@@ -6,10 +6,10 @@
 
 | 類別 | 數量 | 任務 |
 | --- | --- | --- |
-| 已完成 | 16 | T-00, T-01, T-02, T-03, T-04, T-05, T-06, T-07, T-08, T-09, T-10, T-11, T-12, T-13, T-16, T-20 |
-| 未完成 | 19 | T-14, T-15, T-17 ~ T-19, T-21 ~ T-34 |
-| 可立即開始 | 4 | T-14, T-15, T-22, T-23 |
-| 仍受依賴阻塞 | 15 | T-17 ~ T-19, T-21, T-24 ~ T-34 |
+| 已完成 | 24 | T-00, T-01, T-02, T-03, T-04, T-05, T-06, T-07, T-08, T-09, T-10, T-11, T-12, T-13, T-14, T-15, T-16, T-17, T-18, T-19, T-20, T-21, T-22, T-23 |
+| 未完成 | 11 | T-24 ~ T-34 |
+| 可立即開始 | 2 | T-24, T-25 |
+| 仍受依賴阻塞 | 9 | T-26 ~ T-34 |
 
 ### 已完成任務詳細紀錄
 
@@ -19,25 +19,19 @@
 
 | Task | 原因 | 主要前置 |
 | --- | --- | --- |
-| T-14 | trace 與 publish 規劃已完成 | T-02, T-05, T-06 |
-| T-15 | tool contract 與 optional tool 研究已完成 | T-02, T-07, T-08, T-09, T-10, T-11, T-12 |
-| T-22 | trace 與 tool contract 已就緒，可做 smoke test | T-03, T-05, T-07 |
-| T-23 | T-05 ~ T-12 已補齊，可做 extension 驗證 | T-05 ~ T-12 |
+| T-24 | T-18、T-19 已完成，可做英文建站驗證 | T-18, T-19 |
+| T-25 | 首頁與導覽敘事已定稿，可開始繁中翻譯入口內容 | T-19, glossary, style guide |
 
 ### 依賴中任務速覽
 
 | Task | 目前狀態 | 依賴 | 還缺什麼 |
 | --- | --- | --- | --- |
-| T-17 | 未開始 | T-13, T-14, T-15, T-16 | T-14, T-15 |
-| T-18 | 未開始 | T-17 | T-17 |
-| T-19 | 未開始 | T-17 | T-17 |
-| T-21 | 未開始 | T-13, T-14, T-15, T-16 | T-14, T-15 |
-| T-24 | 未開始 | T-18, T-19 | T-18, T-19 |
-| T-25 | 未開始 | T-19, glossary, style guide | T-19 |
+| T-24 | 未開始 | T-18, T-19 | 無，已可開始 |
+| T-25 | 未開始 | T-19, glossary, style guide | 無，已可開始 |
 | T-26 | 未開始 | T-25 | T-25 |
 | T-27 | 未開始 | T-25 | T-25 |
 | T-28 | 未開始 | T-25 | T-25 |
-| T-29 | 未開始 | T-17, T-25 | T-17, T-25 |
+| T-29 | 未開始 | T-17, T-25 | T-25 |
 | T-30 | 未開始 | T-25 | T-25 |
 | T-31 | 未開始 | T-25 | T-25 |
 | T-32 | 未開始 | T-26 ~ T-31 | T-26 ~ T-31 |
@@ -306,10 +300,12 @@
 
 ## T-14 撰寫英文頁：Foundry Agent
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件
 - 平行處理：可部分平行
 - 建議 Agent：Agent C
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-14-foundry-agent-page-zhtw.md`, `workshop/docs/03-understand/02-foundry-agent.md`
 
 ### 目標檔案
 
@@ -334,10 +330,12 @@
 
 ## T-15 撰寫英文頁：Foundry Tool
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件
 - 平行處理：可部分平行
 - 建議 Agent：Agent C
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-15-foundry-tool-page-zhtw.md`, `workshop/docs/03-understand/03-foundry-tool.md`
 
 ### 目標檔案
 
@@ -378,10 +376,12 @@
 
 ## T-17 重寫英文頁：Deep Dive Overview
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件
 - 平行處理：否
 - 建議 Agent：Agent C
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-17-deep-dive-overview-zhtw.md`, `workshop/docs/03-understand/index.md`
 
 ### 目標檔案
 
@@ -404,10 +404,12 @@
 
 ## T-18 更新 MkDocs 導覽
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件 / 設定
 - 平行處理：否
 - 建議 Agent：Agent C
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-18-mkdocs-nav-update-zhtw.md`, `workshop/mkdocs.yml`
 
 ### 目標檔案
 
@@ -427,10 +429,12 @@
 
 ## T-19 更新首頁與部署頁敘事
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件
 - 平行處理：可部分平行
 - 建議 Agent：Agent C
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-19-homepage-deploy-narrative-zhtw.md`, `README.md`, `workshop/docs/index.md`, `workshop/docs/01-deploy/index.md`
 
 ### 目標檔案
 
@@ -463,10 +467,12 @@
 
 ## T-21 撰寫英文 FAQ / talking points 補強
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件
 - 平行處理：是
 - 建議 Agent：Agent C
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-21-faq-talking-points-zhtw.md`, `workshop/docs/03-understand/00-foundry-model.md`, `workshop/docs/03-understand/02-foundry-agent.md`, `workshop/docs/03-understand/03-foundry-tool.md`, `workshop/docs/03-understand/04-control-plane.md`
 
 ### 內容
 
@@ -486,10 +492,12 @@
 
 ## T-22 主流程腳本 smoke test
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：測試
 - 平行處理：否
 - 建議 Agent：Agent E
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-22-main-flow-smoke-test-zhtw.md`, `scripts/08_test_foundry_agent.py`
 
 ### 內容
 
@@ -512,10 +520,12 @@
 
 ## T-23 選配能力 smoke test
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：測試
 - 平行處理：是
 - 建議 Agent：Agent E
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-23-optional-extension-smoke-test-zhtw.md`
 
 ### 內容
 
@@ -785,15 +795,12 @@
 
 - 已完成：glossary / style guide / reviewer checklist
 
-### 第二波可平行啟動
+### 第二波可平行啟動（目前）
 
-在 T-02 與各技術研究初步完成後，可平行進行：
+在 T-18 / T-19 完成後，目前最合理的平行工作是：
 
-- T-13 Foundry Model 頁
-- T-14 Foundry Agent 頁
-- T-15 Foundry Tool 頁
-- T-16 Control Plane 頁
-- T-21 FAQ / talking points
+- T-24 建站驗證（英文）
+- T-25 開始繁中翻譯：首頁與導覽
 
 ### 第三波可平行啟動
 
@@ -810,7 +817,6 @@
 
 以下工作強依賴前置結果，不建議同時多人直接改同一檔案：
 
-- T-17 重寫 `03-understand/index.md`
 - T-18 更新 `workshop/mkdocs.yml`
 - T-19 更新首頁與部署頁核心敘事
 - T-24 / T-33 建站驗證
@@ -818,34 +824,17 @@
 
 ## 最小可行落地順序（建議）
 
-若要先求「最快有成果」，建議先做這條主線：
+若從目前進度往前推，建議先做這條主線：
 
-1. T-00
-2. T-01
-3. T-02
-4. T-04
-5. T-07
-6. T-13
-7. T-14
-8. T-15
-9. T-16
-10. T-17
-11. T-18
-12. T-19
-13. T-24
+1. T-24
+2. T-25
 
-這樣可以先把英文的五主軸骨架與主流程敘事補齊。
+這樣可以先完成英文站台驗證，並開始繁中入口內容落地。
 
 之後再做：
 
-14. T-03
-15. T-05
-16. T-06
-17. T-08 ~ T-12
-18. T-22
-19. T-23
-20. T-25 ~ T-33
-21. T-34
+3. T-26 ~ T-33
+4. T-34
 
 ## 備註
 

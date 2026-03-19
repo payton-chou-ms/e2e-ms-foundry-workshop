@@ -28,8 +28,16 @@
 | T-11 | PII 評估 | `tmp/t-11-pii-zhtw.md`、`scripts/12_demo_pii_redaction.py` |
 | T-12 | Image Generation 評估 | `tmp/t-12-image-generation-zhtw.md`、`scripts/13_demo_image_generation.py` |
 | T-13 | Foundry Model 頁 | `workshop/docs/03-understand/00-foundry-model.md` |
+| T-14 | Foundry Agent 頁 | `workshop/docs/03-understand/02-foundry-agent.md` |
+| T-15 | Foundry Tool 頁 | `workshop/docs/03-understand/03-foundry-tool.md` |
 | T-16 | Control Plane 頁 | `workshop/docs/03-understand/04-control-plane.md` |
+| T-17 | Deep Dive Overview 重寫 | `workshop/docs/03-understand/index.md` |
+| T-18 | MkDocs 導覽更新 | `workshop/mkdocs.yml` |
+| T-19 | 首頁與部署頁敘事更新 | `README.md`、`workshop/docs/index.md`、`workshop/docs/01-deploy/index.md` |
 | T-20 | Mermaid 圖補齊 | `workshop/docs/03-understand/index.md`、`workshop/docs/03-understand/00-foundry-model.md`、`workshop/docs/03-understand/04-control-plane.md` |
+| T-21 | FAQ / talking points 補強 | `workshop/docs/03-understand/00-foundry-model.md`、`workshop/docs/03-understand/02-foundry-agent.md`、`workshop/docs/03-understand/03-foundry-tool.md`、`workshop/docs/03-understand/04-control-plane.md` |
+| T-22 | 主流程 smoke test | `tmp/t-22-main-flow-smoke-test-zhtw.md`、`scripts/08_test_foundry_agent.py` |
+| T-23 | 選配能力 smoke test | `tmp/t-23-optional-extension-smoke-test-zhtw.md` |
 
 ---
 
@@ -307,6 +315,48 @@
 
 ---
 
+## T-14 撰寫英文頁：Foundry Agent
+
+- 狀態：已完成
+- 類型：文件
+- 主要產出：`tmp/t-14-foundry-agent-page-zhtw.md`、`workshop/docs/03-understand/02-foundry-agent.md`
+
+完成內容：
+
+- 說明 `PromptAgentDefinition` 的 model / instructions / tools 三要素
+- 對齊 `07_create_foundry_agent.py` 與 `08_test_foundry_agent.py` 的 create / get / test flow
+- 補上 tracing env flags、best-effort 原則與 publish boundary 說明
+- 補上 agent orchestration Mermaid 圖
+
+驗收結果：
+
+- Markdown diagnostics clean
+- 已加入 workshop nav
+- `mkdocs build` 可通過
+
+---
+
+## T-15 撰寫英文頁：Foundry Tool
+
+- 狀態：已完成
+- 類型：文件
+- 主要產出：`tmp/t-15-foundry-tool-page-zhtw.md`、`workshop/docs/03-understand/03-foundry-tool.md`
+
+完成內容：
+
+- 對齊 canonical tool contract 與 main runtime execution loop
+- 說明 `execute_sql` / `search_documents` schema 與責任邊界
+- 說明 optional demos 為 layered extensions，不直接混入主流程 tool contract
+- 補上 function-call sequence Mermaid 圖
+
+驗收結果：
+
+- Markdown diagnostics clean
+- 已加入 workshop nav
+- `mkdocs build` 可通過
+
+---
+
 ## T-16 撰寫英文頁：Control Plane
 
 - 狀態：已完成
@@ -326,6 +376,65 @@
 
 ---
 
+## T-17 重寫英文頁：Deep Dive Overview
+
+- 狀態：已完成
+- 類型：文件
+- 主要產出：`tmp/t-17-deep-dive-overview-zhtw.md`、`workshop/docs/03-understand/index.md`
+
+完成內容：
+
+- 將 overview 重寫為五主軸導覽
+- 補上 `control plane -> model -> agent -> tool -> IQ -> data sources` 關係圖
+- 新增頁面對照與 customer-question routing 區塊
+- 對齊 Foundry Model / Agent / Tool / IQ / Control Plane 的連結
+
+驗收結果：
+
+- Markdown diagnostics clean
+- `mkdocs build` 可通過
+
+---
+
+## T-18 更新 MkDocs 導覽
+
+- 狀態：已完成
+- 類型：文件 / 設定
+- 主要產出：`tmp/t-18-mkdocs-nav-update-zhtw.md`、`workshop/mkdocs.yml`
+
+完成內容：
+
+- 將 Deep Dive 導覽順序調整為與五主軸敘事更一致
+- 將 `Foundry Agent`、`Foundry Tool` 放到 `Foundry IQ` 之前
+- 保持 nav 標題與頁面標題一致
+
+驗收結果：
+
+- YAML diagnostics clean
+- `mkdocs build` 可通過
+
+---
+
+## T-19 更新首頁與部署頁敘事
+
+- 狀態：已完成
+- 類型：文件
+- 主要產出：`tmp/t-19-homepage-deploy-narrative-zhtw.md`、`README.md`、`workshop/docs/index.md`、`workshop/docs/01-deploy/index.md`
+
+完成內容：
+
+- 將入口文件從雙主軸敘事擴展為「主流程簡潔 + 五主軸架構」的雙層說法
+- 在 `README.md` 補上五主軸架構與主流程 / 技術深談分層
+- 在 overview 與 deploy 頁補上 main path vs five-axis architecture 的說明
+- 保持 workshop 執行路徑仍以單一 agent、兩個 core tools、兩條 grounding path 為主
+
+驗收結果：
+
+- Markdown diagnostics clean
+- `mkdocs build` 可通過
+
+---
+
 ## T-20 為新頁面補架構圖或 Mermaid 圖
 
 - 狀態：已完成
@@ -342,3 +451,62 @@
 
 - Markdown diagnostics clean
 - Deep dive 導覽已可直接連到新圖與新頁面
+
+---
+
+## T-21 撰寫英文 FAQ / talking points 補強
+
+- 狀態：已完成
+- 類型：文件
+- 主要產出：`tmp/t-21-faq-talking-points-zhtw.md`、`workshop/docs/03-understand/00-foundry-model.md`、`workshop/docs/03-understand/02-foundry-agent.md`、`workshop/docs/03-understand/03-foundry-tool.md`、`workshop/docs/03-understand/04-control-plane.md`
+
+完成內容：
+
+- 為 Foundry Model、Foundry Agent、Foundry Tool、Control Plane 四頁補上 FAQ 區塊
+- 保留並強化每頁可直接口述的 talking points
+- 讓頁面同時支援技術深談與 customer-facing 解說
+
+驗收結果：
+
+- Markdown diagnostics clean
+- `mkdocs build` 可通過
+
+---
+
+## T-22 主流程腳本 smoke test
+
+- 狀態：已完成
+- 類型：測試
+- 主要產出：`tmp/t-22-main-flow-smoke-test-zhtw.md`、`scripts/08_test_foundry_agent.py`
+
+完成內容：
+
+- 驗證 `00_build_solution.py --only 07-search --dry-run` 可正確組裝 pipeline
+- 驗證 `07_create_foundry_agent.py` 在 full / foundry-only 都會對缺少 `AZURE_AI_PROJECT_ENDPOINT` 給出正確 guardrail
+- 驗證 `08_test_foundry_agent.py` 在 full / foundry-only 都會對缺少 `AZURE_AI_PROJECT_ENDPOINT` 給出正確 guardrail
+- 修正 full mode 先被 `pyodbc` 缺件短路的問題，改為 lazy import 與 SQL-time failure
+
+驗收結果：
+
+- 主流程在無雲端資源的目前環境下會給出正確錯誤，不會被本機 ODBC 缺件誤導
+- `scripts/08_test_foundry_agent.py` diagnostics clean
+- `python3 -m py_compile /workspaces/nc-iq-workshop/scripts/08_test_foundry_agent.py` 可通過
+
+---
+
+## T-23 選配能力 smoke test
+
+- 狀態：已完成
+- 類型：測試
+- 主要產出：`tmp/t-23-optional-extension-smoke-test-zhtw.md`
+
+完成內容：
+
+- 以 `py_compile` 驗證 tracing helper、publish helper、Content Understanding、Browser Automation、Web Search、PII、Image Generation 腳本語法
+- 執行各腳本並分類為可執行或正確 skip
+- 確認目前環境下所有不可用功能都會明確輸出 `SKIP:` 或 guarded precheck 訊息
+
+驗收結果：
+
+- 選配腳本未出現未處理例外造成的直接崩潰
+- Publish / Content Understanding / Browser Automation / Web Search / PII / Image Generation 均正確落在 guarded skip 路徑
