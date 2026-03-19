@@ -1,5 +1,49 @@
 # 完整交付 To-Do List（程式、文件、翻譯、測試）
 
+## Summary
+
+### 進度總覽
+
+| 類別 | 數量 | 任務 |
+| --- | --- | --- |
+| 已完成 | 16 | T-00, T-01, T-02, T-03, T-04, T-05, T-06, T-07, T-08, T-09, T-10, T-11, T-12, T-13, T-16, T-20 |
+| 未完成 | 19 | T-14, T-15, T-17 ~ T-19, T-21 ~ T-34 |
+| 可立即開始 | 4 | T-14, T-15, T-22, T-23 |
+| 仍受依賴阻塞 | 15 | T-17 ~ T-19, T-21, T-24 ~ T-34 |
+
+### 已完成任務詳細紀錄
+
+- 已完成任務的細節、產出與驗證，已移到：`tmp/master-delivery-completed-zhtw.md`
+
+### 可立即開始的任務
+
+| Task | 原因 | 主要前置 |
+| --- | --- | --- |
+| T-14 | trace 與 publish 規劃已完成 | T-02, T-05, T-06 |
+| T-15 | tool contract 與 optional tool 研究已完成 | T-02, T-07, T-08, T-09, T-10, T-11, T-12 |
+| T-22 | trace 與 tool contract 已就緒，可做 smoke test | T-03, T-05, T-07 |
+| T-23 | T-05 ~ T-12 已補齊，可做 extension 驗證 | T-05 ~ T-12 |
+
+### 依賴中任務速覽
+
+| Task | 目前狀態 | 依賴 | 還缺什麼 |
+| --- | --- | --- | --- |
+| T-17 | 未開始 | T-13, T-14, T-15, T-16 | T-14, T-15 |
+| T-18 | 未開始 | T-17 | T-17 |
+| T-19 | 未開始 | T-17 | T-17 |
+| T-21 | 未開始 | T-13, T-14, T-15, T-16 | T-14, T-15 |
+| T-24 | 未開始 | T-18, T-19 | T-18, T-19 |
+| T-25 | 未開始 | T-19, glossary, style guide | T-19 |
+| T-26 | 未開始 | T-25 | T-25 |
+| T-27 | 未開始 | T-25 | T-25 |
+| T-28 | 未開始 | T-25 | T-25 |
+| T-29 | 未開始 | T-17, T-25 | T-17, T-25 |
+| T-30 | 未開始 | T-25 | T-25 |
+| T-31 | 未開始 | T-25 | T-25 |
+| T-32 | 未開始 | T-26 ~ T-31 | T-26 ~ T-31 |
+| T-33 | 未開始 | T-32 | T-32 |
+| T-34 | 未開始 | 最終驗收任務 | 建議待 T-24 與 T-33 後執行 |
+
 ## 目的
 
 這份文件整理目前 repo 若要依據下列兩份計劃完整落地所需的全部工作：
@@ -88,6 +132,8 @@
 
 ## 完整 To-Do List
 
+已完成任務的詳細內容已移至：`tmp/master-delivery-completed-zhtw.md`
+
 ---
 
 ## T-00 專案對齊與決策紀錄
@@ -96,22 +142,9 @@
 - 類型：治理 / 規格
 - 平行處理：否
 - 建議 Agent：Agent A 或 Agent C
-
-### 內容
-
-- 明確定義主流程必要能力
-- 明確定義選配能力
-- 明確定義繁中站台策略
-- 明確定義本次是否要做到進階工具真的可跑
-
-### 產出
-
-- 一份決策記錄文件
-  - `tmp/t-00-delivery-decisions-zhtw.md`
-
-### 驗收
-
-- 所有後續任務可明確判斷是否屬於必要或選配
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-00-delivery-decisions-zhtw.md`
+- 依賴：無
 
 ---
 
@@ -121,21 +154,9 @@
 - 類型：分析
 - 平行處理：是
 - 建議 Agent：Agent A + Agent B + Agent C
-
-### 內容
-
-- 盤點 `infra/modules/foundry.bicep` 現有 control plane 定義
-- 盤點 `scripts/07_create_foundry_agent.py`、`scripts/08_test_foundry_agent.py` 現有 agent / tool 流程
-- 盤點 `workshop/docs/03-understand/` 現有文件缺口
-
-### 產出
-
-- 一份 gap analysis 清單
-  - `tmp/t-01-gap-analysis-zhtw.md`
-
-### 依賴
-
-- T-00
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-01-gap-analysis-zhtw.md`
+- 依賴：T-00
 
 ---
 
@@ -145,29 +166,9 @@
 - 類型：文件架構
 - 平行處理：可部分平行
 - 建議 Agent：Agent C
-
-### 內容
-
-- 設計 `03-understand/` 新導覽順序
-- 決定檔名與頁面命名
-- 定義各頁互相引用關係
-
-### 目標頁面
-
-- `workshop/docs/03-understand/00-foundry-model.md`
-- `workshop/docs/03-understand/01-foundry-iq.md`
-- `workshop/docs/03-understand/02-foundry-agent.md`
-- `workshop/docs/03-understand/03-foundry-tool.md`
-- `workshop/docs/03-understand/02-fabric-iq.md`
-- `workshop/docs/03-understand/04-control-plane.md`
-
-### 依賴
-
-- T-01
-
-### 產出
-
-- `tmp/t-02-information-architecture-zhtw.md`
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-02-information-architecture-zhtw.md`
+- 依賴：T-01
 
 ---
 
@@ -177,42 +178,9 @@
 - 類型：程式 / IaC
 - 平行處理：可部分平行
 - 建議 Agent：Agent A
-
-### 內容
-
-- 檢視 `infra/modules/foundry.bicep`
-- 設計主流程模型與選配模型的參數化方式
-- 支援最佳努力部署與失敗跳過策略
-- 規劃成功部署模型清單輸出
-
-### 涵蓋模型
-
-- 主流程必要模型
-  - 主要 orchestration model
-  - embedding model
-- 選配模型
-  - `gpt-5.4`
-  - `gpt-5.4-pro`
-  - `gpt-5.3-Codex`
-  - `claude-sonnet-4-6`
-  - `claude-opus-4-6`
-  - `model-router`
-  - `gpt-image-1`（若要 image generation demo）
-
-### 依賴
-
-- T-00
-- T-01
-
-### 產出
-
-- `tmp/t-03-multi-model-strategy-zhtw.md`
-
-### 測試
-
-- Bicep syntax / diagnostics
-- 參數組合 smoke test
-- 選配模型 unavailable 時可跳過
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-03-multi-model-strategy-zhtw.md`
+- 依賴：T-00, T-01
 
 ---
 
@@ -222,45 +190,21 @@
 - 類型：程式 / IaC
 - 平行處理：是
 - 建議 Agent：Agent A
-
-### 內容
-
-- 確認 project、connections、RBAC、App Insights、Search、Storage 的輸出是否足夠支撐文件敘事
-- 若不足，補上必要 output 或註解
-
-### 依賴
-
-- T-01
-
-### 測試
-
-- Bicep diagnostics
-- azd output 檢查
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`infra/main.bicep`, `infra/modules/foundry.bicep`
+- 依賴：T-01
 
 ---
 
 ## T-05 擴充 agent 程式：agent trace 支援
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：程式
 - 平行處理：可部分平行
 - 建議 Agent：Agent B
-
-### 內容
-
-- 在 `scripts/07_create_foundry_agent.py` 或相關新腳本補上 trace 啟用策略
-- 確認與 Application Insights 的關聯
-- 若無權限或功能不可用，輸出 warning 並跳過
-
-### 依賴
-
-- T-01
-- T-04
-
-### 測試
-
-- 基本 trace 啟用 smoke test
-- trace unavailable 時不阻塞主流程
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-05-agent-tracing-zhtw.md`, `scripts/foundry_trace.py`, `scripts/07_create_foundry_agent.py`, `scripts/08_test_foundry_agent.py`, `scripts/requirements.txt`
+- 依賴：T-01, T-04
 
 ---
 
@@ -270,49 +214,21 @@
 - 類型：程式 / 文件支援
 - 平行處理：可部分平行
 - 建議 Agent：Agent B
-
-### 內容
-
-- 研究是否需要新增腳本或只補文件與 pseudo flow
-- 若真的實作，需提供 non-blocking 的 publish 流程
-- 記錄 publish 後 identity / RBAC 差異
-
-### 依賴
-
-- T-00
-- T-01
-
-### 測試
-
-- 若實作腳本，至少完成 dry-run 或 guarded execution smoke test
-
-### 產出
-
-- `tmp/t-06-publish-plan-zhtw.md`
-- `scripts/09_publish_foundry_agent.py`
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-06-publish-plan-zhtw.md`, `scripts/09_publish_foundry_agent.py`
+- 依賴：T-00, T-01
 
 ---
 
 ## T-07 擴充 tool 程式：主流程 tool 文件對齊
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：程式 / 文件對齊
 - 平行處理：是
 - 建議 Agent：Agent B
-
-### 內容
-
-- 明確整理 `search_documents` 與 `execute_sql` 的 schema、責任邊界、回應 loop
-- 視需要補註解、補 helper、補示例輸出
-
-### 依賴
-
-- T-01
-
-### 測試
-
-- 主流程 tool smoke test
-- 文件示例與實際輸出一致性檢查
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-07-tool-contract-alignment-zhtw.md`, `scripts/foundry_tool_contract.py`
+- 依賴：T-01
 
 ---
 
@@ -322,125 +238,69 @@
 - 類型：研究 / 選配實作
 - 平行處理：是
 - 建議 Agent：Agent B
-
-### 內容
-
-- 確認最小 demo 方案
-- 判斷要做文件示意、腳本示範、還是兩者都做
-- 若不可用，定義 skip 條件
-
-### 依賴
-
-- T-00
-
-### 測試
-
-- 最小 demo 或 skip behavior 驗證
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-08-content-understanding-zhtw.md`, `scripts/09_demo_content_understanding.py`
+- 依賴：T-00
 
 ---
 
 ## T-09 評估延伸工具：Browser Automation
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：研究 / 選配實作
 - 平行處理：是
 - 建議 Agent：Agent B
-
-### 內容
-
-- 盤點 Playwright / browser session 依賴
-- 定義 trusted-site demo
-- 定義無法建立時的 skip 機制
-
-### 測試
-
-- 最小 demo 或 skip behavior 驗證
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-09-browser-automation-zhtw.md`, `scripts/10_demo_browser_automation.py`
+- 依賴：無
 
 ---
 
 ## T-10 評估延伸工具：Web Search
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：研究 / 選配實作
 - 平行處理：是
 - 建議 Agent：Agent B
-
-### 內容
-
-- 盤點可行工具接法
-- 定義 demo 與 skip 條件
-
-### 測試
-
-- 最小 demo 或 skip behavior 驗證
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-10-web-search-zhtw.md`, `scripts/11_demo_web_search.py`
+- 依賴：無
 
 ---
 
 ## T-11 評估延伸工具：PII
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：研究 / 選配實作
 - 平行處理：是
 - 建議 Agent：Agent B
-
-### 內容
-
-- 定義最小文字範例
-- 定義偵測與遮罩 demo
-- 定義不可用時的 fallback 或 skip 文案
-
-### 測試
-
-- 最小 demo 或 skip behavior 驗證
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-11-pii-zhtw.md`, `scripts/12_demo_pii_redaction.py`, `scripts/requirements.txt`
+- 依賴：無
 
 ---
 
 ## T-12 評估延伸工具：Image Generation
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：研究 / 選配實作
 - 平行處理：是
 - 建議 Agent：Agent B + Agent A
-
-### 內容
-
-- 確認 `gpt-image-1` 或等價能力的可部署性
-- 若可用，定義最小示範腳本
-- 若不可用，文件中標示選配並跳過
-
-### 依賴
-
-- T-03
-
-### 測試
-
-- 最小 demo 或 skip behavior 驗證
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`tmp/t-12-image-generation-zhtw.md`, `scripts/13_demo_image_generation.py`, `scripts/optional_demo_utils.py`
+- 依賴：T-03
 
 ---
 
 ## T-13 撰寫英文頁：Foundry Model
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件
 - 平行處理：可部分平行
 - 建議 Agent：Agent C
-
-### 目標檔案
-
-- `workshop/docs/03-understand/00-foundry-model.md`
-
-### 內容
-
-- chat / embedding model deployment
-- 多模型策略
-- 模型角色差異
-- 主流程與選配模型
-- 不可用時如何跳過
-
-### 依賴
-
-- T-02
-- T-03
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`workshop/docs/03-understand/00-foundry-model.md`
+- 依賴：T-02, T-03
 
 ---
 
@@ -506,29 +366,13 @@
 
 ## T-16 撰寫英文頁：Control Plane
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件
 - 平行處理：可部分平行
 - 建議 Agent：Agent C
-
-### 目標檔案
-
-- `workshop/docs/03-understand/04-control-plane.md`
-
-### 內容
-
-- AI Services account
-- Foundry project
-- model deployments
-- project connections
-- App Insights / Search / Storage
-- RBAC
-- control plane vs runtime path
-
-### 依賴
-
-- T-02
-- T-04
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`workshop/docs/03-understand/04-control-plane.md`
+- 依賴：T-02, T-04
 
 ---
 
@@ -607,20 +451,13 @@
 
 ## T-20 為新頁面補架構圖或 Mermaid 圖
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：文件資產
 - 平行處理：是
 - 建議 Agent：Agent C
-
-### 內容
-
-- Control Plane 圖
-- model / agent / tool / IQ 關係圖
-- 可選擇使用 Mermaid 或靜態圖資產
-
-### 依賴
-
-- T-02
+- 詳細紀錄：`tmp/master-delivery-completed-zhtw.md`
+- 主要產出：`workshop/docs/03-understand/index.md`, `workshop/docs/03-understand/00-foundry-model.md`, `workshop/docs/03-understand/04-control-plane.md`
+- 依賴：T-02
 
 ---
 

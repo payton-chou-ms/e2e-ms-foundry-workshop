@@ -4,47 +4,27 @@ This section prepares you for technical questions during customer conversations.
 
 ## Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        User Question                                │
-│            "Which outages exceeded our policy thresholds?"          │
-└─────────────────────────────────────────────────────────────────────┘
-                                │
-                                ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                     Orchestrator Agent                              │
-│                                                                     │
-│   1. Analyzes question                                              │
-│   2. Decides which tool(s) to use                                   │
-│   3. Orchestrates calls                                             │
-│   4. Synthesizes response                                           │
-└─────────────────────────────────────────────────────────────────────┘
-                    │                           │
-                    ▼                           ▼
-    ┌───────────────────────┐   ┌───────────────────────┐
-    │      Foundry IQ       │   │       Fabric IQ       │
-    │  (Document Search)    │   │    (Data Queries)     │
-    │                       │   │                       │
-    │  • Agentic retrieval  │   │  • Ontology           │
-    │  • Plan, iterate,     │   │  • NL → SQL           │
-    │    reflect            │   │  • Business rules     │
-    │  • Citations          │   │                       │
-    └───────────────────────┘   └───────────────────────┘
-              │                           │
-              ▼                           ▼
-    ┌───────────────────────┐   ┌───────────────────────┐
-    │   Azure AI Search     │   │   Microsoft Fabric    │
-    │   (Vector Index)      │   │   (Lakehouse/WH)      │
-    └───────────────────────┘   └───────────────────────┘
+```mermaid
+flowchart LR
+    U[User question] --> A[Prompt agent]
+    A --> T[Function tools]
+    T --> FIQ[Foundry IQ documents]
+    T --> DB[Fabric IQ data]
+    FIQ --> S[Azure AI Search]
+    DB --> L[Fabric Lakehouse SQL]
+    C[Control plane] --> A
+    M[Model deployments] --> A
+    C --> M
 ```
 
-## Key Technologies
+## Deep-dive pages available now
 
-| Component | What It Does | Customer Benefit |
-|-----------|--------------|------------------|
-| **Foundry IQ** | Intelligent search over documents | Answers policy/process questions with citations |
-| **Fabric IQ** | Natural language to SQL | Answers data questions without writing queries |
-| **Orchestrator Agent** | Orchestrates both tools | Single interface for all enterprise knowledge |
+| Page | Focus |
+|------|-------|
+| **Foundry Model** | Required and optional model deployments, plus skip strategy |
+| **Foundry IQ** | Document retrieval, citations, and agentic retrieval behavior |
+| **Fabric IQ** | Ontology-driven NL→SQL and business data access |
+| **Control Plane** | Foundry project, connections, telemetry, and resource topology |
 
 ## Common Customer Questions
 
@@ -66,9 +46,11 @@ This section prepares you for technical questions during customer conversations.
 
 ## Deep Dive Pages
 
-- **[Foundry IQ: Documents](01-foundry-iq.md)**: How agentic retrieval works
-- **[Fabric IQ: Data](02-fabric-iq.md)**: How ontology enables NL→SQL
+- **[Foundry Model: Deployment Strategy](00-foundry-model.md)**: chat, embeddings, and optional model deployment behavior
+- **[Foundry IQ: Documents](01-foundry-iq.md)**: how agentic retrieval works
+- **[Fabric IQ: Data](02-fabric-iq.md)**: how ontology enables NL→SQL
+- **[Control Plane: Resource Topology](04-control-plane.md)**: project resources, connections, and tracing topology
 
 ---
 
-[← Test Your PoC](../02-customize/03-demo.md) | [Foundry IQ: Documents →](01-foundry-iq.md)
+[← Test Your PoC](../02-customize/03-demo.md) | [Foundry Model: Deployment Strategy →](00-foundry-model.md)

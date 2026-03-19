@@ -75,8 +75,10 @@ nav:
       - Test Your PoC: 02-customize/03-demo.md
   - Deep dive:
       - Overview: 03-understand/index.md
+      - "Foundry Model: Deployment Strategy": 03-understand/00-foundry-model.md
       - "Foundry IQ: Documents": 03-understand/01-foundry-iq.md
       - "Fabric IQ: Data": 03-understand/02-fabric-iq.md
+      - "Control Plane: Resource Topology": 03-understand/04-control-plane.md
   - Cleanup:
       - Delete resources: 04-cleanup/index.md
       - Next steps: 04-cleanup/next-steps.md
