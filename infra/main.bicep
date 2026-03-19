@@ -7,7 +7,9 @@ var abbrs = loadJsonContent('./abbreviations.json')
 param environmentName string
 
 @description('Optional. created by user name')
-param createdBy string = contains(deployer(), 'userPrincipalName')? split(deployer().userPrincipalName, '@')[0]: deployer().objectId
+param createdBy string = contains(deployer(), 'userPrincipalName')
+  ? split(deployer().userPrincipalName, '@')[0]
+  : deployer().objectId
 
 // @minLength(1)
 // @description('Industry use case for deployment:')
@@ -15,8 +17,7 @@ param createdBy string = contains(deployer(), 'userPrincipalName')? split(deploy
 //   'Retail-sales-analysis'
 //   'Insurance-improve-customer-meetings'
 // ])
-// param usecase string 
-
+// param usecase string
 
 @minLength(1)
 @description('Secondary location for databases creation(example:eastus2):')
@@ -60,9 +61,12 @@ param embeddingModel string = 'text-embedding-ada-002'
 @description('Capacity of the Embedding Model deployment')
 param embeddingDeploymentCapacity int = 80
 
+@description('Optional model deployments. Each entry can be enabled or disabled independently.')
+param optionalModelDeployments array = []
+
 // param imageTag string = 'latest_v2'
 
-param AZURE_LOCATION string=''
+param AZURE_LOCATION string = ''
 var solutionLocation = empty(AZURE_LOCATION) ? resourceGroup().location : AZURE_LOCATION
 
 var uniqueId = toLower(uniqueString(subscription().id, environmentName, solutionLocation))
@@ -79,7 +83,7 @@ var uniqueId = toLower(uniqueString(subscription().id, environmentName, solution
   'westus3'
 ])
 @metadata({
-  azd:{
+  azd: {
     type: 'location'
     usageName: [
       'OpenAI.GlobalStandard.gpt-4o-mini,150'
@@ -104,11 +108,7 @@ resource resourceGroupTags 'Microsoft.Resources/tags@2021-04-01' = {
   name: 'default'
   properties: {
     tags: union(
-      reference(
-        resourceGroup().id, 
-        '2021-04-01', 
-        'Full'
-      ).tags ?? {},
+      reference(resourceGroup().id, '2021-04-01', 'Full').tags ?? {},
       {
         TemplateName: 'IQs Workshop'
         CreatedBy: createdBy
@@ -130,11 +130,14 @@ module foundry './modules/foundry.bicep' = {
     logAnalyticsName: '${abbrs.managementGovernance.logAnalyticsWorkspace}${solutionPrefix}'
     appInsightsName: '${abbrs.managementGovernance.applicationInsights}${solutionPrefix}'
     chatModel: gptModelName
+    chatModelSkuName: deploymentType
     chatModelVersion: gptModelVersion
     chatModelCapacity: gptDeploymentCapacity
     embeddingModel: embeddingModel
+    embeddingModelSkuName: 'Standard'
     embeddingModelCapacity: embeddingDeploymentCapacity
-    deployingUserPrincipalId: az.deployer().objectId
+    optionalModelDeployments: optionalModelDeployments
+    deployingUserPrincipalId: deployingUserPrincipalId
   }
 }
 
@@ -147,23 +150,43 @@ output SOLUTION_PREFIX string = solutionPrefix
 
 // AI Services
 output AZURE_AI_SERVICES_NAME string = foundry.outputs.accountName
+output AZURE_AI_SERVICES_RESOURCE_ID string = foundry.outputs.accountId
 output AZURE_AI_PROJECT_NAME string = foundry.outputs.projectName
+output AZURE_AI_PROJECT_RESOURCE_ID string = foundry.outputs.projectId
+output AZURE_AI_PROJECT_PRINCIPAL_ID string = foundry.outputs.projectPrincipalId
 output AZURE_AI_PROJECT_ENDPOINT string = foundry.outputs.projectEndpoint
 output AZURE_AI_ENDPOINT string = foundry.outputs.aiEndpoint
 output AZURE_OPENAI_ENDPOINT string = foundry.outputs.openAIEndpoint
 
 // AI Search
 output AZURE_AI_SEARCH_NAME string = foundry.outputs.searchName
+output AZURE_AI_SEARCH_RESOURCE_ID string = foundry.outputs.searchId
+output AZURE_AI_SEARCH_PRINCIPAL_ID string = foundry.outputs.searchPrincipalId
 output AZURE_AI_SEARCH_ENDPOINT string = foundry.outputs.searchEndpoint
+output AZURE_AI_PROJECT_SEARCH_CONNECTION_NAME string = foundry.outputs.searchConnectionName
 
 // Storage
 output AZURE_STORAGE_ACCOUNT_NAME string = foundry.outputs.storageName
+output AZURE_STORAGE_ACCOUNT_RESOURCE_ID string = foundry.outputs.storageId
 output AZURE_STORAGE_BLOB_ENDPOINT string = foundry.outputs.storageBlobEndpoint
+output AZURE_AI_PROJECT_STORAGE_CONNECTION_NAME string = foundry.outputs.storageConnectionName
 
 // Monitoring
 output AZURE_APPINSIGHTS_NAME string = foundry.outputs.appInsightsName
+output AZURE_APPINSIGHTS_RESOURCE_ID string = foundry.outputs.appInsightsId
 output AZURE_APPINSIGHTS_CONNECTION_STRING string = foundry.outputs.appInsightsConnectionString
+output AZURE_AI_PROJECT_APPINSIGHTS_CONNECTION_NAME string = foundry.outputs.appInsightsConnectionName
+output AZURE_LOG_ANALYTICS_NAME string = foundry.outputs.logAnalyticsName
+output AZURE_LOG_ANALYTICS_RESOURCE_ID string = foundry.outputs.logAnalyticsWorkspaceId
 
 // Models
 output AZURE_CHAT_MODEL string = gptModelName
 output AZURE_EMBEDDING_MODEL string = embeddingModel
+output AZURE_CHAT_DEPLOYMENT_NAME string = foundry.outputs.chatDeploymentName
+output AZURE_EMBEDDING_DEPLOYMENT_NAME string = foundry.outputs.embeddingDeploymentName
+output AZURE_CHAT_DEPLOYMENT_SKU string = foundry.outputs.chatDeploymentSkuName
+output AZURE_EMBEDDING_DEPLOYMENT_SKU string = foundry.outputs.embeddingDeploymentSkuName
+output AZURE_OPTIONAL_MODEL_DEPLOYMENTS array = foundry.outputs.optionalModelDeployments
+output AZURE_ENABLED_OPTIONAL_MODEL_DEPLOYMENT_NAMES array = foundry.outputs.enabledOptionalModelDeploymentNames
+output AZURE_SKIPPED_OPTIONAL_MODEL_DEPLOYMENT_NAMES array = foundry.outputs.skippedOptionalModelDeploymentNames
+output AZURE_DEPLOYED_MODEL_SUMMARIES array = foundry.outputs.deployedModelSummaries

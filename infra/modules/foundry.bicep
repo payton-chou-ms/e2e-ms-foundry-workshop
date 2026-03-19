@@ -25,6 +25,13 @@ param appInsightsName string
 @description('Chat completion model')
 param chatModel string
 
+@description('Chat model deployment SKU name')
+@allowed([
+  'Standard'
+  'GlobalStandard'
+])
+param chatModelSkuName string = 'GlobalStandard'
+
 @description('Chat model version')
 param chatModelVersion string
 
@@ -34,11 +41,73 @@ param chatModelCapacity int
 @description('Embedding model')
 param embeddingModel string
 
+@description('Embedding model deployment SKU name')
+@allowed([
+  'Standard'
+  'GlobalStandard'
+])
+param embeddingModelSkuName string = 'Standard'
+
 @description('Embedding model capacity (tokens per minute in thousands)')
 param embeddingModelCapacity int
 
+type optionalModelDeployment = {
+  @description('Unique deployment name within the AI Services account')
+  name: string
+  @description('Foundation model name exposed by the deployment API')
+  modelName: string
+  @description('Model publisher format expected by the deployment API')
+  modelFormat: 'OpenAI' | 'Anthropic'
+  @description('Deployment SKU name')
+  skuName: 'Standard' | 'GlobalStandard'
+  @description('Requested capacity for the deployment')
+  capacity: int
+  @description('Whether to deploy this optional model')
+  enabled: bool
+  @description('Optional model version when required by the model family')
+  modelVersion: string?
+}
+
+@description('Optional model deployments. Set enabled=false to skip a model without editing the template.')
+param optionalModelDeployments optionalModelDeployment[] = []
+
 @description('Principal ID of the user running deployment (for role assignments)')
 param deployingUserPrincipalId string
+
+var enabledOptionalModelDeployments = filter(optionalModelDeployments, model => model.enabled)
+var skippedOptionalModelDeploymentNames = map(
+  filter(optionalModelDeployments, model => !model.enabled),
+  model => model.name
+)
+var requiredModelSummaries = [
+  {
+    category: 'required'
+    deploymentName: chatDeployment.name
+    modelName: chatModel
+    modelFormat: 'OpenAI'
+    modelVersion: chatModelVersion
+    skuName: chatModelSkuName
+    capacity: chatModelCapacity
+  }
+  {
+    category: 'required'
+    deploymentName: embeddingDeployment.name
+    modelName: embeddingModel
+    modelFormat: 'OpenAI'
+    modelVersion: ''
+    skuName: embeddingModelSkuName
+    capacity: embeddingModelCapacity
+  }
+]
+var optionalModelSummaries = map(enabledOptionalModelDeployments, model => {
+  category: 'optional'
+  deploymentName: model.name
+  modelName: model.modelName
+  modelFormat: model.modelFormat
+  modelVersion: model.?modelVersion ?? ''
+  skuName: model.skuName
+  capacity: model.capacity
+})
 
 // Log Analytics Workspace
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
@@ -108,7 +177,7 @@ resource chatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2025-0
   parent: aiServices
   name: chatModel
   sku: {
-    name: 'GlobalStandard'
+    name: chatModelSkuName
     capacity: chatModelCapacity
   }
   properties: {
@@ -125,7 +194,7 @@ resource embeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2
   parent: aiServices
   name: embeddingModel
   sku: {
-    name: 'Standard'
+    name: embeddingModelSkuName
     capacity: embeddingModelCapacity
   }
   properties: {
@@ -136,6 +205,32 @@ resource embeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2
   }
   dependsOn: [chatDeployment]
 }
+
+@batchSize(1)
+resource optionalDeployments 'Microsoft.CognitiveServices/accounts/deployments@2025-04-01-preview' = [
+  for model in enabledOptionalModelDeployments: {
+    parent: aiServices
+    name: model.name
+    sku: {
+      name: model.skuName
+      capacity: model.capacity
+    }
+    properties: {
+      model: union(
+        {
+          format: model.modelFormat
+          name: model.modelName
+        },
+        empty(model.?modelVersion ?? '')
+          ? {}
+          : {
+              version: model.?modelVersion
+            }
+      )
+    }
+    dependsOn: [embeddingDeployment]
+  }
+]
 
 // AI Search Service
 resource aiSearch 'Microsoft.Search/searchServices@2024-06-01-preview' = {
@@ -196,7 +291,6 @@ resource appInsightsConnection 'Microsoft.CognitiveServices/accounts/projects/co
     target: appInsights.id
     authType: 'ApiKey'
     isSharedToAll: true
-    isDefault: true
     credentials: {
       key: appInsights.properties.InstrumentationKey
     }
@@ -407,16 +501,37 @@ resource userStorageBlobContributor 'Microsoft.Authorization/roleAssignments@202
 
 // Outputs
 output accountName string = aiServices.name
+output accountId string = aiServices.id
 output projectName string = aiProject.name
+output projectId string = aiProject.id
+output projectPrincipalId string = aiProject.identity.principalId
 output projectEndpoint string = aiProject.properties.endpoints['AI Foundry API']
 output aiEndpoint string = aiServices.properties.endpoint
 output openAIEndpoint string = aiServices.properties.endpoints['OpenAI Language Model Instance API']
+output chatDeploymentName string = chatDeployment.name
+output embeddingDeploymentName string = embeddingDeployment.name
+output chatDeploymentSkuName string = chatModelSkuName
+output embeddingDeploymentSkuName string = embeddingModelSkuName
+output optionalModelDeployments array = optionalModelSummaries
+output enabledOptionalModelDeploymentNames array = map(enabledOptionalModelDeployments, model => model.name)
+output skippedOptionalModelDeploymentNames array = skippedOptionalModelDeploymentNames
+output deployedModelSummaries array = concat(requiredModelSummaries, optionalModelSummaries)
 output searchName string = aiSearch.name
+output searchId string = aiSearch.id
+output searchPrincipalId string = aiSearch.identity.principalId
 output searchEndpoint string = 'https://${aiSearch.name}.search.windows.net'
+output searchConnectionName string = searchConnection.name
+output searchConnectionId string = searchConnection.id
 output storageName string = storageAccount.name
+output storageId string = storageAccount.id
 output storageBlobEndpoint string = storageAccount.properties.primaryEndpoints.blob
+output storageConnectionName string = storageConnection.name
+output storageConnectionId string = storageConnection.id
 output appInsightsName string = appInsights.name
+output appInsightsId string = appInsights.id
 output appInsightsConnectionString string = appInsights.properties.ConnectionString
+output appInsightsConnectionName string = appInsightsConnection.name
+output appInsightsConnectionId string = appInsightsConnection.id
+output logAnalyticsName string = logAnalytics.name
 output logAnalyticsWorkspaceId string = logAnalytics.id
 output logAnalyticsCustomerId string = logAnalytics.properties.customerId
-output logAnalyticsSharedKey string = logAnalytics.listKeys().primarySharedKey
