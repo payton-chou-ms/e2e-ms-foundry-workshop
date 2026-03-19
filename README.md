@@ -1,6 +1,6 @@
 # Build faster with Solution Accelerators – Foundry IQ + Fabric IQ (Workshop)
 
-Build AI agents that combine **unstructured document knowledge** with **structured enterprise data** using knowledge bases, ontology, and natural language queries.
+Build AI agents that combine **unstructured document knowledge** with **structured enterprise data** while giving you a clear path to explain the broader five-axis architecture behind the demo.
 
 ## The Opportunity
 
@@ -10,10 +10,31 @@ Organizations have valuable knowledge spread across documents (PDFs, policies, m
 
 This lab enables an intelligent agent that:
 
+- **Deploys the required models** for chat and embeddings, with optional extension models kept separate
+- **Creates a prompt agent** that orchestrates grounded reasoning in Azure AI Foundry
+- **Defines a strict tool contract** for SQL and document retrieval with explicit guardrails
 - **Creates knowledge bases** from documents with agentic retrieval (plan, iterate, reflect)
 - **Defines business ontology** to understand entities, relationships, and rules
-- **Queries data** using natural language over both documents and structured data
 - **Combines both** to answer complex business questions
+
+## The five-axis architecture
+
+The workshop runtime stays simple, but the technical story now spans five axes:
+
+| Axis | Why it exists |
+|------|---------------|
+| **Foundry Model** | Separates required chat + embedding deployments from optional extensions |
+| **Foundry Agent** | Stores and reuses the prompt agent definition in the Foundry project |
+| **Foundry Tool** | Constrains function calls with a strict SQL + document tool contract |
+| **Foundry IQ + Fabric IQ** | Grounds answers in enterprise documents and business data |
+| **Control Plane** | Provides the Azure resources, connections, RBAC, and observability that support the runtime |
+
+The main workshop path still focuses on two user-visible capabilities:
+
+1. document grounding through Foundry IQ
+2. structured-data grounding through Fabric IQ
+
+The extra axes explain how that experience is built and governed.
 
 ---
 
@@ -30,7 +51,9 @@ This lab enables an intelligent agent that:
 
 | Component | Technology | Description |
 |-----------|------------|-------------|
+| Model deployments | Azure AI Services / Foundry | Required chat + embedding deployments, plus optional extensions |
 | AI Agent | Azure AI Foundry | Orchestrates tools and generates responses |
+| Tool contract | Azure AI Foundry + local runtime | Executes SQL and document retrieval with explicit guardrails |
 | Knowledge Base | Foundry IQ | Agentic retrieval over documents |
 | Business Ontology | Fabric IQ | Entities, relationships, and NL→SQL |
 | Sample Data | AI-Generated | Custom data for any industry/use case |
@@ -158,6 +181,24 @@ Try these question types:
 | SQL | "How many orders last month?" | Fabric (structured) |
 | Document | "What is our return policy?" | Search (unstructured) |
 | Combined | "Which drivers violate the hours policy?" | Both |
+
+## Why this workshop scales from demo to architecture conversation
+
+The workshop is intentionally simple at runtime:
+
+- one prompt agent
+- two core tools
+- two grounding paths
+
+But when the customer asks how it works, the repo now gives you a clear technical progression:
+
+1. **Model**: what gets deployed
+2. **Agent**: how orchestration is stored and reused
+3. **Tool**: how function calls are constrained
+4. **IQ**: how answers are grounded in documents and data
+5. **Control Plane**: how Azure resources and permissions support the demo
+
+That lets you keep the initial PoC easy to run without losing the ability to answer deeper technical questions.
 
 ### Optional Capability Demo: Content Understanding
 

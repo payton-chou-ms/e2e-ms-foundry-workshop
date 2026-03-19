@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -695,6 +695,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../01-deploy/00-admin-deploy-share/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin deploy and share
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-deploy/00-participant-run-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Participant run and validate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../01-deploy/01-deploy-azure/" class="md-nav__link">
         
   
@@ -1033,6 +1089,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../03-understand/00-foundry-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Model: Deployment Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/02-foundry-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Agent: Runtime Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/03-foundry-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Tool: Function Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../03-understand/01-foundry-iq/" class="md-nav__link">
         
   
@@ -1069,6 +1209,34 @@
     
   
     Fabric IQ: Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/04-control-plane/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Plane: Resource Topology
   
 
     
@@ -1283,7 +1451,30 @@
 
 <h1 id="workshop-flow">Workshop Flow</h1>
 <h2 id="step-1-deploy-solution">Step 1: Deploy solution</h2>
-<p>Deploy infrastructure and run with pre-built <strong>sample</strong> scenario:</p>
+<p>Start with one of these two routes:</p>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Use this when</th>
+<th>Primary page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin deploy and share</strong></td>
+<td>You are responsible for deploying Azure resources, configuring Fabric, and preparing access for others</td>
+<td><a href="../../01-deploy/00-admin-deploy-share/">Admin deploy and share</a></td>
+</tr>
+<tr>
+<td><strong>Participant run and validate</strong></td>
+<td>Someone already prepared the environment and you need to run the sample scenario or validate the agent</td>
+<td><a href="../../01-deploy/00-participant-run-validate/">Participant run and validate</a></td>
+</tr>
+</tbody>
+</table>
+<p>Both routes converge on the same sample scenario and validation steps.</p>
+<p>The full deployment path includes:</p>
 <ul>
 <li>Deploy <strong>Microsoft Foundry</strong> and Azure resources (AI Services, AI Search, Storage)</li>
 <li>Configure <strong>Microsoft Fabric</strong> connection</li>
@@ -1342,6 +1533,11 @@
 <div class="admonition tip">
 <p class="admonition-title">Pre-PoC prep</p>
 <p>Run Step 2 before your PoC. Enter the industry and a brief use case description. The AI generates realistic sample data, documents, and test questions tailored to your scenario.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Single documentation source</p>
+<p>Use the pages under <code>workshop/docs/</code> as the current instructions.
+Files in <code>guides/</code> and PDF outputs are distribution artifacts and may be shorter summaries.</p>
 </div>
 <h2 id="step-3-deep-dive">Step 3: Deep dive</h2>
 <p>Prepare for technical questions in customer conversations:</p>

@@ -86,6 +86,20 @@ If `enabled` is `false`, the deployment is recorded as skipped instead of attemp
 | "Can we add more models later?" | "Yes. Optional deployments are parameterized so you can add demos without changing the core workshop path." |
 | "What if an optional model isn't available?" | "We skip it intentionally and keep the main workshop working instead of making the base deployment fragile." |
 
+## FAQ
+
+### Do customers need to see every model deployment?
+
+No. In most conversations, you only need to explain the separation between the chat model and the embedding model. Optional deployments only matter when you are discussing extension scenarios such as image generation.
+
+### Why not use one large model for everything?
+
+Because the jobs are different. Conversation quality depends on a chat deployment, while retrieval quality depends on embeddings. Splitting them keeps the architecture clearer and usually keeps cost and deployment risk lower.
+
+### What is the simplest talking point for this page?
+
+"The workshop needs one model to reason and one model to vectorize documents. Everything else is optional and intentionally isolated."
+
 ## What this means for the workshop
 
 The workshop promise stays narrow and reliable:

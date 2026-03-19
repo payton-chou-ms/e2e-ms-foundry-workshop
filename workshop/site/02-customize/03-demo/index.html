@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -610,6 +610,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../01-deploy/00-admin-deploy-share/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin deploy and share
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-deploy/00-participant-run-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Participant run and validate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../01-deploy/01-deploy-azure/" class="md-nav__link">
         
   
@@ -922,6 +978,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#current-tool-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current tool contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current tool contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#response-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#testing-tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1105,6 +1200,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../03-understand/00-foundry-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Model: Deployment Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/02-foundry-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Agent: Runtime Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/03-foundry-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Tool: Function Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../03-understand/01-foundry-iq/" class="md-nav__link">
         
   
@@ -1141,6 +1320,34 @@
     
   
     Fabric IQ: Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/04-control-plane/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Plane: Resource Topology
   
 
     
@@ -1323,6 +1530,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#current-tool-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current tool contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current tool contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#response-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Response loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#testing-tips" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1466,24 +1712,81 @@
 <p class="admonition-title">Use these questions first</p>
 <p>The generated questions are tailored to your scenario's data and documents. Start with these before improvising.</p>
 </div>
+<h2 id="current-tool-contract">Current tool contract</h2>
+<p>The workshop agent uses a small, explicit tool contract. Keeping your demo questions inside these boundaries makes the behavior much more predictable.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Use it for</th>
+<th>Do not use it for</th>
+<th>Input schema</th>
+<th>Result shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>execute_sql</strong></td>
+<td>Counts, totals, trends, rankings, joins, and record lookup in Fabric tables</td>
+<td>Policies, procedures, narrative explanations, or any write operation</td>
+<td><code>sql_query: string</code></td>
+<td>Markdown table with row count</td>
+</tr>
+<tr>
+<td><strong>search_documents</strong></td>
+<td>Policies, procedures, FAQs, guidance, and other unstructured document content</td>
+<td>Calculations or broad table scans</td>
+<td><code>query: string</code>, <code>top?: integer</code></td>
+<td>Cited passages with source, title, and page metadata</td>
+</tr>
+</tbody>
+</table>
+<p>In <code>--foundry-only</code> mode, the agent only registers <code>search_documents</code>.</p>
+<h3 id="response-loop">Response loop</h3>
+<p>When you run <code>python scripts/08_test_foundry_agent.py</code>, the runtime follows this loop:</p>
+<ol>
+<li>The model inspects the question and decides whether it needs <code>execute_sql</code>, <code>search_documents</code>, or both.</li>
+<li>The local script executes each requested tool and prints a preview so you can see what happened.</li>
+<li>The raw tool output is sent back to the model as <code>function_call_output</code>.</li>
+<li>The model synthesizes the final answer from those tool results.</li>
+</ol>
+<h3 id="example-outputs">Example outputs</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[SQL Tool] Executing query:
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    SELECT TOP 5 claim_id, status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    FROM claims
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| claim_id | status |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>|---|---|
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| CLM-1001 | Open |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| CLM-1002 | Pending |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>(2 rows returned)
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[Search Tool] Searching for: outage communication policy (top=3)...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>--- Result 1 ---
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Source: outage-policy.pdf (Page 2)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Title: Outage Management Policy
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Content: Customers must be notified within 15 minutes of a confirmed outage...
+</code></pre></div>
 <h2 id="testing-tips">Testing Tips</h2>
 <h3 id="start-with-structured-data-questions">Start with structured data questions</h3>
 <p>Show the power of natural language over structured data:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&quot;How many [entities] do we have?&quot;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>&quot;What&#39;s the total [metric] for [time period]?&quot;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>&quot;Show me the top 5 [entities] by [metric]&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&quot;How many [entities] do we have?&quot;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&quot;What&#39;s the total [metric] for [time period]?&quot;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>&quot;Show me the top 5 [entities] by [metric]&quot;
 </code></pre></div>
 <h3 id="then-unstructured-data-questions">Then unstructured data questions</h3>
 <p>Demonstrate intelligent document retrieval:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&quot;What&#39;s our policy on [topic]?&quot;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>&quot;How do we handle [process]?&quot;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>&quot;What are the requirements for [action]?&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&quot;What&#39;s our policy on [topic]?&quot;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>&quot;How do we handle [process]?&quot;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>&quot;What are the requirements for [action]?&quot;
 </code></pre></div>
 <h3 id="finish-with-combined-questions">Finish with combined questions</h3>
 <p>This is the "wow" moment: questions that need both sources:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&quot;Based on our [policy], which [entities] need attention?&quot;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&quot;Are we meeting our [documented SLA] according to the data?&quot;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>&quot;Which [items] don&#39;t comply with our [policy/guidelines]?&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&quot;Based on our [policy], which [entities] need attention?&quot;
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>&quot;Are we meeting our [documented SLA] according to the data?&quot;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>&quot;Which [items] don&#39;t comply with our [policy/guidelines]?&quot;
 </code></pre></div>
 <h2 id="prepare-your-test-script">Prepare your test script</h2>
 <p>Before customer meetings, prepare 5-7 questions:</p>
@@ -1550,13 +1853,13 @@
 <p><strong>Next:</strong> Review <a href="../../03-understand/">Deep dive</a> to prepare for technical questions</p>
 </div>
 <h2 id="quick-reference-regenerate-for-another-industry-use-case">Quick Reference: Regenerate for another industry use case</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Edit .env with new customer&#39;s industry and use case, then:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>python<span class="w"> </span>scripts/00_build_solution.py<span class="w"> </span>--clean
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or inline:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>python<span class="w"> </span>scripts/00_build_solution.py<span class="w"> </span>--clean<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--industry<span class="w"> </span><span class="s2">&quot;New Industry&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--usecase<span class="w"> </span><span class="s2">&quot;New use case description&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Edit .env with new customer&#39;s industry and use case, then:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>python<span class="w"> </span>scripts/00_build_solution.py<span class="w"> </span>--clean
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Or inline:</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>python<span class="w"> </span>scripts/00_build_solution.py<span class="w"> </span>--clean<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--industry<span class="w"> </span><span class="s2">&quot;New Industry&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>--usecase<span class="w"> </span><span class="s2">&quot;New use case description&quot;</span>
 </code></pre></div>
 <hr />
 <p><a href="../02-generate/">← Generate &amp; Build</a> | <a href="../../03-understand/">Deep dive →</a></p>

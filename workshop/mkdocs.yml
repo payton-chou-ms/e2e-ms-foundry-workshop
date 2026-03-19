@@ -76,6 +76,8 @@ nav:
   - Deep dive:
       - Overview: 03-understand/index.md
       - "Foundry Model: Deployment Strategy": 03-understand/00-foundry-model.md
+      - "Foundry Agent: Runtime Orchestration": 03-understand/02-foundry-agent.md
+      - "Foundry Tool: Function Contract": 03-understand/03-foundry-tool.md
       - "Foundry IQ: Documents": 03-understand/01-foundry-iq.md
       - "Fabric IQ: Data": 03-understand/02-fabric-iq.md
       - "Control Plane: Resource Topology": 03-understand/04-control-plane.md

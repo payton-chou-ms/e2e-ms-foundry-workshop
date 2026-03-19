@@ -107,6 +107,20 @@ The exact role assignment depends on how the environment is governed, but the de
 | "What connects the agent to search?" | "Project connections and tool configuration. The runtime uses the project endpoint instead of embedding secrets into the code." |
 | "Is tracing always on?" | "No. The workshop keeps telemetry optional so missing observability setup never blocks the demo." |
 
+## FAQ
+
+### Why does the workshop talk so much about the project endpoint?
+
+Because the project endpoint is the runtime handoff point. It lets scripts address the agent, telemetry wiring, and connections through one logical boundary instead of hard-coding service-specific credentials everywhere.
+
+### Is the control plane the same thing as the user experience?
+
+No. The control plane is the supporting Azure topology. Users interact with the agent experience, but that experience only works because the control plane provisions models, connections, storage, search, and observability behind it.
+
+### What is the shortest talking point for this page?
+
+"The control plane is the Azure scaffolding that makes the simple runtime demo possible."
+
 ## Operational takeaway
 
 The control plane gives you repeatability:

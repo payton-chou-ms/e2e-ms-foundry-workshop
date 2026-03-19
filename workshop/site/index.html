@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -450,10 +450,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-stays-simple-vs-what-gets-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What stays simple vs what gets deeper
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-your-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose your path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#workshop-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
         Workshop flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-talk-about-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to talk about the architecture
       
     </span>
   </a>
@@ -646,6 +679,62 @@
     
   
     Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-deploy/00-admin-deploy-share/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin deploy and share
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-deploy/00-participant-run-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Participant run and validate
   
 
     
@@ -1004,6 +1093,90 @@
   
   
     <li class="md-nav__item">
+      <a href="03-understand/00-foundry-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Model: Deployment Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-understand/02-foundry-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Agent: Runtime Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-understand/03-foundry-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Tool: Function Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="03-understand/01-foundry-iq/" class="md-nav__link">
         
   
@@ -1040,6 +1213,34 @@
     
   
     Fabric IQ: Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-understand/04-control-plane/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Plane: Resource Topology
   
 
     
@@ -1200,10 +1401,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#what-stays-simple-vs-what-gets-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What stays simple vs what gets deeper
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-your-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose your path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#workshop-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
         Workshop flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-talk-about-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to talk about the architecture
       
     </span>
   </a>
@@ -1233,6 +1467,69 @@
 <h1 id="overview">Overview</h1>
 <p>A good PoC helps customers envision the impact of a solution on their business. It shifts the conversation from just an "interesting idea" to real "exploration". The challenge is that creating a PoC that feels relevant can take weeks of custom work. It requires infrastructure, data pipelines, integrations, and tailored scenarios that reflect their specific challenges.</p>
 <p>This workshop helps you learn how to use solution accelerators to solve that by deploying industry-tailored scenarios quickly so you can demonstrate real value from the first conversation.</p>
+<h2 id="what-stays-simple-vs-what-gets-deeper">What stays simple vs what gets deeper</h2>
+<p>The workshop runtime is intentionally simple:</p>
+<ul>
+<li>one prompt agent</li>
+<li>two core tools</li>
+<li>two grounding paths: Foundry IQ for documents and Fabric IQ for business data</li>
+</ul>
+<p>But the underlying technical story now spans five axes:</p>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Foundry Model</strong></td>
+<td>Explains required vs optional model deployments</td>
+</tr>
+<tr>
+<td><strong>Foundry Agent</strong></td>
+<td>Explains how orchestration is created, fetched, traced, and published</td>
+</tr>
+<tr>
+<td><strong>Foundry Tool</strong></td>
+<td>Explains the strict function contract and safety boundaries</td>
+</tr>
+<tr>
+<td><strong>Foundry IQ + Fabric IQ</strong></td>
+<td>Explains how answers are grounded in documents and data</td>
+</tr>
+<tr>
+<td><strong>Control Plane</strong></td>
+<td>Explains the Azure resource topology, connections, and RBAC</td>
+</tr>
+</tbody>
+</table>
+<p>The workshop flow still emphasizes the simple runtime path first. The five-axis structure is there so you can answer technical questions once the PoC lands.</p>
+<h2 id="choose-your-path">Choose your path</h2>
+<p>This workshop supports two operating models:</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Intended user</th>
+<th>Outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin deploy and share</strong></td>
+<td>Platform admin or solution lead</td>
+<td>Deploy Azure resources, configure Fabric, and prepare a reusable environment for others</td>
+</tr>
+<tr>
+<td><strong>Participant run and validate</strong></td>
+<td>Solution builder, seller, or customer engineer</td>
+<td>Use a prepared environment to validate the sample scenario and run the agent</td>
+</tr>
+</tbody>
+</table>
+<p>If one person owns the whole setup, follow the admin path first and then continue with participant validation.</p>
 <h2 id="workshop-flow">Workshop flow</h2>
 <table>
 <thead>
@@ -1245,7 +1542,7 @@
 <tbody>
 <tr>
 <td><strong>1. Deploy solution</strong></td>
-<td>Deploy Microsoft Foundry + Fabric. Configure with default scenario</td>
+<td>Choose either the admin path or the participant path, then configure the default scenario</td>
 <td>~15 min</td>
 </tr>
 <tr>
@@ -1265,6 +1562,14 @@
 </tr>
 </tbody>
 </table>
+<h2 id="how-to-talk-about-the-architecture">How to talk about the architecture</h2>
+<p>Use this progression during customer conversations:</p>
+<ol>
+<li>Start with the business outcome: one agent answering across documents and data.</li>
+<li>Explain the runtime path: one prompt agent plus two core tools.</li>
+<li>Move into the five axes only when the audience wants technical depth.</li>
+</ol>
+<p>That keeps the front of the workshop approachable while preserving a credible architecture story.</p>
 <div class="admonition tip">
 <p class="admonition-title">Before a PoC</p>
 <ol>
@@ -1272,6 +1577,11 @@
 <li>Run <strong>Step 2</strong> to customize for your use case</li>
 <li>Review <strong>Step 3</strong> to prepare for technical questions</li>
 </ol>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Documentation source of truth</p>
+<p>The canonical workshop content lives in <code>workshop/docs/</code>.
+The generated site output and any PDF artifacts should be treated as release outputs, not as separate authored content.</p>
 </div>
 <hr />
 <p><a href="00-get-started/">Get Started →</a></p>

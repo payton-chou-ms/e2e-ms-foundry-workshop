@@ -2,6 +2,8 @@
 
 This section is the entry point for getting the sample scenario running end-to-end.
 
+The deployment path stays focused on the minimum needed for a working PoC, but the architecture you are deploying now supports the broader five-axis technical story used in the Deep Dive section.
+
 ## Pick the route that matches your role
 
 ### Admin deploy and share
@@ -36,12 +38,34 @@ You will:
 <!-- TODO: Add architecture diagram image here -->
 ![Architecture Diagram](../assets/architecture.png)
 
-The solution combines Microsoft Fabric and Microsoft Foundry to create an AI solution that can answer questions using both structured data and unstructured documents:
+The solution combines Microsoft Fabric and Microsoft Foundry to create an AI solution that can answer questions using both structured data and unstructured documents.
+
+At deployment time, it helps to think in two layers:
+
+### Main workshop path
+
+- a prompt agent in Foundry
+- a SQL tool for structured data
+- a document-search tool for unstructured knowledge
+- Foundry IQ and Fabric IQ as the two grounding paths
+
+### Five-axis architecture behind the path
+
+| Axis | Deployment implication |
+|------|------------------------|
+| **Foundry Model** | Required chat + embedding deployments, with optional model extensions kept separate |
+| **Foundry Agent** | A project-scoped agent definition is created and later reused at runtime |
+| **Foundry Tool** | The runtime depends on a strict SQL + search function contract |
+| **Foundry IQ + Fabric IQ** | Search and Fabric resources ground the agent in documents and data |
+| **Control Plane** | Azure AI Services, Foundry project, Search, Storage, telemetry, and RBAC wire the whole environment together |
+
+In other words, the user experience still feels like one conversational PoC, but the deployment prepares the full technical scaffolding that supports it.
 
 - **Microsoft Fabric** provides the data layer with Lakehouse, Warehouse, and the Fabric IQ semantic layer for natural language to SQL translation
-- **Microsoft Foundry** hosts the AI agents, including Foundry IQ for document retrieval and the Orchestrator Agent that orchestrates both capabilities
-- **Azure AI Services** powers the language models (GPT-4o-mini) and embeddings
+- **Microsoft Foundry** hosts the prompt agent, the tool contract, and Foundry IQ document retrieval
+- **Azure AI Services** powers the chat and embedding model deployments used by the workshop
 - **Azure AI Search** stores document vectors for semantic retrieval
+- **Application Insights** can optionally receive tracing when observability is enabled
 
 !!! tip "Stuck? Ask Copilot"
     Use GitHub Copilot Chat (`Ctrl+I`) for help with errors.

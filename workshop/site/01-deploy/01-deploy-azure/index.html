@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://nchandhi.github.io/nc-iq-workshop/01-deploy/01-deploy-azure/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../00-participant-run-validate/">
       
       
         <link rel="next" href="../02-setup-fabric/">
@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
     
     
       
@@ -612,6 +612,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-admin-deploy-share/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Admin deploy and share
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-participant-run-validate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Participant run and validate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1055,6 +1111,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../../03-understand/00-foundry-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Model: Deployment Strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/02-foundry-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Agent: Runtime Orchestration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/03-foundry-tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundry Tool: Function Contract
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../03-understand/01-foundry-iq/" class="md-nav__link">
         
   
@@ -1091,6 +1231,34 @@
     
   
     Fabric IQ: Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-understand/04-control-plane/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Plane: Resource Topology
   
 
     
@@ -1326,6 +1494,11 @@
 
 
 <h1 id="deploy-infrastructure">Deploy Infrastructure</h1>
+<div class="admonition info">
+<p class="admonition-title">Primary audience</p>
+<p>This page is mainly for the <strong>Admin deploy and share</strong> route.
+If someone already prepared the environment for you, start with <a href="../00-participant-run-validate/">Participant run and validate</a> instead.</p>
+</div>
 <h2 id="clone-the-repository">Clone the Repository</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nchandhi/nc-iq-workshop.git
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>nc-iq-workshop
@@ -1334,6 +1507,11 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>azd<span class="w"> </span>auth<span class="w"> </span>login
 </code></pre></div>
 <p>This opens a browser for authentication.</p>
+<div class="admonition warning">
+<p class="admonition-title">Deployment permissions</p>
+<p>This repository deploys Azure role assignments as part of the infrastructure.
+If <code>azd up</code> fails during RBAC creation, confirm that your identity can create role assignments in the target scope.</p>
+</div>
 <h2 id="deploy-resources">Deploy Resources</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>azd<span class="w"> </span>up
 </code></pre></div>
@@ -1357,7 +1535,7 @@
 <p>You don't need to manually set Azure connection strings. The scripts read them from the azd environment automatically.</p>
 </div>
 <hr />
-<p><a href="../">← Overview</a> | <a href="../02-setup-fabric/">Create Fabric workspace →</a></p>
+<p><a href="../00-admin-deploy-share/">← Admin deploy and share</a> | <a href="../02-setup-fabric/">Create Fabric workspace →</a></p>
 
 
 
