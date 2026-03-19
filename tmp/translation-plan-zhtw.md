@@ -72,6 +72,12 @@
 1. 翻譯原則
 2. 術語表 glossary
 
+目前已建立初版檔案：
+
+1. `tmp/translation-glossary-zhtw.md`
+2. `tmp/translation-style-guide-zhtw.md`
+3. `tmp/translation-reviewer-checklist-zhtw.md`
+
 ### WI-02 翻譯根目錄總覽文件
 
 檔案：
@@ -245,9 +251,9 @@
 
 若後續要正式執行翻譯，建議另外建立：
 
-1. `translation-glossary-zhtw.md`
-2. `translation-style-guide-zhtw.md`
-3. 每章節翻譯完成後的 reviewer checklist
+1. `tmp/translation-glossary-zhtw.md`
+2. `tmp/translation-style-guide-zhtw.md`
+3. `tmp/translation-reviewer-checklist-zhtw.md`
 
 另外建議在翻譯開始前先確認：
 
