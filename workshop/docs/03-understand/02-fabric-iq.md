@@ -1,21 +1,21 @@
-# Fabric IQ: Data Intelligence
+# Fabric IQ：資料智慧
 
-## What is Fabric IQ?
+## 什麼是 Fabric IQ？
 
-Fabric IQ is a semantic intelligence platform that connects AI agents to business data. It goes beyond simple database queries by understanding the meaning of your data through an **Ontology**.
+Fabric IQ 是一個語意智慧平台，將 AI 代理程式連接到商業資料。它透過**本體**來理解資料的含義，超越了簡單的資料庫查詢。
 
-## What is an Ontology?
+## 什麼是本體？
 
-An ontology is a semantic model that helps AI understand your business:
+本體是一種語意模型，幫助 AI 理解您的業務：
 
-| Component | Purpose | Example |
-|-----------|---------|---------|
-| **Entities** | Business objects | Outages, Tickets, Regions |
-| **Relationships** | How entities connect | Ticket → related to → Outage |
-| **Rules** | Business logic | "Critical Outage = customerImpact > 1000" |
-| **Actions** | Queryable operations | GetOutagesByRegion, GetTicketResolutionTime |
+| 元件 | 用途 | 範例 |
+|------|------|------|
+| **實體** | 業務物件 | 故障、工單、區域 |
+| **關係** | 實體之間的連結方式 | 工單 → 關聯至 → 故障 |
+| **規則** | 業務邏輯 | 「重大故障 = customerImpact > 1000」 |
+| **動作** | 可查詢的操作 | GetOutagesByRegion、GetTicketResolutionTime |
 
-## How NL→SQL Works
+## NL→SQL 的運作方式
 
 ```
 User: "Which outages had the most customer impact last month?"
@@ -52,16 +52,16 @@ User: "Which outages had the most customer impact last month?"
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Why Ontology Matters
+## 為什麼本體很重要
 
-### Without Ontology: Brittle Keyword Matching
+### 沒有本體：脆弱的關鍵字比對
 
 ```
 User: "Show me our best customers"
 System: ??? (what makes a customer "best"?)
 ```
 
-### With Ontology: Business Understanding
+### 有本體：業務理解
 
 ```yaml
 # Ontology defines:
@@ -77,15 +77,15 @@ User: "Show me our best customers"
 Agent: Uses "Best Customer" rule → Correct SQL → Meaningful results
 ```
 
-## The Power of Combined Intelligence
+## 結合智慧的力量
 
-| Question Type | Source | Example |
-|---------------|--------|---------|
-| **Policy/Process** | Foundry IQ (Documents) | "What's our outage notification policy?" |
-| **Metrics/Numbers** | Fabric IQ (Data) | "What's our average resolution time?" |
-| **Combined** | Both | "Are we meeting our SLA targets?" |
+| 問題類型 | 來源 | 範例 |
+|---------|------|------|
+| **政策/流程** | Foundry IQ（文件） | 「我們的故障通知政策是什麼？」 |
+| **指標/數字** | Fabric IQ（資料） | 「我們的平均解決時間是多少？」 |
+| **綜合** | 兩者 | 「我們是否達到 SLA 目標？」 |
 
-### Combined Example
+### 綜合範例
 
 ```
 User: "Are we meeting our ticket resolution SLA?"
@@ -98,22 +98,22 @@ Agent thinking:
    → Query Fabric IQ → "Avg critical: 3.2 hrs, High: 7.1 hrs, Medium: 18.5 hrs"
 
 3. Compare and respond:
-   "Yes, we're meeting all SLA targets. Critical tickets average 
-   3.2 hours (target: 4 hours), High priority averages 7.1 hours 
+   "Yes, we're meeting all SLA targets. Critical tickets average
+   3.2 hours (target: 4 hours), High priority averages 7.1 hours
    (target: 8 hours), and Medium averages 18.5 hours (target: 24 hours)."
 ```
 
-## Customer Talking Points
+## 客戶對話要點
 
-| Question | Response |
-|----------|----------|
-| "Why not just let users write SQL?" | "Most users can't write SQL. And even those who can may not know the schema. Natural language lets anyone query data." |
-| "How do you handle ambiguous terms?" | "The ontology defines business terms. 'Critical outage', 'high impact', 'overdue ticket' all have precise definitions your business controls." |
-| "What about performance?" | "Queries run against Fabric's optimized engine. The NL→SQL translation happens once, then it's standard SQL execution." |
+| 問題 | 回應 |
+|------|------|
+| 「為什麼不直接讓使用者寫 SQL？」 | 「大多數使用者不會寫 SQL。即使會寫的人也未必了解結構描述。自然語言讓任何人都能查詢資料。」 |
+| 「如何處理模糊的術語？」 | 「本體定義了業務術語。『重大故障』、『高影響』、『逾期工單』都有您的業務所控制的精確定義。」 |
+| 「效能如何？」 | 「查詢在 Microsoft Fabric 的最佳化引擎上執行。NL→SQL 轉換只發生一次，之後就是標準的 SQL 執行。」 |
 
-## Technical Details
+## 技術細節
 
-### Fabric Architecture
+### Microsoft Fabric 架構
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -131,7 +131,7 @@ Agent thinking:
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Ontology Configuration
+### 本體設定
 
 ```json
 {
@@ -163,4 +163,4 @@ Agent thinking:
 
 ---
 
-[← Foundry IQ: Documents](01-foundry-iq.md) | [Cleanup →](../04-cleanup/index.md)
+[← Foundry IQ：文件](01-foundry-iq.md) | [清理 →](../04-cleanup/index.md)

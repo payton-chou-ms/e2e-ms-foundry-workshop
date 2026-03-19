@@ -1,38 +1,38 @@
-# Create Fabric workspace
+# 建立 Fabric 工作區
 
-Create and configure your Microsoft Fabric workspace for Fabric IQ.
+建立並設定你的 Microsoft Fabric 工作區以使用 Fabric IQ。
 
-!!! info "Primary audience"
-	This page is mainly for the **Admin deploy and share** route.
-	Participants should use a workspace that has already been prepared and shared with them.
+!!! info "主要適用對象"
+本頁主要供**管理員部署與分享**路徑使用。
+參與者應使用已經準備好並分享給他們的工作區。
 
-## Prerequisites
+## 先決條件
 
-- Microsoft Fabric capacity (F2 or higher recommended)
-- Workspace admin permissions
+- Microsoft Fabric 容量（建議 F2 或更高）
+- 工作區管理員權限
 
-## Create a Fabric workspace
+## 建立 Fabric 工作區
 
-1. Go to [Microsoft Fabric](https://app.fabric.microsoft.com)
-2. Click **Workspaces** → **New workspace**
-3. Name it something like `iq-workshop`
-4. Select your Fabric capacity
-5. Click **Apply**
+1. 前往 [Microsoft Fabric](https://app.fabric.microsoft.com)
+2. 點選 **Workspaces** → **New workspace**
+3. 命名，例如 `iq-workshop`
+4. 選擇你的 Fabric 容量
+5. 點選 **Apply**
 
-## Configure workspace settings
+## 設定工作區
 
-1. Open your new workspace
-2. Go to **Settings** → **License info**
-3. Verify the workspace is using Fabric capacity
+1. 開啟你新建的工作區
+2. 前往 **Settings** → **License info**
+3. 確認工作區正在使用 Fabric 容量
 
-## Get workspace details
+## 取得工作區資訊
 
-You'll need these values for the next step:
+下一步你將需要以下值：
 
-| Setting | Where to find it |
-|---------|------------------|
-| Workspace ID | URL after `/groups/` |
-| Workspace name | Workspace settings |
+| 設定項 | 在哪裡找 |
+|--------|----------|
+| Workspace ID | URL 中 `/groups/` 之後的部分 |
+| Workspace name | 工作區設定 |
 
 
-[← Deploy Azure resources](01-deploy-azure.md) | [Configure dev environment →](03-configure.md)
+[← 部署 Azure 資源](01-deploy-azure.md) | [設定開發環境 →](03-configure.md)

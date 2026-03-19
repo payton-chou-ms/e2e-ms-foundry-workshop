@@ -1,8 +1,8 @@
-# Deployment Guide Artifact Note
+# 部署指南產物說明
 
-The canonical workshop instructions now live under `workshop/docs/`.
+正式的 workshop 操作說明現在位於 `workshop/docs/`。
 
-Use these pages as the source of truth:
+請使用以下頁面作為唯一內容來源：
 
 - `workshop/docs/01-deploy/index.md`
 - `workshop/docs/01-deploy/00-admin-deploy-share.md`
@@ -12,9 +12,9 @@ Use these pages as the source of truth:
 - `workshop/docs/01-deploy/03-configure.md`
 - `workshop/docs/01-deploy/04-run-scenario.md`
 
-`guides/` should only contain distribution artifacts, review notes, or short redirect-style landing pages like this one.
+`guides/` 應僅用於發佈產物、審閱備註，或像本頁這樣的簡短導向頁面。
 
-If you need the published website, use:
+如果你需要公開網站，請使用：
 
-- Workshop: https://nchandhi.github.io/nc-iq-workshop/
-- Repository: https://github.com/nchandhi/nc-iq-workshop
+- Workshop：https://nchandhi.github.io/nc-iq-workshop/
+- Repository：https://github.com/nchandhi/nc-iq-workshop

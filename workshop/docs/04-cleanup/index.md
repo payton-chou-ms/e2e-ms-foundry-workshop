@@ -1,39 +1,39 @@
-# Delete resources
+# 清理資源
 
-Delete your Azure resources when you're done to manage costs.
+完成後請刪除 Azure 資源以管理成本。
 
-## Delete Azure Resources
+## 刪除 Azure 資源
 
 ```bash
 azd down
 ```
 
-Confirm when prompted:
+出現提示時請確認：
 
 ```
 ? Total resources to delete: 8, are you sure? (y/N) y
 ```
 
-## Verify Deletion
+## 驗證刪除
 
-1. Go to [Azure Portal](https://portal.azure.com/)
-2. Check **Resource groups**
-3. Confirm your lab resource group is deleted
+1. 前往 [Azure Portal](https://portal.azure.com/)
+2. 檢查 **Resource groups**
+3. 確認你的 lab 資源群組已被刪除
 
-!!! warning "Important"
-    Always run cleanup to avoid ongoing charges!
+!!! warning "重要"
+    請務必執行清理以避免持續產生費用！
 
-## Clean Up Fabric (Optional)
+## 清理 Fabric（選擇性）
 
-If you created Fabric artifacts and want to remove them:
+如果你建立了 Fabric 產物並希望移除它們：
 
-1. Go to [Microsoft Fabric](https://app.fabric.microsoft.com/)
-2. Open your workspace
-3. Delete the Lakehouse and Warehouse created for this workshop
+1. 前往 [Microsoft Fabric](https://app.fabric.microsoft.com/)
+2. 開啟你的工作區
+3. 刪除為本 workshop 建立的 Lakehouse 和 Warehouse
 
-## Clean Up Local Files (Optional)
+## 清理本機檔案（選擇性）
 
-Remove generated data folders:
+移除產生的資料資料夾：
 
 === "Windows PowerShell"
 
@@ -49,4 +49,4 @@ Remove generated data folders:
 
 ---
 
-[Next steps →](next-steps.md)
+[後續步驟 →](next-steps.md)

@@ -1,92 +1,92 @@
-# Admin deploy and share
+# 管理員部署與分享
 
-Use this route when one person or team is responsible for deploying the solution and preparing it for others.
+當一個人或團隊負責部署方案並為其他人準備環境時，請走這條路徑。
 
-## Audience
+## 適用對象
 
-- Platform admin
-- Solution lead
-- Workshop host
-- Technical seller preparing a repeatable demo environment
+- 平台管理員
+- 方案負責人
+- Workshop 主持人
+- 準備可重複使用 demo 環境的技術銷售人員
 
-## What this route covers
+## 這條路徑涵蓋的內容
 
-1. Deploy Azure resources.
-2. Create or select the Fabric workspace.
-3. Configure the shared environment.
-4. Run the sample scenario once.
-5. Share the prepared environment with operators or participants.
+1. 部署 Azure 資源。
+2. 建立或選擇 Fabric 工作區。
+3. 設定共用環境。
+4. 執行範例情境一次。
+5. 將準備好的環境分享給操作者或參與者。
 
-## Before you start
+## 開始之前
 
-Make sure you have:
+請確認你具備：
 
-- Azure deployment rights for the subscription and resource group.
-- Permission to create Azure role assignments if you are using the provided Bicep templates.
-- Fabric workspace admin or equivalent authoring rights.
-- Required model capacity and quota for the selected Azure region.
+- 訂用帳戶與資源群組的 Azure 部署權限。
+- 如果使用提供的 Bicep 範本，需要建立 Azure 角色指派的權限。
+- Fabric 工作區管理員或同等撰寫權限。
+- 所選 Azure 區域的必要模型容量與配額。
 
-!!! warning "Contributor may not be sufficient"
-    The infrastructure creates Azure RBAC role assignments.
-    In many subscriptions, the deploying identity needs `Owner`, `User Access Administrator`, or another role that includes `Microsoft.Authorization/roleAssignments/write`.
+!!! warning "Contributor 可能不足"
+    基礎架構會建立 Azure RBAC 角色指派。
+    在許多訂用帳戶中，部署身分需要 `Owner`、`User Access Administrator`，或其他包含 `Microsoft.Authorization/roleAssignments/write` 的角色。
 
-## Recommended sequence
+## 建議執行順序
 
-### 1. Deploy Azure resources
+### 1. 部署 Azure 資源
 
-Follow [Deploy Azure resources](01-deploy-azure.md).
+請依照 [部署 Azure 資源](01-deploy-azure.md) 操作。
 
-### 2. Create or choose the Fabric workspace
+### 2. 建立或選擇 Fabric 工作區
 
-Follow [Create Fabric workspace](02-setup-fabric.md).
+請依照 [建立 Fabric 工作區](02-setup-fabric.md) 操作。
 
-### 3. Configure the shared environment
+### 3. 設定共用環境
 
-Follow [Configure dev environment](03-configure.md).
+請依照 [設定開發環境](03-configure.md) 操作。
 
-At this stage, capture the values that downstream users will need, especially:
+在這個階段，記下後續使用者需要的值，特別是：
 
 - `FABRIC_WORKSPACE_ID`
-- Any environment naming convention you want participants to reuse
-- Which identity or group should be granted Azure and Fabric access
+- 你希望參與者重複使用的環境命名慣例
+- 應授予 Azure 和 Fabric 存取權的身分或群組
 
-### 4. Build and validate the default scenario
+### 4. 建置並驗證預設情境
 
-Follow [Build solution](04-run-scenario.md).
+請依照 [建置解決方案](04-run-scenario.md) 操作。
 
-Run the default scenario once before sharing it. This confirms that:
+在分享之前先執行一次預設情境。這可以確認：
 
-- Azure resources are healthy
-- Fabric items can be created
-- Documents are indexed
-- The orchestrator agent answers sample questions
+- Azure 資源運作正常
+- Fabric 項目可以建立
+- 文件已索引
+- 協調代理程式能回答範例問題
 
-### 5. Share with participants or operators
+### 5. 分享給參與者或操作者
 
-The current repo does not automate all collaboration steps. Before handing off the environment, decide:
+目前的 repo 不會自動化所有協作步驟。在交接環境之前，請決定：
 
-- Who can only run tests
-- Who can rebuild data or customize scenarios
-- Who can manage Azure resources and Fabric artifacts
+- 誰只能執行測試
+- 誰可以重建資料或自訂情境
+- 誰可以管理 Azure 資源與 Fabric 產物
 
-Minimum handoff checklist:
+最低交接清單：
 
-- Grant Azure access to the required users or groups.
-- Grant Fabric workspace access to the required users.
-- Share the required local configuration values.
-- Tell participants whether they should only validate the sample scenario or also run customization steps.
+- 授予所需使用者或群組 Azure 存取權。
+- 授予所需使用者 Fabric 工作區存取權。
+- 分享所需的本機設定值。
+- 告知參與者是否只需驗證範例情境，還是也應執行自訂步驟。
 
-## What to share with the next user
+## 應分享給下一位使用者的資訊
 
-- The repository URL
-- The expected sign-in identity or tenant
-- The `FABRIC_WORKSPACE_ID`
-- Whether they should start from [Participant run and validate](00-participant-run-validate.md) or from a later customization page
+- Repository URL
+- 預期的登入身分或租用戶
+- `FABRIC_WORKSPACE_ID`
+- 應從 [參與者執行與驗證](00-participant-run-validate.md) 開始，還是從後續自訂頁面開始
 
-## When this route is complete
+## 何時算是完成這條路徑
 
-You are done when another user can open the repo, sign in, and run the sample validation flow without redoing the Azure deployment.
+當另一位使用者可以開啟 repo、登入，並執行範例驗證流程而不需要重新部署 Azure 時，就算完成。
 
 ---
 
-[← Deploy overview](index.md) | [Participant run and validate →](00-participant-run-validate.md)
+[← 部署總覽](index.md) | [參與者執行與驗證 →](00-participant-run-validate.md)

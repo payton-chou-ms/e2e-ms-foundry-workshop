@@ -1,72 +1,72 @@
-# Participant run and validate
+# 參與者執行與驗證
 
-Use this route when an admin or solution lead already prepared the Azure and Fabric environment for you.
+當管理員或方案負責人已經為你準備好 Azure 和 Fabric 環境時，請走這條路徑。
 
-## Audience
+## 適用對象
 
-- Workshop participant
-- Solution builder
-- Customer engineer
-- Technical seller validating the sample scenario
+- Workshop 參與者
+- 方案建構者
+- 客戶工程師
+- 驗證範例情境的技術銷售人員
 
-## What this route covers
+## 這條路徑涵蓋的內容
 
-1. Sign in with the assigned identity.
-2. Open the repo and configure your local environment.
-3. Validate the sample scenario.
-4. Test the agent.
+1. 使用指定身分登入。
+2. 開啟 repo 並設定本機環境。
+3. 驗證範例情境。
+4. 測試代理程式。
 
-## What you should already have from the admin
+## 你應該已從管理員取得的資訊
 
-- Access to the Azure subscription or prepared resources you need to use.
-- Access to the Fabric workspace.
-- The correct `FABRIC_WORKSPACE_ID`.
-- Confirmation of whether the admin already ran the sample build.
+- 存取 Azure 訂用帳戶或已準備好的資源的權限。
+- 存取 Fabric 工作區的權限。
+- 正確的 `FABRIC_WORKSPACE_ID`。
+- 管理員是否已執行過範例建置的確認。
 
-## Recommended sequence
+## 建議執行順序
 
-### 1. Verify sign-in and workspace access
+### 1. 確認登入與工作區存取
 
-Confirm you can authenticate to the right Azure tenant and open the target Fabric workspace.
+確認你可以驗證到正確的 Azure 租用戶，並開啟目標 Fabric 工作區。
 
-If you cannot access the workspace or Azure resources, stop here and ask the admin to grant access before continuing.
+如果你無法存取工作區或 Azure 資源，請先停下來，請管理員授予存取權後再繼續。
 
-### 2. Configure your local environment
+### 2. 設定本機環境
 
-Follow [Configure dev environment](03-configure.md).
+請依照 [設定開發環境](03-configure.md) 操作。
 
-At minimum, your `.env` should contain the shared `FABRIC_WORKSPACE_ID` and the expected `DATA_FOLDER`.
+最低限度，你的 `.env` 應包含共用的 `FABRIC_WORKSPACE_ID` 和預期的 `DATA_FOLDER`。
 
-### 3. Run the sample scenario
+### 3. 執行範例情境
 
-Follow [Build solution](04-run-scenario.md).
+請依照 [建置解決方案](04-run-scenario.md) 操作。
 
-Choose the right starting point:
+選擇正確的起始點：
 
-- If the admin deployed infrastructure but did not run the build, run the documented sample build flow.
-- If the admin already completed the sample build, you can usually move directly to the test step.
+- 如果管理員已部署基礎架構但尚未執行建置，請執行文件中記載的範例建置流程。
+- 如果管理員已完成範例建置，你通常可以直接跳到測試步驟。
 
-### 4. Validate the agent behavior
+### 4. 驗證代理程式行為
 
-Run the sample questions and confirm you can test:
+執行範例問題，確認你可以測試：
 
-- Structured data questions
-- Document questions
-- Combined questions that use both data sources
+- 結構化資料問題
+- 文件問題
+- 同時使用兩個資料來源的組合式問題
 
-## What this route does not cover
+## 這條路徑不涵蓋的內容
 
-- Provisioning Azure resources from scratch
-- Creating the Fabric workspace from scratch
-- Granting Azure RBAC to other users
-- Sharing the environment with additional participants
+- 從零開始佈建 Azure 資源
+- 從零開始建立 Fabric 工作區
+- 授予其他使用者 Azure RBAC
+- 將環境分享給額外的參與者
 
-Use [Admin deploy and share](00-admin-deploy-share.md) for those tasks.
+這些工作請使用 [管理員部署與分享](00-admin-deploy-share.md)。
 
-## Next step after validation
+## 驗證後的下一步
 
-Once the sample scenario works, continue to [Customize for your use case](../02-customize/index.md).
+範例情境正常運作後，請繼續至 [為你的使用案例自訂](../02-customize/index.md)。
 
 ---
 
-[← Admin deploy and share](00-admin-deploy-share.md) | [Configure dev environment →](03-configure.md)
+[← 管理員部署與分享](00-admin-deploy-share.md) | [設定開發環境 →](03-configure.md)

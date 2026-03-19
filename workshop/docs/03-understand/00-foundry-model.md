@@ -1,32 +1,32 @@
-# Foundry Model: Deployment Strategy
+# Foundry 模型：部署策略
 
-## Why this page exists
+## 本頁存在的原因
 
-This workshop depends on a small set of model deployments, but the control-plane design now supports more than the absolute minimum. That matters when customers ask questions like:
+本工作坊依賴一小組模型部署，但控制平面設計現在支援的功能已超過最低限度。這在客戶提出以下問題時非常重要：
 
-- Which model powers the agent conversation?
-- Which model powers embeddings for document retrieval?
-- How do we add optional models without breaking the main workshop path?
+- 哪個模型驅動代理程式的對話？
+- 哪個模型驅動文件檢索的向量嵌入？
+- 如何在不影響主要工作坊路徑的情況下新增選用模型？
 
-## Required vs optional models
+## 必要與選用模型
 
-| Model role | Why the workshop needs it | Typical deployment | Required for main path |
-|------------|---------------------------|--------------------|------------------------|
-| **Chat model** | Drives the agent's reasoning and tool selection | `gpt-4o-mini` or equivalent chat deployment | Yes |
-| **Embedding model** | Creates vectors for Azure AI Search indexing and retrieval | `text-embedding-3-large` or equivalent embedding deployment | Yes |
-| **Image model** | Optional demo for generated visual artifacts | `gpt-image-1` | No |
-| **Extra specialty models** | Future demos or customer-specific extensions | Optional deployment entries in Bicep | No |
+| 模型角色 | 工作坊需要它的原因 | 典型部署 | 主要路徑是否必要 |
+|----------|-------------------|----------|-----------------|
+| **聊天模型** | 驅動代理程式的推理與工具選擇 | `gpt-4o-mini` 或同等聊天部署 | 是 |
+| **向量嵌入模型** | 為 Azure AI Search 索引建立與檢索產生向量 | `text-embedding-3-large` 或同等向量嵌入部署 | 是 |
+| **影像模型** | 用於生成視覺產出物的選用示範 | `gpt-image-1` | 否 |
+| **其他特殊模型** | 未來示範或客戶專屬擴充 | Bicep 中的選用部署項目 | 否 |
 
-## Current workshop strategy
+## 目前的工作坊策略
 
-The infrastructure now separates model deployments into two groups:
+基礎架構現在將模型部署分為兩組：
 
-1. **Required deployments** for the main workshop path
-2. **Optional deployments** that can be explicitly enabled per environment
+1. 主要工作坊路徑的**必要部署**
+2. 可依環境明確啟用的**選用部署**
 
-This keeps the default deployment reliable while still making room for extra demos.
+這讓預設部署保持穩定，同時仍為額外示範保留空間。
 
-## Deployment flow
+## 部署流程
 
 ```mermaid
 flowchart LR
@@ -42,19 +42,19 @@ flowchart LR
     G --> K[Optional demos]
 ```
 
-## Why "best effort" is explicit
+## 為何「盡力而為」是明確的
 
-For optional models, the workshop does **not** rely on the platform silently continuing after a failed provider deployment. Instead, the Bicep module expects you to choose whether an optional deployment is enabled.
+對於選用模型，工作坊**不**依賴平台在供應商部署失敗後靜默繼續的行為。相反地，Bicep 模組要求您明確選擇是否啟用選用部署。
 
-That means:
+這表示：
 
-- If an optional model is not available in your region or subscription, leave it disabled.
-- The required chat + embedding path still deploys cleanly.
-- Outputs summarize which optional models were enabled and which were skipped.
+- 如果某個選用模型在您的區域或訂閱中不可用，請將其保持停用。
+- 必要的聊天 + 向量嵌入路徑仍可順利部署。
+- 輸出會摘要說明哪些選用模型已啟用、哪些已跳過。
 
-## Example optional model shape
+## 選用模型格式範例
 
-The optional deployment list is designed for entries like this:
+選用部署清單的設計格式如下：
 
 ```json
 {
@@ -67,47 +67,47 @@ The optional deployment list is designed for entries like this:
 }
 ```
 
-If `enabled` is `false`, the deployment is recorded as skipped instead of attempted.
+如果 `enabled` 為 `false`，該部署會記錄為已跳過而非嘗試部署。
 
-## How the runtime uses each model
+## 執行階段如何使用各模型
 
-| Runtime step | Model dependency |
-|--------------|------------------|
-| Agent creation and response generation | Chat model |
-| Tool selection and synthesis | Chat model |
-| Document ingestion and vector search | Embedding model |
-| Optional generated image demo | Image model |
+| 執行階段步驟 | 模型相依性 |
+|-------------|-----------|
+| 代理程式建立與回應生成 | 聊天模型 |
+| 工具選擇與合成 | 聊天模型 |
+| 文件攝取與向量搜尋 | 向量嵌入模型 |
+| 選用的影像生成示範 | 影像模型 |
 
-## Customer talking points
+## 客戶對話要點
 
-| Question | Practical answer |
-|----------|------------------|
-| "Why more than one model?" | "Because retrieval and conversation have different jobs. One deployment is optimized for reasoning, another for embeddings." |
-| "Can we add more models later?" | "Yes. Optional deployments are parameterized so you can add demos without changing the core workshop path." |
-| "What if an optional model isn't available?" | "We skip it intentionally and keep the main workshop working instead of making the base deployment fragile." |
+| 問題 | 實務回答 |
+|------|---------|
+| 「為什麼需要多個模型？」 | 「因為檢索和對話是不同的任務。一個部署專為推理最佳化，另一個專為向量嵌入最佳化。」 |
+| 「之後可以新增更多模型嗎？」 | 「可以。選用部署已參數化，因此您可以新增示範而不需變更核心工作坊路徑。」 |
+| 「如果某個選用模型不可用怎麼辦？」 | 「我們會刻意跳過它，讓主要工作坊保持正常運作，而非讓基礎部署變得脆弱。」 |
 
-## FAQ
+## 常見問題
 
-### Do customers need to see every model deployment?
+### 客戶需要看到每個模型部署嗎？
 
-No. In most conversations, you only need to explain the separation between the chat model and the embedding model. Optional deployments only matter when you are discussing extension scenarios such as image generation.
+不需要。在大多數對話中，您只需要解釋聊天模型和向量嵌入模型之間的區別。選用部署僅在討論擴充情境（例如影像生成）時才有意義。
 
-### Why not use one large model for everything?
+### 為什麼不用一個大型模型處理所有事情？
 
-Because the jobs are different. Conversation quality depends on a chat deployment, while retrieval quality depends on embeddings. Splitting them keeps the architecture clearer and usually keeps cost and deployment risk lower.
+因為任務本質不同。對話品質取決於聊天部署，而檢索品質取決於向量嵌入。將它們分開可讓架構更清晰，通常也能降低成本和部署風險。
 
-### What is the simplest talking point for this page?
+### 本頁最簡潔的對話要點是什麼？
 
-"The workshop needs one model to reason and one model to vectorize documents. Everything else is optional and intentionally isolated."
+「工作坊需要一個模型負責推理，另一個模型負責將文件向量化。其他一切都是選用的，且刻意隔離。」
 
-## What this means for the workshop
+## 這對工作坊的意義
 
-The workshop promise stays narrow and reliable:
+工作坊的承諾保持精簡且可靠：
 
-- Main path: chat + embeddings
-- Optional path: image generation and future specialty demos
-- Operational rule: explicit enable or skip, never hidden fallback behavior
+- 主要路徑：聊天 + 向量嵌入
+- 選用路徑：影像生成與未來的特殊示範
+- 營運準則：明確啟用或跳過，絕不使用隱藏的後備行為
 
 ---
 
-[← Overview](index.md) | [Foundry IQ: Documents →](01-foundry-iq.md)
+[← 概觀](index.md) | [Foundry IQ：文件 →](01-foundry-iq.md)

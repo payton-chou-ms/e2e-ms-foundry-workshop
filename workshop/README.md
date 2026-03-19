@@ -1,58 +1,58 @@
-# Workshop Documentation
+# Workshop 文件
 
-This folder contains the MkDocs documentation for the Foundry IQ + Fabric IQ Workshop.
+此資料夾包含 Foundry IQ + Fabric IQ Workshop 的 MkDocs 文件。
 
-## Source Of Truth
+## 唯一內容來源
 
-Use `workshop/docs/` as the only authored source for user-facing workshop content.
+請將 `workshop/docs/` 視為所有面向使用者的 workshop 內容之唯一主要來源。
 
-- `workshop/site/` is generated output from local MkDocs builds.
-- root `site/` is generated output from the GitHub Pages workflow.
-- `guides/` should contain distribution artifacts or audit notes, not a second authored copy of the same instructions.
+- `workshop/site/` 是本機 MkDocs build 的產生輸出。
+- root `site/` 是 GitHub Pages workflow 產生的輸出。
+- `guides/` 應只放發佈產生物或審閱備註，而不是同一套教學內容的第二份手寫副本。
 
-## Local Development
+## 本機開發
 
-### Install Dependencies
+### 安裝相依套件
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Serve Locally
+### 本機啟動
 
 ```bash
 mkdocs serve
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000) to preview.
+啟動後可開啟 [http://127.0.0.1:8000](http://127.0.0.1:8000) 預覽。
 
-### Build Static Site
+### 建置靜態網站
 
 ```bash
 mkdocs build
 ```
 
-Output is in the `site/` folder.
+輸出會位於 `site/` 資料夾。
 
-## Deploy to GitHub Pages
+## 部署到 GitHub Pages
 
 ```bash
 mkdocs gh-deploy
 ```
 
-This builds the site and pushes to the `gh-pages` branch.
+此命令會建置網站並推送到 `gh-pages` branch。
 
-## Structure
+## 結構
 
 ```
 workshop/
-├── mkdocs.yml              # MkDocs configuration
-├── requirements.txt        # Python dependencies
-├── README.md              # This file
+├── mkdocs.yml              # MkDocs 設定
+├── requirements.txt        # Python 相依套件
+├── README.md              # 本檔案
 └── docs/
     ├── index.md           # Overview
-    ├── 00-get-started/    # Prerequisites & workshop flow
-    ├── 01-deploy/         # Deploy Solution
+    ├── 00-get-started/    # 先決條件與 workshop 流程
+    ├── 01-deploy/         # 部署方案
     │   ├── index.md
     │   ├── 00-admin-deploy-share.md
     │   ├── 00-participant-run-validate.md
@@ -60,13 +60,18 @@ workshop/
     │   ├── 02-setup-fabric.md
     │   ├── 03-configure.md
     │   └── 04-run-scenario.md
-    ├── 02-customize/      # Customize for Your Customer
+    ├── 02-customize/      # 依客戶情境自訂
     │   ├── index.md
     │   ├── 02-generate.md
     │   └── 03-demo.md
-    ├── 03-understand/     # Understand the Technology
+    ├── 03-understand/     # 技術理解與 deep dive
     │   ├── index.md
+    │   ├── 00-foundry-model.md
     │   ├── 01-foundry-iq.md
-    │   └── 02-fabric-iq.md
-    └── 04-cleanup/        # Cleanup & Next Steps
+    │   ├── 02-foundry-agent.md
+    │   ├── 02-fabric-iq.md
+    │   ├── 03-foundry-tool.md
+    │   ├── 04-control-plane.md
+    │   └── 05-multi-agent-extension.md
+    └── 04-cleanup/        # 清理與下一步
 ```

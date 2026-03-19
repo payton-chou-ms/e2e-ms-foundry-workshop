@@ -1,67 +1,67 @@
-# Foundry Agent: Runtime Orchestration
+# Foundry 代理程式：執行階段編排
 
-## What this page explains
+## 本頁說明的內容
 
-The workshop does not use a generic chat completion plus ad-hoc glue code. It creates a named prompt agent in Azure AI Foundry and then reuses that definition during runtime testing.
+工作坊並非使用通用的聊天完成加上臨時拼湊的程式碼。它在 Azure AI Foundry 中建立一個具名的提示詞代理程式，然後在執行階段測試時重複使用該定義。
 
-That design matters because customers usually ask three different questions:
+這種設計很重要，因為客戶通常會問三個不同的問題：
 
-- Where is the agent definition stored?
-- How does the agent know which tools it can call?
-- What changes when we move from local testing to publish?
+- 代理程式定義儲存在哪裡？
+- 代理程式如何知道它可以呼叫哪些工具？
+- 從本機測試轉移到發佈時，什麼會改變？
 
-## The agent definition
+## 代理程式定義
 
-The main creation flow lives in `scripts/07_create_foundry_agent.py` and builds a `PromptAgentDefinition` with three core inputs:
+主要的建立流程位於 `scripts/07_create_foundry_agent.py` 中，使用三個核心輸入建構 `PromptAgentDefinition`：
 
-| Field | Where it comes from | Why it matters |
-|-------|---------------------|----------------|
-| `model` | `AZURE_CHAT_MODEL` or `MODEL_DEPLOYMENT` | Chooses the chat deployment that reasons over the prompt and tool outputs |
-| `instructions` | `build_agent_instructions(...)` | Tells the agent when to use SQL, search, or both |
-| `tools` | `foundry_tool_contract.py` | Defines the callable function tools and strict JSON schema |
+| 欄位 | 來源 | 重要性 |
+|------|------|--------|
+| `model` | `AZURE_CHAT_MODEL` 或 `MODEL_DEPLOYMENT` | 選擇負責推理提示詞和工具輸出的聊天部署 |
+| `instructions` | `build_agent_instructions(...)` | 告訴代理程式何時使用 SQL、搜尋或兩者 |
+| `tools` | `foundry_tool_contract.py` | 定義可呼叫的函式工具及嚴格的 JSON 結構描述 |
 
-In other words, the Foundry project stores the agent as a reusable runtime object, not just as a local Python prompt string.
+換句話說，Foundry 專案將代理程式儲存為可重複使用的執行階段物件，而非僅僅是本機的 Python 提示詞字串。
 
-## How instructions are composed
+## 指令的組成方式
 
-The workshop builds instructions from scenario configuration instead of hard-coding a single static system prompt.
+工作坊從情境設定中構建指令，而非硬編碼單一的靜態系統提示詞。
 
-Inputs used in the composition step:
+組成步驟中使用的輸入：
 
-| Input source | Example content |
-|--------------|-----------------|
-| `ontology_config.json` | scenario name, description, table list, relationships |
-| `schema_prompt.txt` | generated schema guidance for Fabric tables |
-| `foundry_only` flag | toggles between search-only and SQL + search behavior |
+| 輸入來源 | 範例內容 |
+|---------|---------|
+| `ontology_config.json` | 情境名稱、描述、資料表清單、關係 |
+| `schema_prompt.txt` | 為 Microsoft Fabric 資料表生成的結構描述指引 |
+| `foundry_only` 旗標 | 在僅搜尋和 SQL + 搜尋行為之間切換 |
 
-The final instruction block includes:
+最終的指令區塊包含：
 
-1. scenario context
-2. tool descriptions and boundaries
-3. SQL rules for read-only access
-4. response-loop guidance for multi-step questions
+1. 情境脈絡
+2. 工具描述與邊界
+3. 唯讀存取的 SQL 規則
+4. 多步驟問題的回應迴圈指引
 
-This is why the agent can stay aligned with the actual generated dataset instead of relying on a fixed example prompt.
+這就是為什麼代理程式能與實際生成的資料集保持一致，而非依賴固定的範例提示詞。
 
-## Tool selection modes
+## 工具選擇模式
 
-The agent has two supported operating modes.
+代理程式有兩種支援的運作模式。
 
-| Mode | Enabled tools | When used |
-|------|---------------|-----------|
-| **Full mode** | `execute_sql` + `search_documents` | Main workshop path with Fabric + Search |
-| **Foundry-only mode** | `search_documents` only | Lightweight path when Fabric is unavailable |
+| 模式 | 啟用的工具 | 使用時機 |
+|------|-----------|---------|
+| **完整模式** | `execute_sql` + `search_documents` | 搭配 Microsoft Fabric + Azure AI Search 的主要工作坊路徑 |
+| **僅 Foundry 模式** | 僅 `search_documents` | Microsoft Fabric 不可用時的輕量路徑 |
 
-The selection happens before agent creation:
+選擇發生在代理程式建立之前：
 
-- `build_search_documents_tool()` is always included
-- `build_execute_sql_tool(...)` is only added when `--foundry-only` is not set
+- `build_search_documents_tool()` 始終包含
+- `build_execute_sql_tool(...)` 僅在未設定 `--foundry-only` 時才新增
 
-That means the prompt and the tool list stay consistent. The search-only agent is not merely told to ignore SQL. It is created without the SQL function at all.
+這表示提示詞和工具清單保持一致。僅搜尋的代理程式不僅僅是被告知要忽略 SQL。它根本就是在沒有 SQL 函式的情況下建立的。
 
-## Create, get, and test flow
+## 建立、取得與測試流程
 
-The current runtime path looks like this:
+目前的執行階段路徑如下：
 
 ```mermaid
 flowchart LR
@@ -80,92 +80,92 @@ flowchart LR
     M --> N[Return final answer]
 ```
 
-The testing script does not redefine the agent. It fetches the stored agent definition from the project, reads the latest model, instructions, and tool metadata, and then drives the conversation loop locally.
+測試腳本不會重新定義代理程式。它從專案中擷取已儲存的代理程式定義，讀取最新的模型、指令和工具中繼資料，然後在本機驅動對話迴圈。
 
-## Why the runtime executes tools locally
+## 為什麼執行階段在本機執行工具
 
-The agent definition contains tool schemas, but the workshop still executes the actual tool logic in `scripts/08_test_foundry_agent.py`.
+代理程式定義包含工具結構描述，但工作坊仍然在 `scripts/08_test_foundry_agent.py` 中執行實際的工具邏輯。
 
-That split keeps the demo easy to inspect:
+這種分離讓示範易於檢視：
 
-- Foundry decides **which function to call**
-- the local runtime decides **how the function is executed**
-- the raw output is returned to the model as `function_call_output`
+- Foundry 決定**要呼叫哪個函式**
+- 本機執行階段決定**函式如何被執行**
+- 原始輸出作為 `function_call_output` 傳回給模型
 
-This is also why the workshop can show the exact SQL query and search payload during demos.
+這也是為什麼工作坊可以在示範期間顯示確切的 SQL 查詢和搜尋酬載。
 
-## Trace behavior
+## 追蹤行為
 
-Tracing is opt-in and routed through `scripts/foundry_trace.py`.
+追蹤是選擇性加入的，透過 `scripts/foundry_trace.py` 路由。
 
-Supported environment flags:
+支援的環境旗標：
 
-| Variable | Purpose |
-|----------|---------|
-| `ENABLE_FOUNDRY_TRACING` | master switch for tracing |
-| `ENABLE_FOUNDRY_CONTENT_TRACING` | allows GenAI content recording |
-| `ENABLE_TRACE_CONTEXT_PROPAGATION` | turns on trace-context propagation in the SDK instrumentor |
-| `APPLICATIONINSIGHTS_CONNECTION_STRING` | explicit telemetry destination |
-| `OTEL_SERVICE_NAME` | optional override for service naming |
+| 變數 | 用途 |
+|------|------|
+| `ENABLE_FOUNDRY_TRACING` | 追蹤的主開關 |
+| `ENABLE_FOUNDRY_CONTENT_TRACING` | 允許 GenAI 內容記錄 |
+| `ENABLE_TRACE_CONTEXT_PROPAGATION` | 在 SDK 儀器化中啟用追蹤脈絡傳遞 |
+| `APPLICATIONINSIGHTS_CONNECTION_STRING` | 明確的遙測目的地 |
+| `OTEL_SERVICE_NAME` | 服務命名的選用覆寫 |
 
-Current design rules:
+目前的設計規則：
 
-- tracing is off by default
-- missing telemetry wiring only produces a warning
-- agent creation and chat should still work without Application Insights
+- 追蹤預設為關閉
+- 缺少遙測配線只會產生警告
+- 代理程式建立和聊天在沒有 Application Insights 的情況下仍應正常運作
 
-That matches the workshop goal: observability is valuable, but it cannot become a blocker for the main demo path.
+這符合工作坊的目標：可觀測性很有價值，但它不能成為主要示範路徑的阻礙。
 
-## Publish path and why it is separate
+## 發佈路徑及其獨立的原因
 
-Publishing is intentionally handled as a guarded follow-up step in `scripts/09_publish_foundry_agent.py`, not as part of the main build pipeline.
+發佈在 `scripts/09_publish_foundry_agent.py` 中被刻意處理為一個有防護的後續步驟，而非主要建置管線的一部分。
 
-The helper does three things:
+該輔助程式做三件事：
 
-1. resolves the current project and target agent
-2. checks Azure CLI and Bot Service readiness when possible
-3. prints the manual UI publish steps and RBAC reminders
+1. 解析目前的專案和目標代理程式
+2. 在可能的情況下檢查 Azure CLI 和 Bot Service 的就緒狀態
+3. 列印手動 UI 發佈步驟和 RBAC 提醒
 
-The workshop keeps publish separate because publish changes the operational boundary:
+工作坊將發佈獨立出來是因為發佈會改變營運邊界：
 
-- a new Agent Application identity is created
-- downstream RBAC may need to be reassigned
-- Teams and Microsoft 365 Copilot packaging adds extra governance steps
+- 會建立新的代理程式應用程式身分
+- 下游的 RBAC 可能需要重新指派
+- Teams 和 Microsoft 365 Copilot 封裝會增加額外的治理步驟
 
-So the workshop proves the agent first inside Foundry, then treats publishing as a controlled second stage.
+因此工作坊先在 Foundry 內部驗證代理程式，然後將發佈視為受控的第二階段。
 
-## Customer talking points
+## 客戶對話要點
 
-| Question | Practical answer |
-|----------|------------------|
-| "Where does the agent live?" | "The definition lives in the Foundry project. The local script just creates it and later fetches it for testing." |
-| "Is the tool logic inside Foundry?" | "The tool contract is registered in Foundry, but this workshop executes the tool functions in the local runtime so the behavior stays transparent." |
-| "Why not publish immediately?" | "Because publish introduces a new app identity and RBAC surface. We keep the workshop simple by validating the agent first, then publishing as a separate step." |
+| 問題 | 實務回答 |
+|------|---------|
+| 「代理程式存在哪裡？」 | 「定義存在 Foundry 專案中。本機腳本只是建立它，之後再擷取它來測試。」 |
+| 「工具邏輯在 Foundry 裡面嗎？」 | 「工具合約已在 Foundry 中註冊，但本工作坊在本機執行階段中執行工具函式，讓行為保持透明。」 |
+| 「為什麼不立即發佈？」 | 「因為發佈會引入新的應用程式身分和 RBAC 範圍。我們讓工作坊保持簡單，先驗證代理程式，再將發佈作為獨立步驟。」 |
 
-## FAQ
+## 常見問題
 
-### Is this a custom app or a Foundry-managed agent?
+### 這是自訂應用程式還是 Foundry 管理的代理程式？
 
-It is both. The agent definition is stored and managed in Foundry, while the current workshop runtime is a transparent local app that creates responses, executes tools, and returns tool outputs.
+兩者皆是。代理程式定義儲存並管理在 Foundry 中，而目前的工作坊執行階段是一個透明的本機應用程式，負責建立回應、執行工具並傳回工具輸出。
 
-### Why does the workshop fetch the agent again during testing?
+### 為什麼工作坊在測試時要再次擷取代理程式？
 
-Because the test script is proving that the stored project definition is reusable. It is not just exercising a local prompt string. It is exercising the agent object that was created in the Foundry project.
+因為測試腳本要證明已儲存的專案定義是可重複使用的。它不只是在測試本機提示詞字串。它是在測試 Foundry 專案中建立的代理程式物件。
 
-### What is the shortest talking point for this page?
+### 本頁最簡潔的對話要點是什麼？
 
-"Foundry owns the agent definition. The workshop runtime owns the local tool execution loop."
+「Foundry 擁有代理程式定義。工作坊執行階段擁有本機工具執行迴圈。」
 
-## Operational takeaway
+## 營運要點
 
-The Foundry agent is the orchestration boundary for the workshop:
+Foundry 代理程式是工作坊的編排邊界：
 
-- model deployment handles reasoning
-- instructions describe the scenario and tool rules
-- tool schemas constrain what can be called
-- the local runtime executes the tools and feeds results back
-- publish is possible, but deliberately treated as a later environment step
+- 模型部署處理推理
+- 指令描述情境和工具規則
+- 工具結構描述限制可呼叫的內容
+- 本機執行階段執行工具並回饋結果
+- 發佈是可行的，但刻意視為後續的環境步驟
 
 ---
 
-[← Foundry IQ: Documents](01-foundry-iq.md) | [Foundry Tool: Function Contract →](03-foundry-tool.md)
+[← Foundry IQ：文件](01-foundry-iq.md) | [Foundry 工具：函式合約 →](03-foundry-tool.md)

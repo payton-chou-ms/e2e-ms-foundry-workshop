@@ -1,43 +1,43 @@
 # VS Code for the Web - Azure AI Foundry Templates
 
-We've generated a simple development environment for you to deploy the templates.
+我們已為你產生一個簡單的開發環境來部署這些範本。
 
-The Azure AI Foundry extension provides tools to help you build, test, and deploy AI models and AI Applications directly from VS Code. It offers simplified operations for interacting with your models, agents, and threads without leaving your development environment. Click on the Azure AI Foundry Icon on the left to see more.
+Azure AI Foundry 擴充功能提供工具，協助你直接在 VS Code 中建構、測試與部署 AI 模型及 AI 應用程式。它提供簡化的操作方式，讓你不需要離開開發環境就能與模型、代理程式和執行緒互動。點選左側的 Azure AI Foundry 圖示以查看更多。
 
-Follow the instructions below to get started!
+請依照以下操作說明開始！
 
-You should see a terminal opened with the template code already cloned.
+你應該會看到一個終端視窗，其中已經 clone 了範本程式碼。
 
-## Deploy the template 
+## 部署範本
 
-You can provision and deploy this template using:
+你可以使用以下指令佈建與部署此範本：
 
 ```bash
 azd up
 ```
 
-Follow any instructions from the deployment script and launch the application.
+依照部署腳本的指示操作並啟動應用程式。
 
 
-If you need to delete the deployment and stop incurring any charges, run:
+如果你需要刪除部署並停止產生費用，請執行：
 
 ```bash
 azd down
 ```
 
-## Continuing on your local desktop
+## 繼續在本機桌面工作
 
-You can keep working locally on VS Code Desktop by clicking "Continue On Desktop..." at the bottom left of this screen. Be sure to take the .env file with you using these steps:
+你可以點選畫面左下角的「Continue On Desktop...」來繼續在 VS Code Desktop 上工作。請確保帶上 .env 檔案，步驟如下：
 
-- Right-click the .env file
-- Select "Download"
-- Move the file from your Downloads folder to the local git repo directory
-- For Windows, you will need to rename the file back to .env using right-click "Rename..."
+- 右鍵點選 .env 檔案
+- 選取「Download」
+- 將檔案從你的 Downloads 資料夾移動到本機 git repo 目錄
+- 若使用 Windows，你需要用右鍵「Rename...」將檔案名稱改回 .env
 
-## More examples
+## 更多範例
 
-Check out [Azure AI Projects client library for Python](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/README.md) for more information on using this SDK.
+請參閱 [Azure AI Projects client library for Python](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/README.md) 以了解更多使用此 SDK 的資訊。
 
-## Troubleshooting
+## 疑難排解
 
-- If you are instantiating your client via endpoint on an Azure AI Foundry project, ensure the endpoint is set in the `.env` as https://{your-foundry-resource-name}.services.ai.azure.com/api/projects/{your-foundry-project-name}`
+- 如果你透過 Azure AI Foundry 專案的端點初始化 client，請確認 `.env` 中設定的端點格式為 https://{your-foundry-resource-name}.services.ai.azure.com/api/projects/{your-foundry-project-name}

@@ -1,12 +1,12 @@
-# Configure dev environment
+# 設定開發環境
 
-!!! info "Used by both routes"
-    Admins use this page to prepare a shareable environment.
-    Participants use this page to connect their local checkout to an environment that was already prepared for them.
+!!! info "兩條路徑都會使用"
+    管理員使用本頁來準備可分享的環境。
+    參與者使用本頁來將本機 checkout 連接到已準備好的環境。
 
-## Python Environment
+## Python 環境
 
-### Create and Activate
+### 建立並啟用
 
 ```bash
 cd scripts
@@ -25,47 +25,47 @@ python -m venv .venv
     source .venv/bin/activate
     ```
 
-### Install Dependencies
+### 安裝相依套件
 
-=== "Fast (Recommended)"
+=== "快速（建議）"
 
     ```bash
     pip install uv && uv pip install -r requirements.txt
     ```
 
-=== "Standard"
+=== "標準"
 
     ```bash
     pip install -r requirements.txt
     ```
 
-### Verify Setup
+### 驗證設定
 
 ```bash
 python -c "import azure.ai.projects; print('Ready!')"
 ```
 
-## Configure Fabric
+## 設定 Fabric
 
-### Get Your Workspace ID
+### 取得工作區 ID
 
-1. Go to [Microsoft Fabric](https://app.fabric.microsoft.com/)
-2. Open your workspace
-3. Copy the workspace ID from the URL:
+1. 前往 [Microsoft Fabric](https://app.fabric.microsoft.com/)
+2. 開啟你的工作區
+3. 從 URL 複製工作區 ID：
 
 ```
 https://app.fabric.microsoft.com/groups/{workspace-id}/...
 ```
 
-### Update Environment File
+### 更新環境檔案
 
-Copy `.env.example` to `.env` and update your Fabric settings:
+將 `.env.example` 複製為 `.env` 並更新 Fabric 設定：
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` in the project root:
+編輯專案根目錄的 `.env`：
 
 ```env
 # --- Microsoft Fabric (required) ---
@@ -75,21 +75,21 @@ FABRIC_WORKSPACE_ID=your-workspace-id-here
 DATA_FOLDER=data/default
 ```
 
-!!! note "Shared environment handoff"
-    If an admin predeployed the environment for you, ask them for the exact `FABRIC_WORKSPACE_ID` and any other required settings before editing `.env`.
+!!! note "共用環境交接"
+    如果管理員已為你預先部署環境，請先向管理員要到正確的 `FABRIC_WORKSPACE_ID` 與其他必要設定，再修改 `.env`。
 
-## Checkpoint
+## 檢查點
 
-Before proceeding:
+繼續之前，請確認：
 
-- [x] `azd up` completed successfully
-- [x] Python environment activated
-- [x] Dependencies installed
-- [x] Fabric workspace ID configured
+- [x] `azd up` 已成功完成
+- [x] Python 環境已啟用
+- [x] 相依套件已安裝
+- [x] Fabric 工作區 ID 已設定
 
-!!! success "Ready to Run"
-    Continue to the next step to see it in action.
+!!! success "準備就緒"
+    請繼續至下一步實際看到成果。
 
 ---
 
-[← Create Fabric workspace](02-setup-fabric.md) | [Build solution →](04-run-scenario.md)
+[← 建立 Fabric 工作區](02-setup-fabric.md) | [建置解決方案 →](04-run-scenario.md)

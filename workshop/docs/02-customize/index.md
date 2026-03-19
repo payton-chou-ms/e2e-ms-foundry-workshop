@@ -1,183 +1,183 @@
-# Customize for your use case
+# 為你的使用案例自訂
 
-This is where it gets exciting. Generate a complete working PoC tailored to your industry and use case in minutes.
+這是令人興奮的部分。在幾分鐘內產生一個完整的、針對你的產業與使用案例量身打造的 PoC。
 
-!!! info "When to use this section"
-    Start here after you complete either [Admin deploy and share](../01-deploy/00-admin-deploy-share.md) or [Participant run and validate](../01-deploy/00-participant-run-validate.md).
+!!! info "何時使用本節"
+    請在完成 [管理員部署與分享](../01-deploy/00-admin-deploy-share.md) 或 [參與者執行與驗證](../01-deploy/00-participant-run-validate.md) 之後再開始。
 
-## What you provide
+## 你需要提供的輸入
 
-Simply provide two inputs:
+只需提供兩個輸入：
 
-| Input | Description | Example |
-|-------|-------------|---------|
-| **Industry** | The business domain or vertical | Telecommunications, Retail, Manufacturing, Finance, Energy |
-| **Use Case** | What the solution should help with | "Claims processing and policy management" |
+| 輸入 | 說明 | 範例 |
+|------|------|------|
+| **產業** | 業務領域或垂直產業 | 電信、零售、製造、金融、能源 |
+| **使用案例** | 方案要協助處理的事項 | "理賠處理與保單管理" |
 
-!!! tip "Be descriptive"
-    The more detail you provide in your use case, the better the generated content will match your scenario. For example:
+!!! tip "盡量描述詳細"
+    你提供的使用案例說明越詳細，產生的內容就越貼合你的情境。例如：
 
-    - ✓ "Property insurance with claims processing, policy management, and coverage verification"
-    - ✗ "Insurance stuff"
+    - ✓ "含理賠處理、保單管理與保障範圍查核的產物保險"
+    - ✗ "保險相關事務"
 
-## What gets generated
+## 會產生什麼內容
 
-| Component | Generated Content |
-|-----------|-------------------|
-| **Documents** | Policies, procedures, FAQs specific to your industry |
-| **Data** | Realistic CSV files with industry-appropriate entities |
-| **Ontology** | Business rules and relationships for NL→SQL |
-| **Sample Questions** | Questions to test the solution |
+| 元件 | 產生的內容 |
+|------|-----------|
+| **文件** | 針對你的產業的政策、程序、FAQ |
+| **資料** | 具有產業適當實體的真實 CSV 檔案 |
+| **本體（Ontology）** | 用於 NL→SQL 的商業規則與關係 |
+| **範例問題** | 用來測試方案的問題集 |
 
-## Example Transformations
+## 範例轉換
 
-=== "Telecommunications"
+=== "電信"
 
-    **Input:** "Network operations with outage tracking and trouble ticket management"
+    **輸入：** "含停機追蹤與障礙單管理的網路營運"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `network_outages.csv` | Outage events, duration, impact level |
-    | `trouble_tickets.csv` | Support tickets linked to outages |
-    | `outage_management_policies.pdf` | Response procedures and SLAs |
-    | `customer_service_policies.pdf` | Customer notification guidelines |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `network_outages.csv` | 停機事件、持續時間、影響程度 |
+    | `trouble_tickets.csv` | 連結到停機事件的支援工單 |
+    | `outage_management_policies.pdf` | 回應程序與 SLA |
+    | `customer_service_policies.pdf` | 客戶通知指引 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which outages exceeded our maximum duration policy?"
-    - "What are the escalation procedures for high-impact outages?"
+    - "哪些停機事件超過了我們的最大持續時間政策？"
+    - "高影響停機事件的升級程序是什麼？"
 
-=== "Retail"
+=== "零售"
 
-    **Input:** "Fashion e-commerce with seasonal inventory and returns"
+    **輸入：** "含季節性庫存與退貨的時尚電子商務"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `products.csv` | SKUs, categories, seasonal collections |
-    | `orders.csv` | Customer orders with status |
-    | `return_policy.pdf` | Return and exchange guidelines |
-    | `shipping_guide.pdf` | Delivery options and timelines |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `products.csv` | SKU、類別、季節系列 |
+    | `orders.csv` | 客戶訂單與狀態 |
+    | `return_policy.pdf` | 退貨與換貨指引 |
+    | `shipping_guide.pdf` | 配送選項與時程 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "What's our return policy for sale items?"
-    - "Which products from the spring collection have low stock?"
+    - "特價商品的退貨政策是什麼？"
+    - "春季系列中哪些產品庫存偏低？"
 
-=== "Manufacturing"
+=== "製造"
 
-    **Input:** "Automotive parts with quality control and suppliers"
+    **輸入：** "含品質控管與供應商的汽車零件"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `equipment.csv` | Machines, maintenance schedules |
-    | `suppliers.csv` | Vendor relationships, lead times |
-    | `quality_standards.pdf` | QC procedures and thresholds |
-    | `maintenance_guide.pdf` | Equipment maintenance protocols |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `equipment.csv` | 機器、維護排程 |
+    | `suppliers.csv` | 供應商關係、前置時間 |
+    | `quality_standards.pdf` | QC 程序與門檻 |
+    | `maintenance_guide.pdf` | 設備維護規範 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which machines are overdue for maintenance?"
-    - "What's our QC process for critical components?"
+    - "哪些機器已超過維護期限？"
+    - "關鍵零件的 QC 流程是什麼？"
 
-=== "Insurance"
+=== "保險"
 
-    **Input:** "Property insurance with claims and policy management"
+    **輸入：** "含理賠與保單管理的產物保險"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `policies.csv` | Policy details, coverage, premiums |
-    | `claims.csv` | Claim status, amounts, dates |
-    | `claims_process.pdf` | How to file and process claims |
-    | `coverage_guide.pdf` | Policy coverage explanations |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `policies.csv` | 保單明細、保障範圍、保費 |
+    | `claims.csv` | 理賠狀態、金額、日期 |
+    | `claims_process.pdf` | 理賠申請與處理流程 |
+    | `coverage_guide.pdf` | 保單保障範圍說明 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which claims are approaching our SLA deadline?"
-    - "What does our standard homeowner policy cover?"
+    - "哪些理賠案件即將到達 SLA 期限？"
+    - "標準房屋保險涵蓋哪些項目？"
 
-=== "Finance"
+=== "金融"
 
-    **Input:** "Regional bank with loans and compliance"
+    **輸入：** "含貸款與合規的區域銀行"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `accounts.csv` | Customer accounts, balances |
-    | `loans.csv` | Loan applications, status |
-    | `lending_policy.pdf` | Approval criteria and rates |
-    | `compliance_guide.pdf` | Regulatory requirements |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `accounts.csv` | 客戶帳戶、餘額 |
+    | `loans.csv` | 貸款申請、狀態 |
+    | `lending_policy.pdf` | 核准標準與利率 |
+    | `compliance_guide.pdf` | 法規要求 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which loan applications meet our approval criteria?"
-    - "What are our compliance requirements for large transactions?"
+    - "哪些貸款申請符合我們的核准條件？"
+    - "大額交易的合規要求是什麼？"
 
-=== "Energy"
+=== "能源"
 
-    **Input:** "Power utility with grid monitoring and outage response"
+    **輸入：** "含電網監控與停電回應的電力公用事業"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `substations.csv` | Grid infrastructure, capacity levels |
-    | `outages.csv` | Power outages, affected areas, restoration times |
-    | `safety_protocols.pdf` | Field crew safety procedures |
-    | `emergency_response.pdf` | Outage escalation and communication |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `substations.csv` | 電網基礎設施、容量水位 |
+    | `outages.csv` | 停電事件、影響區域、復電時間 |
+    | `safety_protocols.pdf` | 現場人員安全程序 |
+    | `emergency_response.pdf` | 停電升級與通知 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which substations are operating above 80% capacity?"
-    - "What's our restoration priority for critical facilities?"
+    - "哪些變電站的運轉容量超過 80%？"
+    - "關鍵設施的復電優先順序是什麼？"
 
-=== "Education"
+=== "教育"
 
-    **Input:** "University with enrollment management and course scheduling"
+    **輸入：** "含選課管理與課程排程的大學"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `students.csv` | Student records, enrollment status |
-    | `courses.csv` | Course catalog, schedules, capacity |
-    | `enrollment_policies.pdf` | Registration rules and deadlines |
-    | `academic_handbook.pdf` | Academic standards and procedures |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `students.csv` | 學生記錄、選課狀態 |
+    | `courses.csv` | 課程目錄、排程、容量 |
+    | `enrollment_policies.pdf` | 選課規則與截止日期 |
+    | `academic_handbook.pdf` | 學術標準與程序 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which courses are at risk of under-enrollment?"
-    - "What are the prerequisites for advanced engineering courses?"
+    - "哪些課程有選課不足的風險？"
+    - "進階工程課程的先修條件是什麼？"
 
-=== "Hospitality"
+=== "旅宿"
 
-    **Input:** "Hotel chain with reservations and guest services"
+    **輸入：** "含訂房與賓客服務的連鎖飯店"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `reservations.csv` | Bookings, room types, guest details |
-    | `rooms.csv` | Room inventory, status, amenities |
-    | `guest_policies.pdf` | Check-in/out, cancellation rules |
-    | `service_standards.pdf` | Guest experience guidelines |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `reservations.csv` | 訂房記錄、房型、賓客資訊 |
+    | `rooms.csv` | 房間庫存、狀態、設施 |
+    | `guest_policies.pdf` | 入住/退房、取消規定 |
+    | `service_standards.pdf` | 賓客體驗指引 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which rooms need turnover service for today's arrivals?"
-    - "What's our policy for late checkout requests?"
+    - "今天抵達的賓客中，哪些房間需要整理服務？"
+    - "延遲退房的政策是什麼？"
 
-=== "Logistics"
+=== "物流"
 
-    **Input:** "Fleet management with delivery tracking and driver compliance"
+    **輸入：** "含配送追蹤與駕駛合規的車隊管理"
 
-    | Generated | Description |
-    |-----------|-------------|
-    | `vehicles.csv` | Fleet inventory, maintenance status |
-    | `deliveries.csv` | Shipments, routes, delivery status |
-    | `driver_policies.pdf` | Hours of service, safety requirements |
-    | `routing_guidelines.pdf` | Route optimization procedures |
+    | 產生項目 | 說明 |
+    |----------|------|
+    | `vehicles.csv` | 車隊清冊、維修狀態 |
+    | `deliveries.csv` | 貨物、路線、配送狀態 |
+    | `driver_policies.pdf` | 工時規定、安全要求 |
+    | `routing_guidelines.pdf` | 路線最佳化程序 |
 
-    **Sample Questions:**
+    **範例問題：**
 
-    - "Which drivers are approaching hours-of-service limits?"
-    - "What's our policy for delayed deliveries?"
+    - "哪些駕駛正在接近工時上限？"
+    - "延遲配送的政策是什麼？"
 
-!!! tip "The more specific, the better"
-    The AI uses your description to generate appropriate entity names, realistic data relationships, industry-specific documents, and relevant sample questions.
+!!! tip "越具體越好"
+    AI 會根據你的描述產生適當的實體名稱、真實的資料關係、產業專屬文件，以及相關的範例問題。
 
 ---
 
-[← Build solution](../01-deploy/04-run-scenario.md) | [Generate & Build →](02-generate.md)
+[← 建置解決方案](../01-deploy/04-run-scenario.md) | [產生與建置 →](02-generate.md)

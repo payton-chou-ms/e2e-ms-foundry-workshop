@@ -1,40 +1,40 @@
-# Build solution
+# 建置解決方案
 
-!!! info "Used by both routes"
-       Admins use this page to validate the default deployment.
-       Participants use this page to run or verify the sample scenario in a prepared environment.
+!!! info "兩條路徑都會使用"
+       管理員使用本頁來驗證預設部署。
+       參與者使用本頁來執行或驗證已準備好的環境中的範例情境。
 
-## Run the Full Pipeline
+## 執行完整流程
 
-One command builds the solution including data processing and agent creation:
+一個命令即可建置方案，包括資料處理與代理程式建立：
 
 ```bash
 python scripts/00_build_solution.py --from 02
 ```
 
-If the environment was fully prepared for you and the sample build already ran successfully, you may only need the test step later on this page.
+如果環境已經完全為你準備好，而且範例建置已成功執行過，你可能只需要本頁稍後的測試步驟。
 
-This uses the `data/default` folder and runs all setup steps:
+這使用 `data/default` 資料夾並執行所有設定步驟：
 
-| Step | What Happens | Time |
-|------|--------------|------|
-| 02 | Setup Fabric workspace | ~30s |
-| 03 | Load data into Fabric | ~1min |
-| 04 | Generate NL2SQL prompt | ~5s |
-| 05 | Create Fabric Data Agent | ~30s |
-| 06 | Upload documents to AI Search | ~1min |
-| 07a | Create Orchestrator Agent | ~10s |
+| 步驟 | 執行內容 | 時間 |
+|------|----------|------|
+| 02 | 設定 Fabric 工作區 | ~30s |
+| 03 | 載入資料到 Fabric | ~1min |
+| 04 | 產生 NL2SQL 提示詞 | ~5s |
+| 05 | 建立 Fabric 資料代理程式 | ~30s |
+| 06 | 上傳文件到 Azure AI Search | ~1min |
+| 07a | 建立協調代理程式 | ~10s |
 
-!!! tip "No Fabric License?"
-    If you don't have access to Microsoft Fabric, you can still run the workshop using azure services only:
+!!! tip "沒有 Fabric 授權？"
+    如果你沒有 Microsoft Fabric 的存取權，仍然可以只使用 Azure 服務執行 workshop：
 
     ```bash
     python scripts/00_build_solution.py --foundry-only
     ```
 
-    This skips Fabric setup (steps 02-05) and creates an agent in Microsoft Foundry only.
+    這會跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式。
 
-## Expected Output
+## 預期輸出
 
 ```
 > [02] Create Fabric Items... [OK]
@@ -51,13 +51,13 @@ Next: python scripts/08_test_foundry_agent.py
 
 ```
 
-## Test the Agent
+## 測試代理程式
 
 ```bash
 python scripts/08_test_foundry_agent.py
 ```
 
-### Sample Conversation
+### 範例對話
 
 ```
 ============================================================
@@ -103,15 +103,15 @@ Agent: Let me check the outage data against our policy thresholds...
 You: quit
 ```
 
-## Checkpoint
+## 檢查點
 
-!!! success "Solution Deployed!"
-    You now have a working solution with:
+!!! success "方案已部署！"
+    你現在擁有一個可運作的方案：
 
-    - [x] **Fabric IQ** answering data questions
-    - [x] **Foundry IQ** retrieving document knowledge
-    - [x] **Orchestrator Agent** combining both sources
+    - [x] **Fabric IQ** 回答資料問題
+    - [x] **Foundry IQ** 擷取文件知識
+    - [x] **協調代理程式** 結合兩個來源
 
     ---
 
-[← Configure dev environment](03-configure.md) | [Customize for your use case →](../02-customize/index.md)
+[← 設定開發環境](03-configure.md) | [為你的使用案例自訂 →](../02-customize/index.md)

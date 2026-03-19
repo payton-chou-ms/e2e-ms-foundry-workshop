@@ -1,21 +1,21 @@
-# Foundry IQ: Document Intelligence
+# Foundry IQ：文件智慧
 
-## What is Foundry IQ?
+## 什麼是 Foundry IQ？
 
-Foundry IQ is Azure AI Foundry's unified knowledge layer that enables agents to access enterprise documents through intelligent retrieval.
+Foundry IQ 是 Azure AI Foundry 的統一知識層，讓代理程式能夠透過智慧檢索存取企業文件。
 
-## Key Capabilities
+## 主要功能
 
-| Capability | Description |
-|------------|-------------|
-| **Knowledge Bases** | Automatic indexing and vectorization of documents |
-| **Agentic Retrieval** | AI-driven search with planning, iteration, and reflection |
-| **Enterprise Security** | Built-in Entra ID authentication and Purview integration |
-| **Multi-format Support** | PDFs, Word, PowerPoint, and unstructured text |
+| 功能 | 說明 |
+|------|------|
+| **知識庫** | 自動索引建立與文件向量化 |
+| **代理式檢索** | 具備規劃、迭代與反思能力的 AI 驅動搜尋 |
+| **企業安全性** | 內建 Entra ID 驗證與 Purview 整合 |
+| **多格式支援** | PDF、Word、PowerPoint 及非結構化文字 |
 
-## How Agentic Retrieval Works
+## 代理式檢索的運作方式
 
-Unlike simple vector search (find similar text), agentic retrieval uses AI to:
+與簡單的向量搜尋（尋找相似文字）不同，代理式檢索使用 AI 來：
 
 ```
 User: "What's our policy for notifying customers during extended outages?"
@@ -56,46 +56,46 @@ User: "What's our policy for notifying customers during extended outages?"
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Why This Matters for Customers
+## 為什麼這對客戶很重要
 
-### Problem: Simple RAG Fails on Complex Questions
+### 問題：簡單 RAG 無法處理複雜問題
 
-Basic retrieval-augmented generation (RAG) does one search and uses whatever comes back. This fails when:
+基本的檢索增強生成（RAG）只進行一次搜尋並使用任何返回的結果。以下情況會導致失敗：
 
-- Questions have multiple parts
-- Information spans multiple documents
-- The obvious search terms don't match the document language
+- 問題包含多個部分
+- 資訊分散在多份文件中
+- 直觀的搜尋詞彙與文件用語不一致
 
-### Solution: Agentic Retrieval Reasons About the Search
+### 解決方案：代理式檢索對搜尋進行推理
 
-The agent acts like a knowledgeable employee who:
+代理程式的行為就像一位知識豐富的員工：
 
-1. Understands what's really being asked
-2. Knows to check multiple sources
-3. Reconciles conflicting information
-4. Admits when it can't find an answer
+1. 理解問題的真正意圖
+2. 知道要查閱多個來源
+3. 調和互相矛盾的資訊
+4. 在找不到答案時坦然承認
 
-## Customer Talking Points
+## 客戶對話要點
 
-| Question | Response |
-|----------|----------|
-| "Why not just use search?" | "Search finds documents. Agentic retrieval finds answers — and knows when to look in multiple places." |
-| "What about hallucination?" | "Every response cites specific documents. Users can click through to verify. The agent says 'I don't know' rather than guess." |
-| "Can it handle our complex policies?" | "The Plan-Iterate-Reflect approach handles multi-part policies. Let me show you with this example..." |
+| 問題 | 回應 |
+|------|------|
+| 「為什麼不直接用搜尋？」 | 「搜尋找到的是文件。代理式檢索找到的是答案——而且知道何時需要查閱多個來源。」 |
+| 「幻覺問題怎麼辦？」 | 「每個回應都引用特定文件。使用者可以點擊連結進行驗證。代理程式會說『我不知道』而非猜測。」 |
+| 「能處理我們複雜的政策嗎？」 | 「規劃-迭代-反思方法能處理多部分的政策。讓我用這個範例為您展示⋯⋯」 |
 
-## Technical Details
+## 技術細節
 
-### Document Processing Pipeline
+### 文件處理管線
 
 ```
 PDFs/Word/PPT → Text Extraction → Chunking → Embedding → Vector Index
 ```
 
-- **Chunking**: Preserves sentence boundaries, typically 500-1000 tokens
-- **Embedding**: Azure OpenAI text-embedding-3-large (3072 dimensions)
-- **Index**: Azure AI Search with hybrid (keyword + vector) retrieval
+- **分塊**：保留句子邊界，通常 500-1000 個 token
+- **向量嵌入**：Azure OpenAI text-embedding-3-large（3072 維度）
+- **索引**：Azure AI Search 搭配混合式（關鍵字 + 向量）檢索
 
-### Search Configuration
+### 搜尋設定
 
 ```python
 # Hybrid search combines:
@@ -108,4 +108,4 @@ query_type = "vectorSemanticHybrid"
 
 ---
 
-[← Overview](index.md) | [Fabric IQ: Data →](02-fabric-iq.md)
+[← 概觀](index.md) | [Fabric IQ：資料 →](02-fabric-iq.md)

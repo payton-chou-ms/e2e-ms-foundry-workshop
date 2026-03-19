@@ -1,20 +1,20 @@
-# Generate Custom Data
+# 產生自訂資料
 
-## Run the AI Generator
+## 執行 AI 產生器
 
-With your `.env` configured, generate customer-specific data:
+在 `.env` 設定完成後，產生客戶專屬資料：
 
 ```bash
 python scripts/00_build_solution.py --clean
 ```
 
-| Flag | Purpose |
-|------|---------|
-| `--clean` | Reset Fabric artifacts (required when switching scenarios) |
+| 旗標 | 用途 |
+|------|------|
+| `--clean` | 重設 Fabric 產物（切換情境時必要） |
 
-### Alternative: Inline Parameters
+### 替代方式：內嵌參數
 
-Override `.env` settings directly from the command line:
+直接在命令列覆蓋 `.env` 的設定：
 
 ```bash
 python scripts/00_build_solution.py --clean \
@@ -22,7 +22,7 @@ python scripts/00_build_solution.py --clean \
   --usecase "Property insurance with claims processing and policy management"
 ```
 
-## Generation Process
+## 產生流程
 
 ```
 ============================================================
@@ -60,19 +60,19 @@ Data generated: data/20260202_143022_insurance/
 ============================================================
 ```
 
-## Review Generated Content
+## 檢視產生的內容
 
-Check what was created:
+確認產生了什麼：
 
 ```bash
-# View the generated files
+# 檢視產生的檔案
 ls data/*/
 
-# Read sample questions for testing
+# 讀取範例問題以供測試
 cat data/*/config/sample_questions.txt
 ```
 
-### Sample Questions (Insurance Example)
+### 範例問題（保險案例）
 
 ```
 # Structured data questions (Fabric IQ)
@@ -90,9 +90,9 @@ Which open claims are approaching our SLA deadline based on our process guidelin
 Do any current claims involve coverage types not in our standard policy?
 ```
 
-## Expected Output
+## 預期輸出
 
-The complete build takes ~5 minutes:
+完整建置約需 5 分鐘：
 
 ```
 ============================================================
@@ -130,20 +130,20 @@ Build complete! Ready for customer PoC.
 ============================================================
 ```
 
-## Troubleshooting
+## 疑難排解
 
-### AI generation times out
+### AI 產生逾時
 
-- Check your internet connection
-- Try with `--size small` for faster generation
-- Verify Azure AI Services quota
+- 檢查你的網路連線
+- 嘗試使用 `--size small` 加快產生速度
+- 確認 Azure AI Services 配額
 
-### Fabric errors on --clean
+### --clean 時出現 Fabric 錯誤
 
-- Ensure `FABRIC_WORKSPACE_ID` is correct
-- Check you have Contributor access to the workspace
-- Wait a minute and retry (Fabric operations can be slow)
+- 確認 `FABRIC_WORKSPACE_ID` 正確
+- 確認你對工作區有 Contributor 存取權
+- 等待一分鐘後重試（Fabric 操作可能較慢）
 
 ---
 
-[← Overview](index.md) | [Test Your PoC →](03-demo.md)
+[← 總覽](index.md) | [建置與測試 PoC →](03-demo.md)

@@ -1,55 +1,55 @@
-# Deploy Infrastructure
+# 部署基礎架構
 
-!!! info "Primary audience"
-    This page is mainly for the **Admin deploy and share** route.
-    If someone already prepared the environment for you, start with [Participant run and validate](00-participant-run-validate.md) instead.
+!!! info "主要適用對象"
+    本頁主要供**管理員部署與分享**路徑使用。
+    如果已有人為你準備好環境，請從 [參與者執行與驗證](00-participant-run-validate.md) 開始。
 
-## Clone the Repository
+## 複製 Repository
 
 ```bash
 git clone https://github.com/nchandhi/nc-iq-workshop.git
 cd nc-iq-workshop
 ```
 
-## Login to Azure
+## 登入 Azure
 
 ```bash
 azd auth login
 ```
 
-This opens a browser for authentication.
+這會開啟瀏覽器進行驗證。
 
-!!! warning "Deployment permissions"
-    This repository deploys Azure role assignments as part of the infrastructure.
-    If `azd up` fails during RBAC creation, confirm that your identity can create role assignments in the target scope.
+!!! warning "部署權限"
+    本 repository 會在部署過程中建立 Azure 角色指派。
+    如果 `azd up` 在 RBAC 建立時失敗，請確認你的身分可以在目標範圍內建立角色指派。
 
-## Deploy Resources
+## 部署資源
 
 ```bash
 azd up
 ```
 
-Follow the prompts to select your environment name, subscription, and location etc.
+依照提示選擇你的環境名稱、訂用帳戶與位置等。
 
-!!! warning "Wait for Completion"
-    Deployment takes 7-8 minutes. Don't proceed until you see the success message.
+!!! warning "請等待完成"
+    部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作。
 
-## Verify Deployment
+## 驗證部署
 
-Verify in [Azure Portal](https://portal.azure.com/) that your resource group contains all resources:
+在 [Azure Portal](https://portal.azure.com/) 中確認你的資源群組包含所有資源：
 
 - Microsoft Foundry
 - Azure AI Search
 - Storage Account
 - Application Insights
 
-## Environment Variables
+## 環境變數
 
-After deployment, Azure endpoints are automatically saved to `.azure/<env>/.env` and loaded by the scripts.
+部署完成後，Azure 端點會自動儲存到 `.azure/<env>/.env`，並由腳本自動載入。
 
-!!! note "No Manual Configuration"
-    You don't need to manually set Azure connection strings. The scripts read them from the azd environment automatically.
+!!! note "無需手動設定"
+    你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取。
 
 ---
 
-[← Admin deploy and share](00-admin-deploy-share.md) | [Create Fabric workspace →](02-setup-fabric.md)
+[← 管理員部署與分享](00-admin-deploy-share.md) | [建立 Fabric 工作區 →](02-setup-fabric.md)

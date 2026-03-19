@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://nchandhi.github.io/nc-iq-workshop/03-understand/04-control-plane/">
+        <link rel="canonical" href="https://nchandhi.github.io/nc-iq-workshop/03-understand/05-multi-agent-extension/">
       
       
-        <link rel="prev" href="../02-fabric-iq/">
+        <link rel="prev" href="../04-control-plane/">
       
       
-        <link rel="next" href="../05-multi-agent-extension/">
+        <link rel="next" href="../../04-cleanup/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Control Plane: 資源拓撲 - 使用 Solution Accelerators 更快建構方案 – Foundry IQ + Fabric IQ</title>
+        <title>Multi-Agent Extension: 情境工作流 - 使用 Solution Accelerators 更快建構方案 – Foundry IQ + Fabric IQ</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#multi-agent-extension" class="md-skip">
           Skip to content
         </a>
       
@@ -114,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Control Plane: 資源拓撲
+              Multi-Agent Extension: 情境工作流
             
           </span>
         </div>
@@ -1146,6 +1146,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-control-plane/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Control Plane: 資源拓撲
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1165,7 +1193,7 @@
   <span class="md-ellipsis">
     
   
-    Control Plane: 資源拓撲
+    Multi-Agent Extension: 情境工作流
   
 
     
@@ -1183,7 +1211,7 @@
   <span class="md-ellipsis">
     
   
-    Control Plane: 資源拓撲
+    Multi-Agent Extension: 情境工作流
   
 
     
@@ -1209,10 +1237,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本頁說明的內容
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        控制平面掌管的範圍
+        為什麼這條延伸路徑存在
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目前 extension 的角色設計
       
     </span>
   </a>
@@ -1223,7 +1273,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        核心資源
+        宣告式設計長什麼樣子
       
     </span>
   </a>
@@ -1234,7 +1284,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        控制平面與執行階段路徑
+        建立流程
       
     </span>
   </a>
@@ -1245,7 +1295,40 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        為什麼專案很重要
+        執行流程
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        與主 workshop 的關係
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼仍然保留本機 tool execution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 設計方式
       
     </span>
   </a>
@@ -1256,39 +1339,6 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        專案連線
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        可觀測性路徑
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC 期望
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
-    <span class="md-ellipsis">
-      
         客戶對話要點
       
     </span>
@@ -1297,41 +1347,190 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#faq" class="md-nav__link">
     <span class="md-ellipsis">
       
-        常見問題
+        FAQ
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="常見問題">
+    <nav class="md-nav" aria-label="FAQ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        這是正式產品架構，還是教學延伸？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼用 YAML，而不是直接把流程寫死在 Python？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        這頁最簡潔的對話要點是什麼？
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        營運要點
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        為什麼工作坊大量討論專案端點？
+        本頁說明的內容
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
+  <a href="#extension-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼它是 extension，不是 replacement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extension 的檔案組成
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        控制平面和使用者體驗是同一件事嗎？
+        角色分工
       
     </span>
   </a>
   
 </li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 結構
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yaml-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML 在 workshop 中扮演什麼角色
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目前提供的示範情境
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        它如何沿用前面章節的內容
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        建立與測試流程
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        什麼時候應該把這頁拿出來講
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        客戶對話要點
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="客戶對話要點">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         本頁最簡潔的對話要點是什麼？
@@ -1347,7 +1546,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         營運要點
@@ -1361,34 +1560,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../05-multi-agent-extension/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Multi-Agent Extension: 情境工作流
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1541,10 +1712,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        本頁說明的內容
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        控制平面掌管的範圍
+        為什麼這條延伸路徑存在
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目前 extension 的角色設計
       
     </span>
   </a>
@@ -1555,7 +1748,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        核心資源
+        宣告式設計長什麼樣子
       
     </span>
   </a>
@@ -1566,7 +1759,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        控制平面與執行階段路徑
+        建立流程
       
     </span>
   </a>
@@ -1577,7 +1770,40 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        為什麼專案很重要
+        執行流程
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        與主 workshop 的關係
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼仍然保留本機 tool execution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario 設計方式
       
     </span>
   </a>
@@ -1588,39 +1814,6 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        專案連線
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        可觀測性路徑
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC 期望
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
-    <span class="md-ellipsis">
-      
         客戶對話要點
       
     </span>
@@ -1629,41 +1822,190 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#faq" class="md-nav__link">
     <span class="md-ellipsis">
       
-        常見問題
+        FAQ
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="常見問題">
+    <nav class="md-nav" aria-label="FAQ">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        這是正式產品架構，還是教學延伸？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yaml-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼用 YAML，而不是直接把流程寫死在 Python？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        這頁最簡潔的對話要點是什麼？
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        營運要點
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        為什麼工作坊大量討論專案端點？
+        本頁說明的內容
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
+  <a href="#extension-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼它是 extension，不是 replacement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extension 的檔案組成
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        控制平面和使用者體驗是同一件事嗎？
+        角色分工
       
     </span>
   </a>
   
 </li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow 結構
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#yaml-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        YAML 在 workshop 中扮演什麼角色
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        目前提供的示範情境
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        它如何沿用前面章節的內容
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        建立與測試流程
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        什麼時候應該把這頁拿出來講
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        客戶對話要點
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="客戶對話要點">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         本頁最簡潔的對話要點是什麼？
@@ -1679,7 +2021,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         營運要點
@@ -1709,152 +2051,170 @@
   
 
 
-<h1 id="_1">控制平面：資源拓撲</h1>
-<h2 id="_2">控制平面掌管的範圍</h2>
-<p>工作坊的執行階段之所以感覺簡單，是因為基礎架構在背後建立並串聯了更大規模的 Azure 資源。本頁說明這些控制平面資源，以及它們與執行階段路徑的關係。</p>
-<h2 id="_3">核心資源</h2>
-<table>
-<thead>
-<tr>
-<th>資源</th>
-<th>在本工作坊中的用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Azure AI Services 帳戶</strong></td>
-<td>Foundry 專案功能與模型部署的父帳戶</td>
-</tr>
-<tr>
-<td><strong>Foundry 專案</strong></td>
-<td>代理程式、工具、連線與可觀測性的工作區邊界</td>
-</tr>
-<tr>
-<td><strong>模型部署</strong></td>
-<td>工作坊使用的聊天、向量嵌入及選用模型端點</td>
-</tr>
-<tr>
-<td><strong>Azure AI Search</strong></td>
-<td><code>search_documents</code> 的文件索引建立與檢索</td>
-</tr>
-<tr>
-<td><strong>儲存體</strong></td>
-<td>解決方案設定使用的資料與文件儲存</td>
-</tr>
-<tr>
-<td><strong>Application Insights</strong></td>
-<td>選用代理程式遙測的追蹤目的地</td>
-</tr>
-</tbody>
-</table>
-<h2 id="_4">控制平面與執行階段路徑</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart TB
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    subgraph ControlPlane[Control Plane]
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        A[Azure AI Services account]
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        B[Foundry project]
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        C[Model deployments]
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        D[Project connections]
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        E[Application Insights]
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        F[Azure AI Search]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        G[Storage]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    end
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    subgraph Runtime[Runtime Path]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        H[07_create_foundry_agent.py]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        I[08_test_foundry_agent.py]
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        J[Prompt agent]
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        K[Function tools]
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        L[Azure AI Search queries]
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        M[Fabric SQL queries]
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    end
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    A --&gt; B
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    B --&gt; C
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    B --&gt; D
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    B --&gt; E
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    D --&gt; F
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    D --&gt; G
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    H --&gt; B
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    I --&gt; B
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    B --&gt; J
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    J --&gt; K
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    K --&gt; L
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    K --&gt; M
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    J -. optional tracing .-&gt; E
-</code></pre></div>
-<h2 id="_5">為什麼專案很重要</h2>
-<p>Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供一個端點來使用，同時平台持續追蹤：</p>
+<h1 id="multi-agent-extension">Multi-Agent Extension: 情境工作流</h1>
+<h2 id="_1">本頁說明的內容</h2>
+<p>主 workshop 故意維持單代理程式主路徑，方便部署、解說與驗證。但當客戶開始問「如果後面要拆成不同角色、不同責任、不同治理邊界的多代理程式系統，要怎麼往前走？」時，repo 現在也提供一條清楚的延伸路徑。</p>
+<p>這條延伸路徑位於：</p>
 <ul>
-<li>代理程式定義</li>
-<li>專案連線</li>
-<li>模型可用性</li>
-<li>追蹤設定</li>
+<li><code>multi_agent/workflow.yaml</code></li>
+<li><code>scripts/14_create_multi_agent_workflow.py</code></li>
+<li><code>scripts/15_test_multi_agent_workflow.py</code></li>
+<li><code>scripts/foundry_multi_agent_runtime.py</code></li>
 </ul>
-<p>這就是為什麼大多數工作坊腳本只需要 Foundry 專案端點加上認證資訊。</p>
-<h2 id="_6">專案連線</h2>
-<p>連線代表代理程式或專案可以使用的相依性，無需在腳本中硬編碼密碼。</p>
-<p>在本工作坊中，最相關的連線模式為：</p>
+<p>它不是要取代主 workshop，而是示範如何在沿用既有資料、搜尋索引與 tool contract 的前提下，把單代理程式 PoC 擴成情境化 multi-agent workflow。</p>
+<h2 id="_2">為什麼這條延伸路徑存在</h2>
+<p>主 workshop 已經回答了「一個 agent 如何同時查文件與查資料」。</p>
+<p>多代理程式延伸要回答的是另一組問題：</p>
+<ul>
+<li>如果不同角色要有不同 tool surface，怎麼拆？</li>
+<li>如果規劃、政策判讀、資料分析、最終彙整要分開治理，怎麼做？</li>
+<li>如果未來要加更多情境，而不是一直往同一個 system prompt 疊功能，怎麼維持可維護性？</li>
+</ul>
+<h2 id="extension">目前 extension 的角色設計</h2>
+<p>這個 extension 目前把 workflow 拆成四個角色。</p>
 <table>
 <thead>
 <tr>
-<th>連線類型</th>
-<th>重要性</th>
+<th>角色</th>
+<th>主要責任</th>
+<th>工具模式</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Azure AI Search</strong></td>
-<td>支援文件參照與檢索</td>
+<td><code>planner</code></td>
+<td>重述問題、定義需要哪些政策證據與資料證據</td>
+<td><code>none</code></td>
 </tr>
 <tr>
-<td><strong>瀏覽器自動化連線</strong></td>
-<td>用於瀏覽器自動化預覽的選用 Playwright 工作區</td>
+<td><code>policy_specialist</code></td>
+<td>從文件中找政策、流程、門檻與例外</td>
+<td><code>search</code></td>
 </tr>
 <tr>
-<td><strong>Bing 參照連線</strong></td>
-<td>選用的即時公開網路參照</td>
+<td><code>data_specialist</code></td>
+<td>對 Fabric SQL 做唯讀查詢並萃取關鍵數據</td>
+<td><code>sql</code></td>
+</tr>
+<tr>
+<td><code>synthesizer</code></td>
+<td>組合前面三者輸出，產生最終回答</td>
+<td><code>none</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="_7">可觀測性路徑</h2>
-<p>追蹤是選用的，但當 Application Insights 連結至專案時，控制平面可以支援它。</p>
-<p>目前的工作坊做法是：</p>
+<p>這個分工刻意讓不同角色只拿到自己該拿的能力，而不是讓每個 agent 都同時擁有所有工具。</p>
+<h2 id="_3">宣告式設計長什麼樣子</h2>
+<p><code>multi_agent/workflow.yaml</code> 是這條延伸路徑的中心。它同時定義：</p>
 <ol>
-<li>預設<strong>關閉</strong>追蹤</li>
-<li>允許腳本透過環境旗標啟用追蹤</li>
-<li>僅在連線字串可用時使用 Application Insights</li>
-<li>當遙測不可用時，絕不阻擋主要工作坊路徑</li>
+<li>agent templates</li>
+<li>每個角色的 instruction template</li>
+<li>workflow steps</li>
+<li>scenario catalog</li>
 </ol>
-<h2 id="rbac">RBAC 期望</h2>
+<p>這樣做的重點是，把「情境設計」從 Python orchestration code 裡抽出來。</p>
+<p>你可以把它理解成兩層：</p>
+<ul>
+<li>Python 負責執行與接線</li>
+<li>YAML 負責描述角色、步驟與 scenario 差異</li>
+</ul>
+<h2 id="_4">建立流程</h2>
+<p>建立 multi-agent set 的流程如下：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart LR
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    A[multi_agent/workflow.yaml] --&gt; B[14_create_multi_agent_workflow.py]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    B --&gt; C[讀取 scenario 與 agent template]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    C --&gt; D[依 tool_mode 建立對應工具清單]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    D --&gt; E[建立 PromptAgentDefinition]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    E --&gt; F[在 Foundry project 中建立或覆蓋角色 agent]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    F --&gt; G[輸出 multi_agent_ids.json]
+</code></pre></div>
+<p>建立腳本會針對每個 scenario 建立一組角色 agent，並把 agent id 存回資料夾中的設定檔，供測試腳本後續讀取。</p>
+<h2 id="_5">執行流程</h2>
+<p><code>scripts/15_test_multi_agent_workflow.py</code> 會依照 YAML 中定義的 workflow steps，逐步執行整條鏈。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>flowchart LR
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    U[User question] --&gt; P[planner]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    P --&gt; PS[policy_specialist]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    P --&gt; DS[data_specialist]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    PS --&gt; S[synthesizer]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    DS --&gt; S
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    S --&gt; A[Final answer]
+</code></pre></div>
+<p>對應的可見輸出分成四段：</p>
+<ol>
+<li>planner brief</li>
+<li>policy findings</li>
+<li>data findings</li>
+<li>final synthesized answer</li>
+</ol>
+<p>這對 demo 很有用，因為它讓使用者清楚看見「規劃」、「找政策」、「查資料」、「彙整」是不同責任，而不是全部都藏在單一 agent 的黑盒子裡。</p>
+<h2 id="workshop">與主 workshop 的關係</h2>
+<p>這條延伸路徑不是重新發明一套新的底層能力。它直接重用目前 workshop 已經存在的基礎：</p>
 <table>
 <thead>
 <tr>
-<th>操作</th>
-<th>通常需要的權限</th>
+<th>延伸元件</th>
+<th>重用的既有能力</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>部署基礎架構</td>
-<td>訂閱或資源群組的部署權限</td>
+<td><code>policy_specialist</code></td>
+<td><code>search_documents</code> 與 Azure AI Search grounding</td>
 </tr>
 <tr>
-<td>建立專案資源和連線</td>
-<td>Foundry 專案管理權限</td>
+<td><code>data_specialist</code></td>
+<td><code>execute_sql</code> 與 Fabric Lakehouse SQL endpoint</td>
 </tr>
 <tr>
-<td>執行代理程式腳本</td>
-<td>可存取 Foundry 專案的 Azure 登入</td>
+<td><code>foundry_multi_agent_runtime.py</code></td>
+<td>與主路徑相同的本機 tool execution 模型</td>
 </tr>
 <tr>
-<td>讀取遙測</td>
-<td>對已連結 Application Insights 資源的存取權限</td>
+<td>scenario context</td>
+<td><code>ontology_config.json</code>、<code>schema_prompt.txt</code>、<code>fabric_ids.json</code></td>
 </tr>
 </tbody>
 </table>
-<p>確切的角色指派取決於環境的治理方式，但設計假設很明確：部署權限和執行階段使用權限可能不是同一個身分。</p>
-<h2 id="_8">客戶對話要點</h2>
+<p>這代表 multi-agent extension 改變的是 orchestration shape，而不是資料來源或核心 grounding 路徑。</p>
+<h2 id="tool-execution">為什麼仍然保留本機 tool execution</h2>
+<p>即使角色數變多，這條延伸路徑仍然沿用目前 workshop 的設計原則：</p>
+<ul>
+<li>Foundry 負責保存 prompt agent definition</li>
+<li>本機 runtime 負責執行實際工具</li>
+<li>工具結果再以 <code>function_call_output</code> 回傳給模型</li>
+</ul>
+<p>保留這個模式有三個好處：</p>
+<ol>
+<li>可以沿用既有的 SQL guardrail 與 search behavior。</li>
+<li>Demo 時仍然看得到每一步到底呼叫了哪些工具。</li>
+<li>不需要在 extension 階段就把所有工具執行搬進另一套複雜 hosting model。</li>
+</ol>
+<h2 id="scenario">Scenario 設計方式</h2>
+<p>目前 YAML 已示範三種 scenario：</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>policy_gap_analysis</code></td>
+<td>比對政策門檻與實際營運結果</td>
+</tr>
+<tr>
+<td><code>exception_triage</code></td>
+<td>針對異常事件做政策 + 數據聯合判讀</td>
+</tr>
+<tr>
+<td><code>executive_brief</code></td>
+<td>用政策與資料整理管理層摘要</td>
+</tr>
+</tbody>
+</table>
+<p>這個設計的重點不是 scenario 名稱本身，而是讓你知道後續若要再擴充，只需要新增 YAML scenario 與對應 prompt，而不是把所有新需求都回寫到主 workshop agent 裡。</p>
+<h2 id="_6">客戶對話要點</h2>
 <table>
 <thead>
 <tr>
@@ -1864,37 +2224,228 @@
 </thead>
 <tbody>
 <tr>
-<td>「代理程式實際上存在哪裡？」</td>
-<td>「代理程式定義存在 Foundry 專案中，而模型部署存在 Azure AI Services 帳戶下。」</td>
+<td>「為什麼要做 multi-agent？」</td>
+<td>「當不同工作需要不同治理邊界時，拆角色比一直膨脹單一 prompt 更容易維護。」</td>
 </tr>
 <tr>
-<td>「什麼將代理程式連接到搜尋？」</td>
-<td>「專案連線和工具設定。執行階段使用專案端點，而非將密碼嵌入程式碼中。」</td>
+<td>「是不是每個 agent 都需要一樣的工具？」</td>
+<td>「不用。這個 extension 的重點就是讓不同角色只拿到需要的 tool surface。」</td>
 </tr>
 <tr>
-<td>「追蹤是否一直開啟？」</td>
-<td>「不是。工作坊將遙測設為選用，因此缺少可觀測性設定永遠不會阻擋示範。」</td>
+<td>「這會不會推翻原本的 workshop？」</td>
+<td>「不會。它沿用同一批資料、索引與 tool contract，只是把 orchestration 往前延伸。」</td>
 </tr>
 </tbody>
 </table>
-<h2 id="_9">常見問題</h2>
-<h3 id="_10">為什麼工作坊大量討論專案端點？</h3>
-<p>因為專案端點是執行階段的交接點。它讓腳本透過一個邏輯邊界存取代理程式、遙測配線和連線，而非在各處硬編碼服務專屬的認證資訊。</p>
-<h3 id="_11">控制平面和使用者體驗是同一件事嗎？</h3>
-<p>不是。控制平面是支援性的 Azure 拓撲。使用者與代理程式體驗互動，但該體驗之所以能運作，是因為控制平面在背後佈建了模型、連線、儲存體、搜尋和可觀測性。</p>
-<h3 id="_12">本頁最簡潔的對話要點是什麼？</h3>
-<p>「控制平面是讓簡單的執行階段示範成為可能的 Azure 鷹架。」</p>
-<h2 id="_13">營運要點</h2>
-<p>控制平面賦予您可重複性：</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="_7">這是正式產品架構，還是教學延伸？</h3>
+<p>目前是教學延伸。它的價值在於示範如何從單代理程式 PoC，演進到更有角色邊界與工作流概念的設計。</p>
+<h3 id="yaml-python">為什麼用 YAML，而不是直接把流程寫死在 Python？</h3>
+<p>因為這樣比較容易新增 scenario、調整角色指令、或更換 workflow 順序，而不必每次都改 orchestration code。</p>
+<h3 id="_8">這頁最簡潔的對話要點是什麼？</h3>
+<p>「主 workshop 展示單代理程式主路徑；multi-agent extension 展示如何沿用同一批 grounding 能力，把它演進成多角色情境工作流。」</p>
+<h2 id="_9">營運要點</h2>
+<p>這條 multi-agent extension 提供的是一個可治理的延伸方向：</p>
 <ul>
-<li>Bicep 定義資源</li>
-<li>輸出公開重要的識別碼</li>
-<li>腳本透過環境變數使用這些輸出</li>
-<li>可以新增選用功能而無需重新設計主要執行階段</li>
+<li>角色有清楚責任</li>
+<li>工具有清楚邊界</li>
+<li>scenario 用宣告式設定管理</li>
+<li>底層 grounding 資產仍與主 workshop 共用</li>
 </ul>
-<p>這也包含後續的 multi-agent 延伸。新增角色與 workflow 時，通常不需要重做整個 Azure 拓撲，而是重用既有的 Foundry project、模型部署、Search 索引、Fabric SQL 端點，以及身分驗證設定。真正新增的是 orchestration 層，而不是另一套控制平面。</p>
+<p>因此它很適合作為從 demo 到更完整 solution architecture 對話之間的過渡層。</p>
 <hr />
-<p><a href="../02-fabric-iq/">← Fabric IQ：資料</a> | <a href="../05-multi-agent-extension/">Multi-Agent Extension：情境工作流 →</a></p>
+<p><a href="../04-control-plane/">← Control Plane: 資源拓撲</a> | <a href="../../04-cleanup/">刪除資源 →</a># Multi-Agent Extension：情境工作流</p>
+<h2 id="_10">本頁說明的內容</h2>
+<p>目前 workshop 的主流程是單一 Foundry prompt agent，加上兩個受控函式工具。這個設計適合教學，因為架構清楚、部署面少、對客戶也容易解釋。</p>
+<p>但如果你要在 workshop 後段加入更多情境，例如例外處理、政策差距分析、管理摘要生成，單一代理程式很快就會承擔太多角色。這時比較好的做法不是重寫前面的流程，而是把既有能力延伸成一個可宣告的 multi-agent workflow。</p>
+<p>這個 repository 已經提供一套獨立 extension，放在 <code>multi_agent/</code> 和 <code>scripts/14_*</code>、<code>scripts/15_*</code> 腳本中。</p>
+<h2 id="extension-replacement">為什麼它是 extension，不是 replacement</h2>
+<p>這一點很重要。</p>
+<ul>
+<li>核心 workshop 仍然維持單代理程式，方便第一次部署與第一次說明</li>
+<li>multi-agent 只在你需要更長、更角色化的情境時才加上去</li>
+<li>它沿用既有的 Search、Fabric、Foundry project 與模型部署</li>
+<li>它不改寫前面教學的核心故事，只是把它延伸成更進階的示範</li>
+</ul>
+<p>換句話說，這不是第二套產品，而是同一套 workshop 的「後續章節」。</p>
+<h2 id="extension_1">Extension 的檔案組成</h2>
+<table>
+<thead>
+<tr>
+<th>檔案</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>multi_agent/workflow.yaml</code></td>
+<td>宣告角色、步驟與情境</td>
+</tr>
+<tr>
+<td><code>scripts/foundry_multi_agent_runtime.py</code></td>
+<td>共用執行時 helper，重用 Search / Fabric / env 邏輯</td>
+</tr>
+<tr>
+<td><code>scripts/14_create_multi_agent_workflow.py</code></td>
+<td>依照 YAML 建立或更新多個 prompt agents</td>
+</tr>
+<tr>
+<td><code>scripts/15_test_multi_agent_workflow.py</code></td>
+<td>依照步驟順序執行某個 scenario</td>
+</tr>
+<tr>
+<td><code>multi_agent/README.md</code></td>
+<td>extension 的操作說明</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_11">角色分工</h2>
+<p>目前的 YAML 將工作拆成四個角色。</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>任務</th>
+<th>主要依賴</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>planner</code></td>
+<td>將使用者問題拆成查證計畫</td>
+<td>Foundry reasoning</td>
+</tr>
+<tr>
+<td><code>policy_specialist</code></td>
+<td>查政策、程序、FAQ、文件證據</td>
+<td><code>search_documents</code></td>
+</tr>
+<tr>
+<td><code>data_specialist</code></td>
+<td>查指標、事件、工單、商業資料</td>
+<td><code>execute_sql</code></td>
+</tr>
+<tr>
+<td><code>synthesizer</code></td>
+<td>匯總前面結果，形成最後答案</td>
+<td>前序步驟輸出</td>
+</tr>
+</tbody>
+</table>
+<p>這裡的重點不是「更多工具」，而是「更明確的責任邊界」。</p>
+<h2 id="workflow">Workflow 結構</h2>
+<p>目前 extension 不是做完全自由協商的 agent swarm，而是採用教學上更可控的 staged workflow。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>flowchart LR
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    U[User scenario] --&gt; P[Planner]
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    P --&gt; PS[Policy specialist]
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    P --&gt; DS[Data specialist]
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    PS --&gt; S[Synthesizer]
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    DS --&gt; S
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    S --&gt; A[Final answer]
+</code></pre></div>
+<p>這樣做有三個好處：</p>
+<ol>
+<li>比較容易教學和除錯</li>
+<li>比較容易解釋每個角色為什麼存在</li>
+<li>比較容易逐步增加情境，而不必一次處理完全動態的代理協商</li>
+</ol>
+<h2 id="yaml-workshop">YAML 在 workshop 中扮演什麼角色</h2>
+<p><code>multi_agent/workflow.yaml</code> 是 extension 的單一事實來源。它定義三件事：</p>
+<ol>
+<li>agent templates</li>
+<li>workflow steps</li>
+<li>scenarios</li>
+</ol>
+<p>這代表你後續要加情境時，先調整 YAML，再決定要不要調整提示詞或執行時程式碼。</p>
+<p>對 workshop 來說，這很有價值，因為它把「情境設計」從「基礎架構部署」拆開了。</p>
+<h2 id="_12">目前提供的示範情境</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>policy_gap_analysis</code></td>
+<td>檢查政策與實際資料是否一致</td>
+</tr>
+<tr>
+<td><code>exception_triage</code></td>
+<td>針對異常事件做分流與建議</td>
+</tr>
+<tr>
+<td><code>executive_brief</code></td>
+<td>將多來源訊息整理成高階摘要</td>
+</tr>
+</tbody>
+</table>
+<p>你可以把它們理解成 workshop 後段的「進階 demo 選單」。</p>
+<h2 id="_13">它如何沿用前面章節的內容</h2>
+<p>這個 extension 並沒有引入新的基礎真相，而是重用前面五個主軸：</p>
+<ul>
+<li><strong>Foundry Model</strong>：仍使用同一批模型部署</li>
+<li><strong>Foundry Agent</strong>：仍然建立 prompt agents，只是從一個變成多個</li>
+<li><strong>Foundry Tool</strong>：仍使用同一組受控工具合約</li>
+<li><strong>Foundry IQ / Fabric IQ</strong>：仍用同一套 grounding 來源</li>
+<li><strong>Control Plane</strong>：仍用同一組 Azure 資源與認證</li>
+</ul>
+<p>所以比較精準的說法是：</p>
+<blockquote>
+<p>單代理程式 workshop 定義了穩定核心，而 multi-agent extension 把這個核心重新編排成更長的情境工作流。</p>
+</blockquote>
+<h2 id="_14">建立與測試流程</h2>
+<p>建立多代理程式：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>scripts/14_create_multi_agent_workflow.py
+</code></pre></div>
+<p>測試某個情境：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>scripts/15_test_multi_agent_workflow.py<span class="w"> </span>--scenario<span class="w"> </span>policy_gap_analysis
+</code></pre></div>
+<p>這些腳本與主 workshop 一樣，依賴既有環境變數、Foundry project 設定，以及已建立的 Search / Fabric 資源。</p>
+<h2 id="_15">什麼時候應該把這頁拿出來講</h2>
+<p>當客戶開始問以下問題時，這頁就有用：</p>
+<ul>
+<li>「如果我要加更多情境，單一 agent 會不會太重？」</li>
+<li>「不同角色能不能分開負責政策和資料？」</li>
+<li>「可不可以讓一個 agent 規劃、另一個 agent 查證、最後再匯總？」</li>
+<li>「這個 PoC 之後怎麼往更完整的 copilot experience 發展？」</li>
+</ul>
+<h2 id="_16">客戶對話要點</h2>
+<table>
+<thead>
+<tr>
+<th>問題</th>
+<th>實務回答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>「你們現在已經是 multi-agent 嗎？」</td>
+<td>「核心 workshop 不是；核心是單代理程式。multi-agent 是我們後續加上的進階延伸。」</td>
+</tr>
+<tr>
+<td>「為什麼不一開始就做 multi-agent？」</td>
+<td>「因為單代理程式更適合教學與首次部署。multi-agent 在情境變多時才值得引入。」</td>
+</tr>
+<tr>
+<td>「multi-agent 會不會需要整套 Azure 重做？」</td>
+<td>「通常不需要。大多是 orchestration 層增加，而不是控制平面重建。」</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_17">本頁最簡潔的對話要點是什麼？</h3>
+<p>「先用單代理程式把核心打穩，再用宣告式 workflow 把它延伸成多角色情境。」</p>
+<h2 id="_18">營運要點</h2>
+<p>multi-agent extension 的真正價值在於：</p>
+<ul>
+<li>保留原 workshop 的清楚主線</li>
+<li>提供後續擴展情境的結構化入口</li>
+<li>重用既有工具、資料與 Azure 資源</li>
+<li>把角色分工與場景流程顯式化</li>
+</ul>
+<hr />
+<p><a href="../04-control-plane/">← Control Plane：資源拓撲</a> | <a href="../../04-cleanup/">清理 →</a></p>
 
 
 

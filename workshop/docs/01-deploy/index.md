@@ -1,79 +1,79 @@
-# Deploy solution
+# 部署解決方案
 
-This section is the entry point for getting the sample scenario running end-to-end.
+本節是讓範例情境端到端運作的入口。
 
-The deployment path stays focused on the minimum needed for a working PoC, but the architecture you are deploying now supports the broader five-axis technical story used in the Deep Dive section.
+部署路徑聚焦在讓 PoC 能正常運作所需的最低限度，但你所部署的架構已支援 Deep Dive 章節中更完整的五主軸技術故事。
 
-## Pick the route that matches your role
+## 選擇符合你角色的路徑
 
-### Admin deploy and share
+### 管理員部署與分享
 
-Use this route if you are preparing the environment for a team, customer, or workshop participants.
+如果你負責為團隊、客戶或 workshop 參與者準備環境，請走這條路徑。
 
-You will:
+你將會：
 
-- Deploy Azure resources with `azd up`
-- Create or choose the Fabric workspace
-- Configure the shared environment
-- Decide what access other users need
-- Hand off a ready-to-use environment
+- 使用 `azd up` 部署 Azure 資源
+- 建立或選擇 Fabric 工作區
+- 設定共用環境
+- 決定其他使用者需要的存取權限
+- 交接一個可直接使用的環境
 
-[Go to Admin deploy and share](00-admin-deploy-share.md)
+[前往管理員部署與分享](00-admin-deploy-share.md)
 
-### Participant run and validate
+### 參與者執行與驗證
 
-Use this route if Azure resources and the Fabric workspace are already prepared for you.
+如果 Azure 資源和 Fabric 工作區已經為你準備好，請走這條路徑。
 
-You will:
+你將會：
 
-- Open the repo and sign in with your assigned identity
-- Configure local settings
-- Run the sample scenario
-- Test the orchestrator agent and validate outputs
+- 開啟 repo 並使用指定身分登入
+- 設定本機組態
+- 執行範例情境
+- 測試協調代理程式（Orchestrator Agent）並驗證輸出
 
-[Go to Participant run and validate](00-participant-run-validate.md)
+[前往參與者執行與驗證](00-participant-run-validate.md)
 
-## Architecture
+## 架構
 
 <!-- TODO: Add architecture diagram image here -->
 ![Architecture Diagram](../assets/architecture.png)
 
-The solution combines Microsoft Fabric and Microsoft Foundry to create an AI solution that can answer questions using both structured data and unstructured documents.
+本方案結合 Microsoft Fabric 與 Microsoft Foundry，建構一個可同時使用結構化資料與非結構化文件回答問題的 AI 解決方案。
 
-At deployment time, it helps to think in two layers:
+在部署時，可以用兩個層次來理解：
 
-### Main workshop path
+### Workshop 主流程
 
-- a prompt agent in Foundry
-- a SQL tool for structured data
-- a document-search tool for unstructured knowledge
-- Foundry IQ and Fabric IQ as the two grounding paths
+- Foundry 中的提示詞代理程式（prompt agent）
+- 用於結構化資料的 SQL 工具
+- 用於非結構化知識的文件搜尋工具
+- Foundry IQ 與 Fabric IQ 作為兩條資料接地路徑
 
-### Five-axis architecture behind the path
+### 主流程背後的五主軸架構
 
-| Axis | Deployment implication |
-|------|------------------------|
-| **Foundry Model** | Required chat + embedding deployments, with optional model extensions kept separate |
-| **Foundry Agent** | A project-scoped agent definition is created and later reused at runtime |
-| **Foundry Tool** | The runtime depends on a strict SQL + search function contract |
-| **Foundry IQ + Fabric IQ** | Search and Fabric resources ground the agent in documents and data |
-| **Control Plane** | Azure AI Services, Foundry project, Search, Storage, telemetry, and RBAC wire the whole environment together |
+| 主軸 | 部署意義 |
+|------|----------|
+| **Foundry Model** | 必要的 chat + embedding 部署，選配模型擴充另外保持獨立 |
+| **Foundry Agent** | 在專案範圍內建立代理程式定義，並在執行時重複使用 |
+| **Foundry Tool** | 執行時依賴嚴格的 SQL + 搜尋函式工具合約 |
+| **Foundry IQ + Fabric IQ** | Search 與 Fabric 資源為代理程式提供文件與資料接地 |
+| **Control Plane** | Azure AI Services、Foundry 專案、Search、Storage、遙測與 RBAC 串連整個環境 |
 
-In other words, the user experience still feels like one conversational PoC, but the deployment prepares the full technical scaffolding that supports it.
+換言之，使用者體驗仍然像一個對話式 PoC，但部署已準備好支撐完整的技術骨架。
 
-- **Microsoft Fabric** provides the data layer with Lakehouse, Warehouse, and the Fabric IQ semantic layer for natural language to SQL translation
-- **Microsoft Foundry** hosts the prompt agent, the tool contract, and Foundry IQ document retrieval
-- **Azure AI Services** powers the chat and embedding model deployments used by the workshop
-- **Azure AI Search** stores document vectors for semantic retrieval
-- **Application Insights** can optionally receive tracing when observability is enabled
+- **Microsoft Fabric** 提供資料層，包括 Lakehouse、Warehouse，以及 Fabric IQ 語意層的自然語言轉 SQL
+- **Microsoft Foundry** 託管提示詞代理程式、工具合約，以及 Foundry IQ 文件擷取
+- **Azure AI Services** 驅動 workshop 使用的 chat 與 embedding 模型部署
+- **Azure AI Search** 儲存文件向量以供語意擷取
+- **Application Insights** 在啟用可觀測性時可選擇性接收追蹤資料
 
-!!! tip "Stuck? Ask Copilot"
-    Use GitHub Copilot Chat (`Ctrl+I`) for help with errors.
+!!! tip "卡住了？問 Copilot"
+    使用 GitHub Copilot Chat（`Ctrl+I`）協助排除錯誤。
 
-!!! note "Canonical content"
-    This MkDocs tree is the canonical workshop documentation.
-    Generated PDFs and site output are secondary artifacts.
+!!! note "唯一內容來源"
+    這個 MkDocs 站台就是 workshop 的正式文件。
+    產生的 PDF 與站台輸出為次要產物。
 
 ---
 
-[← Get Started](../00-get-started/workshop-flow.md) | [Admin deploy and share →](00-admin-deploy-share.md)
+[← 快速開始](../00-get-started/workshop-flow.md) | [管理員部署與分享 →](00-admin-deploy-share.md)
