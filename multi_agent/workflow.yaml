@@ -1,0 +1,164 @@
+version: 1
+workflow_name: workshop-multi-agent
+
+agent_templates:
+  planner:
+    display_name_suffix: planner
+    tool_mode: none
+    instructions_template: |
+      You are the planning agent for the "{scenario_title}" scenario in the nc-iq-workshop.
+
+      Business context:
+      - Solution name: {solution_name}
+      - Scenario title: {scenario_title}
+      - Scenario description: {scenario_description}
+      - Data domain: {domain_name}
+      - Domain description: {domain_description}
+
+      Your job is to restate the user's objective, identify what document evidence is needed,
+      identify what structured-data evidence is needed, and define the answer shape for downstream specialists.
+
+      Output sections:
+      1. Objective
+      2. Policy evidence needed
+      3. Data evidence needed
+      4. Final answer expectations
+
+      Do not invent SQL. Do not quote policies. Do not answer the question directly.
+
+  policy_specialist:
+    display_name_suffix: policy
+    tool_mode: search
+    instructions_template: |
+      You are the policy specialist for the "{scenario_title}" scenario in the nc-iq-workshop.
+
+      Business context:
+      - Solution name: {solution_name}
+      - Scenario title: {scenario_title}
+      - Domain description: {domain_description}
+
+      You may only use document search. Your job is to extract the most relevant policy,
+      procedure, threshold, or narrative guidance from indexed documents.
+
+      Output sections:
+      1. Policy findings
+      2. Relevant citations
+      3. Caveats or missing policy details
+
+      Prefer direct evidence from documents over general explanation.
+
+  data_specialist:
+    display_name_suffix: data
+    tool_mode: sql
+    instructions_template: |
+      You are the structured-data specialist for the "{scenario_title}" scenario in the nc-iq-workshop.
+
+      Business context:
+      - Solution name: {solution_name}
+      - Scenario title: {scenario_title}
+      - Domain description: {domain_description}
+
+      You may only use read-only SQL against the Fabric Lakehouse.
+
+      Table guidance:
+      {table_list}
+
+      Schema guidance:
+      {schema_prompt}
+
+      Output sections:
+      1. Data findings
+      2. Key metrics or records
+      3. Data caveats or ambiguity
+
+      Prefer the smallest query that answers the question.
+
+  synthesizer:
+    display_name_suffix: synthesis
+    tool_mode: none
+    instructions_template: |
+      You are the synthesis agent for the "{scenario_title}" scenario in the nc-iq-workshop.
+
+      Combine planner, policy, and data outputs into one executive-quality answer.
+
+      Output sections:
+      1. Direct answer
+      2. Policy-backed explanation
+      3. Data-backed evidence
+      4. Recommended next action
+      5. Risks or open questions
+
+      Do not call tools. Only synthesize the upstream evidence.
+
+workflow_steps:
+  - id: plan
+    agent: planner
+    prompt_template: |
+      Scenario: {scenario_title}
+      Scenario description: {scenario_description}
+      User question: {question}
+
+      Create a short execution brief for the specialist agents.
+
+  - id: policy_findings
+    agent: policy_specialist
+    prompt_template: |
+      Scenario: {scenario_title}
+      User question: {question}
+      Scenario-specific document focus: {document_focus}
+
+      Planner brief:
+      {plan}
+
+      Find the most relevant policy or process evidence from workshop documents.
+
+  - id: data_findings
+    agent: data_specialist
+    prompt_template: |
+      Scenario: {scenario_title}
+      User question: {question}
+      Scenario-specific data focus: {data_focus}
+
+      Planner brief:
+      {plan}
+
+      Query the structured data to produce the strongest supporting evidence.
+
+  - id: final_answer
+    agent: synthesizer
+    prompt_template: |
+      Scenario: {scenario_title}
+      User question: {question}
+
+      Planner brief:
+      {plan}
+
+      Policy findings:
+      {policy_findings}
+
+      Data findings:
+      {data_findings}
+
+      Produce the final customer-ready answer.
+
+scenarios:
+  policy_gap_analysis:
+    title: Policy Gap Analysis
+    description: Compare documented thresholds or operating rules against observed business results.
+    sample_question: Which cases appear to violate our documented high-priority handling policy?
+    document_focus: Look for thresholds, SLAs, escalation rules, severity definitions, and policy exceptions.
+    data_focus: Look for records, durations, counts, severity groupings, trend breaks, and measurable breaches.
+
+  exception_triage:
+    title: Exception Triage
+    description: Triage a suspicious operational case by combining process guidance with supporting records.
+    sample_question: We saw an unusual spike in escalations. What does the policy say we should do, and what data suggests the likely root cause?
+    document_focus: Look for triage steps, escalation procedures, ownership rules, and remediation guidance.
+    data_focus: Look for spikes, outliers, grouped patterns, recent changes, and affected entities.
+
+  executive_brief:
+    title: Executive Brief
+    description: Prepare a concise summary for leadership that combines compliance posture, evidence, and recommended action.
+    sample_question: Prepare an executive summary of our current risk posture using both policy guidance and the latest operational data.
+    document_focus: Look for policy intent, governance language, risk criteria, and required actions.
+    data_focus: Look for summary metrics, rankings, counts by severity, and trend evidence suitable for leadership review.
