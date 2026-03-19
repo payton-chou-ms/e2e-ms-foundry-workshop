@@ -18,6 +18,16 @@ The agent has function tools:
     Foundry-only: search_documents only
 """
 
+from foundry_tool_contract import (
+    build_execute_sql_tool,
+    build_search_documents_tool,
+    build_tool_instruction_block,
+    get_tool_summary_lines,
+)
+from azure.ai.projects.models import PromptAgentDefinition
+from azure.ai.projects import AIProjectClient
+from azure.identity import DefaultAzureCredential
+from load_env import load_all_env
 import os
 import sys
 import json
@@ -35,12 +45,8 @@ FOUNDRY_ONLY = args.foundry_only
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Load environment from azd + project .env
-from load_env import load_all_env
 load_all_env()
 
-from azure.identity import DefaultAzureCredential
-from azure.ai.projects import AIProjectClient
-from azure.ai.projects.models import PromptAgentDefinition, FunctionTool
 
 # ============================================================================
 # Configuration
@@ -48,7 +54,8 @@ from azure.ai.projects.models import PromptAgentDefinition, FunctionTool
 
 # Azure services - from azd environment
 ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
-MODEL = os.getenv("AZURE_CHAT_MODEL") or os.getenv("MODEL_DEPLOYMENT", "gpt-4o-mini")
+MODEL = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
+    "MODEL_DEPLOYMENT", "gpt-4o-mini")
 SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
 
 # Project settings - from .env
@@ -103,7 +110,8 @@ if os.path.exists(prompt_path):
 else:
     schema_prompt = ""
     if not FOUNDRY_ONLY:
-        print("WARNING: schema_prompt.txt not found - run 04_generate_agent_prompt.py first")
+        print(
+            "WARNING: schema_prompt.txt not found - run 04_generate_agent_prompt.py first")
 
 # Load Fabric IDs (optional in foundry-only mode)
 fabric_ids_path = os.path.join(config_dir, "fabric_ids.json")
@@ -121,14 +129,17 @@ search_ids_path = os.path.join(config_dir, "search_ids.json")
 if os.path.exists(search_ids_path):
     with open(search_ids_path) as f:
         search_ids = json.load(f)
-    INDEX_NAME = search_ids.get("index_name", f"{fabric_ids.get('solution_name', 'demo')}-documents")
+    INDEX_NAME = search_ids.get(
+        "index_name", f"{fabric_ids.get('solution_name', 'demo')}-documents")
 else:
     INDEX_NAME = f"{fabric_ids.get('solution_name', 'demo')}-documents"
-    print(f"WARNING: search_ids.json not found - using default index: {INDEX_NAME}")
+    print(
+        f"WARNING: search_ids.json not found - using default index: {INDEX_NAME}")
 
 WORKSPACE_ID = fabric_ids.get("workspace_id")
 LAKEHOUSE_NAME = fabric_ids.get("lakehouse_name")
-SOLUTION_NAME = fabric_ids.get("solution_name") or scenario.lower().replace(" ", "-")
+SOLUTION_NAME = fabric_ids.get(
+    "solution_name") or scenario.lower().replace(" ", "-")
 # Agent name: simple and consistent
 AGENT_NAME = f"{SOLUTION_NAME}-agent"
 
@@ -150,41 +161,16 @@ print(f"Search Index: {INDEX_NAME}")
 # Build Agent Instructions
 # ============================================================================
 
+
 def build_agent_instructions(config, schema_text, foundry_only=False):
     """Build agent instructions based on mode"""
     scenario_name = config.get("name", "Business Data")
     scenario_desc = config.get("description", "")
     tables_config = config.get("tables", {})
     relationships = config.get("relationships", [])
-    
-    if foundry_only:
-        # Search-only instructions
-        return f"""You are a helpful assistant that answers questions about {scenario_name}.
 
-{scenario_desc}
-
-You have access to ONE tool:
-
-## Tool: search_documents
-Use this to search PDF documents indexed in Azure AI Search.
-- Good for: policies, guidelines, procedures, descriptions, FAQs
-- Example questions: "What is the policy?", "How does X work?", "What are the guidelines?"
-- Returns relevant text passages from documents
-
-## How to answer:
-1. Analyze the user's question
-2. Use search_documents to find relevant information
-3. Synthesize the results into a clear answer
-4. Cite source documents when relevant
-
-## Limitations:
-- You CANNOT query structured/tabular data
-- You CANNOT perform calculations or aggregations
-- For data questions, let the user know this agent is for document search only"""
-    
-    # Full multi-tool instructions
     table_names = list(tables_config.keys())
-    
+
     # Build relationship descriptions for JOINs
     join_hints = []
     for rel in relationships:
@@ -193,49 +179,22 @@ Use this to search PDF documents indexed in Azure AI Search.
         from_key = rel.get("fromKey")
         to_key = rel.get("toKey")
         join_hints.append(f"{from_table}.{from_key} = {to_table}.{to_key}")
-    
-    return f"""You are a helpful data analyst assistant that answers questions about {scenario_name}.
+
+    persona = "helpful assistant" if foundry_only else "helpful data analyst assistant"
+    tool_block = build_tool_instruction_block(
+        foundry_only, table_names, schema_text, join_hints)
+
+    return f"""You are a {persona} that answers questions about {scenario_name}.
 
 {scenario_desc}
 
-You have access to TWO tools:
-
-## Tool 1: execute_sql
-Use this for STRUCTURED DATA queries - numbers, counts, aggregations, specific records.
-- Query the Fabric Lakehouse SQL endpoint
-- Use T-SQL syntax
-- Available tables: {', '.join(table_names)}
-{schema_text}
-
-## Tool 2: search_documents  
-Use this for UNSTRUCTURED DATA queries - policies, guidelines, procedures, descriptions.
-- Search PDF documents indexed in AI Search
-- Good for: "What is the return policy?", "How does shipping work?", "What are the loyalty benefits?"
-- Returns relevant text passages from documents
-
-## Decision Guide:
-- Numbers/counts/aggregations → execute_sql
-- "How many...", "Total...", "Average...", "List all..." → execute_sql  
-- Policies/procedures/guidelines → search_documents
-- "What is the policy for...", "How do I...", "Explain..." → search_documents
-- Complex questions may need BOTH tools - use them sequentially
-
-## SQL Guidelines:
-- Use T-SQL syntax compatible with Fabric Lakehouse
-- Do NOT use schema prefixes (no dbo.) - just use table names directly
-- Use proper aggregation functions: COUNT, SUM, AVG, MIN, MAX
-- Always use GROUP BY when using aggregation with non-aggregated columns
-- For JOINs use: {'; '.join(join_hints) if join_hints else 'check schema for foreign keys'}
-- Use TOP N instead of LIMIT for row limiting
-
-## Response Format:
-1. Determine which tool(s) to use
-2. Execute the appropriate tool(s)
-3. Combine and summarize the results clearly
+{tool_block}
 
 Be concise and accurate. If a query fails, explain the issue and try a different approach."""
 
-instructions = build_agent_instructions(ontology_config, schema_prompt, FOUNDRY_ONLY)
+
+instructions = build_agent_instructions(
+    ontology_config, schema_prompt, FOUNDRY_ONLY)
 print(f"\nBuilt instructions ({len(instructions)} chars)")
 
 # ============================================================================
@@ -246,42 +205,12 @@ print(f"\nBuilt instructions ({len(instructions)} chars)")
 agent_tools = []
 
 # AI Search Tool (always included)
-search_documents_tool = FunctionTool(
-    name="search_documents",
-    description="Search PDF documents in Azure AI Search for policies, guidelines, procedures, and other unstructured information. Use for questions about 'how to', policies, procedures, guidelines, or explanatory content.",
-    parameters={
-        "type": "object",
-        "properties": {
-            "query": {
-                "type": "string",
-                "description": "The search query to find relevant documents. Use natural language - the search supports semantic understanding."
-            }
-        },
-        "required": ["query"],
-        "additionalProperties": False
-    },
-    strict=True
-)
+search_documents_tool = build_search_documents_tool()
 agent_tools.append(search_documents_tool)
 
 # SQL Execution Tool (only in full mode)
 if not FOUNDRY_ONLY:
-    execute_sql_tool = FunctionTool(
-        name="execute_sql",
-        description=f"Execute a SQL query against the Fabric Lakehouse to query structured data. Use for numbers, counts, aggregations, and specific records. Available tables: {', '.join(tables)}. Use T-SQL syntax.",
-        parameters={
-            "type": "object",
-            "properties": {
-                "sql_query": {
-                    "type": "string",
-                    "description": f"The T-SQL query to execute. Use table names: {', '.join(tables)}. Do not use schema prefixes."
-                }
-            },
-            "required": ["sql_query"],
-            "additionalProperties": False
-        },
-        strict=True
-    )
+    execute_sql_tool = build_execute_sql_tool(tables)
     agent_tools.insert(0, execute_sql_tool)  # SQL first in full mode
 
 # ============================================================================
@@ -322,16 +251,16 @@ try:
             instructions=instructions,
             tools=agent_tools
         )
-        
+
         agent = project_client.agents.create(
             name=AGENT_NAME,
             definition=agent_definition
         )
-        
+
         print(f"\n[OK] Agent created successfully!")
         print(f"  Agent ID: {agent.id}")
         print(f"  Agent Name: {agent.name}")
-        
+
 except Exception as e:
     print(f"\n[FAIL] Failed to create agent: {e}")
     sys.exit(1)
@@ -361,6 +290,8 @@ print(f"\n[OK] Agent config saved to: {agent_ids_path}")
 # ============================================================================
 
 if FOUNDRY_ONLY:
+    tool_summary = "\n".join(
+        f"  {line}" for line in get_tool_summary_lines(True))
     print(f"""
 {'='*60}
 Search-Only Agent Created Successfully!
@@ -372,7 +303,7 @@ Model: {MODEL}
 Scenario: {scenario_name}
 
 Tools:
-  1. search_documents - Search unstructured data (AI Search)
+{tool_summary}
 
 This agent can answer questions about:
   - Policies, guidelines, procedures
@@ -385,6 +316,8 @@ Next step:
   python scripts/08_test_foundry_agent.py --foundry-only
 """)
 else:
+    tool_summary = "\n".join(
+        f"  {line}" for line in get_tool_summary_lines(False))
     print(f"""
 {'='*60}
 Multi-Tool AI Foundry Agent Created Successfully!
@@ -396,8 +329,7 @@ Model: {MODEL}
 Scenario: {scenario_name}
 
 Tools:
-  1. execute_sql - Query structured data (Fabric Lakehouse)
-  2. search_documents - Search unstructured data (AI Search)
+{tool_summary}
 
 Sample questions that use BOTH tools:
   - "What's the total value of orders that qualify for free shipping based on our policy?"
@@ -406,5 +338,3 @@ Sample questions that use BOTH tools:
 Next step:
   python scripts/08_test_foundry_agent.py
 """)
-
-

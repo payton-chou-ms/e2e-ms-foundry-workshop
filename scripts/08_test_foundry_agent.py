@@ -13,6 +13,16 @@ This script handles function tools:
     Foundry-only: search_documents only
 """
 
+from foundry_tool_contract import (
+    DEFAULT_SEARCH_TOP,
+    MAX_SEARCH_TOP,
+    SQL_RESULT_ROW_LIMIT,
+    get_tool_summary_lines,
+)
+from azure.search.documents import SearchClient
+from azure.ai.projects import AIProjectClient
+from azure.identity import DefaultAzureCredential
+from load_env import load_all_env
 import os
 import sys
 import json
@@ -29,12 +39,8 @@ args = parser.parse_args()
 FOUNDRY_ONLY = args.foundry_only
 
 # Load environment from azd + project .env
-from load_env import load_all_env
 load_all_env()
 
-from azure.identity import DefaultAzureCredential
-from azure.ai.projects import AIProjectClient
-from azure.search.documents import SearchClient
 
 if not FOUNDRY_ONLY:
     import pyodbc
@@ -126,6 +132,9 @@ if FOUNDRY_ONLY:
 else:
     print("Orchestrator Agent Chat")
 print(f"{'='*60}")
+print("Available tools:")
+for line in get_tool_summary_lines(FOUNDRY_ONLY):
+    print(f"  {line}")
 print("Type 'quit' to exit, 'help' for sample questions\n")
 
 # ============================================================================
@@ -138,12 +147,13 @@ if not FOUNDRY_ONLY:
     def get_sql_endpoint():
         """Get the SQL analytics endpoint for the Lakehouse"""
         credential = DefaultAzureCredential()
-        token = credential.get_token("https://api.fabric.microsoft.com/.default")
-        
+        token = credential.get_token(
+            "https://api.fabric.microsoft.com/.default")
+
         import requests
         headers = {"Authorization": f"Bearer {token.token}"}
         url = f"https://api.fabric.microsoft.com/v1/workspaces/{WORKSPACE_ID}/lakehouses/{LAKEHOUSE_ID}"
-        
+
         resp = requests.get(url, headers=headers)
         if resp.status_code == 200:
             data = resp.json()
@@ -160,50 +170,90 @@ if not FOUNDRY_ONLY:
 # SQL Execution Function
 # ============================================================================
 
+DISALLOWED_SQL_TERMS = (
+    " insert ",
+    " update ",
+    " delete ",
+    " merge ",
+    " drop ",
+    " alter ",
+    " create ",
+    " truncate ",
+    " exec ",
+    " execute ",
+)
+
+
+def validate_sql_query(sql_query):
+    """Ensure the tool remains read-only and limited to queries."""
+    normalized = " ".join(sql_query.strip().lower().split())
+    if not normalized:
+        return False, "SQL query is empty"
+    if not (normalized.startswith("select ") or normalized.startswith("with ")):
+        return False, "Only read-only SELECT statements and CTE queries are allowed"
+
+    padded = f" {normalized} "
+    for term in DISALLOWED_SQL_TERMS:
+        if term in padded:
+            return False, "Write operations and DDL statements are not allowed"
+
+    return True, ""
+
+
+def format_sql_results(columns, rows):
+    """Format SQL rows as a compact markdown table for the model."""
+    result_lines = []
+    result_lines.append("| " + " | ".join(columns) + " |")
+    result_lines.append("|" + "|".join(["---"] * len(columns)) + "|")
+
+    for row in rows[:SQL_RESULT_ROW_LIMIT]:
+        values = [str(value) if value is not None else "NULL" for value in row]
+        result_lines.append("| " + " | ".join(values) + " |")
+
+    if len(rows) > SQL_RESULT_ROW_LIMIT:
+        result_lines.append(
+            f"\n... and {len(rows) - SQL_RESULT_ROW_LIMIT} more rows")
+
+    result_lines.append(f"\n({len(rows)} rows returned)")
+    return "\n".join(result_lines)
+
+
 def execute_sql(sql_query):
     """Execute SQL query against Fabric Lakehouse and return results"""
     if not SQL_ENDPOINT:
         return "Error: SQL endpoint not available"
-    
+
+    is_valid, validation_message = validate_sql_query(sql_query)
+    if not is_valid:
+        return f"SQL Error: {validation_message}"
+
     try:
         # Get AAD token for SQL
         credential = DefaultAzureCredential()
         token = credential.get_token('https://database.windows.net//.default')
-        
+
         # Build token struct with UTF-16-LE encoding (required for ODBC)
         token_bytes = token.token.encode('UTF-16-LE')
-        token_struct = struct.pack(f'<I{len(token_bytes)}s', len(token_bytes), token_bytes)
-        
+        token_struct = struct.pack(
+            f'<I{len(token_bytes)}s', len(token_bytes), token_bytes)
+
         # Connection string
         conn_str = f'Driver={{ODBC Driver 18 for SQL Server}};Server={SQL_ENDPOINT};Database={LAKEHOUSE_NAME};Encrypt=yes;TrustServerCertificate=no'
-        
+
         # Connect with token
         SQL_COPT_SS_ACCESS_TOKEN = 1256
-        conn = pyodbc.connect(conn_str, attrs_before={SQL_COPT_SS_ACCESS_TOKEN: token_struct})
+        conn = pyodbc.connect(conn_str, attrs_before={
+                              SQL_COPT_SS_ACCESS_TOKEN: token_struct})
         cursor = conn.cursor()
-        
+
         cursor.execute(sql_query)
-        
+
         columns = [col[0] for col in cursor.description]
         rows = cursor.fetchall()
-        
-        # Format results
-        result_lines = []
-        result_lines.append("| " + " | ".join(columns) + " |")
-        result_lines.append("|" + "|".join(["---"] * len(columns)) + "|")
-        
-        for row in rows[:50]:  # Limit to 50 rows
-            values = [str(v) if v is not None else "NULL" for v in row]
-            result_lines.append("| " + " | ".join(values) + " |")
-        
-        if len(rows) > 50:
-            result_lines.append(f"\n... and {len(rows) - 50} more rows")
-        
-        result_lines.append(f"\n({len(rows)} rows returned)")
-        
+
         conn.close()
-        return "\n".join(result_lines)
-        
+        return format_sql_results(columns, rows)
+
     except Exception as e:
         return f"SQL Error: {str(e)}"
 
@@ -211,38 +261,48 @@ def execute_sql(sql_query):
 # AI Search Function
 # ============================================================================
 
+
 def search_documents(query, top=3):
     """Search documents in Azure AI Search"""
     try:
+        try:
+            top_value = int(top)
+        except (TypeError, ValueError):
+            top_value = DEFAULT_SEARCH_TOP
+
+        top_value = max(1, min(top_value, MAX_SEARCH_TOP))
+
         credential = DefaultAzureCredential()
         search_client = SearchClient(
             endpoint=SEARCH_ENDPOINT,
             index_name=INDEX_NAME,
             credential=credential
         )
-        
+
         # Perform hybrid search (text + vector if available)
         results = search_client.search(
             search_text=query,
-            top=min(top, 10),
+            top=top_value,
             query_type="semantic",
             semantic_configuration_name="default-semantic",
             select=["content", "title", "source", "page_number"]
         )
-        
+
         # Format results
         result_lines = []
         for i, result in enumerate(results, 1):
             result_lines.append(f"\n--- Result {i} ---")
-            result_lines.append(f"Source: {result.get('source', 'Unknown')} (Page {result.get('page_number', '?')})")
+            result_lines.append(
+                f"Source: {result.get('source', 'Unknown')} (Page {result.get('page_number', '?')})")
             result_lines.append(f"Title: {result.get('title', 'Unknown')}")
-            result_lines.append(f"Content: {result.get('content', '')[:500]}...")
-        
+            result_lines.append(
+                f"Content: {result.get('content', '')[:500]}...")
+
         if not result_lines:
             return "No documents found matching the query."
-        
+
         return "\n".join(result_lines)
-        
+
     except Exception as e:
         return f"Search Error: {str(e)}"
 
@@ -250,13 +310,14 @@ def search_documents(query, top=3):
 # Load Sample Questions
 # ============================================================================
 
+
 questions_path = os.path.join(config_dir, "sample_questions.txt")
 sample_questions = []
 
 if os.path.exists(questions_path):
     with open(questions_path, "r") as f:
         content = f.read()
-    
+
     # Parse the COMBINED INSIGHT QUESTIONS section (best demonstrates multi-tool)
     in_combined_section = False
     for line in content.split("\n"):
@@ -304,9 +365,10 @@ print("-" * 60)
 # Chat Function
 # ============================================================================
 
+
 def chat(user_message):
     """Send a message and handle function calls"""
-    
+
     # Build input with conversation context
     response = openai_client.responses.create(
         model=MODEL,
@@ -315,10 +377,10 @@ def chat(user_message):
         tools=TOOLS,
         conversation={'id': conversation.id}
     )
-    
+
     # Process the response
     final_text = ""
-    
+
     while True:
         # Check for function calls in output
         function_calls = []
@@ -331,39 +393,40 @@ def chat(user_message):
                     for content in item.content:
                         if hasattr(content, 'text'):
                             final_text += content.text + "\n"
-        
+
         if not function_calls:
             break
-        
+
         # Handle function calls
         tool_outputs = []
         for fc in function_calls:
             args = json.loads(fc.arguments)
-            
+
             if fc.name == "execute_sql":
                 sql_query = args.get("sql_query", "")
-                
+
                 print(f"\n  [SQL Tool] Executing query:")
                 # Print full query with indentation
                 for line in sql_query.strip().split('\n'):
                     print(f"    {line}")
-                
+
                 result = execute_sql(sql_query)
-                
+
                 tool_outputs.append({
                     "type": "function_call_output",
                     "call_id": fc.call_id,
                     "output": result
                 })
-                
+
             elif fc.name == "search_documents":
                 query = args.get("query", "")
-                top = args.get("top", 3)
-                
-                print(f"\n  [Search Tool] Searching for: {query}...")
-                
+                top = args.get("top", DEFAULT_SEARCH_TOP)
+
+                print(
+                    f"\n  [Search Tool] Searching for: {query} (top={top})...")
+
                 result = search_documents(query, top)
-                
+
                 # Show the result that goes to the agent
                 print(f"  [Search Result]:")
                 # Truncate if too long, but show meaningful content
@@ -372,7 +435,7 @@ def chat(user_message):
                     print(f"    {line}")
                 if len(result) > 500:
                     print(f"    ... ({len(result)} chars total)")
-                
+
                 tool_outputs.append({
                     "type": "function_call_output",
                     "call_id": fc.call_id,
@@ -384,7 +447,7 @@ def chat(user_message):
                     "call_id": fc.call_id,
                     "output": f"Unknown function: {fc.name}"
                 })
-        
+
         # Submit function results and continue conversation
         response = openai_client.responses.create(
             model=MODEL,
@@ -393,12 +456,13 @@ def chat(user_message):
             tools=TOOLS,
             conversation={'id': conversation.id}
         )
-    
+
     return final_text.strip()
 
 # ============================================================================
 # Chat Loop
 # ============================================================================
+
 
 print("-" * 60)
 
@@ -408,21 +472,21 @@ while True:
     except (EOFError, KeyboardInterrupt):
         print()  # New line after ^C
         break
-    
+
     if not user_input:
         continue
-    
+
     if user_input.lower() in ["quit", "exit", "q"]:
         break
-    
+
     if user_input.lower() == "help":
         print("\nSample questions (that may use BOTH tools):")
         for q in sample_questions:
             print(f"  - {q}")
         continue
-    
+
     print("\nAgent: ", end="", flush=True)
-    
+
     try:
         response = chat(user_input)
         if response:
