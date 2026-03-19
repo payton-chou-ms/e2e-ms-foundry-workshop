@@ -84,7 +84,7 @@ pip install -r requirements.txt                        # Standard
 
 #### Configure Environment
 
-After `azd up`, Azure service endpoints are automatically available from the azd environment. 
+After `azd up`, Azure service endpoints are automatically available from the azd environment.
 
 Edit `.env` in the project root for **project-specific settings only**:
 
@@ -159,6 +159,16 @@ Try these question types:
 | Document | "What is our return policy?" | Search (unstructured) |
 | Combined | "Which drivers violate the hours policy?" | Both |
 
+### Optional Capability Demo: Content Understanding
+
+Run the smallest standalone Content Understanding demo against one of the generated workshop PDFs:
+
+```bash
+python scripts/09_demo_content_understanding.py
+```
+
+This demo uses `prebuilt-documentSearch` on a local PDF. If the optional capability is not configured in the environment, the script prints a visible `SKIP:` message instead of blocking the main workshop flow.
+
 ---
 
 ### 04 Cleanup
@@ -190,7 +200,8 @@ nc-iq-workshop/
 │   ├── 04_generate_agent_prompt.py # Agent prompt generation
 │   ├── 06_upload_to_search.py  # Document indexing
 │   ├── 07_create_foundry_agent.py   # Create Foundry agent
-│   └── 08_test_foundry_agent.py     # Interactive testing
+│   ├── 08_test_foundry_agent.py     # Interactive testing
+│   └── 09_demo_content_understanding.py  # Optional Content Understanding demo
 └── data/                   # Generated sample data
 ```
 
