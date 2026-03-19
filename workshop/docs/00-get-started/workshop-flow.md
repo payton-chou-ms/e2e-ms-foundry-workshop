@@ -2,7 +2,16 @@
 
 ## Step 1: Deploy solution
 
-Deploy infrastructure and run with pre-built **sample** scenario:
+Start with one of these two routes:
+
+| Route | Use this when | Primary page |
+|-------|---------------|--------------|
+| **Admin deploy and share** | You are responsible for deploying Azure resources, configuring Fabric, and preparing access for others | [Admin deploy and share](../01-deploy/00-admin-deploy-share.md) |
+| **Participant run and validate** | Someone already prepared the environment and you need to run the sample scenario or validate the agent | [Participant run and validate](../01-deploy/00-participant-run-validate.md) |
+
+Both routes converge on the same sample scenario and validation steps.
+
+The full deployment path includes:
 
 - Deploy **Microsoft Foundry** and Azure resources (AI Services, AI Search, Storage)
 - Configure **Microsoft Fabric** connection
@@ -26,6 +35,10 @@ Generate custom data for **each use case**:
 
 !!! tip "Pre-PoC prep"
     Run Step 2 before your PoC. Enter the industry and a brief use case description. The AI generates realistic sample data, documents, and test questions tailored to your scenario.
+
+!!! note "Single documentation source"
+    Use the pages under `workshop/docs/` as the current instructions.
+    Files in `guides/` and PDF outputs are distribution artifacts and may be shorter summaries.
 
 ## Step 3: Deep dive
 

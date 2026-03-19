@@ -2,6 +2,10 @@
 
 Create and configure your Microsoft Fabric workspace for Fabric IQ.
 
+!!! info "Primary audience"
+	This page is mainly for the **Admin deploy and share** route.
+	Participants should use a workspace that has already been prepared and shared with them.
+
 ## Prerequisites
 
 - Microsoft Fabric capacity (F2 or higher recommended)

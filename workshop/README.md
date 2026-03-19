@@ -2,6 +2,14 @@
 
 This folder contains the MkDocs documentation for the Foundry IQ + Fabric IQ Workshop.
 
+## Source Of Truth
+
+Use `workshop/docs/` as the only authored source for user-facing workshop content.
+
+- `workshop/site/` is generated output from local MkDocs builds.
+- root `site/` is generated output from the GitHub Pages workflow.
+- `guides/` should contain distribution artifacts or audit notes, not a second authored copy of the same instructions.
+
 ## Local Development
 
 ### Install Dependencies
@@ -43,20 +51,22 @@ workshop/
 ├── README.md              # This file
 └── docs/
     ├── index.md           # Overview
-    ├── get-started.md     # Prerequisites & PoC journey
+    ├── 00-get-started/    # Prerequisites & workshop flow
     ├── 01-deploy/         # Deploy Solution
     │   ├── index.md
-    │   ├── infrastructure.md
-    │   ├── configure.md
-    │   └── run.md
+    │   ├── 00-admin-deploy-share.md
+    │   ├── 00-participant-run-validate.md
+    │   ├── 01-deploy-azure.md
+    │   ├── 02-setup-fabric.md
+    │   ├── 03-configure.md
+    │   └── 04-run-scenario.md
     ├── 02-customize/      # Customize for Your Customer
     │   ├── index.md
-    │   ├── choose.md
-    │   ├── generate.md
-    │   └── demo.md
+    │   ├── 02-generate.md
+    │   └── 03-demo.md
     ├── 03-understand/     # Understand the Technology
     │   ├── index.md
-    │   ├── foundry-iq.md
-    │   └── fabric-iq.md
-    └── 04-cleanup.md      # Cleanup & Next Steps
+    │   ├── 01-foundry-iq.md
+    │   └── 02-fabric-iq.md
+    └── 04-cleanup/        # Cleanup & Next Steps
 ```

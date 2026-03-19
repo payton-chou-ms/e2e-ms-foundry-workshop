@@ -1,5 +1,9 @@
 # Deploy Infrastructure
 
+!!! info "Primary audience"
+    This page is mainly for the **Admin deploy and share** route.
+    If someone already prepared the environment for you, start with [Participant run and validate](00-participant-run-validate.md) instead.
+
 ## Clone the Repository
 
 ```bash
@@ -14,6 +18,10 @@ azd auth login
 ```
 
 This opens a browser for authentication.
+
+!!! warning "Deployment permissions"
+    This repository deploys Azure role assignments as part of the infrastructure.
+    If `azd up` fails during RBAC creation, confirm that your identity can create role assignments in the target scope.
 
 ## Deploy Resources
 
@@ -44,4 +52,4 @@ After deployment, Azure endpoints are automatically saved to `.azure/<env>/.env`
 
 ---
 
-[← Overview](index.md) | [Create Fabric workspace →](02-setup-fabric.md)
+[← Admin deploy and share](00-admin-deploy-share.md) | [Create Fabric workspace →](02-setup-fabric.md)

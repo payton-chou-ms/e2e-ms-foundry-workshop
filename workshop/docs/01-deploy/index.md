@@ -1,6 +1,35 @@
 # Deploy solution
 
-This step deploys the core infrastructure and runs the solution with a default scenario so you can see it working end-to-end.
+This section is the entry point for getting the sample scenario running end-to-end.
+
+## Pick the route that matches your role
+
+### Admin deploy and share
+
+Use this route if you are preparing the environment for a team, customer, or workshop participants.
+
+You will:
+
+- Deploy Azure resources with `azd up`
+- Create or choose the Fabric workspace
+- Configure the shared environment
+- Decide what access other users need
+- Hand off a ready-to-use environment
+
+[Go to Admin deploy and share](00-admin-deploy-share.md)
+
+### Participant run and validate
+
+Use this route if Azure resources and the Fabric workspace are already prepared for you.
+
+You will:
+
+- Open the repo and sign in with your assigned identity
+- Configure local settings
+- Run the sample scenario
+- Test the orchestrator agent and validate outputs
+
+[Go to Participant run and validate](00-participant-run-validate.md)
 
 ## Architecture
 
@@ -17,6 +46,10 @@ The solution combines Microsoft Fabric and Microsoft Foundry to create an AI sol
 !!! tip "Stuck? Ask Copilot"
     Use GitHub Copilot Chat (`Ctrl+I`) for help with errors.
 
+!!! note "Canonical content"
+    This MkDocs tree is the canonical workshop documentation.
+    Generated PDFs and site output are secondary artifacts.
+
 ---
 
-[← Get Started](../00-get-started/workshop-flow.md) | [Deploy Azure resources →](01-deploy-azure.md)
+[← Get Started](../00-get-started/workshop-flow.md) | [Admin deploy and share →](00-admin-deploy-share.md)

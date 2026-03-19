@@ -1,5 +1,9 @@
 # Build solution
 
+!!! info "Used by both routes"
+       Admins use this page to validate the default deployment.
+       Participants use this page to run or verify the sample scenario in a prepared environment.
+
 ## Run the Full Pipeline
 
 One command builds the solution including data processing and agent creation:
@@ -7,6 +11,8 @@ One command builds the solution including data processing and agent creation:
 ```bash
 python scripts/00_build_solution.py --from 02
 ```
+
+If the environment was fully prepared for you and the sample build already ran successfully, you may only need the test step later on this page.
 
 This uses the `data/default` folder and runs all setup steps:
 
@@ -21,11 +27,11 @@ This uses the `data/default` folder and runs all setup steps:
 
 !!! tip "No Fabric License?"
     If you don't have access to Microsoft Fabric, you can still run the workshop using azure services only:
-    
+
     ```bash
     python scripts/00_build_solution.py --foundry-only
     ```
-    
+
     This skips Fabric setup (steps 02-05) and creates an agent in Microsoft Foundry only.
 
 ## Expected Output
@@ -63,27 +69,27 @@ Type 'quit' to exit, 'help' for sample questions
 
 You: How many outages occurred last month?
 
-Agent: Based on the database, there were 16 network outages recorded 
+Agent: Based on the database, there were 16 network outages recorded
        in January 2024.
 
 You: What are the policies for notifying customers of outages?
 
 Agent: According to our Customer Service Policies document:
-       
+
        - Customers must be notified within 15 minutes of confirmed outage
        - Use SMS, email, and app notifications for affected customers
        - Provide estimated restoration time when available
        - Send updates every 30 minutes during extended outages
-       
+
        [Source: customer_service_policies.pdf]
 
 You: Which outages exceeded the maximum duration defined in our policy?
 
 Agent: Let me check the outage data against our policy thresholds...
 
-       Based on a 4-hour (240 minute) maximum duration policy, these 
+       Based on a 4-hour (240 minute) maximum duration policy, these
        outages exceeded the threshold:
-       
+
        | Outage ID | Duration (min) | Impact Level |
        |-----------|----------------|--------------|
        | OUT011    | 472            | Medium       |
@@ -91,7 +97,7 @@ Agent: Let me check the outage data against our policy thresholds...
        | OUT007    | 445            | Low          |
        | OUT005    | 417            | Medium       |
        | OUT003    | 411            | Low          |
-       
+
        5 outages exceeded the policy maximum duration.
 
 You: quit
@@ -101,11 +107,11 @@ You: quit
 
 !!! success "Solution Deployed!"
     You now have a working solution with:
-    
+
     - [x] **Fabric IQ** answering data questions
     - [x] **Foundry IQ** retrieving document knowledge
     - [x] **Orchestrator Agent** combining both sources
-    
+
     ---
 
 [← Configure dev environment](03-configure.md) | [Customize for your use case →](../02-customize/index.md)

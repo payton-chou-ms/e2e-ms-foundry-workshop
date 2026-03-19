@@ -1,5 +1,9 @@
 # Configure dev environment
 
+!!! info "Used by both routes"
+    Admins use this page to prepare a shareable environment.
+    Participants use this page to connect their local checkout to an environment that was already prepared for them.
+
 ## Python Environment
 
 ### Create and Activate
@@ -70,6 +74,9 @@ FABRIC_WORKSPACE_ID=your-workspace-id-here
 # --- Data Folder (pre-populated with default scenario) ---
 DATA_FOLDER=data/default
 ```
+
+!!! note "Shared environment handoff"
+    If an admin predeployed the environment for you, ask them for the exact `FABRIC_WORKSPACE_ID` and any other required settings before editing `.env`.
 
 ## Checkpoint
 

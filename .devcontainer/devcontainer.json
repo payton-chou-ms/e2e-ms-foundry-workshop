@@ -24,7 +24,7 @@
       }
     }
   },
-  "postCreateCommand": "pip install -r scripts/requirements.txt && cp .env.example .env",
+  "postCreateCommand": "pip install -r scripts/requirements.txt -r workshop/requirements.txt && cp .env.example .env",
   "postStartCommand": "echo '✅ Ready! Run: azd auth login && azd up to deploy Azure resources, then: python scripts/00_run_pipeline.py --ai'",
   "forwardPorts": [],
   "remoteUser": "vscode",

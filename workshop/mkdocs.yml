@@ -59,22 +59,24 @@ extra:
 nav:
   - Overview: index.md
   - Get Started:
-    - Prerequisites: 00-get-started/index.md
-    - Workshop Flow: 00-get-started/workshop-flow.md
+      - Prerequisites: 00-get-started/index.md
+      - Workshop Flow: 00-get-started/workshop-flow.md
   - Deploy solution:
-    - Overview: 01-deploy/index.md
-    - Deploy Azure resources: 01-deploy/01-deploy-azure.md
-    - Create Fabric workspace: 01-deploy/02-setup-fabric.md
-    - Configure dev environment: 01-deploy/03-configure.md
-    - Build solution: 01-deploy/04-run-scenario.md
+      - Overview: 01-deploy/index.md
+      - Admin deploy and share: 01-deploy/00-admin-deploy-share.md
+      - Participant run and validate: 01-deploy/00-participant-run-validate.md
+      - Deploy Azure resources: 01-deploy/01-deploy-azure.md
+      - Create Fabric workspace: 01-deploy/02-setup-fabric.md
+      - Configure dev environment: 01-deploy/03-configure.md
+      - Build solution: 01-deploy/04-run-scenario.md
   - Customize for your use case:
-    - Overview: 02-customize/index.md
-    - Generate & Build: 02-customize/02-generate.md
-    - Test Your PoC: 02-customize/03-demo.md
+      - Overview: 02-customize/index.md
+      - Generate & Build: 02-customize/02-generate.md
+      - Test Your PoC: 02-customize/03-demo.md
   - Deep dive:
-    - Overview: 03-understand/index.md
-    - "Foundry IQ: Documents": 03-understand/01-foundry-iq.md
-    - "Fabric IQ: Data": 03-understand/02-fabric-iq.md
+      - Overview: 03-understand/index.md
+      - "Foundry IQ: Documents": 03-understand/01-foundry-iq.md
+      - "Fabric IQ: Data": 03-understand/02-fabric-iq.md
   - Cleanup:
-    - Delete resources: 04-cleanup/index.md
-    - Next steps: 04-cleanup/next-steps.md
+      - Delete resources: 04-cleanup/index.md
+      - Next steps: 04-cleanup/next-steps.md
