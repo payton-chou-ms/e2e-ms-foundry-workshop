@@ -173,7 +173,7 @@
 
 ## T-03 擴充 Bicep：多模型部署策略
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：程式 / IaC
 - 平行處理：可部分平行
 - 建議 Agent：Agent A
@@ -204,6 +204,10 @@
 - T-00
 - T-01
 
+### 產出
+
+- `tmp/t-03-multi-model-strategy-zhtw.md`
+
 ### 測試
 
 - Bicep syntax / diagnostics
@@ -214,7 +218,7 @@
 
 ## T-04 擴充 Bicep：Control Plane 文件所需輸出
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：程式 / IaC
 - 平行處理：是
 - 建議 Agent：Agent A
@@ -262,7 +266,7 @@
 
 ## T-06 擴充 agent 程式：publish to Teams / M365 Copilot 規劃
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：程式 / 文件支援
 - 平行處理：可部分平行
 - 建議 Agent：Agent B
@@ -281,6 +285,11 @@
 ### 測試
 
 - 若實作腳本，至少完成 dry-run 或 guarded execution smoke test
+
+### 產出
+
+- `tmp/t-06-publish-plan-zhtw.md`
+- `scripts/09_publish_foundry_agent.py`
 
 ---
 
@@ -309,7 +318,7 @@
 
 ## T-08 評估延伸工具：Content Understanding
 
-- 狀態：未開始
+- 狀態：已完成
 - 類型：研究 / 選配實作
 - 平行處理：是
 - 建議 Agent：Agent B
