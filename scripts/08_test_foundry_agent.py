@@ -43,8 +43,15 @@ FOUNDRY_ONLY = args.foundry_only
 load_all_env()
 
 
+pyodbc = None
+PYODBC_IMPORT_ERROR = None
+
 if not FOUNDRY_ONLY:
-    import pyodbc
+    try:
+        import pyodbc as _pyodbc
+        pyodbc = _pyodbc
+    except ImportError as exc:
+        PYODBC_IMPORT_ERROR = exc
 
 # ============================================================================
 # Configuration
@@ -223,6 +230,10 @@ def execute_sql(sql_query):
     """Execute SQL query against Fabric Lakehouse and return results"""
     if not SQL_ENDPOINT:
         return "Error: SQL endpoint not available"
+
+    if pyodbc is None:
+        detail = f": {PYODBC_IMPORT_ERROR}" if PYODBC_IMPORT_ERROR else ""
+        return f"SQL Error: pyodbc is unavailable{detail}"
 
     is_valid, validation_message = validate_sql_query(sql_query)
     if not is_valid:
