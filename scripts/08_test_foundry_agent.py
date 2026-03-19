@@ -19,6 +19,7 @@ from foundry_tool_contract import (
     SQL_RESULT_ROW_LIMIT,
     get_tool_summary_lines,
 )
+from foundry_trace import configure_foundry_tracing
 from azure.search.documents import SearchClient
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
@@ -347,8 +348,20 @@ project_client = AIProjectClient(
     credential=credential
 )
 
+trace_session = configure_foundry_tracing(
+    project_client=project_client,
+    scenario_name="08_test_foundry_agent",
+    service_name="nc-iq-workshop.agent-chat",
+)
+
+if trace_session.enabled:
+    print("Tracing: enabled")
+elif trace_session.warning:
+    print(f"Tracing: {trace_session.warning}")
+
 # Get agent details
-agent = project_client.agents.get(AGENT_ID)
+with trace_session.span("get-agent"):
+    agent = project_client.agents.get(AGENT_ID)
 agent_def = agent.versions['latest']['definition']
 MODEL = agent_def['model']
 INSTRUCTIONS = agent_def['instructions']
@@ -358,7 +371,8 @@ TOOLS = agent_def['tools']
 openai_client = project_client.get_openai_client()
 
 # Create a conversation
-conversation = openai_client.conversations.create()
+with trace_session.span("create-conversation"):
+    conversation = openai_client.conversations.create()
 print("-" * 60)
 
 # ============================================================================
@@ -370,13 +384,14 @@ def chat(user_message):
     """Send a message and handle function calls"""
 
     # Build input with conversation context
-    response = openai_client.responses.create(
-        model=MODEL,
-        input=user_message,
-        instructions=INSTRUCTIONS,
-        tools=TOOLS,
-        conversation={'id': conversation.id}
-    )
+    with trace_session.span("create-response"):
+        response = openai_client.responses.create(
+            model=MODEL,
+            input=user_message,
+            instructions=INSTRUCTIONS,
+            tools=TOOLS,
+            conversation={'id': conversation.id}
+        )
 
     # Process the response
     final_text = ""
@@ -410,7 +425,8 @@ def chat(user_message):
                 for line in sql_query.strip().split('\n'):
                     print(f"    {line}")
 
-                result = execute_sql(sql_query)
+                with trace_session.span("tool-execute-sql"):
+                    result = execute_sql(sql_query)
 
                 tool_outputs.append({
                     "type": "function_call_output",
@@ -425,7 +441,8 @@ def chat(user_message):
                 print(
                     f"\n  [Search Tool] Searching for: {query} (top={top})...")
 
-                result = search_documents(query, top)
+                with trace_session.span("tool-search-documents"):
+                    result = search_documents(query, top)
 
                 # Show the result that goes to the agent
                 print(f"  [Search Result]:")
@@ -449,13 +466,14 @@ def chat(user_message):
                 })
 
         # Submit function results and continue conversation
-        response = openai_client.responses.create(
-            model=MODEL,
-            input=tool_outputs,
-            instructions=INSTRUCTIONS,
-            tools=TOOLS,
-            conversation={'id': conversation.id}
-        )
+        with trace_session.span("create-followup-response"):
+            response = openai_client.responses.create(
+                model=MODEL,
+                input=tool_outputs,
+                instructions=INSTRUCTIONS,
+                tools=TOOLS,
+                conversation={'id': conversation.id}
+            )
 
     return final_text.strip()
 

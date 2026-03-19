@@ -8,6 +8,11 @@ azure-identity==1.23.0
 # Azure AI Foundry SDK
 azure-ai-projects==2.0.0b2
 
+# Foundry tracing (optional, best-effort)
+azure-monitor-opentelemetry==1.6.9
+azure-core-tracing-opentelemetry==1.0.0b12
+opentelemetry-sdk==1.36.0
+
 # Azure Storage (OneLake uploads)
 azure-storage-file-datalake==12.20.0
 
@@ -28,6 +33,7 @@ azure-search-documents==11.6.0
 
 # Azure Content Understanding (optional extension demos)
 azure-ai-contentunderstanding==1.0.1
+azure-ai-textanalytics==5.3.0
 
 # OpenAI SDK (for embeddings)
 openai==2.8.1

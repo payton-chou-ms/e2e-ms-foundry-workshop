@@ -18,6 +18,25 @@ TOOL_EXECUTION_LOOP = [
     "Synthesize the final answer from the tool outputs and explain when a source is unavailable.",
 ]
 
+TOOL_CONTRACT_ROWS = [
+    {
+        "name": "execute_sql",
+        "mode": "full",
+        "use_for": "Counts, totals, trends, rankings, joins, and record lookup in Fabric tables.",
+        "avoid_for": "Policies, procedures, narrative explanations, or any write operation.",
+        "input_schema": "sql_query: string",
+        "result_shape": "Markdown table with row count.",
+    },
+    {
+        "name": "search_documents",
+        "mode": "all",
+        "use_for": "Policies, procedures, FAQs, guidance, and other unstructured document content.",
+        "avoid_for": "Calculations or broad table scans.",
+        "input_schema": "query: string, top?: integer",
+        "result_shape": "Cited passages with source, title, and page metadata.",
+    },
+]
+
 SEARCH_DOCUMENTS_PARAMETERS = {
     "type": "object",
     "properties": {
@@ -92,6 +111,17 @@ def get_tool_summary_lines(foundry_only=False):
         "1. execute_sql - Query structured data in the Fabric Lakehouse",
         "2. search_documents - Search unstructured data in Azure AI Search",
     ]
+
+
+def get_response_loop_lines():
+    return list(TOOL_EXECUTION_LOOP)
+
+
+def get_tool_contract_rows(foundry_only=False):
+    if foundry_only:
+        return [row for row in TOOL_CONTRACT_ROWS if row["mode"] == "all"]
+
+    return list(TOOL_CONTRACT_ROWS)
 
 
 def build_tool_instruction_block(foundry_only, table_names, schema_text, join_hints):

@@ -24,6 +24,7 @@ from foundry_tool_contract import (
     build_tool_instruction_block,
     get_tool_summary_lines,
 )
+from foundry_trace import configure_foundry_tracing
 from azure.ai.projects.models import PromptAgentDefinition
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
@@ -230,15 +231,28 @@ except Exception as e:
     print(f"[FAIL] Failed to initialize client: {e}")
     sys.exit(1)
 
+trace_session = configure_foundry_tracing(
+    project_client=project_client,
+    scenario_name="07_create_foundry_agent",
+    service_name="nc-iq-workshop.agent-create",
+)
+
+if trace_session.enabled:
+    print("[OK] Foundry tracing enabled")
+elif trace_session.warning:
+    print(f"WARNING: {trace_session.warning}")
+
 try:
     with project_client:
         # Delete existing agent if it exists
         print(f"\nChecking if agent '{AGENT_NAME}' already exists...")
         try:
-            existing_agent = project_client.agents.get(AGENT_NAME)
+            with trace_session.span("get-existing-agent"):
+                existing_agent = project_client.agents.get(AGENT_NAME)
             if existing_agent:
                 print(f"  Found existing agent, deleting...")
-                project_client.agents.delete(AGENT_NAME)
+                with trace_session.span("delete-existing-agent"):
+                    project_client.agents.delete(AGENT_NAME)
                 print(f"[OK] Deleted existing agent")
         except Exception:
             print(f"  No existing agent found")
@@ -252,10 +266,11 @@ try:
             tools=agent_tools
         )
 
-        agent = project_client.agents.create(
-            name=AGENT_NAME,
-            definition=agent_definition
-        )
+        with trace_session.span("create-agent"):
+            agent = project_client.agents.create(
+                name=AGENT_NAME,
+                definition=agent_definition
+            )
 
         print(f"\n[OK] Agent created successfully!")
         print(f"  Agent ID: {agent.id}")
