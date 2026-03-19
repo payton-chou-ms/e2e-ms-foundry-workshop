@@ -15,16 +15,11 @@ This note consolidates three decisions for this repository:
 - `workshop/docs/`: Markdown source for the workshop website.
 - `workshop/mkdocs.yml`: Navigation and site configuration for the workshop website.
 - `guides/deployment_guide.md`: Separate Markdown quick-start guide.
-- `scripts/generate_deployment_guide.py`: Hand-authored PDF generator for `guides/deployment_guide.pdf`.
-- `scripts/generate_workshop_guide.py`: Hand-authored PDF generator for `guides/workshop_guide.pdf`.
 
 ### Generated outputs
 
 - `workshop/site/`: Local MkDocs build output.
 - `site/`: GitHub Pages workflow output when `mkdocs build --site-dir ../site` is used.
-- `guides/deployment_guide.pdf`: Generated from Python, not from Markdown.
-- `guides/workshop_guide.pdf`: Generated from Python, not from Markdown.
-- `docs/Foundry_IQ_Fabric_IQ_Workshop_Guide.pdf`: Existing PDF artifact with no current generator path in code.
 
 ## Recommended Customer Documentation Architecture
 
@@ -45,7 +40,7 @@ Why:
 | `workshop/docs/` | Canonical customer and partner-facing content | Yes |
 | `workshop/site/` | Local build artifact only | No |
 | `site/` | CI/CD deployment artifact only | No |
-| `guides/` | Distribution artifacts only: quick start PDF, workshop PDF, review notes | Prefer no for generated files |
+| `guides/` | Review notes and distribution-ready summaries that point back to the canonical docs | Prefer no |
 | `docs/` | Remove or repurpose; do not keep orphaned PDFs here | No |
 
 ### Audience split
@@ -71,14 +66,11 @@ Recommended publication flow:
 
 1. Author content in `workshop/docs/`.
 2. Build HTML with MkDocs.
-3. If PDF is needed, export from the same Markdown source.
-4. Treat `guides/*.pdf` as release artifacts, not separate authored content.
+3. If PDF is ever needed again, export it from the same Markdown source instead of maintaining a separate script.
 
 ### Recommended cleanup
 
-- Keep one workshop PDF artifact name.
-- Keep one deployment quick-start artifact name.
-- Remove or archive duplicate PDF files under `guides/` and `docs/`.
+- Remove or archive duplicate distribution artifacts under `guides/` and `docs/`.
 - Standardize on one site output location for documentation builds.
 
 ## Admin Predeployment and Sharing Model
@@ -195,41 +187,33 @@ Missing pieces:
 
 | Topic | Website source | Other source |
 | --- | --- | --- |
-| Azure deployment with `azd up` | `workshop/docs/01-deploy/01-deploy-azure.md` | `guides/deployment_guide.md`, `scripts/generate_deployment_guide.py`, `README.md` |
+| Azure deployment with `azd up` | `workshop/docs/01-deploy/01-deploy-azure.md` | `guides/deployment_guide.md`, `README.md` |
 | Fabric workspace setup | `workshop/docs/01-deploy/02-setup-fabric.md` | `guides/deployment_guide.md` |
 | `.env` setup and `FABRIC_WORKSPACE_ID` | `workshop/docs/01-deploy/03-configure.md` | `guides/deployment_guide.md`, `README.md` |
-| Build pipeline command | `workshop/docs/01-deploy/04-run-scenario.md` | `guides/deployment_guide.md`, `README.md`, `scripts/generate_workshop_guide.py` |
-| Sample questions | `workshop/docs/01-deploy/04-run-scenario.md` | `guides/deployment_guide.md`, `scripts/generate_deployment_guide.py`, `scripts/generate_workshop_guide.py` |
+| Build pipeline command | `workshop/docs/01-deploy/04-run-scenario.md` | `guides/deployment_guide.md`, `README.md` |
+| Sample questions | `workshop/docs/01-deploy/04-run-scenario.md` | `guides/deployment_guide.md` |
 
 ## Current Inconsistencies and Stale References
 
 ### Critical
 
-1. `scripts/generate_deployment_guide.py` still points to the old repository slug in the clone command and footer.
-2. The written prerequisite says Contributor access, but the infrastructure performs RBAC role assignments.
+1. The written prerequisite says Contributor access, but the infrastructure performs RBAC role assignments.
 
 ### Medium
 
-1. `scripts/generate_workshop_guide.py` docstring still describes an output under `docs/`, while the implementation writes to `guides/workshop_guide.pdf`.
-2. Local docs build output is described as `workshop/site/`, while the GitHub Pages workflow writes to root `site/`.
-3. `guides/deployment_guide.md` and `scripts/generate_deployment_guide.py` are two separate sources for the same deployment handout.
+1. Local docs build output is described as `workshop/site/`, while the GitHub Pages workflow writes to root `site/`.
+2. `guides/deployment_guide.md` is a separate summary page and should stay intentionally shorter than the canonical docs.
 
 ### Low
 
-1. There are multiple PDF artifacts with overlapping purpose:
-   - `guides/workshop_guide.pdf`
-   - `guides/Foundry_IQ_Fabric_IQ_Workshop_Guide.pdf`
-   - `docs/Foundry_IQ_Fabric_IQ_Workshop_Guide.pdf`
-   - `guides/deployment_guide copy.pdf`
-2. The website content is modular, but the PDF scripts restate the same instructions as standalone prose, which increases maintenance cost.
+1. The website content is modular, and any future export format should be generated from the same Markdown source.
 
 ## Recommended Consolidation Plan
 
 ### Phase 1: Freeze the source of truth
 
 - Treat `workshop/docs/` as canonical.
-- Stop adding new authored content to Python PDF generators.
-- Mark `guides/` as generated or review-only artifacts.
+- Keep `guides/` limited to review notes and pointer content.
 
 ### Phase 2: Align the audience model
 
@@ -239,10 +223,8 @@ Missing pieces:
 
 ### Phase 3: Simplify distribution artifacts
 
-- Keep one quick-start PDF.
-- Keep one full workshop PDF.
-- Remove duplicates and stale PDF names.
-- Either generate PDF from Markdown or clearly accept that PDFs are secondary artifacts with manual sync cost.
+- Remove duplicates and stale distribution artifacts.
+- If a PDF is needed again, generate it from Markdown or clearly accept the maintenance cost of a secondary format.
 
 ### Phase 4: Make sharing explicit
 

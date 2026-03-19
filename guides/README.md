@@ -4,7 +4,6 @@ This folder is not the canonical authoring location for workshop instructions.
 
 ## Use this folder for
 
-- Generated PDF artifacts
 - Review notes
 - Distribution-ready summaries that point back to the website documentation
 
