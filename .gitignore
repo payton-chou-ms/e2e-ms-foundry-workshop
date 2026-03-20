@@ -153,6 +153,19 @@ venv.bak/
 
 # mkdocs documentation
 /site
+workshop/site/
+
+# Generated runtime files
+_generated_script.py
+scripts/fabric_suffix.txt
+
+# Generated scenario outputs
+data/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]_*/
+
+# Local analysis notes
+tmp/README.md
+tmp/codebase-review-plan.md
+tmp/docs-quality-scan.md
 
 # Generated ARM templates from local Bicep builds
 infra/*.json
