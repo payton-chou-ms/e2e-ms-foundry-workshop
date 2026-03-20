@@ -3,7 +3,7 @@
 這是令人興奮的部分。在幾分鐘內產生一個完整的、針對你的產業與使用案例量身打造的 PoC。
 
 !!! info "何時使用本節"
-    請在完成 [管理員部署與分享](../01-deploy/00-admin-deploy-share.md) 或 [參與者執行與驗證](../01-deploy/00-participant-run-validate.md) 之後再開始。
+    請在完成 [管理員部署](../01-deploy/00-admin-deploy-share.md) 或 [參與者執行與驗證](../01-deploy/00-participant-run-validate.md) 之後再開始
 
 ## 你需要提供的輸入
 
@@ -30,8 +30,8 @@
 | **範例問題** | 用來測試方案的問題集 |
 
 !!! note "固定範例資產"
-    為了讓每個 tab 都對應到 repo 中可下載的實體檔案，本 repository 現在提供固定樣本資產於 `data/static_examples/<scenario>/`。
-    每個固定樣本資料夾也都包含 `config/sample_questions.txt`，可直接對應該 tab 的問題集。
+    為了讓每個 tab 都對應到 repo 中可下載的實體檔案，本 repository 現在提供固定樣本資產於 `data/static_examples/<scenario>/`
+    每個固定樣本資料夾也都包含 `config/sample_questions.txt`，可直接對應該 tab 的問題集
 
 ## 範例轉換
 
@@ -218,14 +218,14 @@
 
     **範例問題：**
 
-    - "Which drivers are close to the weekly driving-hour limit?"
-    - "What is the policy for delayed deliveries over 60 minutes?"
-    - "Which vehicles cannot be dispatched because of inspection status?"
-    - "Which deliveries are currently delayed or at risk?"
-    - "When is customer notification required for a route delay?"
+    - 「哪些司機已接近每週駕駛時數上限？」
+    - 「配送延遲超過 60 分鐘時，政策要求是什麼？」
+    - 「哪些車輛因為檢查狀態而不能派車？」
+    - 「哪些配送目前已延遲或有風險？」
+    - 「路線延誤時，什麼情況下必須通知客戶？」
 
 !!! tip "越具體越好"
-    AI 會根據你的描述產生適當的實體名稱、真實的資料關係、產業專屬文件，以及相關的範例問題。
+    AI 會根據你的描述產生適當的實體名稱、真實的資料關係、產業專屬文件，以及相關的範例問題
 
 ---
 

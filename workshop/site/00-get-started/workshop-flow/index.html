@@ -558,10 +558,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3deep-dive" class="md-nav__link">
+  <a href="#step-3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3：Deep dive
+        Step 3：深入解析
       
     </span>
   </a>
@@ -1449,10 +1449,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3deep-dive" class="md-nav__link">
+  <a href="#step-3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3：Deep dive
+        Step 3：深入解析
       
     </span>
   </a>
@@ -1482,21 +1482,21 @@
 <table>
 <thead>
 <tr>
-<th>Route</th>
-<th>Use this when</th>
-<th>Primary page</th>
+<th>路徑</th>
+<th>適用情境</th>
+<th>主要頁面</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Admin deploy and share</strong></td>
+<td><strong>管理員部署</strong></td>
 <td>你想自己把整套 Azure 與 Fabric 環境準備完成</td>
-<td><a href="../../01-deploy/00-admin-deploy-share/">管理員部署並分享</a></td>
+<td><a href="../../01-deploy/00-admin-deploy-share/">管理員部署</a></td>
 </tr>
 <tr>
-<td><strong>Participant run and validate</strong></td>
+<td><strong>學員執行與驗證</strong></td>
 <td>你已拿到現成環境，只需要執行範例情境與驗證代理程式</td>
-<td><a href="../../01-deploy/00-participant-run-validate/">參與者執行並驗證</a></td>
+<td><a href="../../01-deploy/00-participant-run-validate/">學員執行與驗證</a></td>
 </tr>
 </tbody>
 </table>
@@ -1514,41 +1514,41 @@
 <table>
 <thead>
 <tr>
-<th>Customer Industry</th>
-<th>Use Case Example</th>
-<th>Sample Questions</th>
+<th>客戶產業</th>
+<th>使用案例範例</th>
+<th>示範問題</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Telecommunications</td>
-<td>Network outages + service policies</td>
-<td>"Which outages exceeded our SLA threshold?"</td>
+<td>電信</td>
+<td>網路中斷 + 服務政策</td>
+<td>"哪些 outage 超過我們的 SLA 門檻？"</td>
 </tr>
 <tr>
-<td>Manufacturing</td>
-<td>Equipment data + maintenance docs</td>
-<td>"Which machines are overdue for maintenance per our schedule?"</td>
+<td>製造</td>
+<td>設備資料 + 維護文件</td>
+<td>"哪些機台依照維護排程已經逾期？"</td>
 </tr>
 <tr>
-<td>Retail</td>
-<td>Product catalog + return policies</td>
-<td>"What's our return policy for electronics over $500?"</td>
+<td>零售</td>
+<td>產品目錄 + 退貨政策</td>
+<td>"超過 500 美元的電子產品退貨政策是什麼？"</td>
 </tr>
 <tr>
-<td>Finance</td>
-<td>Account data + lending policies</td>
-<td>"Which loan applications meet our approval criteria?"</td>
+<td>金融</td>
+<td>帳戶資料 + 放款政策</td>
+<td>"哪些貸款申請符合我們的核准條件？"</td>
 </tr>
 <tr>
-<td>Insurance</td>
-<td>Claims data + policy documents</td>
-<td>"What's the status of claims filed this week vs our SLA?"</td>
+<td>保險</td>
+<td>理賠資料 + 保單文件</td>
+<td>"本週提出的理賠案件，相對於 SLA 目前狀態如何？"</td>
 </tr>
 <tr>
-<td>Energy</td>
-<td>Grid monitoring + safety protocols</td>
-<td>"Which substations are operating above 80% capacity?"</td>
+<td>能源</td>
+<td>電網監控 + 安全規範</td>
+<td>"哪些變電站目前運作容量超過 80%？"</td>
 </tr>
 <tr>
 <td><strong>Customer X</strong></td>
@@ -1559,20 +1559,24 @@
 </table>
 <div class="admonition tip">
 <p class="admonition-title">PoC 前準備</p>
-<p>在 PoC 前先執行 Step 2。輸入產業與簡短的使用案例描述後，AI 會依照你的情境產生更貼近實際的範例資料、文件與測試問題。</p>
+<p>在 PoC 前先執行 Step 2。輸入產業與簡短的使用案例描述後，AI 會依照你的情境產生更貼近實際的範例資料、文件與測試問題</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">單一文件來源</p>
-<p>請以 <code>workshop/docs/</code> 底下的頁面作為目前有效的操作說明。
-<code>guides/</code> 與 PDF 輸出屬於發佈產生物，內容可能較精簡。</p>
+<p>請以 <code>workshop/docs/</code> 底下的頁面作為目前有效的操作說明
+<code>guides/</code> 與 PDF 輸出屬於發佈產生物，內容可能較精簡</p>
 </div>
-<h2 id="step-3deep-dive">Step 3：Deep dive</h2>
-<p>請用這一段來補齊你對技術細節的理解：</p>
+<h2 id="step-3">Step 3：深入解析</h2>
+<p>如果你想知道這個 PoC 背後到底是怎麼運作的，就從這一段開始。你會在這裡把主流程拆回幾個核心技術面向：</p>
 <ul>
-<li><strong>Fabric IQ</strong>：本體如何把商業問題轉換成 SQL</li>
-<li><strong>Foundry IQ</strong>：agentic retrieval 如何 plan、iterate 與 reflect</li>
-<li><strong>Orchestrator Agent</strong>：代理程式如何決定要查詢哪個來源</li>
+<li><strong>Foundry Model</strong>：這個 workshop 目前用了哪些模型，哪些是主線必要，哪些是選配延伸</li>
+<li><strong>Foundry Agent</strong>：代理程式定義存在哪裡，建立後又是怎麼被重複使用</li>
+<li><strong>Foundry Tool</strong>：<code>execute_sql</code> 和 <code>search_documents</code> 各自負責什麼，工具邊界怎麼控制</li>
+<li><strong>Foundry IQ</strong>：文件怎麼進 Azure AI Search，agent 又怎麼取回可引用的段落</li>
+<li><strong>Fabric IQ</strong>：資料表、schema 與 prompt 怎麼把商業問題轉成唯讀 SQL</li>
+<li><strong>Foundry Control Plane</strong>：哪些 Azure 資源、連線與權限在背後支撐整個體驗</li>
 </ul>
+<p>如果你之後還想把這個單一 agent 的 PoC 延伸成多角色 workflow，再接著看 <strong>多代理程式延伸</strong></p>
 <hr />
 <p><a href="../">← 快速開始</a> | <a href="../../01-deploy/">部署方案 →</a></p>
 

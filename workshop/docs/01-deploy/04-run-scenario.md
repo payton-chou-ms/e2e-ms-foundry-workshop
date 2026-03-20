@@ -1,8 +1,8 @@
 # 建置解決方案
 
 !!! info "兩條路徑都會使用"
-       管理員使用本頁來驗證預設部署。
-       參與者使用本頁來執行或驗證已準備好的環境中的範例情境。
+       管理員使用本頁來驗證預設部署
+       參與者使用本頁來執行或驗證已準備好的環境中的範例情境
 
 ## 執行完整流程
 
@@ -84,7 +84,7 @@ python scripts/00_build_solution.py
     python scripts/00_build_solution.py --foundry-only
     ```
 
-       這會先自動設定 Content Understanding defaults，接著跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式。
+       這會先自動設定 Content Understanding defaults，接著跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式
 
        `--foundry-only` 的目前步驟如下：
 
@@ -111,10 +111,10 @@ python scripts/00_build_solution.py
 
 `10_demo_browser_automation.py` 的最短手動收尾如下：
 
-1. 在 Portal 的 Playwright Workspace 產生 access token。
-2. 在 Foundry project 建立 Browser Automation connection。
-3. 將 connection resource ID 填入 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`。
-4. 執行 `python scripts/10_demo_browser_automation.py --strict`。
+1. 在 Portal 的 Playwright Workspace 產生 access token
+2. 在 Foundry project 建立 Browser Automation connection
+3. 將 connection resource ID 填入 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
+4. 執行 `python scripts/10_demo_browser_automation.py --strict`
 
 如果沒有 `AZURE_PLAYWRIGHT_CONNECTION_ID`，腳本會直接 `SKIP:`，這是預期行為。
 
@@ -147,7 +147,7 @@ python scripts/08_test_foundry_agent.py
 ============================================================
 Orchestrator Agent Chat
 ============================================================
-Type 'quit' to exit, 'help' for sample questions
+輸入 `quit` 離開，輸入 `help` 查看示範問題
 
 ------------------------------------------------------------
 

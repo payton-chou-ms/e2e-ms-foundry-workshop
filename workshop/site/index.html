@@ -1500,7 +1500,7 @@
 <li>完整模式下：一個 prompt agent、兩個 core tools、兩條 grounding path：文件走 Foundry IQ，商業資料走 Fabric IQ</li>
 <li>Foundry-only 模式下：一個 prompt agent、一個 core tool、一條 grounding path：只走 Foundry IQ 文件路徑</li>
 </ul>
-<p>當你把主線跑通之後，可以再從首頁先認識五個核心主軸；<code>Multi-Agent Extension</code> 會另外放在延伸主題中介紹：</p>
+<p>當你把主線跑通之後，可以再從首頁先認識五個核心主軸；<code>多代理程式延伸</code> 會另外放在延伸主題中介紹：</p>
 <table>
 <thead>
 <tr>
@@ -1532,7 +1532,7 @@
 </tbody>
 </table>
 <p>首頁這裡先幫你抓住主線；等你對 PoC 的執行方式有感覺之後，再回頭看這五個主軸，會比較容易把技術細節對上實際操作。</p>
-<p>如果你要再往後延伸成更多角色與工作流，請到 deep dive 章節查看第六個主題：<strong>Multi-Agent Extension</strong>。</p>
+<p>如果你要再往後延伸成更多角色與工作流，請到深入解析章節查看第六個主題：<strong>多代理程式延伸</strong>。</p>
 <h2 id="_3">選擇你的路徑</h2>
 <p>這個 workshop 提供兩種起點，請依照你現在手上的環境來選：</p>
 <table>
@@ -1545,7 +1545,7 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>管理員部署與分享</strong></td>
+<td><strong>管理員部署</strong></td>
 <td>你要自己把整套 Azure 與 Fabric 環境準備好</td>
 <td>部署 Azure 資源、設定 Fabric，並整理出可重複使用的環境</td>
 </tr>
@@ -1556,7 +1556,7 @@
 </tr>
 </tbody>
 </table>
-<p>如果你是從零開始準備環境，建議先走「管理員部署與分享」，之後再回到「學員執行與驗證」把主流程完整跑過一次。</p>
+<p>如果你是從零開始準備環境，建議先走「管理員部署」，之後再回到「學員執行與驗證」把主流程完整跑過一次</p>
 <h2 id="workshop">Workshop 流程</h2>
 <table>
 <thead>
@@ -1569,7 +1569,7 @@
 <tbody>
 <tr>
 <td><strong>1. 部署方案</strong></td>
-<td>依你的角色選擇「管理員部署與分享」或「學員執行與驗證」，把 workshop 所需環境準備好，並確認預設情境可以正常使用</td>
+<td>依你的角色選擇「管理員部署」或「學員執行與驗證」，把 workshop 所需環境準備好，並確認預設情境可以正常使用</td>
 <td>~15 min</td>
 </tr>
 <tr>
@@ -1578,7 +1578,7 @@
 <td>~20 min</td>
 </tr>
 <tr>
-<td><strong>3. Deep dive</strong></td>
+<td><strong>3. 深入解析</strong></td>
 <td>回頭理解這個 PoC 背後的模型、代理程式、工具、接地流程與控制平面，方便你回答 Q&amp;A 或往後延伸</td>
 <td>~15 min</td>
 </tr>
@@ -1602,19 +1602,19 @@
     A --&gt; T[Foundry Tool\n工具合約與 guardrails]
     A --&gt; M[Foundry Model\n哪些模型負責推理與嵌入]
     IQ --&gt; C[Foundry Control Plane\n哪些 Azure 資源與權限支撐執行]
-    C -. 進階延伸 .-&gt; MA[Multi-Agent Extension\n需要更多角色與工作流時再看]</code></pre>
+    C -. 進階延伸 .-&gt; MA[多代理程式延伸\n需要更多角色與工作流時再看]</code></pre>
 <p>你可以用下面這個順序來讀這張圖：</p>
 <ul>
-<li>第一層先看最上面，確認這個 PoC 最後要達成的成果是什麼。</li>
-<li>第二層看中間，分清楚完整模式和 Foundry-only 模式各自會走哪些步驟。</li>
-<li>第三層再往下看，理解這個體驗是怎麼由 IQ、Agent、Tool、Model、Control Plane 一起支撐起來的。</li>
-<li>最右下角的 Multi-Agent Extension 是延伸主題，建議等你先把主線跑通之後再看。</li>
+<li>第一層先看最上面，確認這個 PoC 最後要達成的成果是什麼</li>
+<li>第二層看中間，分清楚完整模式和 Foundry-only 模式各自會走哪些步驟</li>
+<li>第三層再往下看，理解這個體驗是怎麼由 IQ、Agent、Tool、Model、Control Plane 一起支撐起來的</li>
+<li>最右下角的多代理程式延伸是延伸主題，建議等你先把主線跑通之後再看</li>
 </ul>
 <p>如果你想用最省力的方式理解這套架構，建議順序是：</p>
 <ol>
-<li>先把 PoC 跑起來。</li>
-<li>再回頭對照這張圖，把你剛剛做的步驟和主流程對起來。</li>
-<li>最後才進入 Deep dive，看每個技術主軸的細節與延伸方向。</li>
+<li>先把 PoC 跑起來</li>
+<li>再回頭對照這張圖，把你剛剛做的步驟和主流程對起來</li>
+<li>最後才進入深入解析，看每個技術主軸的細節與延伸方向</li>
 </ol>
 <div class="admonition tip">
 <p class="admonition-title">PoC 前建議</p>
@@ -1626,8 +1626,8 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">文件位置</p>
-<p>本 workshop 的完整文件請直接參考本網站內容。
-若需要查看原始 Markdown 檔案，位置在 <code>workshop/docs/</code>。</p>
+<p>本 workshop 的完整文件請直接參考本網站內容
+若需要查看原始 Markdown 檔案，位置在 <code>workshop/docs/</code></p>
 </div>
 <hr />
 <p><a href="00-get-started/">快速開始 →</a></p>

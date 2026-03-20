@@ -1,8 +1,8 @@
 # 部署基礎架構
 
 !!! info "主要適用對象"
-    本頁主要供**管理員部署與分享**路徑使用。
-    如果已有人為你準備好環境，請從 [參與者執行與驗證](00-participant-run-validate.md) 開始。
+    本頁主要供**管理員部署**路徑使用
+    如果已有人為你準備好環境，請從 [參與者執行與驗證](00-participant-run-validate.md) 開始
 
 ## 開啟專案目錄
 
@@ -21,25 +21,25 @@ azd auth login
 這會開啟瀏覽器進行驗證。
 
 !!! warning "部署權限"
-    本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限。
+    本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限
 
     實務上請用下列其中一種權限模型：
 
-    - `Owner`：最直接，既能建立資源，也能建立角色指派。
-    - `Contributor` + `User Access Administrator`：較符合最小權限原則。
-    - `Contributor` + `Role Based Access Control Administrator`：同樣可行，適合把資源建立與 RBAC 指派拆開管理。
-    - 等效的自訂角色組合：同時涵蓋資源寫入，以及 `Microsoft.Authorization/roleAssignments/write`。
+    - `Owner`：最直接，既能建立資源，也能建立角色指派
+    - `Contributor` + `User Access Administrator`：較符合最小權限原則
+    - `Contributor` + `Role Based Access Control Administrator`：同樣可行，適合把資源建立與 RBAC 指派拆開管理
+    - 等效的自訂角色組合：同時涵蓋資源寫入，以及 `Microsoft.Authorization/roleAssignments/write`
 
-    `Contributor` 單獨使用通常會失敗，因為它不能建立 Azure RBAC 角色指派。
+    `Contributor` 單獨使用通常會失敗，因為它不能建立 Azure RBAC 角色指派
 
 !!! note "這個模板實際會建立哪些 RBAC 指派"
     目前的 Bicep 模板會在部署期間建立多組角色指派，包含：
 
-    - 對 **Foundry project 的 managed identity** 指派 Search 與 Storage 相關角色。
-    - 對 **Azure AI Search 的 managed identity** 指派 `Cognitive Services OpenAI User` 與 `Storage Blob Data Reader`。
-    - 對 **執行部署的使用者身分** 指派 `Cognitive Services User`、`Azure AI User`、`Search Index Data Contributor`、`Search Service Contributor`、`Storage Blob Data Contributor`。
+    - 對 **Foundry project 的 managed identity** 指派 Search 與 Storage 相關角色
+    - 對 **Azure AI Search 的 managed identity** 指派 `Cognitive Services OpenAI User` 與 `Storage Blob Data Reader`
+    - 對 **執行部署的使用者身分** 指派 `Cognitive Services User`、`Azure AI User`、`Search Index Data Contributor`、`Search Service Contributor`、`Storage Blob Data Contributor`
 
-    也就是說，部署不只是「把資源建出來」，還會順便把執行 workshop 主流程所需的資料平面 / 控制平面存取補齊。
+    也就是說，部署不只是「把資源建出來」，還會順便把執行 workshop 主流程所需的資料平面 / 控制平面存取補齊
 
 ## 部署資源
 
@@ -55,9 +55,9 @@ azd up
 - `azd up` **不能直接**用旗標指定 **Tenant**；Tenant 會跟著你目前 Azure CLI 的登入內容
 
 !!! tip "gpt-5.4-mini 的區域建議"
-    如果你要使用目前 repo 的預設模型 `gpt-5.4-mini`，建議把 **AI deployment location** 設為 `eastus2`。
+    如果你要使用目前 repo 的預設模型 `gpt-5.4-mini`，建議把 **AI deployment location** 設為 `eastus2`
 
-    實務上可以維持資源群組主區域為 `eastus`，但把 `AZURE_ENV_AI_DEPLOYMENTS_LOCATION` 設成 `eastus2`。這是目前這份 workshop 模板驗證過、較穩定的組合。
+    實務上可以維持資源群組主區域為 `eastus`，但把 `AZURE_ENV_AI_DEPLOYMENTS_LOCATION` 設成 `eastus2`。這是目前這份 workshop 模板驗證過、較穩定的組合
 
 最直接的做法是先登入正確 Tenant，再執行 `azd up`：
 
@@ -130,7 +130,7 @@ azd up --environment <environment-name>
 - 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`
 
 !!! warning "請等待完成"
-    部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作。
+    部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作
 
 ## 驗證部署
 
@@ -150,17 +150,17 @@ azd up --environment <environment-name>
 
 !!! note "補充說明"
     chat、embedding 與其他選配模型部署會掛在 Microsoft Foundry 底下，
-    不一定會在資源群組清單中以獨立頂層資源顯示。
+    不一定會在資源群組清單中以獨立頂層資源顯示
 
 ## 環境變數
 
 部署完成後，Azure 端點會自動儲存到 `.azure/<env>/.env`，並由腳本自動載入。
 
 !!! note "無需手動設定"
-    你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取。
+    你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取
 
 !!! note "Browser Automation 的最後一段仍需手動"
-    `azd up` 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection。
+    `azd up` 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection
 
     - **從哪邊拿資料**：到 Azure Portal 的 Playwright Workspace，進入 **Settings** > **Access Management** 產生一次性的 **Access token**；再到 Workspace 的 **Overview** 複製 **Browser endpoint**（`wss://...`）
     - **貼到哪邊**：到 Foundry project 的 **Build** > **Tools** > **Connect a tool** > **Browser Automation**，把 **Browser endpoint** 貼到 *Playwright workspace region endpoint*，把 **Access token** 貼到 *Access token*
@@ -172,4 +172,4 @@ azd up --environment <environment-name>
 
 ---
 
-[← 管理員部署與分享](00-admin-deploy-share.md) | [建立 Fabric 工作區 →](02-setup-fabric.md)
+[← 管理員部署](00-admin-deploy-share.md) | [建立 Fabric 工作區 →](02-setup-fabric.md)

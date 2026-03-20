@@ -26,7 +26,7 @@ cat data/default/config/sample_questions.txt
 | **組合式問題** | 兩個來源 | "Which claims are approaching our SLA deadline based on our process guidelines?" |
 
 !!! tip "先使用這些問題"
-    產生的問題是針對你的情境的資料與文件量身打造的。請先使用這些問題，再自行即興發問。
+    產生的問題是針對你的情境的資料與文件量身打造的。請先使用這些問題，再自行即興發問
 
 ## 目前的工具合約
 
@@ -43,10 +43,10 @@ Workshop 代理程式使用一個小型、明確的工具合約。讓你的 demo
 
 當你執行 `python scripts/08_test_foundry_agent.py` 時，執行時會依照以下迴圈：
 
-1. 模型檢視問題，決定是否需要 `execute_sql`、`search_documents`，或兩者皆需。
-2. 本機腳本執行每個被請求的工具，並列印預覽讓你看到發生了什麼。
-3. 原始工具輸出以 `function_call_output` 傳回模型。
-4. 模型從工具結果合成最終答案。
+1. 模型檢視問題，決定是否需要 `execute_sql`、`search_documents`，或兩者皆需
+2. 本機腳本執行每個被請求的工具，並列印預覽讓你看到發生了什麼
+3. 原始工具輸出以 `function_call_output` 傳回模型
+4. 模型從工具結果合成最終答案
 
 ### 範例輸出
 
@@ -119,7 +119,7 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
 | 7 | **組合式** | "Do any current claims involve coverage types not in our standard policy?" |
 
 !!! tip "讓客戶自己提問"
-    在你準備好的問題之後，讓客戶提出自己的問題。這能展示方案可以處理真實情境，而不只是照稿演出。
+    在你準備好的問題之後，讓客戶提出自己的問題。這能展示方案可以處理真實情境，而不只是照稿演出
 
 ## 檢查點
 
@@ -131,7 +131,7 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
     - [x] 結合來源回答複雜問題
     - [x] 使用產業適當的用語
 
-    **下一步：** 閱讀 [Deep dive](../03-understand/index.md) 以準備回答技術問題
+    **下一步：** 閱讀 [深入解析](../03-understand/index.md) 以準備回答技術問題
 
 ## 快速參考：替另一個產業使用案例重新產生
 
@@ -147,4 +147,4 @@ python scripts/00_build_solution.py --clean \
 
 ---
 
-[← 產生與建置](02-generate.md) | [Deep dive →](../03-understand/index.md)
+[← 產生與建置](02-generate.md) | [深入解析 →](../03-understand/index.md)

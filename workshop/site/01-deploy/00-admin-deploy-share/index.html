@@ -1675,29 +1675,29 @@
 <p>如果你想先快速判斷自己是否需要 Azure 部署權限，先看 <a href="../#azure-permissions">部署總覽中的 Azure 權限對照</a>。</p>
 <h2 id="_3">這條路徑涵蓋的內容</h2>
 <ol>
-<li>部署 Azure 資源。</li>
-<li>建立或選擇 Fabric 工作區。</li>
-<li>設定共用環境。</li>
-<li>執行範例情境一次。</li>
-<li>將準備好的環境提供給其他學員，或留給自己後續重複使用。</li>
+<li>部署 Azure 資源</li>
+<li>建立或選擇 Fabric 工作區</li>
+<li>設定共用環境</li>
+<li>執行範例情境一次</li>
+<li>將準備好的環境提供給其他學員，或留給自己後續重複使用</li>
 </ol>
 <h2 id="_4">開始之前</h2>
 <p>請確認你具備：</p>
 <ul>
-<li>目標資源群組（或其上層 scope）的 Azure 資源建立權限。</li>
-<li>目標資源群組（或其上層 scope）的 Azure 角色指派建立權限。</li>
-<li>Fabric 工作區管理員或同等撰寫權限。</li>
-<li>所選 Azure 區域的必要模型容量與配額。</li>
+<li>目標資源群組（或其上層 scope）的 Azure 資源建立權限</li>
+<li>目標資源群組（或其上層 scope）的 Azure 角色指派建立權限</li>
+<li>Fabric 工作區管理員或同等撰寫權限</li>
+<li>所選 Azure 區域的必要模型容量與配額</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Contributor 單獨使用通常不夠</p>
-<p>這套基礎架構不只會建立資源，也會在部署過程中建立 Azure RBAC 角色指派。</p>
+<p>這套基礎架構不只會建立資源，也會在部署過程中建立 Azure RBAC 角色指派</p>
 <p>文件上建議用下面兩種寫法理解：</p>
 <ul>
-<li>最簡單：部署身分在目標資源群組或訂用帳戶上具備 <code>Owner</code>。</li>
-<li>最小實務組合：部署身分同時具備「可建立資源的角色」與「可建立角色指派的角色」。常見組合是 <code>Contributor</code> + <code>User Access Administrator</code>，或 <code>Contributor</code> + <code>Role Based Access Control Administrator</code>。</li>
+<li>最簡單：部署身分在目標資源群組或訂用帳戶上具備 <code>Owner</code></li>
+<li>最小實務組合：部署身分同時具備「可建立資源的角色」與「可建立角色指派的角色」。常見組合是 <code>Contributor</code> + <code>User Access Administrator</code>，或 <code>Contributor</code> + <code>Role Based Access Control Administrator</code></li>
 </ul>
-<p>如果你使用的是自訂角色，至少要同時涵蓋資源建立所需的寫入權限，以及 <code>Microsoft.Authorization/roleAssignments/write</code>。</p>
+<p>如果你使用的是自訂角色，至少要同時涵蓋資源建立所需的寫入權限，以及 <code>Microsoft.Authorization/roleAssignments/write</code></p>
 </div>
 <h2 id="_5">建議執行順序</h2>
 <h3 id="1-azure">1. 部署 Azure 資源</h3>
@@ -1722,20 +1722,22 @@
 <li>協調代理程式能回答範例問題</li>
 </ul>
 <h3 id="5">5. 整理給後續使用者</h3>
-<p>目前的 repo 不會自動化所有協作步驟。在環境準備完成之後，請先決定：</p>
+<p>環境建好之後，建議你先把「下一位使用者到底要做什麼」講清楚。</p>
+<p>最常見的差別其實只有三種：</p>
 <ul>
 <li>誰只需要執行測試</li>
 <li>誰需要重建資料或自訂情境</li>
 <li>誰需要管理 Azure 資源與 Fabric 產物</li>
 </ul>
-<p>最低整理清單：</p>
+<p>在你把環境交出去之前，至少先整理好下面這些項目：</p>
 <ul>
-<li>授予所需使用者或群組 Azure 存取權。</li>
-<li>授予所需使用者 Fabric 工作區存取權。</li>
-<li>分享所需的本機設定值。</li>
-<li>告知下一位使用者是只需驗證範例情境，還是也要執行自訂步驟。</li>
+<li>授予所需使用者或群組 Azure 存取權</li>
+<li>授予所需使用者 Fabric 工作區存取權</li>
+<li>分享所需的本機設定值</li>
+<li>告知下一位使用者是只需驗證範例情境，還是也要執行自訂步驟</li>
 </ul>
 <h2 id="_6">建議保留給下一次操作的資訊</h2>
+<p>下次不管是你自己回來接手，還是換另一位學員接手，至少要留下面這些資訊：</p>
 <ul>
 <li>Repository URL</li>
 <li>預期的登入身分或租用戶</li>
@@ -1743,7 +1745,7 @@
 <li>應從 <a href="../00-participant-run-validate/">參與者執行與驗證</a> 開始，還是從後續自訂頁面開始</li>
 </ul>
 <h2 id="_7">何時算是完成這條路徑</h2>
-<p>當你或另一位學員可以開啟 repo、登入，並執行範例驗證流程而不需要重新部署 Azure 時，就算完成。</p>
+<p>當你或另一位學員可以直接開啟 repo、登入、完成範例驗證，而且不需要重新部署 Azure，這條路徑就算完成</p>
 <hr />
 <p><a href="../">← 部署總覽</a> | <a href="../00-participant-run-validate/">參與者執行與驗證 →</a></p>
 

@@ -51,8 +51,8 @@ Use Case: Property insurance with claims processing and policy management
   → underwriting_policy.pdf — Risk assessment guidelines
   ✓ 3 documents generated
 
-[4/4] Generating sample questions...
-  → 15 sample questions spanning data, documents, and combined
+[4/4] 產生示範問題...
+  → 15 題涵蓋資料、文件與混合情境的示範問題
   ✓ sample_questions.txt
 
 ============================================================

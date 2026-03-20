@@ -1647,8 +1647,8 @@
 <h1 id="_1">建置解決方案</h1>
 <div class="admonition info">
 <p class="admonition-title">兩條路徑都會使用</p>
-<p>管理員使用本頁來驗證預設部署。
-   參與者使用本頁來執行或驗證已準備好的環境中的範例情境。</p>
+<p>管理員使用本頁來驗證預設部署
+   參與者使用本頁來執行或驗證已準備好的環境中的範例情境</p>
 </div>
 <h2 id="_2">執行完整流程</h2>
 <p>如果你想先看「每一支 script 是做什麼、什麼時候該跑、要怎麼跑」，請先看 <a href="../05-script-sequence/">腳本用途與執行順序</a>。</p>
@@ -1743,7 +1743,7 @@
 <p>如果你沒有 Microsoft Fabric 的存取權，仍然可以只使用 Azure 服務執行 workshop：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>scripts/00_build_solution.py<span class="w"> </span>--foundry-only
 </code></pre></div>
-<p>這會先自動設定 Content Understanding defaults，接著跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式。</p>
+<p>這會先自動設定 Content Understanding defaults，接著跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式</p>
 <p><code>--foundry-only</code> 的目前步驟如下：</p>
 <table>
 <thead>
@@ -1818,10 +1818,10 @@
 <h3 id="browser-automation">Browser Automation 手動收尾</h3>
 <p><code>10_demo_browser_automation.py</code> 的最短手動收尾如下：</p>
 <ol>
-<li>在 Portal 的 Playwright Workspace 產生 access token。</li>
-<li>在 Foundry project 建立 Browser Automation connection。</li>
-<li>將 connection resource ID 填入 <code>.env</code> 的 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code>。</li>
-<li>執行 <code>python scripts/10_demo_browser_automation.py --strict</code>。</li>
+<li>在 Portal 的 Playwright Workspace 產生 access token</li>
+<li>在 Foundry project 建立 Browser Automation connection</li>
+<li>將 connection resource ID 填入 <code>.env</code> 的 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code></li>
+<li>執行 <code>python scripts/10_demo_browser_automation.py --strict</code></li>
 </ol>
 <p>如果沒有 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code>，腳本會直接 <code>SKIP:</code>，這是預期行為。</p>
 <h2 id="_4">預期輸出</h2>
@@ -1844,7 +1844,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>============================================================
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Orchestrator Agent Chat
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>============================================================
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Type &#39;quit&#39; to exit, &#39;help&#39; for sample questions
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>輸入 `quit` 離開，輸入 `help` 查看示範問題
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>------------------------------------------------------------
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>

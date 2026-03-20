@@ -1579,8 +1579,8 @@
 <h1 id="_1">部署基礎架構</h1>
 <div class="admonition info">
 <p class="admonition-title">主要適用對象</p>
-<p>本頁主要供<strong>管理員部署與分享</strong>路徑使用。
-如果已有人為你準備好環境，請從 <a href="../00-participant-run-validate/">參與者執行與驗證</a> 開始。</p>
+<p>本頁主要供<strong>管理員部署</strong>路徑使用
+如果已有人為你準備好環境，請從 <a href="../00-participant-run-validate/">參與者執行與驗證</a> 開始</p>
 </div>
 <h2 id="_2">開啟專案目錄</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>nc-iq-workshop
@@ -1592,25 +1592,25 @@
 <p>這會開啟瀏覽器進行驗證。</p>
 <div class="admonition warning">
 <p class="admonition-title">部署權限</p>
-<p>本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限。</p>
+<p>本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限</p>
 <p>實務上請用下列其中一種權限模型：</p>
 <ul>
-<li><code>Owner</code>：最直接，既能建立資源，也能建立角色指派。</li>
-<li><code>Contributor</code> + <code>User Access Administrator</code>：較符合最小權限原則。</li>
-<li><code>Contributor</code> + <code>Role Based Access Control Administrator</code>：同樣可行，適合把資源建立與 RBAC 指派拆開管理。</li>
-<li>等效的自訂角色組合：同時涵蓋資源寫入，以及 <code>Microsoft.Authorization/roleAssignments/write</code>。</li>
+<li><code>Owner</code>：最直接，既能建立資源，也能建立角色指派</li>
+<li><code>Contributor</code> + <code>User Access Administrator</code>：較符合最小權限原則</li>
+<li><code>Contributor</code> + <code>Role Based Access Control Administrator</code>：同樣可行，適合把資源建立與 RBAC 指派拆開管理</li>
+<li>等效的自訂角色組合：同時涵蓋資源寫入，以及 <code>Microsoft.Authorization/roleAssignments/write</code></li>
 </ul>
-<p><code>Contributor</code> 單獨使用通常會失敗，因為它不能建立 Azure RBAC 角色指派。</p>
+<p><code>Contributor</code> 單獨使用通常會失敗，因為它不能建立 Azure RBAC 角色指派</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">這個模板實際會建立哪些 RBAC 指派</p>
 <p>目前的 Bicep 模板會在部署期間建立多組角色指派，包含：</p>
 <ul>
-<li>對 <strong>Foundry project 的 managed identity</strong> 指派 Search 與 Storage 相關角色。</li>
-<li>對 <strong>Azure AI Search 的 managed identity</strong> 指派 <code>Cognitive Services OpenAI User</code> 與 <code>Storage Blob Data Reader</code>。</li>
-<li>對 <strong>執行部署的使用者身分</strong> 指派 <code>Cognitive Services User</code>、<code>Azure AI User</code>、<code>Search Index Data Contributor</code>、<code>Search Service Contributor</code>、<code>Storage Blob Data Contributor</code>。</li>
+<li>對 <strong>Foundry project 的 managed identity</strong> 指派 Search 與 Storage 相關角色</li>
+<li>對 <strong>Azure AI Search 的 managed identity</strong> 指派 <code>Cognitive Services OpenAI User</code> 與 <code>Storage Blob Data Reader</code></li>
+<li>對 <strong>執行部署的使用者身分</strong> 指派 <code>Cognitive Services User</code>、<code>Azure AI User</code>、<code>Search Index Data Contributor</code>、<code>Search Service Contributor</code>、<code>Storage Blob Data Contributor</code></li>
 </ul>
-<p>也就是說，部署不只是「把資源建出來」，還會順便把執行 workshop 主流程所需的資料平面 / 控制平面存取補齊。</p>
+<p>也就是說，部署不只是「把資源建出來」，還會順便把執行 workshop 主流程所需的資料平面 / 控制平面存取補齊</p>
 </div>
 <h2 id="_3">部署資源</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>azd<span class="w"> </span>up
@@ -1623,8 +1623,8 @@
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">gpt-5.4-mini 的區域建議</p>
-<p>如果你要使用目前 repo 的預設模型 <code>gpt-5.4-mini</code>，建議把 <strong>AI deployment location</strong> 設為 <code>eastus2</code>。</p>
-<p>實務上可以維持資源群組主區域為 <code>eastus</code>，但把 <code>AZURE_ENV_AI_DEPLOYMENTS_LOCATION</code> 設成 <code>eastus2</code>。這是目前這份 workshop 模板驗證過、較穩定的組合。</p>
+<p>如果你要使用目前 repo 的預設模型 <code>gpt-5.4-mini</code>，建議把 <strong>AI deployment location</strong> 設為 <code>eastus2</code></p>
+<p>實務上可以維持資源群組主區域為 <code>eastus</code>，但把 <code>AZURE_ENV_AI_DEPLOYMENTS_LOCATION</code> 設成 <code>eastus2</code>。這是目前這份 workshop 模板驗證過、較穩定的組合</p>
 </div>
 <p>最直接的做法是先登入正確 Tenant，再執行 <code>azd up</code>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>az<span class="w"> </span>login<span class="w"> </span>--tenant<span class="w"> </span>&lt;TENANT_ID&gt;
@@ -1675,7 +1675,7 @@
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">請等待完成</p>
-<p>部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作。</p>
+<p>部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作</p>
 </div>
 <h2 id="_5">驗證部署</h2>
 <p>在 <a href="https://portal.azure.com/">Azure Portal</a> 中確認你的資源群組至少包含下列資源：</p>
@@ -1695,17 +1695,17 @@
 <div class="admonition note">
 <p class="admonition-title">補充說明</p>
 <p>chat、embedding 與其他選配模型部署會掛在 Microsoft Foundry 底下，
-不一定會在資源群組清單中以獨立頂層資源顯示。</p>
+不一定會在資源群組清單中以獨立頂層資源顯示</p>
 </div>
 <h2 id="_6">環境變數</h2>
 <p>部署完成後，Azure 端點會自動儲存到 <code>.azure/&lt;env&gt;/.env</code>，並由腳本自動載入。</p>
 <div class="admonition note">
 <p class="admonition-title">無需手動設定</p>
-<p>你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取。</p>
+<p>你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Browser Automation 的最後一段仍需手動</p>
-<p><code>azd up</code> 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection。</p>
+<p><code>azd up</code> 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection</p>
 <ul>
 <li><strong>從哪邊拿資料</strong>：到 Azure Portal 的 Playwright Workspace，進入 <strong>Settings</strong> &gt; <strong>Access Management</strong> 產生一次性的 <strong>Access token</strong>；再到 Workspace 的 <strong>Overview</strong> 複製 <strong>Browser endpoint</strong>（<code>wss://...</code>）</li>
 <li><strong>貼到哪邊</strong>：到 Foundry project 的 <strong>Build</strong> &gt; <strong>Tools</strong> &gt; <strong>Connect a tool</strong> &gt; <strong>Browser Automation</strong>，把 <strong>Browser endpoint</strong> 貼到 <em>Playwright workspace region endpoint</em>，把 <strong>Access token</strong> 貼到 <em>Access token</em></li>
@@ -1717,7 +1717,7 @@
 </ul>
 </div>
 <hr />
-<p><a href="../00-admin-deploy-share/">← 管理員部署與分享</a> | <a href="../02-setup-fabric/">建立 Fabric 工作區 →</a></p>
+<p><a href="../00-admin-deploy-share/">← 管理員部署</a> | <a href="../02-setup-fabric/">建立 Fabric 工作區 →</a></p>
 
 
 

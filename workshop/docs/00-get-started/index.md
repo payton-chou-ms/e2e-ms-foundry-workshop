@@ -20,7 +20,7 @@
     - "What does this script do?"
     - "How do I fix this Python error?"
 
-    在 VS Code 中按 `Ctrl+I` 可開啟 Copilot Chat。
+    在 VS Code 中按 `Ctrl+I` 可開啟 Copilot Chat
 
 ---
 

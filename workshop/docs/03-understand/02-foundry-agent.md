@@ -1,6 +1,6 @@
 # Foundry 代理程式：執行階段編排
 
-## Summary
+## 概要
 
 這個工作坊不是每次提問時都臨時拼一段 prompt。它會先在 Microsoft Foundry 裡建立一個 agent 定義，再由測試腳本把這個 agent 叫出來執行。
 
@@ -13,9 +13,9 @@
 
 看完這頁，你應該知道：
 
-- agent 定義裡面包含哪些東西。
-- agent 為什麼知道自己可以呼叫哪些工具。
-- 本機測試與後續發佈之間有什麼差別。
+- agent 定義裡面包含哪些東西
+- agent 為什麼知道自己可以呼叫哪些工具
+- 本機測試與後續發佈之間有什麼差別
 
 ## 代理程式定義
 
@@ -72,19 +72,19 @@
 
 ```mermaid
 flowchart LR
-    A[07_create_foundry_agent.py] --> B[Load env and scenario config]
-    B --> C[Build instructions and tool list]
+    A[07_create_foundry_agent.py] --> B[載入環境與情境設定]
+    B --> C[建立指令與工具清單]
     C --> D[AIProjectClient]
-    D --> E[Delete existing named agent if present]
-    E --> F[Create PromptAgentDefinition]
-    F --> G[Save agent_id to agent_ids.json]
+    D --> E[若已存在同名 agent 先刪除]
+    E --> F[建立 PromptAgentDefinition]
+    F --> G[將 agent_id 存到 agent_ids.json]
     G --> H[08_test_foundry_agent.py]
-    H --> I[Get agent by id]
-    I --> J[Create conversation]
-    J --> K[Create response]
-    K --> L[Handle function calls locally]
-    L --> M[Submit function_call_output]
-    M --> N[Return final answer]
+    H --> I[依 id 取得 agent]
+    I --> J[建立對話]
+    J --> K[建立回應]
+    K --> L[在本機處理函式呼叫]
+    L --> M[送回 function_call_output]
+    M --> N[回傳最終答案]
 ```
 
 測試腳本不會重建一個新的 agent，而是讀取已經存好的 agent 定義，再用本機程式驅動整個問答流程。

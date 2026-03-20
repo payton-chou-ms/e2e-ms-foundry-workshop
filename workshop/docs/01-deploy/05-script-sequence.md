@@ -1,13 +1,13 @@
 # 腳本用途與執行順序
 
-## Summary
+## 概要
 
 如果你是學員，先記住這四點就夠了：
 
-- 大多數情況下，你**不需要手動把 `scripts/00` 到 `scripts/15` 全部跑一遍**。
-- 標準 workshop 最常用的是 `00_build_solution.py` 和 `08_test_foundry_agent.py`。
-- `09` 到 `13` 是選配 demo，要用到再跑。
-- `14` 到 `15` 是 multi-agent 延伸，不是基本 workshop 必跑步驟。
+- 大多數情況下，你**不需要手動把 `scripts/00` 到 `scripts/15` 全部跑一遍**
+- 標準 workshop 最常用的是 `00_build_solution.py` 和 `08_test_foundry_agent.py`
+- `09` 到 `13` 是選配 demo，要用到再跑
+- `14` 到 `15` 是 multi-agent 延伸，不是基本 workshop 必跑步驟
 
 最短主流程通常是：
 
@@ -54,13 +54,13 @@ python scripts/08_test_foundry_agent.py --foundry-only
 
 **它是做什麼的**
 
-- 這是主流程總控腳本。
-- 它會依照你指定的模式，依序執行主要建置步驟。
+- 這是主流程總控腳本
+- 它會依照你指定的模式，依序執行主要建置步驟
 
 **什麼時候跑**
 
-- 你要快速把 workshop 建起來時。
-- 你不想手動逐支執行 `01` 到 `07` 時。
+- 你要快速把 workshop 建起來時
+- 你不想手動逐支執行 `01` 到 `07` 時
 
 **怎麼跑**
 
@@ -81,13 +81,13 @@ python scripts/00_build_solution.py --from 04
 
 **它是做什麼的**
 
-- 根據你的產業與 use case 產生一套新的 sample data。
-- 會產生 CSV、PDF、ontology config 和 sample questions。
+- 根據你的產業與 use case 產生一套新的 sample data
+- 會產生 CSV、PDF、ontology config 和示範問題
 
 **什麼時候跑**
 
-- 你要換新的產業或新的 use case。
-- 你想從頭重做情境資料。
+- 你要換新的產業或新的 use case
+- 你想從頭重做情境資料
 
 **怎麼跑**
 
@@ -100,12 +100,12 @@ python scripts/01_generate_sample_data.py --industry "Telecommunications" --usec
 
 **它是做什麼的**
 
-- 用固定 template 產生內建情境資料。
+- 用固定 template 產生內建情境資料
 
 **什麼時候跑**
 
-- 你想走 template-based 的固定情境。
-- 一般學員通常不用先跑這支。
+- 你想走 template-based 的固定情境
+- 一般學員通常不用先跑這支
 
 **怎麼跑**
 
@@ -117,13 +117,13 @@ python scripts/01_generate_sample_data_templates.py --scenario retail --size sma
 
 **它是做什麼的**
 
-- 在 Fabric 建立 Lakehouse、Ontology、DataBindings 和 relationships。
-- 這一步還不會把資料真正載入進去。
+- 在 Fabric 建立 Lakehouse、Ontology、DataBindings 和 relationships
+- 這一步還不會把資料真正載入進去
 
 **什麼時候跑**
 
-- 你要使用完整的 Fabric IQ 路徑時。
-- `01` 已經產生好資料之後。
+- 你要使用完整的 Fabric IQ 路徑時
+- `01` 已經產生好資料之後
 
 **怎麼跑**
 
@@ -136,11 +136,11 @@ python scripts/02_create_fabric_items.py --clean
 
 **它是做什麼的**
 
-- 把 CSV 上傳進 Lakehouse，載入成可查詢的資料表。
+- 把 CSV 上傳進 Lakehouse，載入成可查詢的資料表
 
 **什麼時候跑**
 
-- `02` 已經建立好 Fabric 項目之後。
+- `02` 已經建立好 Fabric 項目之後
 
 **怎麼跑**
 
@@ -152,11 +152,11 @@ python scripts/03_load_fabric_data.py
 
 **它是做什麼的**
 
-- 根據 ontology/schema 產生給 agent 使用的 `schema_prompt.txt`。
+- 根據 ontology/schema 產生給 agent 使用的 `schema_prompt.txt`
 
 **什麼時候跑**
 
-- 你要讓 agent 能正確理解資料表與欄位時。
+- 你要讓 agent 能正確理解資料表與欄位時
 
 **怎麼跑**
 
@@ -169,12 +169,12 @@ python scripts/04_generate_agent_prompt.py --from-config
 
 **它是做什麼的**
 
-- 這是較早期的 Fabric Data Agent 路徑。
+- 這是較早期的 Fabric Data Agent 路徑
 
 **什麼時候跑**
 
-- 一般學員通常**不用跑**。
-- 它現在主要保留作為舊路徑參考。
+- 一般學員通常**不用跑**
+- 它現在主要保留作為舊路徑參考
 
 **怎麼跑**
 
@@ -186,11 +186,11 @@ python scripts/05_create_fabric_agent.py
 
 **它是做什麼的**
 
-- 把 PDF 文件切 chunk、做 embedding、上傳到 Azure AI Search。
+- 把 PDF 文件切 chunk、做 embedding、上傳到 Azure AI Search
 
 **什麼時候跑**
 
-- 你要讓 agent 可以回答文件型問題時。
+- 你要讓 agent 可以回答文件型問題時
 
 **怎麼跑**
 
@@ -202,14 +202,14 @@ python scripts/06_upload_to_search.py
 
 **它是做什麼的**
 
-- 在 Foundry project 建立主 workshop agent。
-- 完整模式會有 SQL + Search 兩個工具。
-- `--foundry-only` 只會建立 Search-only agent。
+- 在 Foundry project 建立主 workshop agent
+- 完整模式會有 SQL + Search 兩個工具
+- `--foundry-only` 只會建立 Search-only agent
 
 **什麼時候跑**
 
-- `04` 和 `06` 已準備好之後。
-- 完整模式下，通常也代表 `02`、`03` 已完成。
+- `04` 和 `06` 已準備好之後
+- 完整模式下，通常也代表 `02`、`03` 已完成
 
 **怎麼跑**
 
@@ -222,12 +222,12 @@ python scripts/07_create_foundry_agent.py --foundry-only
 
 **它是做什麼的**
 
-- 測試你剛建立好的 agent。
-- 這也是你最常用來 demo 的互動式腳本。
+- 測試你剛建立好的 agent
+- 這也是你最常用來 demo 的互動式腳本
 
 **什麼時候跑**
 
-- `07` 跑完之後。
+- `07` 跑完之後
 
 **怎麼跑**
 
@@ -346,7 +346,7 @@ python scripts/08_test_foundry_agent.py
 
 ## 你可以怎麼使用這一頁
 
-- 先看 Summary，判斷自己是不是只需要 `00` 和 `08`
+- 先看概要，判斷自己是不是只需要 `00` 和 `08`
 - 如果某一步失敗，再回來查那支 script 的用途與執行命令
 - 如果你要加 demo，再看 `09` 到 `13`
 - 如果你要看進階延伸，再看 `14` 到 `15`

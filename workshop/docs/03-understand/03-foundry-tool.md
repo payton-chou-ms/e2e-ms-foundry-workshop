@@ -1,6 +1,6 @@
 # Foundry 工具：函式合約
 
-## Summary
+## 概要
 
 這個工作坊不會把所有 Python 函式都直接開給模型用。它只提供少數、用途明確的工具，並且用固定的 JSON schema 限制輸入格式。
 
@@ -14,9 +14,9 @@
 
 看完這頁，你應該知道：
 
-- 工作坊有哪些核心工具。
-- 每個工具適合做什麼，不適合做什麼。
-- 為什麼工具合約要集中定義在同一個模組。
+- 工作坊有哪些核心工具
+- 每個工具適合做什麼，不適合做什麼
+- 為什麼工具合約要集中定義在同一個模組
 
 ## 工作坊中的主要工具
 
@@ -83,17 +83,17 @@ SQL 執行階段會套用額外的強制措施：
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant A as Foundry agent
-    participant R as Local runtime
-    participant S as SQL/Search backends
+    participant U as 使用者
+    participant A as Foundry 代理程式
+    participant R as 本機執行階段
+    participant S as SQL/Search 後端
 
-    U->>A: user message
+    U->>A: 使用者訊息
     A->>R: function_call
-    R->>S: execute_sql or search_documents
-    S-->>R: raw result
+    R->>S: execute_sql 或 search_documents
+    S-->>R: 原始結果
     R->>A: function_call_output
-    A-->>U: synthesized answer
+    A-->>U: 整理後答案
 ```
 
 重要的細節是，模型可以在回答之前要求多次函式呼叫。迴圈會持續進行，直到回應輸出中沒有更多工具呼叫為止。
@@ -145,7 +145,7 @@ sequenceDiagram
 
 因此，目前的工作坊將標準工具合約視為穩定核心，並使用獨立的示範腳本作為進階擴充。
 
-如果你想把 workshop 往後延伸成 multi-agent 體驗，這個工具層仍然是共用基礎。新增的角色通常不是各自發明新工具，而是共同使用既有的 `execute_sql` 和 `search_documents`，只是在不同步驟中分工推理。這也是 [Multi-Agent Extension: 情境工作流](05-multi-agent-extension.md) 採用的做法。
+如果你想把 workshop 往後延伸成 multi-agent 體驗，這個工具層仍然是共用基礎。新增的角色通常不是各自發明新工具，而是共同使用既有的 `execute_sql` 和 `search_documents`，只是在不同步驟中分工推理。這也是 [多代理程式延伸：情境工作流](05-multi-agent-extension.md) 採用的做法。
 
 ## 客戶對話要點
 

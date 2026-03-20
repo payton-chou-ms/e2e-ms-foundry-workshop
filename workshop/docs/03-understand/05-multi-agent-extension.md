@@ -1,8 +1,8 @@
-# Multi-Agent Extension: 情境工作流
+# 多代理程式延伸：情境工作流
 
-## Summary
+## 概要
 
-主工作坊採用單一 agent，因為這樣最容易部署、教學和驗證。Multi-agent extension 則是在回答另一個問題：如果未來想把工作拆給不同角色，該怎麼擴充？
+主工作坊採用單一 agent，因為這樣最容易部署、教學和驗證。多代理程式延伸則是在回答另一個問題：如果未來想把工作拆給不同角色，該怎麼擴充？
 
 所以這一頁不是在講「取代主流程」，而是在講「主流程之後怎麼往前走」。
 
@@ -10,9 +10,9 @@
 
 看完這頁，你應該知道：
 
-- 為什麼有人會想把一個 agent 拆成多個角色。
-- 這個 repo 現在怎麼定義這些角色。
-- multi-agent 其實重用了哪些現有能力。
+- 為什麼有人會想把一個 agent 拆成多個角色
+- 這個 repo 現在怎麼定義這些角色
+- 多代理程式其實重用了哪些現有能力
 
 ## 為什麼這條延伸路徑存在
 
@@ -115,9 +115,9 @@ flowchart LR
 
 保留這個模式有三個好處：
 
-1. 可以沿用既有的 SQL guardrail 與 search behavior。
-2. Demo 時仍然看得到每一步到底呼叫了哪些工具。
-3. 不需要在 extension 階段就把所有工具執行搬進另一套複雜 hosting model。
+1. 可以沿用既有的 SQL guardrail 與 search behavior
+2. Demo 時仍然看得到每一步到底呼叫了哪些工具
+3. 不需要在 extension 階段就把所有工具執行搬進另一套複雜 hosting model
 
 ## Scenario 設計方式
 
@@ -151,7 +151,7 @@ flowchart LR
 
 ### 這頁最簡潔的對話要點是什麼？
 
-「主 workshop 展示單代理程式主路徑；multi-agent extension 展示如何沿用同一批 grounding 能力，把它演進成多角色情境工作流。」
+「主 workshop 展示單代理程式主路徑；多代理程式延伸展示如何沿用同一批 grounding 能力，把它演進成多角色情境工作流。」
 
 ## 官方延伸閱讀
 
