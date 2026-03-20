@@ -1,8 +1,8 @@
-# 控制平面：資源拓撲
+# Foundry Control Plane：資源拓撲
 
-## 控制平面掌管的範圍
+## Foundry Control Plane 掌管的範圍
 
-工作坊的執行階段之所以感覺簡單，是因為基礎架構在背後建立並串聯了更大規模的 Azure 資源。本頁說明這些控制平面資源，以及它們與執行階段路徑的關係。
+工作坊的執行階段之所以感覺簡單，是因為 Foundry Control Plane 在背後建立並串聯了更大規模的 Azure 資源。本頁說明這些資源，以及它們與執行階段路徑的關係。
 
 ## 核心資源
 
@@ -17,11 +17,11 @@
 | **Application Insights** | 選用代理程式遙測的追蹤目的地 |
 | **Playwright Workspace** | Browser Automation demo 的瀏覽器執行工作區 |
 
-## 控制平面與執行階段路徑
+## Foundry Control Plane 與執行階段路徑
 
 ```mermaid
 flowchart TB
-    subgraph ControlPlane[Control Plane]
+    subgraph ControlPlane[Foundry Control Plane]
         A[Azure AI Services account]
         B[Foundry project]
         C[Model deployments]
@@ -121,13 +121,13 @@ Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供
 
 因為專案端點是 agent 定義與部分平台能力的交接點。但本 workshop 的核心工具執行仍保留在本機 runtime，這樣比較透明，也更容易教學與除錯。
 
-### 控制平面和使用者體驗是同一件事嗎？
+### Foundry Control Plane 和使用者體驗是同一件事嗎？
 
-不是。控制平面是支援性的 Azure 拓撲。使用者與代理程式體驗互動，但該體驗之所以能運作，是因為控制平面在背後佈建了模型、連線、儲存體、搜尋和可觀測性。
+不是。Foundry Control Plane 是支援性的 Azure 拓撲。你實際互動的是代理程式體驗，但它之所以能運作，是因為這層控制平面在背後佈建了模型、連線、儲存體、搜尋和可觀測性。
 
 ### 本頁最簡潔的對話要點是什麼？
 
-「控制平面是讓簡單的執行階段示範成為可能的 Azure 鷹架。」
+「Foundry Control Plane 是讓簡單的執行階段示範成為可能的 Azure 鷹架。」
 
 ## 營運要點
 
@@ -138,7 +138,7 @@ Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供
 - 腳本透過環境變數使用這些輸出
 - 可以新增選用功能而無需重新設計主要執行階段
 
-這也包含後續的 multi-agent 延伸。新增角色與 workflow 時，通常不需要重做整個 Azure 拓撲，而是重用既有的 Foundry project、模型部署、Search 索引、Fabric SQL 端點，以及身分驗證設定。真正新增的是 orchestration 層，而不是另一套控制平面。
+這也包含後續的 multi-agent 延伸。新增角色與 workflow 時，通常不需要重做整個 Azure 拓撲，而是重用既有的 Foundry project、模型部署、Search 索引、Fabric SQL 端點，以及身分驗證設定。真正新增的是 orchestration 層，而不是另一套 Foundry Control Plane。
 
 ---
 

@@ -2,9 +2,6 @@ site_name: 使用 Solution Accelerators 更快建構方案 – Foundry IQ + Fabr
 site_description: 實作型 workshop，示範如何建構同時結合非結構化文件知識與結構化企業資料的 AI 代理程式
 site_url: https://nchandhi.github.io/nc-iq-workshop
 
-repo_name: GitHub
-repo_url: https://github.com/nchandhi/nc-iq-workshop
-
 theme:
   name: material
   palette:
@@ -28,9 +25,6 @@ theme:
     - navigation.top
     - content.code.copy
     - content.tabs.link
-  icon:
-    repo: fontawesome/brands/github
-
 markdown_extensions:
   - admonition
   - pymdownx.details
@@ -80,7 +74,7 @@ nav:
       - "Foundry Tool: 函式工具合約": 03-understand/03-foundry-tool.md
       - "Foundry IQ: 文件": 03-understand/01-foundry-iq.md
       - "Fabric IQ: 資料": 03-understand/02-fabric-iq.md
-      - "Control Plane: 資源拓撲": 03-understand/04-control-plane.md
+      - "Foundry Control Plane: 資源拓撲": 03-understand/04-control-plane.md
       - "Multi-Agent Extension: 情境工作流": 03-understand/05-multi-agent-extension.md
   - 清理:
       - 刪除資源: 04-cleanup/index.md

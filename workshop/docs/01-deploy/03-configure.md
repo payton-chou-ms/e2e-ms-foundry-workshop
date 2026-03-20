@@ -1,8 +1,8 @@
 # 設定開發環境
 
 !!! info "兩條路徑都會使用"
-    管理員使用本頁來準備可分享的環境。
-    參與者使用本頁來將本機 checkout 連接到已準備好的環境。
+    如果你是自己部署環境，本頁會幫你把環境接好。
+    如果你拿到的是現成環境，本頁會幫你把本機 checkout 連接上去。
 
 ## Python 環境
 
@@ -115,7 +115,7 @@ python scripts/10_demo_browser_automation.py --strict
     `AZURE_PLAYWRIGHT_WS_ENDPOINT` 與 Playwright access token 是用來手動建立 Foundry connection 的中介資訊；腳本實際執行時讀取的是 `AZURE_PLAYWRIGHT_CONNECTION_ID`。
 
 !!! note "共用環境交接"
-    如果管理員已為你預先部署環境，請先向管理員要到正確的 `FABRIC_WORKSPACE_ID` 與其他必要設定，再修改 `.env`。
+    如果這套環境是別人先幫你部署好的，請先拿到正確的 `FABRIC_WORKSPACE_ID` 與其他必要設定，再修改 `.env`。
 
 ## 檢查點
 

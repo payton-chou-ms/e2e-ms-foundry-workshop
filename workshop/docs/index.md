@@ -1,12 +1,12 @@
 # 總覽
 
-一個好的 PoC 能幫助客戶具體想像這個方案對業務會帶來什麼影響。它會把對話從「這點子很有趣」推進到真正的「值得深入探索」。真正的挑戰在於，要做出一個有貼近感的 PoC，往往需要數週的客製工作，包括基礎架構、資料流程、整合，以及能反映客戶情境的專屬案例。
+這個 workshop 的目標，是讓你親手完成一個能同時回答文件問題與資料問題的 AI PoC。你會從可運作的範例開始，理解它的部署方式、接地方式，以及後續如何改成自己的情境。
 
-這個 workshop 會帶你學會如何使用 solution accelerators 快速部署產業化情境，讓你從第一次對話開始就能展示真實價值。
+你可以把這套內容當成一條學習路徑：先把 PoC 跑起來，再回頭理解底層設計，最後再把它改成自己的 use case。
 
 ## 哪些部分維持簡潔，哪些部分可進一步展開
 
-這個 workshop 的 runtime 刻意維持簡潔：
+這個 workshop 的 runtime 刻意維持簡潔，方便你先掌握主流程：
 
 - 一個 prompt agent
 - 兩個 core tools
@@ -16,13 +16,13 @@
 
 | Axis | Why it matters |
 |------|----------------|
-| **Foundry Model** | 說明必要與選配模型部署如何分工 |
-| **Foundry Agent** | 說明協調流程如何被建立、讀取、追蹤與發佈 |
-| **Foundry Tool** | 說明嚴格的 function contract 與安全邊界 |
+| **Foundry Model** | 說明哪些模型部署提供推理能力，哪些部署提供嵌入與其他延伸能力 |
+| **Foundry Agent** | 說明 agent 如何結合 instructions、tools 與 knowledge sources 來協調回應 |
+| **Foundry Tool** | 說明 agent 如何透過內建工具與自訂函式安全地取用資料或執行動作 |
 | **Foundry IQ + Fabric IQ** | 說明答案如何 grounded 到文件與資料 |
-| **Control Plane** | 說明 Azure 資源拓樸、connections 與 RBAC |
+| **Foundry Control Plane** | 說明 project、connections、managed identity 與 Azure RBAC 如何治理資源存取 |
 
-這個 workshop flow 仍然優先強調簡潔的 runtime 路徑。五主軸的結構則是為了讓你在 PoC 打動客戶之後，能進一步回答技術問題。
+這個 workshop flow 仍然優先強調簡潔的 runtime 路徑。五主軸的結構則是為了讓你在把 PoC 跑通之後，能進一步理解背後的技術設計。
 
 ## 選擇你的路徑
 
@@ -30,10 +30,10 @@
 
 | Path | Intended user | Outcome |
 |------|---------------|---------|
-| **Admin deploy and share** | 平台管理員或方案負責人 | 部署 Azure 資源、設定 Fabric，並為其他人準備可重用環境 |
-| **Participant run and validate** | 方案建構者、業務或客戶工程師 | 使用已準備好的環境驗證範例情境並執行代理程式 |
+| **Admin deploy and share** | 想自行完成整套環境準備的學員 | 部署 Azure 資源、設定 Fabric，並整理出可重複使用的環境 |
+| **Participant run and validate** | 已拿到現成環境的學員 | 使用已準備好的環境驗證範例情境並執行代理程式 |
 
-如果同一個人負責完整 setup，請先走 admin 路徑，再進行 participant 驗證。
+如果你是自己從頭操作，請先走 admin 路徑，再進行 participant 驗證。
 
 ## Workshop 流程
 
@@ -44,24 +44,24 @@
 | **3. Deep dive** | 用於 Q&A 的技術 deep dive | ~15 min |
 | **4. 清理** | 刪除 Azure 資源 | ~5 min |
 
-## 如何說明這套架構
+## 如何理解這套架構
 
-在與客戶對話時，建議按照這個順序說明：
+建議你先按這個順序理解：
 
-1. 先從業務成果開始：一個代理程式可以同時回答文件與資料問題。
-2. 再說明 runtime path：一個 prompt agent 加上兩個 core tools。
-3. 只有當聽眾需要更多技術細節時，再展開五個主軸。
+1. 先看成果：一個代理程式可以同時回答文件與資料問題。
+2. 再看 runtime path：一個 prompt agent 加上兩個 core tools。
+3. 最後再展開五個主軸，理解背後的技術骨架。
 
-這樣可以讓 workshop 的前段維持容易進入，同時保留足夠可信的架構說法。
+這樣可以讓你先掌握主線，再逐步進入技術細節。
 
 !!! tip "PoC 前建議"
     1. 先完整做一次 **Step 1**，確認部署與流程可正常運作
     2. 再執行 **Step 2**，針對你的使用案例做客製化
     3. 最後閱讀 **Step 3**，準備回答技術問題
 
-!!! note "文件唯一內容來源"
-    canonical workshop 內容位於 `workshop/docs/`。
-    產生出來的 site 輸出與 PDF 產生物應視為發佈輸出，而不是獨立維護的手寫內容。
+!!! note "文件位置"
+    本 workshop 的完整文件請直接參考本網站內容。
+    若需要查看原始 Markdown 檔案，位置在 `workshop/docs/`。
 
 ---
 

@@ -23,11 +23,11 @@
 
 | Axis | Why it exists |
 |------|---------------|
-| **Foundry Model** | 區分必要的 chat + embedding 部署與選配延伸模型 |
-| **Foundry Agent** | 在 Foundry project 中儲存並重用 prompt agent 定義 |
-| **Foundry Tool** | 用嚴格的 SQL + 文件 tool contract 約束 function call |
+| **Foundry Model** | 區分提供推理能力的核心部署，以及提供嵌入與其他延伸能力的部署 |
+| **Foundry Agent** | 用 instructions、tools 與 knowledge sources 定義可重用的 agent 行為 |
+| **Foundry Tool** | 讓 agent 透過內建工具與自訂函式安全地取用外部資料或執行動作 |
 | **Foundry IQ + Fabric IQ** | 讓答案 grounded 到企業文件與商業資料 |
-| **Control Plane** | 提供支撐 runtime 的 Azure 資源、connections、RBAC 與 observability |
+| **Control Plane** | 用 project、connections、managed identity 與 Azure RBAC 治理執行環境與資源存取 |
 
 主 workshop 路徑仍聚焦在兩個對使用者最可見的能力：
 
@@ -77,11 +77,11 @@
 # 登入 Azure
 azd auth login
 
-# 部署所有資源（AI Services、AI Search、Storage）
+# 部署 Microsoft Foundry control plane 與支援 Azure 資源
 azd up
 ```
 
-這會部署：
+這會部署完整的 Foundry control plane 與支援資源，包括：
 - Azure AI Services (Foundry) with GPT-4o-mini and text-embedding-3-large
 - Optional Content Understanding defaults: gpt-4.1-mini and text-embedding-3-large
 - Dedicated image-capable Azure OpenAI resource for `13_demo_image_generation.py`

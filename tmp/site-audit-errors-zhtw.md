@@ -1,5 +1,17 @@
 # Workshop Site 完整錯誤清單（2026-03-20）
 
+## 後續處理狀態（2026-03-20，第二次驗證）
+
+以下狀態反映目前 workspace 的最新來源與重建結果，用來補充這份稽核報告最初建立時的快照結論。
+
+- E-01 已修正：`01-deploy/index.md` 中的首頁架構圖 placeholder 已移除，頁面現在直接使用正式圖檔。
+- E-02 已修正：`03-understand/index.md` 中的 `[X]` placeholder 已改為實際可對外敘述的文字。
+- E-03 至 E-07 已修正：在後續文件修正後已重新執行 `mkdocs build --clean`，`workshop/site/` 不再停留在當時 audit 所比對的過時輸出。
+- E-08 已修正：`workshop/docs/assets/` 目前只剩單一 canonical 圖檔 `architecture.png`，不再有 `architecture1.png` 的命名歧義。
+- E-09 仍保留為結構討論事項：這是資訊架構一致性議題，不是 blocking error。
+
+如需重新做一次只反映目前狀態的 site audit，應以這份補充狀態為準，而不是把下方條目全部視為未修正。
+
 ## 稽核範圍
 
 本次稽核覆蓋下列階段：

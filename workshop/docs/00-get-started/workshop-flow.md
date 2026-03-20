@@ -6,14 +6,14 @@
 
 | Route | Use this when | Primary page |
 |-------|---------------|--------------|
-| **Admin deploy and share** | 你負責部署 Azure 資源、設定 Fabric，並為其他人準備存取權限 | [管理員部署並分享](../01-deploy/00-admin-deploy-share.md) |
-| **Participant run and validate** | 已有人替你準備好環境，而你需要執行範例情境或驗證代理程式 | [參與者執行並驗證](../01-deploy/00-participant-run-validate.md) |
+| **Admin deploy and share** | 你想自己把整套 Azure 與 Fabric 環境準備完成 | [管理員部署並分享](../01-deploy/00-admin-deploy-share.md) |
+| **Participant run and validate** | 你已拿到現成環境，只需要執行範例情境與驗證代理程式 | [參與者執行並驗證](../01-deploy/00-participant-run-validate.md) |
 
 這兩條路徑最終都會收斂到相同的範例情境與驗證步驟。
 
 完整部署路徑包含：
 
-- 部署 **Microsoft Foundry** 與 Azure 資源（AI Services、AI Search、Storage）
+- 部署 **Microsoft Foundry control plane** 與支援 Azure 資源，包括 AI Services / project、模型部署、AI Search、Storage、Application Insights，以及選配的 image OpenAI 與 Playwright Workspace
 - 設定 **Microsoft Fabric** 連線
 - 設定開發環境
 - 讓代理程式對範例資料實際運作
@@ -42,7 +42,7 @@
 
 ## Step 3：Deep dive
 
-請用這一段來準備客戶會提出的技術問題：
+請用這一段來補齊你對技術細節的理解：
 
 - **Fabric IQ**：本體如何把商業問題轉換成 SQL
 - **Foundry IQ**：agentic retrieval 如何 plan、iterate 與 reflect
