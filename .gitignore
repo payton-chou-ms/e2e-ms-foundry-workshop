@@ -163,7 +163,6 @@ scripts/fabric_suffix.txt
 data/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]_*/
 
 # Local analysis notes
-tmp/README.md
 tmp/codebase-review-plan.md
 tmp/docs-quality-scan.md
 
@@ -209,6 +208,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# macOS Finder metadata
+.DS_Store
 
 # Cursor
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
