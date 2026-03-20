@@ -50,10 +50,21 @@ python scripts/00_build_solution.py --from 02
 | 腳本 | 目前狀態 | 備註 |
 |------|----------|------|
 | `09_demo_content_understanding.py` | 可用 | 依賴已部署的 CU defaults |
-| `10_demo_browser_automation.py` | 條件式可用 | 需要 Browser Automation / Playwright connection，否則 `SKIP:` |
+| `10_demo_browser_automation.py` | 條件式可用 | `azd up` 會自動建立 Playwright Workspace，但仍需先在 Portal 產生 Playwright access token 並建立 Browser Automation connection |
 | `11_demo_web_search.py` | 可用 | 已對齊新版 SDK 類型 |
 | `12_demo_pii_redaction.py` | 可用 | 支援 AAD，不需額外 Language key |
-| `13_demo_image_generation.py` | 條件式可用 | 需 image model deployment；East US 目前通常無可用部署 |
+| `13_demo_image_generation.py` | 可用 | `azd up` 會自動建立獨立 image resource，腳本預設讀取 `AZURE_IMAGE_OPENAI_ENDPOINT` 與 `AZURE_IMAGE_MODEL_DEPLOYMENT` |
+
+### Browser Automation 手動收尾
+
+`10_demo_browser_automation.py` 的最短手動收尾如下：
+
+1. 在 Portal 的 Playwright Workspace 產生 access token。
+2. 在 Foundry project 建立 Browser Automation connection。
+3. 將 connection resource ID 填入 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`。
+4. 執行 `python scripts/10_demo_browser_automation.py --strict`。
+
+如果沒有 `AZURE_PLAYWRIGHT_CONNECTION_ID`，腳本會直接 `SKIP:`，這是預期行為。
 
 ## 預期輸出
 

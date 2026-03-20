@@ -2,18 +2,18 @@
 
 ## 什麼是 Fabric IQ？
 
-Fabric IQ 是一個語意智慧平台，將 AI 代理程式連接到商業資料。它透過**本體**來理解資料的含義，超越了簡單的資料庫查詢。
+在這個 workshop 裡，Fabric IQ 指的是「資料接地」這條路徑：agent 先讀取情境設定與 schema prompt，再透過 `execute_sql` 產生唯讀 T-SQL，最後由本機 runtime 對 Fabric Lakehouse SQL endpoint 執行查詢。
 
-## 什麼是本體？
+## 目前實際會用到哪些資料脈絡？
 
-本體是一種語意模型，幫助 AI 理解您的業務：
+目前主路徑真正會進入 agent 指令或 runtime 的資訊包括：
 
 | 元件 | 用途 | 範例 |
 |------|------|------|
-| **實體** | 業務物件 | 故障、工單、區域 |
-| **關係** | 實體之間的連結方式 | 工單 → 關聯至 → 故障 |
-| **規則** | 業務邏輯 | 「重大故障 = customerImpact > 1000」 |
-| **動作** | 可查詢的操作 | GetOutagesByRegion、GetTicketResolutionTime |
+| **情境設定** | 告訴 agent 業務領域、資料表與關係 | 故障、工單、區域 |
+| **schema prompt** | 提供資料表欄位與 join 線索 | `outages`、`tickets`、`customers` |
+| **SQL guardrails** | 限制只允許唯讀查詢 | `SELECT`、`WITH`、拒絕 DDL / write |
+| **Lakehouse SQL endpoint** | 查詢真正執行的位置 | Fabric Lakehouse |
 
 ## NL→SQL 的運作方式
 
@@ -21,29 +21,29 @@ Fabric IQ 是一個語意智慧平台，將 AI 代理程式連接到商業資料
 User: "Which outages had the most customer impact last month?"
 
 ┌─────────────────────────────────────────────────────────────┐
-│  Step 1: UNDERSTAND                                         │
-│  Agent interprets intent using ontology:                    │
-│  • "outages" → NetworkOutages entity                        │
-│  • "customer impact" → customersAffected column              │
-│  • "last month" → date filter                               │
+│  Step 1: GROUND                                              │
+│  Agent reads scenario context and schema guidance           │
+│  • Which tables are available?                              │
+│  • Which joins are allowed?                                 │
+│  • What business question is being asked?                   │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  Step 2: TRANSLATE                                          │
-│  Generate SQL from semantic understanding:                  │
+│  Generate read-only T-SQL from grounded context:            │
 │                                                             │
-│  SELECT outageId, region, customersAffected, duration       │
+│  SELECT TOP 10 outage_id, region, customers_affected        │
 │  FROM network_outages                                       │
-│  WHERE outageDate >= DATEADD(month, -1, GETDATE())          │
-│  ORDER BY customersAffected DESC                            │
-│  LIMIT 10                                                   │
+│  WHERE outage_date >= DATEADD(month, -1, GETDATE())         │
+│  ORDER BY customers_affected DESC                           │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  Step 3: EXECUTE & EXPLAIN                                  │
-│  Run against Fabric, format response:                       │
+│  Local runtime validates SQL, runs it against Fabric,       │
+│  and formats rows for the model:                            │
 │                                                             │
 │  "Here are the outages with highest customer impact:        │
 │   1. OUT-1042 (Northeast) - 15,234 customers                │
@@ -52,30 +52,22 @@ User: "Which outages had the most customer impact last month?"
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 為什麼本體很重要
+## 為什麼這條路徑值得展示
 
-### 沒有本體：脆弱的關鍵字比對
+這個 workshop 要展示的不是一個完整的 Fabric-native semantic platform，而是比較透明、容易教學的三段式流程：
 
-```
-User: "Show me our best customers"
-System: ??? (what makes a customer "best"?)
-```
+- 用情境與 schema 把問題接地
+- 用受控函式工具產生唯讀 SQL
+- 在實際 Fabric 資料上執行並回傳結果
 
-### 有本體：業務理解
+### 目前頁面應如何對外說明
 
-```yaml
-# Ontology defines:
-rules:
-  - name: "Premium Customer"
-    definition: "totalSpend > 10000 AND orderCount > 5"
-  - name: "Best Customer"
-    definition: "Premium Customer with healthScore > 80"
-```
+比較精準的說法是：
 
-```
-User: "Show me our best customers"
-Agent: Uses "Best Customer" rule → Correct SQL → Meaningful results
-```
+1. repo 目前確實有情境設定與資料表關係脈絡
+2. agent 會依據這些脈絡選擇或產生 SQL
+3. 真正的查詢仍由本機 runtime 執行並套用 guardrails
+4. 若要談更完整的 ontology / action layer，應列為延伸方向，而不是主流程既有能力
 
 ## 結合智慧的力量
 
@@ -108,54 +100,44 @@ Agent thinking:
 | 問題 | 回應 |
 |------|------|
 | 「為什麼不直接讓使用者寫 SQL？」 | 「大多數使用者不會寫 SQL。即使會寫的人也未必了解結構描述。自然語言讓任何人都能查詢資料。」 |
-| 「如何處理模糊的術語？」 | 「本體定義了業務術語。『重大故障』、『高影響』、『逾期工單』都有您的業務所控制的精確定義。」 |
-| 「效能如何？」 | 「查詢在 Microsoft Fabric 的最佳化引擎上執行。NL→SQL 轉換只發生一次，之後就是標準的 SQL 執行。」 |
+| 「如何處理模糊的術語？」 | 「目前 workshop 主要靠 scenario config、schema prompt 與明確的 SQL tool 指令來縮小歧義，而不是依賴另一層隱藏的語意平台。」 |
+| 「效能如何？」 | 「真正昂貴的部分仍是 LLM 產生查詢與 Fabric 執行查詢本身；文件頁不應把這段說成已經由另一個 Fabric IQ 平台層自動吸收。」 |
 
 ## 技術細節
 
-### Microsoft Fabric 架構
+### 目前 workshop 的資料路徑
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Microsoft Fabric                         │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │  Lakehouse   │ →  │  Warehouse   │ →  │  Semantic    │  │
-│  │  (Raw Data)  │    │  (SQL Tables)│    │  Model       │  │
+│  │  Lakehouse   │ →  │ SQL endpoint │ ←  │ Local runtime│  │
+│  │  tables      │    │  (read-only) │    │ execute_sql  │  │
 │  └──────────────┘    └──────────────┘    └──────────────┘  │
-│                                                ↓            │
+│                                                ↑            │
 │                                          ┌──────────┐       │
-│                                          │ Fabric IQ│       │
-│                                          │ Ontology │       │
+│                                          │ Foundry  │       │
+│                                          │ agent    │       │
 │                                          └──────────┘       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 本體設定
+### 用來接地 SQL 的設定來源
 
 ```json
 {
-  "entities": [
-    {
-      "name": "NetworkOutages",
-      "table": "network_outages",
-      "key": "outageId",
-      "attributes": ["region", "outageType", "customersAffected", "duration"]
+  "tables": {
+    "network_outages": {
+      "columns": ["outage_id", "region", "customers_affected", "duration_minutes"]
     }
-  ],
+  },
   "relationships": [
     {
-      "name": "related_to_outage",
       "from": "TroubleTickets",
       "to": "NetworkOutages",
-      "type": "many-to-one"
-    }
-  ],
-  "businessRules": [
-    {
-      "name": "CriticalOutage",
-      "entity": "NetworkOutages",
-      "condition": "customersAffected > 1000"
+      "fromKey": "outage_id",
+      "toKey": "outage_id"
     }
   ]
 }

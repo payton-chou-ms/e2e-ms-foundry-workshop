@@ -36,6 +36,11 @@ azd up
 - `gpt-4.1-mini`
 - `text-embedding-3-large`
 
+此外，部署流程也會自動建立兩個選配能力所需的控制平面資源：
+
+- 一個專用的 image-capable Azure OpenAI resource，用於 `13_demo_image_generation.py`
+- 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`
+
 !!! warning "請等待完成"
     部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作。
 
@@ -55,9 +60,11 @@ azd up
 !!! note "無需手動設定"
     你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取。
 
-!!! note "選配能力的目前限制"
-    Browser Automation 仍需要額外的 Browser Automation / Playwright project connection。
-    Image Generation demo 已支援 AAD，但是否能執行仍取決於該區域是否有可部署的 image model。
+!!! note "Browser Automation 的最後一段仍需手動"
+    `azd up` 現在會自動建立 Playwright Workspace，但 Browser Automation 仍需要你在 Azure Portal 產生一次性的 Playwright access token，並在 Foundry project 中建立 Browser Automation connection。
+
+!!! note "Image Generation 已納入正式部署流程"
+    `azd up` 現在會自動建立獨立的 image-capable Azure OpenAI resource，並把 `AZURE_IMAGE_OPENAI_ENDPOINT` / `AZURE_IMAGE_MODEL_DEPLOYMENT` 寫入 azd 環境輸出。
 
 ---
 

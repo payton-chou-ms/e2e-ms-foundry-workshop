@@ -44,11 +44,15 @@ def main():
     args = parse_args()
 
     endpoint, endpoint_name = resolve_env_value(
+        "AZURE_IMAGE_OPENAI_ENDPOINT",
+        "AZURE_IMAGE_ENDPOINT",
         "AZURE_OPENAI_ENDPOINT",
         "AZURE_AI_ENDPOINT",
         "AZURE_AI_SERVICES_ENDPOINT",
     )
     key, key_name = resolve_env_value(
+        "AZURE_IMAGE_OPENAI_API_KEY",
+        "AZURE_IMAGE_API_KEY",
         "AZURE_OPENAI_API_KEY",
         "AZURE_AI_KEY",
     )
@@ -75,7 +79,7 @@ def main():
 
     if not endpoint:
         finish_skip(
-            "Azure OpenAI endpoint is not configured for image generation.",
+            "Azure OpenAI endpoint is not configured for image generation. Set AZURE_IMAGE_OPENAI_ENDPOINT or AZURE_OPENAI_ENDPOINT.",
             strict=args.strict,
         )
 

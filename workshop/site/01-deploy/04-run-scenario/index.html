@@ -826,6 +826,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        選配 demo 驗證狀態
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="選配 demo 驗證狀態">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#browser-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Browser Automation 手動收尾
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1464,6 +1492,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        選配 demo 驗證狀態
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="選配 demo 驗證狀態">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#browser-automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Browser Automation 手動收尾
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1591,8 +1647,87 @@
 <p>如果你沒有 Microsoft Fabric 的存取權，仍然可以只使用 Azure 服務執行 workshop：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>scripts/00_build_solution.py<span class="w"> </span>--foundry-only
 </code></pre></div>
-<p>這會跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式。</p>
+<p>這會先自動設定 Content Understanding defaults，接著跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式。</p>
+<p><code>--foundry-only</code> 的目前步驟如下：</p>
+<table>
+<thead>
+<tr>
+<th>步驟</th>
+<th>執行內容</th>
+<th>時間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cu-defaults</td>
+<td>設定 Content Understanding defaults</td>
+<td>~5s</td>
+</tr>
+<tr>
+<td>01</td>
+<td>產生範例資料</td>
+<td>~2min</td>
+</tr>
+<tr>
+<td>06</td>
+<td>上傳文件到 Azure AI Search</td>
+<td>~1min</td>
+</tr>
+<tr>
+<td>07-search</td>
+<td>建立 Search-only Foundry agent</td>
+<td>~10s</td>
+</tr>
+</tbody>
+</table>
 </div>
+<h2 id="demo">選配 demo 驗證狀態</h2>
+<p>部署完成後，可額外驗證以下獨立 demo：</p>
+<table>
+<thead>
+<tr>
+<th>腳本</th>
+<th>目前狀態</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>09_demo_content_understanding.py</code></td>
+<td>可用</td>
+<td>依賴已部署的 CU defaults</td>
+</tr>
+<tr>
+<td><code>10_demo_browser_automation.py</code></td>
+<td>條件式可用</td>
+<td><code>azd up</code> 會自動建立 Playwright Workspace，但仍需先在 Portal 產生 Playwright access token 並建立 Browser Automation connection</td>
+</tr>
+<tr>
+<td><code>11_demo_web_search.py</code></td>
+<td>可用</td>
+<td>已對齊新版 SDK 類型</td>
+</tr>
+<tr>
+<td><code>12_demo_pii_redaction.py</code></td>
+<td>可用</td>
+<td>支援 AAD，不需額外 Language key</td>
+</tr>
+<tr>
+<td><code>13_demo_image_generation.py</code></td>
+<td>可用</td>
+<td><code>azd up</code> 會自動建立獨立 image resource，腳本預設讀取 <code>AZURE_IMAGE_OPENAI_ENDPOINT</code> 與 <code>AZURE_IMAGE_MODEL_DEPLOYMENT</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="browser-automation">Browser Automation 手動收尾</h3>
+<p><code>10_demo_browser_automation.py</code> 的最短手動收尾如下：</p>
+<ol>
+<li>在 Portal 的 Playwright Workspace 產生 access token。</li>
+<li>在 Foundry project 建立 Browser Automation connection。</li>
+<li>將 connection resource ID 填入 <code>.env</code> 的 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code>。</li>
+<li>執行 <code>python scripts/10_demo_browser_automation.py --strict</code>。</li>
+</ol>
+<p>如果沒有 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code>，腳本會直接 <code>SKIP:</code>，這是預期行為。</p>
 <h2 id="_3">預期輸出</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&gt; [02] Create Fabric Items... [OK]
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>&gt; [03] Load Data into Fabric... [OK]

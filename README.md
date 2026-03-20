@@ -84,6 +84,8 @@ azd up
 這會部署：
 - Azure AI Services (Foundry) with GPT-4o-mini and text-embedding-3-large
 - Optional Content Understanding defaults: gpt-4.1-mini and text-embedding-3-large
+- Dedicated image-capable Azure OpenAI resource for `13_demo_image_generation.py`
+- Playwright Workspace for `10_demo_browser_automation.py`
 - Azure AI Search (Basic tier with semantic search)
 - Azure Storage Account
 - Application Insights
@@ -138,7 +140,7 @@ DATA_SIZE=small
 | Logistics | Fleet management with delivery tracking |
 | Real Estate | Property listings and lease management |
 
-> **注意**：Azure endpoint（例如 `AZURE_AI_PROJECT_ENDPOINT`、`AZURE_AI_SEARCH_ENDPOINT`）會自動從 azd 環境讀取，不需要手動複製。
+> **注意**：Azure endpoint（例如 `AZURE_AI_PROJECT_ENDPOINT`、`AZURE_AI_SEARCH_ENDPOINT`、`AZURE_IMAGE_OPENAI_ENDPOINT`、`AZURE_PLAYWRIGHT_DATAPLANE_URI`）會自動從 azd 環境讀取，不需要手動複製。
 
 ---
 
@@ -217,10 +219,17 @@ python scripts/09_demo_content_understanding.py
 目前 repo 中的選配 demo 已調整為以下行為：
 
 - `09_demo_content_understanding.py`：可用，會自動使用已部署的 Content Understanding defaults
-- `10_demo_browser_automation.py`：SDK 相容性已修正；若未建立 Browser Automation / Playwright connection，會乾淨地 `SKIP:`
+- `10_demo_browser_automation.py`：SDK 相容性已修正；`azd up` 會自動建立 Playwright Workspace，但仍需先在 Portal 產生 Playwright access token，並在 Foundry project 中建立 Browser Automation connection，否則會乾淨地 `SKIP:`
 - `11_demo_web_search.py`：可用，已對齊目前 `azure-ai-projects` SDK 類型名稱
 - `12_demo_pii_redaction.py`：可用，支援 `DefaultAzureCredential` 與 `AZURE_AI_ENDPOINT`，不再強制要求 `AZURE_LANGUAGE_KEY`
-- `13_demo_image_generation.py`：已支援 AAD 驗證，但 East US 目前沒有可部署的可用 image model；若沒有 image deployment 會乾淨地 `SKIP:`
+- `13_demo_image_generation.py`：可用；`azd up` 會自動建立獨立的 image-capable Azure OpenAI resource，腳本預設讀取 `AZURE_IMAGE_OPENAI_ENDPOINT` 與 `AZURE_IMAGE_MODEL_DEPLOYMENT`
+
+若要真正執行 `10_demo_browser_automation.py`，最短手動步驟是：
+
+1. 在 Playwright Workspace 產生 access token
+2. 在 Foundry project 建立 Browser Automation connection
+3. 將該 connection resource ID 寫入 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
+4. 執行 `python scripts/10_demo_browser_automation.py --strict`
 
 ---
 

@@ -2,9 +2,9 @@
 
 本節協助你準備回答客戶對話中的技術問題。
 
-## 六主軸
+## 六個技術主題
 
-Workshop 的技術故事現在掛在六個主軸上。前五個主軸解釋核心單代理程式路徑，第六個主軸說明如何在不破壞核心教學的情況下，往後延伸成情境化 multi-agent workflow。
+Workshop 的技術故事現在掛在六個技術主題上。前五個主題解釋核心單代理程式路徑，第六個主題說明如何在不破壞核心教學的情況下，往後延伸成情境化 multi-agent workflow。
 
 | 主軸 | 核心問題 | 主要頁面 |
 |------|----------|----------|
@@ -53,8 +53,8 @@ flowchart LR
 | **Foundry Model** | 必要與選配模型部署，以及 skip 策略 |
 | **Foundry Agent** | 提示詞代理程式定義、執行時迴圈、追蹤與發佈邊界 |
 | **Foundry Tool** | 函式工具結構描述、執行迴圈與選配擴充分層 |
-| **Foundry IQ** | 文件擷取、引用與代理式擷取行為 |
-| **Fabric IQ** | 本體驅動的 NL→SQL 與商業資料存取 |
+| **Foundry IQ** | 文件如何進入 Azure AI Search，並透過 `search_documents` 提供引用段落 |
+| **Fabric IQ** | 情境與 schema 脈絡如何引導 agent 產生唯讀 SQL 查詢 Fabric 資料 |
 | **Control Plane** | Foundry 專案、連線、遙測與資源拓撲 |
 | **Multi-Agent Extension** | 宣告式 YAML、角色分工、情境工作流與延伸教學策略 |
 
@@ -81,19 +81,23 @@ flowchart LR
 
 ### "準確嗎？"
 
-> **你的回答：** "Foundry IQ 使用代理式擷取——AI 會規劃要搜尋什麼、評估結果，並在需要時反覆迭代。對於資料，Fabric IQ 轉譯為 SQL 並在實際資料上執行。兩者都提供引用讓使用者可以驗證。"
+> **你的回答：** "這個 workshop 的主路徑不是黑盒產品功能，而是透明的兩段接地流程。文件部分先進 Azure AI Search，再由 `search_documents` 回傳帶來源與頁碼的段落；資料部分則由 agent 根據情境與 schema 脈絡產生唯讀 SQL，並在實際 Fabric 資料上執行。"
 
 ### "設定有多難？"
 
-> **你的回答：** "這個 PoC 花了 [X] 分鐘。對於正式環境，你只需連接你的真實文件和資料來源。加速器處理所有底層工作——向量嵌入、索引建立、代理程式設定。"
+> **你的回答：** "這個 PoC 的最小可行版本可以在幾十分鐘內完成。對於正式環境，你只需連接你的真實文件和資料來源。加速器處理所有底層工作——向量嵌入、索引建立、代理程式設定。"
+
+!!! note "導覽順序說明"
+    Deep dive 導覽會把 **Intelligence Layer** 拆成兩頁來講：先是 **Foundry IQ**，再是 **Fabric IQ**。
+    因此導覽列會看到七個頁面項目，但底層仍然是這裡定義的六個技術主題。
 
 ## Deep Dive 頁面
 
 - **[Foundry Model: 部署策略](00-foundry-model.md)**：chat、向量嵌入，以及選配模型部署行為
 - **[Foundry Agent: 執行時協調](02-foundry-agent.md)**：代理程式定義、建立/測試流程、追蹤與發佈邊界
 - **[Foundry Tool: 函式工具合約](03-foundry-tool.md)**：核心工具、結構描述、執行迴圈與擴充策略
-- **[Foundry IQ: 文件](01-foundry-iq.md)**：代理式擷取如何運作
-- **[Fabric IQ: 資料](02-fabric-iq.md)**：本體如何實現 NL→SQL
+- **[Foundry IQ: 文件](01-foundry-iq.md)**：文件如何被索引到 Azure AI Search，並由 `search_documents` 取回引用段落
+- **[Fabric IQ: 資料](02-fabric-iq.md)**：情境設定與 schema prompt 如何引導唯讀 NL→SQL
 - **[Control Plane: 資源拓撲](04-control-plane.md)**：專案資源、連線與追蹤拓撲
 - **[Multi-Agent Extension: 情境工作流](05-multi-agent-extension.md)**：如何用 YAML 和額外腳本，把單代理程式 workshop 延伸成多角色情境流程
 

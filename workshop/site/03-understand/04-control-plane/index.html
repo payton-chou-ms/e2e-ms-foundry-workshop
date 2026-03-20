@@ -1734,6 +1734,10 @@
 <td>工作坊使用的聊天、向量嵌入及選用模型端點</td>
 </tr>
 <tr>
+<td><strong>Dedicated image OpenAI resource</strong></td>
+<td>讓 image generation demo 可使用獨立區域與配額，而不影響主要聊天路徑</td>
+</tr>
+<tr>
 <td><strong>Azure AI Search</strong></td>
 <td><code>search_documents</code> 的文件索引建立與檢索</td>
 </tr>
@@ -1745,6 +1749,10 @@
 <td><strong>Application Insights</strong></td>
 <td>選用代理程式遙測的追蹤目的地</td>
 </tr>
+<tr>
+<td><strong>Playwright Workspace</strong></td>
+<td>Browser Automation demo 的瀏覽器執行工作區</td>
+</tr>
 </tbody>
 </table>
 <h2 id="_4">控制平面與執行階段路徑</h2>
@@ -1753,35 +1761,39 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        A[Azure AI Services account]
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        B[Foundry project]
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        C[Model deployments]
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        D[Project connections]
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        E[Application Insights]
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        F[Azure AI Search]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        G[Storage]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    end
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    subgraph Runtime[Runtime Path]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        H[07_create_foundry_agent.py]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        I[08_test_foundry_agent.py]
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        J[Prompt agent]
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        K[Function tools]
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        L[Azure AI Search queries]
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        M[Fabric SQL queries]
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    end
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    A --&gt; B
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    B --&gt; C
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    B --&gt; D
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    B --&gt; E
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    D --&gt; F
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    D --&gt; G
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    H --&gt; B
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    I --&gt; B
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    B --&gt; J
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    J --&gt; K
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    K --&gt; L
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    K --&gt; M
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    J -. optional tracing .-&gt; E
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        C2[Dedicated image OpenAI]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        D[Project connections]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        E[Application Insights]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        F[Azure AI Search]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        G[Storage]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        N[Playwright Workspace]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    end
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    subgraph Runtime[Runtime Path]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        H[07_create_foundry_agent.py]
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        I[08_test_foundry_agent.py]
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        J[Prompt agent]
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        K[Function tools]
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        L[Azure AI Search queries]
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        M[Fabric SQL queries]
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    end
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    A --&gt; B
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    B --&gt; C
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    A --&gt; C2
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    B --&gt; D
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    B --&gt; E
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    D --&gt; F
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    D --&gt; G
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    D --&gt; N
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    H --&gt; B
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    I --&gt; B
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    B --&gt; J
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    J --&gt; K
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    K --&gt; L
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    K --&gt; M
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    J -. optional tracing .-&gt; E
 </code></pre></div>
 <h2 id="_5">為什麼專案很重要</h2>
 <p>Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供一個端點來使用，同時平台持續追蹤：</p>
@@ -1794,7 +1806,8 @@
 <p>這就是為什麼大多數工作坊腳本只需要 Foundry 專案端點加上認證資訊。</p>
 <h2 id="_6">專案連線</h2>
 <p>連線代表代理程式或專案可以使用的相依性，無需在腳本中硬編碼密碼。</p>
-<p>在本工作坊中，最相關的連線模式為：</p>
+<p>在本工作坊中，應把「已部署的 project connection」和「主路徑實際怎麼執行」分開理解。</p>
+<p>最相關的 connection / tool 類型如下：</p>
 <table>
 <thead>
 <tr>
@@ -1804,16 +1817,16 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>Azure AI Search</strong></td>
-<td>支援文件參照與檢索</td>
+<td><strong>Azure AI Search connection</strong></td>
+<td>已在 Foundry project 中建立，對治理與後續延伸有意義；但目前主路徑的 <code>search_documents</code> 仍由本機 runtime 直接呼叫 Azure AI Search</td>
 </tr>
 <tr>
 <td><strong>瀏覽器自動化連線</strong></td>
-<td>用於瀏覽器自動化預覽的選用 Playwright 工作區</td>
+<td>連接 Foundry project 與已部署的 Playwright Workspace；workspace 可自動建立，但 token 與 connection 仍需手動完成</td>
 </tr>
 <tr>
-<td><strong>Bing 參照連線</strong></td>
-<td>選用的即時公開網路參照</td>
+<td><strong>Public web search tool</strong></td>
+<td>選用 demo 直接使用 Foundry 的內建 web search tool，不是目前主路徑的 project connection 依賴</td>
 </tr>
 </tbody>
 </table>
@@ -1869,7 +1882,7 @@
 </tr>
 <tr>
 <td>「什麼將代理程式連接到搜尋？」</td>
-<td>「專案連線和工具設定。執行階段使用專案端點，而非將密碼嵌入程式碼中。」</td>
+<td>「目前要分兩層看：agent 定義來自 Foundry project，但主 workshop 的 <code>search_documents</code> 仍是由本機 runtime 直接呼叫 Azure AI Search。」</td>
 </tr>
 <tr>
 <td>「追蹤是否一直開啟？」</td>
@@ -1879,7 +1892,7 @@
 </table>
 <h2 id="_9">常見問題</h2>
 <h3 id="_10">為什麼工作坊大量討論專案端點？</h3>
-<p>因為專案端點是執行階段的交接點。它讓腳本透過一個邏輯邊界存取代理程式、遙測配線和連線，而非在各處硬編碼服務專屬的認證資訊。</p>
+<p>因為專案端點是 agent 定義與部分平台能力的交接點。但本 workshop 的核心工具執行仍保留在本機 runtime，這樣比較透明，也更容易教學與除錯。</p>
 <h3 id="_11">控制平面和使用者體驗是同一件事嗎？</h3>
 <p>不是。控制平面是支援性的 Azure 拓撲。使用者與代理程式體驗互動，但該體驗之所以能運作，是因為控制平面在背後佈建了模型、連線、儲存體、搜尋和可觀測性。</p>
 <h3 id="_12">本頁最簡潔的對話要點是什麼？</h3>

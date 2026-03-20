@@ -2,86 +2,82 @@
 
 ## 什麼是 Foundry IQ？
 
-Foundry IQ 是 Azure AI Foundry 的統一知識層，讓代理程式能夠透過智慧檢索存取企業文件。
+在這個 workshop 裡，Foundry IQ 指的是「文件接地」這條路徑：先把 PDF 文件整理、切塊並上傳到 Azure AI Search，再讓 Foundry agent 透過 `search_documents` 工具取回帶來源資訊的段落。
 
 ## 主要功能
 
 | 功能 | 說明 |
 |------|------|
-| **知識庫** | 自動索引建立與文件向量化 |
-| **代理式檢索** | 具備規劃、迭代與反思能力的 AI 驅動搜尋 |
-| **企業安全性** | 內建 Entra ID 驗證與 Purview 整合 |
+| **文件索引** | 由腳本建立 Azure AI Search index，並寫入頁面與來源欄位 |
+| **引用段落** | `search_documents` 回傳包含來源、標題與頁碼的片段 |
+| **Entra ID 驗證** | Workshop 腳本以 Azure 身分直接呼叫 Search 與 Foundry |
 | **多格式支援** | PDF、Word、PowerPoint 及非結構化文字 |
 
-## 代理式檢索的運作方式
+## 目前 workshop 的文件路徑
 
-與簡單的向量搜尋（尋找相似文字）不同，代理式檢索使用 AI 來：
+目前的主路徑不是 Foundry 原生 agentic retrieval，而是下列可檢視、可追蹤的流程：
 
 ```
 User: "What's our policy for notifying customers during extended outages?"
 
 ┌─────────────────────────────────────────────────────────────┐
-│  Step 1: PLAN                                               │
-│  Agent decomposes into sub-queries:                         │
-│  • "customer notification policy"                           │
-│  • "extended outage definition"                             │
-│  • "communication requirements during incidents"            │
+│  Step 1: INGEST                                             │
+│  Workshop script:                                           │
+│  • Extracts text from PDFs                                  │
+│  • Chunks by sentences                                      │
+│  • Generates embeddings                                     │
+│  • Uploads chunks to Azure AI Search                        │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  Step 2: ITERATE                                            │
-│  For each sub-query:                                        │
-│  • Search knowledge base                                    │
-│  • Evaluate relevance of results                            │
-│  • Refine search if needed                                  │
+│  Step 2: TOOL CALL                                           │
+│  Agent decides the question needs document evidence         │
+│  and emits `search_documents(query=...)`                    │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  Step 3: REFLECT                                            │
-│  Before responding:                                         │
-│  • Do I have enough information?                            │
-│  • Are sources consistent?                                  │
-│  • Can I cite specific documents?                           │
+│  Step 3: SEARCH                                              │
+│  Local runtime calls Azure AI Search with semantic search   │
+│  and returns source/title/page metadata                     │
 └─────────────────────────────────────────────────────────────┘
                             │
                             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  Response with Citations                                    │
-│  "According to our Customer Service Policies (page 2),      │
-│  customers must be notified within 15 minutes of a          │
-│  confirmed outage. The Outage Management Policy (page 1)    │
-│  defines extended outages as those exceeding 4 hours..."    │
+│  Step 4: SYNTHESIZE                                          │
+│  Agent reads returned passages and answers with             │
+│  grounded wording and visible citation metadata             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ## 為什麼這對客戶很重要
 
-### 問題：簡單 RAG 無法處理複雜問題
+### 為什麼這樣的設計值得展示
 
-基本的檢索增強生成（RAG）只進行一次搜尋並使用任何返回的結果。以下情況會導致失敗：
+這條路徑的重點不是宣稱平台自動替你做完整知識推理，而是讓客戶清楚看見：
 
-- 問題包含多個部分
-- 資訊分散在多份文件中
-- 直觀的搜尋詞彙與文件用語不一致
+- 文件如何被索引
+- agent 何時決定需要文件證據
+- runtime 實際送出了什麼搜尋
+- 最終答案引用的是哪個來源與頁碼
 
-### 解決方案：代理式檢索對搜尋進行推理
+### 目前頁面應如何對外說明
 
-代理程式的行為就像一位知識豐富的員工：
+比較精準的說法是：
 
-1. 理解問題的真正意圖
-2. 知道要查閱多個來源
-3. 調和互相矛盾的資訊
-4. 在找不到答案時坦然承認
+1. 文件接地目前由 Azure AI Search 提供索引與檢索
+2. Foundry agent 透過受控函式工具決定何時查文件
+3. 本機 runtime 負責把搜尋結果回傳給 agent
+4. 引用資訊來自實際索引欄位，而不是隱藏的黑盒流程
 
 ## 客戶對話要點
 
 | 問題 | 回應 |
 |------|------|
-| 「為什麼不直接用搜尋？」 | 「搜尋找到的是文件。代理式檢索找到的是答案——而且知道何時需要查閱多個來源。」 |
-| 「幻覺問題怎麼辦？」 | 「每個回應都引用特定文件。使用者可以點擊連結進行驗證。代理程式會說『我不知道』而非猜測。」 |
-| 「能處理我們複雜的政策嗎？」 | 「規劃-迭代-反思方法能處理多部分的政策。讓我用這個範例為您展示⋯⋯」 |
+| 「為什麼不直接用搜尋？」 | 「因為 workshop 不只示範搜尋本身，而是示範 agent 如何在需要時呼叫文件工具，並把可引用的段落整合回答案。」 |
+| 「幻覺問題怎麼辦？」 | 「文件答案來自實際搜尋結果，結果裡保留 source、title 與 page metadata，方便人工驗證。」 |
+| 「能處理我們複雜的政策嗎？」 | 「可以先從目前的 Search-grounded 路徑示範；如果後續要進一步擴成更複雜的檢索策略，那是下一階段延伸，而不是本 workshop 目前已經自動具備的能力。」 |
 
 ## 技術細節
 
@@ -93,17 +89,17 @@ PDFs/Word/PPT → Text Extraction → Chunking → Embedding → Vector Index
 
 - **分塊**：保留句子邊界，通常 500-1000 個 token
 - **向量嵌入**：Azure OpenAI text-embedding-3-large（3072 維度）
-- **索引**：Azure AI Search 搭配混合式（關鍵字 + 向量）檢索
+- **索引**：Azure AI Search index，包含內容、標題、來源、頁碼與向量欄位
 
 ### 搜尋設定
 
 ```python
-# Hybrid search combines:
-# 1. Vector similarity (semantic meaning)
-# 2. Keyword matching (exact terms)
-# 3. Semantic ranking (re-ranking for relevance)
-
-query_type = "vectorSemanticHybrid"
+results = search_client.search(
+    search_text=query,
+    query_type="semantic",
+    semantic_configuration_name="default-semantic",
+    select=["content", "title", "source", "page_number"],
+)
 ```
 
 ---

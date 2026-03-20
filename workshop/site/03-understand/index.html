@@ -1044,7 +1044,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        六主軸
+        六個技術主題
       
     </span>
   </a>
@@ -1522,7 +1522,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        六主軸
+        六個技術主題
       
     </span>
   </a>
@@ -1667,8 +1667,8 @@
 
 <h1 id="deep-dive">Deep dive</h1>
 <p>本節協助你準備回答客戶對話中的技術問題。</p>
-<h2 id="_1">六主軸</h2>
-<p>Workshop 的技術故事現在掛在六個主軸上。前五個主軸解釋核心單代理程式路徑，第六個主軸說明如何在不破壞核心教學的情況下，往後延伸成情境化 multi-agent workflow。</p>
+<h2 id="_1">六個技術主題</h2>
+<p>Workshop 的技術故事現在掛在六個技術主題上。前五個主題解釋核心單代理程式路徑，第六個主題說明如何在不破壞核心教學的情況下，往後延伸成情境化 multi-agent workflow。</p>
 <table>
 <thead>
 <tr>
@@ -1760,11 +1760,11 @@
 </tr>
 <tr>
 <td><strong>Foundry IQ</strong></td>
-<td>文件擷取、引用與代理式擷取行為</td>
+<td>文件如何進入 Azure AI Search，並透過 <code>search_documents</code> 提供引用段落</td>
 </tr>
 <tr>
 <td><strong>Fabric IQ</strong></td>
-<td>本體驅動的 NL→SQL 與商業資料存取</td>
+<td>情境與 schema 脈絡如何引導 agent 產生唯讀 SQL 查詢 Fabric 資料</td>
 </tr>
 <tr>
 <td><strong>Control Plane</strong></td>
@@ -1822,19 +1822,24 @@
 </blockquote>
 <h3 id="_7">"準確嗎？"</h3>
 <blockquote>
-<p><strong>你的回答：</strong> "Foundry IQ 使用代理式擷取——AI 會規劃要搜尋什麼、評估結果，並在需要時反覆迭代。對於資料，Fabric IQ 轉譯為 SQL 並在實際資料上執行。兩者都提供引用讓使用者可以驗證。"</p>
+<p><strong>你的回答：</strong> "這個 workshop 的主路徑不是黑盒產品功能，而是透明的兩段接地流程。文件部分先進 Azure AI Search，再由 <code>search_documents</code> 回傳帶來源與頁碼的段落；資料部分則由 agent 根據情境與 schema 脈絡產生唯讀 SQL，並在實際 Fabric 資料上執行。"</p>
 </blockquote>
 <h3 id="_8">"設定有多難？"</h3>
 <blockquote>
-<p><strong>你的回答：</strong> "這個 PoC 花了 [X] 分鐘。對於正式環境，你只需連接你的真實文件和資料來源。加速器處理所有底層工作——向量嵌入、索引建立、代理程式設定。"</p>
+<p><strong>你的回答：</strong> "這個 PoC 的最小可行版本可以在幾十分鐘內完成。對於正式環境，你只需連接你的真實文件和資料來源。加速器處理所有底層工作——向量嵌入、索引建立、代理程式設定。"</p>
 </blockquote>
+<div class="admonition note">
+<p class="admonition-title">導覽順序說明</p>
+<p>Deep dive 導覽會把 <strong>Intelligence Layer</strong> 拆成兩頁來講：先是 <strong>Foundry IQ</strong>，再是 <strong>Fabric IQ</strong>。
+因此導覽列會看到七個頁面項目，但底層仍然是這裡定義的六個技術主題。</p>
+</div>
 <h2 id="deep-dive_2">Deep Dive 頁面</h2>
 <ul>
 <li><strong><a href="00-foundry-model/">Foundry Model: 部署策略</a></strong>：chat、向量嵌入，以及選配模型部署行為</li>
 <li><strong><a href="02-foundry-agent/">Foundry Agent: 執行時協調</a></strong>：代理程式定義、建立/測試流程、追蹤與發佈邊界</li>
 <li><strong><a href="03-foundry-tool/">Foundry Tool: 函式工具合約</a></strong>：核心工具、結構描述、執行迴圈與擴充策略</li>
-<li><strong><a href="01-foundry-iq/">Foundry IQ: 文件</a></strong>：代理式擷取如何運作</li>
-<li><strong><a href="02-fabric-iq/">Fabric IQ: 資料</a></strong>：本體如何實現 NL→SQL</li>
+<li><strong><a href="01-foundry-iq/">Foundry IQ: 文件</a></strong>：文件如何被索引到 Azure AI Search，並由 <code>search_documents</code> 取回引用段落</li>
+<li><strong><a href="02-fabric-iq/">Fabric IQ: 資料</a></strong>：情境設定與 schema prompt 如何引導唯讀 NL→SQL</li>
 <li><strong><a href="04-control-plane/">Control Plane: 資源拓撲</a></strong>：專案資源、連線與追蹤拓撲</li>
 <li><strong><a href="05-multi-agent-extension/">Multi-Agent Extension: 情境工作流</a></strong>：如何用 YAML 和額外腳本，把單代理程式 workshop 延伸成多角色情境流程</li>
 </ul>

@@ -1853,7 +1853,7 @@
 <p>本工作坊透過將定義集中在一個模組中，並從建立腳本和測試腳本中匯入它們來避免這種偏離。</p>
 <h2 id="_4">工具結構描述設計</h2>
 <h3 id="search_documents"><code>search_documents</code></h3>
-<p>搜尋工具使用嚴格的 JSON 結構描述，包含兩個參數：</p>
+<p>搜尋工具使用嚴格的 JSON 結構描述，目前只包含一個參數：</p>
 <table>
 <thead>
 <tr>
@@ -1867,11 +1867,6 @@
 <td><code>query</code></td>
 <td>字串</td>
 <td>自然語言檢索查詢</td>
-</tr>
-<tr>
-<td><code>top</code></td>
-<td>整數</td>
-<td>選用的結果數量，限制在 <code>1..10</code></td>
 </tr>
 </tbody>
 </table>
@@ -1972,6 +1967,13 @@
 </tr>
 </tbody>
 </table>
+<p>目前這些腳本的狀態是：</p>
+<ul>
+<li><code>09_demo_content_understanding.py</code> 已能直接運作，前提是部署後已設定 Content Understanding defaults</li>
+<li><code>10_demo_browser_automation.py</code> 與 <code>11_demo_web_search.py</code> 已對齊目前 <code>azure-ai-projects</code> SDK 類型名稱</li>
+<li><code>12_demo_pii_redaction.py</code> 已支援 AAD，不再強制要求獨立 Language key</li>
+<li><code>13_demo_image_generation.py</code> 已支援 AAD，但仍受限於目標區域是否有可部署的 image model</li>
+</ul>
 <p>這種分層是刻意的。</p>
 <ul>
 <li>主要工作坊仍然易於部署和說明</li>

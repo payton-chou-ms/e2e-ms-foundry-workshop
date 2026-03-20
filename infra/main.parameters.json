@@ -48,6 +48,33 @@
         }
       ]
     },
+    "deployDedicatedImageOpenAI": {
+      "value": true
+    },
+    "imageOpenAILocation": {
+      "value": "westus3"
+    },
+    "imageOpenAIDeploymentName": {
+      "value": "gpt-image-1-5"
+    },
+    "imageOpenAIModelName": {
+      "value": "gpt-image-1.5"
+    },
+    "imageOpenAIModelVersion": {
+      "value": "2025-12-16"
+    },
+    "imageOpenAIDeploymentSkuName": {
+      "value": "GlobalStandard"
+    },
+    "imageOpenAIDeploymentCapacity": {
+      "value": 1
+    },
+    "deployBrowserAutomation": {
+      "value": true
+    },
+    "browserAutomationLocation": {
+      "value": "eastus"
+    },
     "aiDeploymentsLocation": {
       "value": "${AZURE_ENV_AI_DEPLOYMENTS_LOCATION}"
     }

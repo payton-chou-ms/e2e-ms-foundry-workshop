@@ -1175,10 +1175,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#workshop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        代理式檢索的運作方式
+        目前 workshop 的文件路徑
       
     </span>
   </a>
@@ -1186,7 +1186,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         為什麼這對客戶很重要
@@ -1198,10 +1198,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rag" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        問題：簡單 RAG 無法處理複雜問題
+        為什麼這樣的設計值得展示
       
     </span>
   </a>
@@ -1212,7 +1212,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        解決方案：代理式檢索對搜尋進行推理
+        目前頁面應如何對外說明
       
     </span>
   </a>
@@ -1536,10 +1536,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#workshop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        代理式檢索的運作方式
+        目前 workshop 的文件路徑
       
     </span>
   </a>
@@ -1547,7 +1547,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         為什麼這對客戶很重要
@@ -1559,10 +1559,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rag" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        問題：簡單 RAG 無法處理複雜問題
+        為什麼這樣的設計值得展示
       
     </span>
   </a>
@@ -1573,7 +1573,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        解決方案：代理式檢索對搜尋進行推理
+        目前頁面應如何對外說明
       
     </span>
   </a>
@@ -1657,7 +1657,7 @@
 
 <h1 id="foundry-iq">Foundry IQ：文件智慧</h1>
 <h2 id="foundry-iq_1">什麼是 Foundry IQ？</h2>
-<p>Foundry IQ 是 Azure AI Foundry 的統一知識層，讓代理程式能夠透過智慧檢索存取企業文件。</p>
+<p>在這個 workshop 裡，Foundry IQ 指的是「文件接地」這條路徑：先把 PDF 文件整理、切塊並上傳到 Azure AI Search，再讓 Foundry agent 透過 <code>search_documents</code> 工具取回帶來源資訊的段落。</p>
 <h2 id="_1">主要功能</h2>
 <table>
 <thead>
@@ -1668,16 +1668,16 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>知識庫</strong></td>
-<td>自動索引建立與文件向量化</td>
+<td><strong>文件索引</strong></td>
+<td>由腳本建立 Azure AI Search index，並寫入頁面與來源欄位</td>
 </tr>
 <tr>
-<td><strong>代理式檢索</strong></td>
-<td>具備規劃、迭代與反思能力的 AI 驅動搜尋</td>
+<td><strong>引用段落</strong></td>
+<td><code>search_documents</code> 回傳包含來源、標題與頁碼的片段</td>
 </tr>
 <tr>
-<td><strong>企業安全性</strong></td>
-<td>內建 Entra ID 驗證與 Purview 整合</td>
+<td><strong>Entra ID 驗證</strong></td>
+<td>Workshop 腳本以 Azure 身分直接呼叫 Search 與 Foundry</td>
 </tr>
 <tr>
 <td><strong>多格式支援</strong></td>
@@ -1685,60 +1685,56 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_2">代理式檢索的運作方式</h2>
-<p>與簡單的向量搜尋（尋找相似文字）不同，代理式檢索使用 AI 來：</p>
+<h2 id="workshop">目前 workshop 的文件路徑</h2>
+<p>目前的主路徑不是 Foundry 原生 agentic retrieval，而是下列可檢視、可追蹤的流程：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>User: &quot;What&#39;s our policy for notifying customers during extended outages?&quot;
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Step 1: PLAN                                               │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Agent decomposes into sub-queries:                         │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  • &quot;customer notification policy&quot;                           │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  • &quot;extended outage definition&quot;                             │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  • &quot;communication requirements during incidents&quot;            │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└─────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                            │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                            ▼
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Step 2: ITERATE                                            │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  For each sub-query:                                        │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  • Search knowledge base                                    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  • Evaluate relevance of results                            │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  • Refine search if needed                                  │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└─────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                            │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                            ▼
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Step 3: REFLECT                                            │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Before responding:                                         │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  • Do I have enough information?                            │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  • Are sources consistent?                                  │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  • Can I cite specific documents?                           │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└─────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>                            │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>                            ▼
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Response with Citations                                    │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  &quot;According to our Customer Service Policies (page 2),      │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  customers must be notified within 15 minutes of a          │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  confirmed outage. The Outage Management Policy (page 1)    │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  defines extended outages as those exceeding 4 hours...&quot;    │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Step 1: INGEST                                             │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Workshop script:                                           │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  • Extracts text from PDFs                                  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  • Chunks by sentences                                      │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  • Generates embeddings                                     │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  • Uploads chunks to Azure AI Search                        │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                            │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                            ▼
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Step 2: TOOL CALL                                           │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Agent decides the question needs document evidence         │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  and emits `search_documents(query=...)`                    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                            │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                            ▼
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Step 3: SEARCH                                              │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Local runtime calls Azure AI Search with semantic search   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  and returns source/title/page metadata                     │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└─────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                            │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                            ▼
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>┌─────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Step 4: SYNTHESIZE                                          │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Agent reads returned passages and answers with             │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  grounded wording and visible citation metadata             │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>└─────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="_3">為什麼這對客戶很重要</h2>
-<h3 id="rag">問題：簡單 RAG 無法處理複雜問題</h3>
-<p>基本的檢索增強生成（RAG）只進行一次搜尋並使用任何返回的結果。以下情況會導致失敗：</p>
+<h2 id="_2">為什麼這對客戶很重要</h2>
+<h3 id="_3">為什麼這樣的設計值得展示</h3>
+<p>這條路徑的重點不是宣稱平台自動替你做完整知識推理，而是讓客戶清楚看見：</p>
 <ul>
-<li>問題包含多個部分</li>
-<li>資訊分散在多份文件中</li>
-<li>直觀的搜尋詞彙與文件用語不一致</li>
+<li>文件如何被索引</li>
+<li>agent 何時決定需要文件證據</li>
+<li>runtime 實際送出了什麼搜尋</li>
+<li>最終答案引用的是哪個來源與頁碼</li>
 </ul>
-<h3 id="_4">解決方案：代理式檢索對搜尋進行推理</h3>
-<p>代理程式的行為就像一位知識豐富的員工：</p>
+<h3 id="_4">目前頁面應如何對外說明</h3>
+<p>比較精準的說法是：</p>
 <ol>
-<li>理解問題的真正意圖</li>
-<li>知道要查閱多個來源</li>
-<li>調和互相矛盾的資訊</li>
-<li>在找不到答案時坦然承認</li>
+<li>文件接地目前由 Azure AI Search 提供索引與檢索</li>
+<li>Foundry agent 透過受控函式工具決定何時查文件</li>
+<li>本機 runtime 負責把搜尋結果回傳給 agent</li>
+<li>引用資訊來自實際索引欄位，而不是隱藏的黑盒流程</li>
 </ol>
 <h2 id="_5">客戶對話要點</h2>
 <table>
@@ -1751,15 +1747,15 @@
 <tbody>
 <tr>
 <td>「為什麼不直接用搜尋？」</td>
-<td>「搜尋找到的是文件。代理式檢索找到的是答案——而且知道何時需要查閱多個來源。」</td>
+<td>「因為 workshop 不只示範搜尋本身，而是示範 agent 如何在需要時呼叫文件工具，並把可引用的段落整合回答案。」</td>
 </tr>
 <tr>
 <td>「幻覺問題怎麼辦？」</td>
-<td>「每個回應都引用特定文件。使用者可以點擊連結進行驗證。代理程式會說『我不知道』而非猜測。」</td>
+<td>「文件答案來自實際搜尋結果，結果裡保留 source、title 與 page metadata，方便人工驗證。」</td>
 </tr>
 <tr>
 <td>「能處理我們複雜的政策嗎？」</td>
-<td>「規劃-迭代-反思方法能處理多部分的政策。讓我用這個範例為您展示⋯⋯」</td>
+<td>「可以先從目前的 Search-grounded 路徑示範；如果後續要進一步擴成更複雜的檢索策略，那是下一階段延伸，而不是本 workshop 目前已經自動具備的能力。」</td>
 </tr>
 </tbody>
 </table>
@@ -1770,15 +1766,15 @@
 <ul>
 <li><strong>分塊</strong>：保留句子邊界，通常 500-1000 個 token</li>
 <li><strong>向量嵌入</strong>：Azure OpenAI text-embedding-3-large（3072 維度）</li>
-<li><strong>索引</strong>：Azure AI Search 搭配混合式（關鍵字 + 向量）檢索</li>
+<li><strong>索引</strong>：Azure AI Search index，包含內容、標題、來源、頁碼與向量欄位</li>
 </ul>
 <h3 id="_8">搜尋設定</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Hybrid search combines:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># 1. Vector similarity (semantic meaning)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># 2. Keyword matching (exact terms)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 3. Semantic ranking (re-ranking for relevance)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">query_type</span> <span class="o">=</span> <span class="s2">&quot;vectorSemanticHybrid&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">search_client</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">search_text</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">query_type</span><span class="o">=</span><span class="s2">&quot;semantic&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">semantic_configuration_name</span><span class="o">=</span><span class="s2">&quot;default-semantic&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">select</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;page_number&quot;</span><span class="p">],</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
 </code></pre></div>
 <hr />
 <p><a href="../">← 概觀</a> | <a href="../02-fabric-iq/">Fabric IQ：資料 →</a></p>

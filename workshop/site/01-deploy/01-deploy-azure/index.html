@@ -1544,6 +1544,16 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>azd<span class="w"> </span>up
 </code></pre></div>
 <p>依照提示選擇你的環境名稱、訂用帳戶與位置等。</p>
+<p>這個部署現在除了主要 chat + embedding 模型外，也會一併建立 Content Understanding 所需的延伸模型部署：</p>
+<ul>
+<li><code>gpt-4.1-mini</code></li>
+<li><code>text-embedding-3-large</code></li>
+</ul>
+<p>此外，部署流程也會自動建立兩個選配能力所需的控制平面資源：</p>
+<ul>
+<li>一個專用的 image-capable Azure OpenAI resource，用於 <code>13_demo_image_generation.py</code></li>
+<li>一個 Playwright Workspace，用於 <code>10_demo_browser_automation.py</code></li>
+</ul>
 <div class="admonition warning">
 <p class="admonition-title">請等待完成</p>
 <p>部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作。</p>
@@ -1561,6 +1571,14 @@
 <div class="admonition note">
 <p class="admonition-title">無需手動設定</p>
 <p>你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Browser Automation 的最後一段仍需手動</p>
+<p><code>azd up</code> 現在會自動建立 Playwright Workspace，但 Browser Automation 仍需要你在 Azure Portal 產生一次性的 Playwright access token，並在 Foundry project 中建立 Browser Automation connection。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Image Generation 已納入正式部署流程</p>
+<p><code>azd up</code> 現在會自動建立獨立的 image-capable Azure OpenAI resource，並把 <code>AZURE_IMAGE_OPENAI_ENDPOINT</code> / <code>AZURE_IMAGE_MODEL_DEPLOYMENT</code> 寫入 azd 環境輸出。</p>
 </div>
 <hr />
 <p><a href="../00-admin-deploy-share/">← 管理員部署與分享</a> | <a href="../02-setup-fabric/">建立 Fabric 工作區 →</a></p>

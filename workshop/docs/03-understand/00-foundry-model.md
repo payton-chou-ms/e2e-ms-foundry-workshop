@@ -13,8 +13,8 @@
 | 模型角色 | 工作坊需要它的原因 | 典型部署 | 主要路徑是否必要 |
 |----------|-------------------|----------|-----------------|
 | **聊天模型** | 驅動代理程式的推理與工具選擇 | `gpt-4o-mini` 或同等聊天部署 | 是 |
-| **向量嵌入模型** | 為 Azure AI Search 索引建立與檢索產生向量 | `text-embedding-3-large` 或同等向量嵌入部署 | 是 |
-| **影像模型** | 用於生成視覺產出物的選用示範 | `gpt-image-1` | 否 |
+| **向量嵌入模型** | 為 Azure AI Search 索引建立與檢索產生向量 | 目前範本預設為 `text-embedding-ada-002`；也可改成其他支援的 embedding 部署 | 是 |
+| **影像模型** | 用於生成視覺產出物的選用示範 | `gpt-image-1.5` | 否 |
 | **其他特殊模型** | 未來示範或客戶專屬擴充 | Bicep 中的選用部署項目 | 否 |
 
 ## 目前的工作坊策略
@@ -24,6 +24,8 @@
 1. 主要工作坊路徑的**必要部署**
 2. 可依環境明確啟用的**選用部署**
 
+其中 image generation 已進一步獨立成專用的 Azure OpenAI resource。這樣做的原因是 image-capable model 往往受區域、配額與資源型態限制，將它和主要聊天路徑拆開會更穩定。
+
 這讓預設部署保持穩定，同時仍為額外示範保留空間。
 
 ## 部署流程
@@ -32,19 +34,22 @@
 flowchart LR
     A[infra/main.parameters.json] --> B[infra/main.bicep]
     B --> C[infra/modules/foundry.bicep]
+    B --> C2[infra/modules/image_openai.bicep]
     C --> D[Required chat deployment]
     C --> E[Required embedding deployment]
     C --> F[Optional model deployment list]
     F --> G[Enabled optional deployments]
     F --> H[Skipped optional deployments]
+    C2 --> I2[Dedicated image deployment]
     D --> I[Agent runtime]
     E --> J[Azure AI Search indexing]
     G --> K[Optional demos]
+    I2 --> K
 ```
 
 ## 為何「盡力而為」是明確的
 
-對於選用模型，工作坊**不**依賴平台在供應商部署失敗後靜默繼續的行為。相反地，Bicep 模組要求您明確選擇是否啟用選用部署。
+對於選用模型，工作坊**不**依賴平台在供應商部署失敗後靜默繼續的行為。相反地，Bicep 模組要求您明確選擇是否啟用選用部署，而 image generation 則直接使用專用 resource 來隔離風險。
 
 這表示：
 
@@ -58,8 +63,9 @@ flowchart LR
 
 ```json
 {
-  "deploymentName": "image-generation",
+  "name": "image-generation",
   "modelName": "gpt-image-1",
+  "modelFormat": "OpenAI",
   "modelVersion": "latest",
   "skuName": "GlobalStandard",
   "capacity": 1,

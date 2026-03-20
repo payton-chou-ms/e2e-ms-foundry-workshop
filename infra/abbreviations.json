@@ -2,7 +2,8 @@
   "ai": {
     "aiServices": "aisa-",
     "aiFoundryProject": "aifp-",
-    "aiSearch": "srch-"
+    "aiSearch": "srch-",
+    "imageOpenAI": "aoaiimg"
   },
   "storage": {
     "storageAccount": "st"
@@ -10,6 +11,9 @@
   "managementGovernance": {
     "logAnalyticsWorkspace": "log-",
     "applicationInsights": "appi-"
+  },
+  "testing": {
+    "playwrightWorkspace": "pww-"
   },
   "containers": {
     "containerRegistry": "cr",

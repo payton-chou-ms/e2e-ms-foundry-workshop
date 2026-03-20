@@ -2,7 +2,7 @@
 
 本節是讓範例情境端到端運作的入口。
 
-部署路徑聚焦在讓 PoC 能正常運作所需的最低限度，但你所部署的架構已支援 Deep Dive 章節中更完整的五主軸技術故事。
+部署路徑聚焦在讓 PoC 能正常運作所需的最低限度，但你所部署的架構已支援 Deep Dive 章節中更完整的六個技術主題。
 
 ## 選擇符合你角色的路徑
 
@@ -35,7 +35,6 @@
 
 ## 架構
 
-<!-- TODO: Add architecture diagram image here -->
 ![Architecture Diagram](../assets/architecture.png)
 
 本方案結合 Microsoft Fabric 與 Microsoft Foundry，建構一個可同時使用結構化資料與非結構化文件回答問題的 AI 解決方案。
@@ -49,7 +48,7 @@
 - 用於非結構化知識的文件搜尋工具
 - Foundry IQ 與 Fabric IQ 作為兩條資料接地路徑
 
-### 主流程背後的五主軸架構
+### 主流程背後的六個技術主題
 
 | 主軸 | 部署意義 |
 |------|----------|
@@ -58,6 +57,7 @@
 | **Foundry Tool** | 執行時依賴嚴格的 SQL + 搜尋函式工具合約 |
 | **Foundry IQ + Fabric IQ** | Search 與 Fabric 資源為代理程式提供文件與資料接地 |
 | **Control Plane** | Azure AI Services、Foundry 專案、Search、Storage、遙測與 RBAC 串連整個環境 |
+| **Multi-Agent Extension** | 重用同一套模型、工具與接地能力，往後延伸成情境化工作流 |
 
 換言之，使用者體驗仍然像一個對話式 PoC，但部署已準備好支撐完整的技術骨架。
 

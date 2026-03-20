@@ -870,6 +870,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#browser-automation-sop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Browser Automation 最短手動 SOP
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1575,6 +1586,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#browser-automation-sop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Browser Automation 最短手動 SOP
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1619,8 +1641,7 @@
 </div>
 <h2 id="python">Python 環境</h2>
 <h3 id="_2">建立並啟用</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>scripts
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 </code></pre></div>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Windows</label><label for="__tabbed_1_2">macOS/Linux</label></div>
 <div class="tabbed-content">
@@ -1635,20 +1656,28 @@
 </div>
 </div>
 <h3 id="_3">安裝相依套件</h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">快速（建議）</label><label for="__tabbed_2_2">標準</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">快速（建議）</label><label for="__tabbed_2_2">標準</label><label for="__tabbed_2_3">如果你也要本機建置文件站台</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>uv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>uv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>scripts/requirements.txt
 </code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>scripts/requirements.txt
+</code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>scripts/requirements.txt<span class="w"> </span>-r<span class="w"> </span>workshop/requirements.txt
 </code></pre></div>
 </div>
 </div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">目前沒有根目錄 requirements.txt</p>
+<p>Workshop 腳本相依套件在 <code>scripts/requirements.txt</code>，MkDocs 站台相依套件在 <code>workshop/requirements.txt</code>。</p>
+</div>
 <h3 id="_4">驗證設定</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import azure.ai.projects; print(&#39;Ready!&#39;)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import azure.ai.projects; print(&#39;Ready!&#39;)&quot;</span>
 </code></pre></div>
 <h2 id="fabric">設定 Fabric</h2>
 <h3 id="id">取得工作區 ID</h3>
@@ -1657,19 +1686,50 @@
 <li>開啟你的工作區</li>
 <li>從 URL 複製工作區 ID：</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>https://app.fabric.microsoft.com/groups/{workspace-id}/...
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>https://app.fabric.microsoft.com/groups/{workspace-id}/...
 </code></pre></div>
 <h3 id="_5">更新環境檔案</h3>
 <p>將 <code>.env.example</code> 複製為 <code>.env</code> 並更新 Fabric 設定：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 </code></pre></div>
 <p>編輯專案根目錄的 <code>.env</code>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># --- Microsoft Fabric (required) ---
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>FABRIC_WORKSPACE_ID=your-workspace-id-here
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a># --- Data Folder (pre-populated with default scenario) ---
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>DATA_FOLDER=data/default
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a># --- Microsoft Fabric (required) ---
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>FABRIC_WORKSPACE_ID=your-workspace-id-here
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># --- Data Folder (pre-populated with default scenario) ---
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>DATA_FOLDER=data/default
 </code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Azure 服務變數不需要手動抄寫</p>
+<p>只要你是透過 <code>azd up</code> 建立環境，像是 <code>AZURE_AI_PROJECT_ENDPOINT</code>、<code>AZURE_AI_ENDPOINT</code>、<code>AZURE_OPENAI_ENDPOINT</code>、<code>AZURE_IMAGE_OPENAI_ENDPOINT</code>、<code>AZURE_PLAYWRIGHT_DATAPLANE_URI</code> 等值都會自動從 <code>.azure/&lt;env&gt;/.env</code> 載入。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">PII demo 不再需要額外 Language key</p>
+<p><code>12_demo_pii_redaction.py</code> 現在可直接使用 <code>AZURE_AI_ENDPOINT</code> 加上 <code>DefaultAzureCredential</code>。只有在你刻意要用獨立 Language resource 時，才需要另外設定 <code>AZURE_LANGUAGE_ENDPOINT</code> / <code>AZURE_LANGUAGE_KEY</code>。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Browser Automation 的手動交接</p>
+<p>Playwright Workspace 現在會隨部署自動建立，但你仍需要在 Azure Portal 產生 Playwright access token，並在 Foundry project 中建立 Browser Automation connection，<code>10_demo_browser_automation.py</code> 才會真正執行。</p>
+</div>
+<h3 id="browser-automation-sop">Browser Automation 最短手動 SOP</h3>
+<p>如果你要真正執行 <code>10_demo_browser_automation.py</code>，最少只需要補完以下手動步驟：</p>
+<ol>
+<li>在 Azure Portal 開啟 <code>azd up</code> 建立出的 Playwright Workspace。</li>
+<li>產生一次性的 Playwright access token，先把它暫時記下來。</li>
+<li>在同一個 Foundry project 中建立 <code>Browser Automation</code> connection，使用剛剛的 Playwright Workspace 與 token。</li>
+<li>把該 connection 的資源 ID 寫入專案根目錄 <code>.env</code>：</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>AZURE_PLAYWRIGHT_CONNECTION_ID=/subscriptions/.../resourceGroups/.../providers/Microsoft.CognitiveServices/accounts/.../projects/.../connections/...
+</code></pre></div>
+<ol>
+<li>執行：</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>python<span class="w"> </span>scripts/10_demo_browser_automation.py<span class="w"> </span>--strict
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">真正會被腳本讀取的是 connection ID</p>
+<p><code>AZURE_PLAYWRIGHT_WS_ENDPOINT</code> 與 Playwright access token 是用來手動建立 Foundry connection 的中介資訊；腳本實際執行時讀取的是 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code>。</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">共用環境交接</p>
 <p>如果管理員已為你預先部署環境，請先向管理員要到正確的 <code>FABRIC_WORKSPACE_ID</code> 與其他必要設定，再修改 <code>.env</code>。</p>
