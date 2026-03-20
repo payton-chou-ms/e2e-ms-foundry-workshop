@@ -32,7 +32,28 @@ python scripts/00_build_solution.py --from 02
     python scripts/00_build_solution.py --foundry-only
     ```
 
-    這會跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式。
+       這會先自動設定 Content Understanding defaults，接著跳過 Fabric 設定步驟（02-05），只在 Microsoft Foundry 中建立代理程式。
+
+       `--foundry-only` 的目前步驟如下：
+
+       | 步驟 | 執行內容 | 時間 |
+       |------|----------|------|
+       | cu-defaults | 設定 Content Understanding defaults | ~5s |
+       | 01 | 產生範例資料 | ~2min |
+       | 06 | 上傳文件到 Azure AI Search | ~1min |
+       | 07-search | 建立 Search-only Foundry agent | ~10s |
+
+## 選配 demo 驗證狀態
+
+部署完成後，可額外驗證以下獨立 demo：
+
+| 腳本 | 目前狀態 | 備註 |
+|------|----------|------|
+| `09_demo_content_understanding.py` | 可用 | 依賴已部署的 CU defaults |
+| `10_demo_browser_automation.py` | 條件式可用 | 需要 Browser Automation / Playwright connection，否則 `SKIP:` |
+| `11_demo_web_search.py` | 可用 | 已對齊新版 SDK 類型 |
+| `12_demo_pii_redaction.py` | 可用 | 支援 AAD，不需額外 Language key |
+| `13_demo_image_generation.py` | 條件式可用 | 需 image model deployment；East US 目前通常無可用部署 |
 
 ## 預期輸出
 

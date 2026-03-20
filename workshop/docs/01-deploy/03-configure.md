@@ -9,7 +9,6 @@
 ### 建立並啟用
 
 ```bash
-cd scripts
 python -m venv .venv
 ```
 
@@ -74,6 +73,12 @@ FABRIC_WORKSPACE_ID=your-workspace-id-here
 # --- Data Folder (pre-populated with default scenario) ---
 DATA_FOLDER=data/default
 ```
+
+!!! note "Azure 服務變數不需要手動抄寫"
+    只要你是透過 `azd up` 建立環境，像是 `AZURE_AI_PROJECT_ENDPOINT`、`AZURE_AI_ENDPOINT`、`AZURE_OPENAI_ENDPOINT` 等值都會自動從 `.azure/<env>/.env` 載入。
+
+!!! note "PII demo 不再需要額外 Language key"
+    `12_demo_pii_redaction.py` 現在可直接使用 `AZURE_AI_ENDPOINT` 加上 `DefaultAzureCredential`。只有在你刻意要用獨立 Language resource 時，才需要另外設定 `AZURE_LANGUAGE_ENDPOINT` / `AZURE_LANGUAGE_KEY`。
 
 !!! note "共用環境交接"
     如果管理員已為你預先部署環境，請先向管理員要到正確的 `FABRIC_WORKSPACE_ID` 與其他必要設定，再修改 `.env`。

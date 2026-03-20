@@ -83,6 +83,7 @@ azd up
 
 這會部署：
 - Azure AI Services (Foundry) with GPT-4o-mini and text-embedding-3-large
+- Optional Content Understanding defaults: gpt-4.1-mini and text-embedding-3-large
 - Azure AI Search (Basic tier with semantic search)
 - Azure Storage Account
 - Application Insights
@@ -160,6 +161,7 @@ python scripts/00_build_solution.py
 **Pipeline 選項：**
 - `--clean` - 在切換情境時重設 Fabric 產生物
 - `--foundry-only` - 完全跳過 Fabric，只使用 AI Search（不需要 Fabric 授權）
+- `--foundry-only` 也會先自動設定 Content Understanding defaults，讓 `09_demo_content_understanding.py` 可直接執行
 - `--from 03` - 從指定步驟開始
 - `--only 06` - 只執行單一步驟
 - `--skip 05` - 跳過指定步驟
@@ -209,6 +211,16 @@ python scripts/09_demo_content_understanding.py
 ```
 
 這個 demo 會對本機 PDF 使用 `prebuilt-documentSearch`。如果環境中尚未設定這個選配能力，腳本會印出明確的 `SKIP:` 訊息，而不是阻塞主 workshop 流程。
+
+### 選配能力 Demo：目前驗證狀態
+
+目前 repo 中的選配 demo 已調整為以下行為：
+
+- `09_demo_content_understanding.py`：可用，會自動使用已部署的 Content Understanding defaults
+- `10_demo_browser_automation.py`：SDK 相容性已修正；若未建立 Browser Automation / Playwright connection，會乾淨地 `SKIP:`
+- `11_demo_web_search.py`：可用，已對齊目前 `azure-ai-projects` SDK 類型名稱
+- `12_demo_pii_redaction.py`：可用，支援 `DefaultAzureCredential` 與 `AZURE_AI_ENDPOINT`，不再強制要求 `AZURE_LANGUAGE_KEY`
+- `13_demo_image_generation.py`：已支援 AAD 驗證，但 East US 目前沒有可部署的可用 image model；若沒有 image deployment 會乾淨地 `SKIP:`
 
 ---
 

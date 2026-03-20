@@ -115,6 +115,13 @@ sequenceDiagram
 | `12_demo_pii_redaction.py` | PII 遮蔽 | Azure Language 工作流程，而非 Foundry 函式工具編排 |
 | `13_demo_image_generation.py` | 影像生成 | 獨立的模型系列和輸出格式 |
 
+目前這些腳本的狀態是：
+
+- `09_demo_content_understanding.py` 已能直接運作，前提是部署後已設定 Content Understanding defaults
+- `10_demo_browser_automation.py` 與 `11_demo_web_search.py` 已對齊目前 `azure-ai-projects` SDK 類型名稱
+- `12_demo_pii_redaction.py` 已支援 AAD，不再強制要求獨立 Language key
+- `13_demo_image_generation.py` 已支援 AAD，但仍受限於目標區域是否有可部署的 image model
+
 這種分層是刻意的。
 
 - 主要工作坊仍然易於部署和說明

@@ -31,6 +31,11 @@ azd up
 
 依照提示選擇你的環境名稱、訂用帳戶與位置等。
 
+這個部署現在除了主要 chat + embedding 模型外，也會一併建立 Content Understanding 所需的延伸模型部署：
+
+- `gpt-4.1-mini`
+- `text-embedding-3-large`
+
 !!! warning "請等待完成"
     部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作。
 
@@ -49,6 +54,10 @@ azd up
 
 !!! note "無需手動設定"
     你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取。
+
+!!! note "選配能力的目前限制"
+    Browser Automation 仍需要額外的 Browser Automation / Playwright project connection。
+    Image Generation demo 已支援 AAD，但是否能執行仍取決於該區域是否有可部署的 image model。
 
 ---
 
