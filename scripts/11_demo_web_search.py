@@ -18,11 +18,12 @@ IMPORT_ERROR = None
 try:
     from azure.identity import DefaultAzureCredential
     from azure.ai.projects import AIProjectClient
-    from azure.ai.projects.models import (
-        PromptAgentDefinition,
-        WebSearchTool,
-        WebSearchApproximateLocation,
-    )
+    from azure.ai.projects.models import PromptAgentDefinition
+    # SDK renamed WebSearchTool → WebSearchPreviewTool
+    try:
+        from azure.ai.projects.models import WebSearchPreviewTool
+    except ImportError:
+        from azure.ai.projects.models import WebSearchTool as WebSearchPreviewTool
 except ImportError as exc:  # pragma: no cover - runtime dependent
     IMPORT_ERROR = exc
 
@@ -73,15 +74,7 @@ def main():
             definition=PromptAgentDefinition(
                 model=model,
                 instructions="You are a helpful assistant that can search the public web.",
-                tools=[
-                    WebSearchTool(
-                        user_location=WebSearchApproximateLocation(
-                            country="US",
-                            city="Seattle",
-                            region="Washington",
-                        )
-                    )
-                ],
+                tools=[WebSearchPreviewTool()],
             ),
             description="Public web search demo.",
         )

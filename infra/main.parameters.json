@@ -8,9 +8,6 @@
     "AZURE_LOCATION": {
       "value": "${AZURE_LOCATION}"
     },
-    "secondaryLocation": {
-      "value": "${AZURE_SECONDARY_LOCATION}"
-    },
     "deploymentType": {
       "value": "${AZURE_OPENAI_MODEL_DEPLOYMENT_TYPE}"
     },
@@ -30,7 +27,26 @@
       "value": "${AZURE_OPENAI_EMBEDDING_MODEL_CAPACITY}"
     },
     "optionalModelDeployments": {
-      "value": []
+      "value": [
+        {
+          "name": "gpt-4.1-mini",
+          "modelName": "gpt-4.1-mini",
+          "modelFormat": "OpenAI",
+          "skuName": "GlobalStandard",
+          "capacity": 3,
+          "enabled": true,
+          "modelVersion": "2025-04-14"
+        },
+        {
+          "name": "text-embedding-3-large",
+          "modelName": "text-embedding-3-large",
+          "modelFormat": "OpenAI",
+          "skuName": "Standard",
+          "capacity": 3,
+          "enabled": true,
+          "modelVersion": "1"
+        }
+      ]
     },
     "aiDeploymentsLocation": {
       "value": "${AZURE_ENV_AI_DEPLOYMENTS_LOCATION}"

@@ -11,18 +11,6 @@ param createdBy string = contains(deployer(), 'userPrincipalName')
   ? split(deployer().userPrincipalName, '@')[0]
   : deployer().objectId
 
-// @minLength(1)
-// @description('Industry use case for deployment:')
-// @allowed([
-//   'Retail-sales-analysis'
-//   'Insurance-improve-customer-meetings'
-// ])
-// param usecase string
-
-@minLength(1)
-@description('Secondary location for databases creation(example:eastus2):')
-param secondaryLocation string = 'eastus2'
-
 @minLength(1)
 @description('GPT model deployment type:')
 @allowed([
@@ -37,10 +25,6 @@ param gptModelName string = 'gpt-4o-mini'
 @description('Version of the GPT model to deploy:')
 param gptModelVersion string = '2024-07-18'
 
-param azureOpenAIApiVersion string = '2025-01-01-preview'
-
-param azureAiAgentApiVersion string = '2025-05-01'
-
 @minValue(10)
 @description('Capacity of the GPT deployment:')
 // You can increase this, but capacity is limited per model/region, so you will get errors if you go over
@@ -54,6 +38,8 @@ param tags resourceInput<'Microsoft.Resources/resourceGroups@2025-04-01'>.tags =
 @description('Name of the Text Embedding model to deploy:')
 @allowed([
   'text-embedding-ada-002'
+  'text-embedding-3-small'
+  'text-embedding-3-large'
 ])
 param embeddingModel string = 'text-embedding-ada-002'
 
@@ -63,8 +49,6 @@ param embeddingDeploymentCapacity int = 80
 
 @description('Optional model deployments. Each entry can be enabled or disabled independently.')
 param optionalModelDeployments array = []
-
-// param imageTag string = 'latest_v2'
 
 param AZURE_LOCATION string = ''
 var solutionLocation = empty(AZURE_LOCATION) ? resourceGroup().location : AZURE_LOCATION
@@ -96,9 +80,6 @@ param aiDeploymentsLocation string
 
 var solutionPrefix = 'da${padLeft(take(uniqueId, 12), 12, '0')}'
 
-// @description('Name of the Azure Container Registry')
-// param acrName string = 'dataagentscontainerreg'
-
 //Get the current deployer's information
 var deployerInfo = deployer()
 var deployingUserPrincipalId = deployerInfo.objectId
@@ -108,7 +89,7 @@ resource resourceGroupTags 'Microsoft.Resources/tags@2021-04-01' = {
   name: 'default'
   properties: {
     tags: union(
-      reference(resourceGroup().id, '2021-04-01', 'Full').tags ?? {},
+      resourceGroup().tags ?? {},
       {
         TemplateName: 'IQs Workshop'
         CreatedBy: createdBy

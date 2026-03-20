@@ -8,7 +8,7 @@ Usage:
 
     # Foundry-only mode (no Fabric required)
     python scripts/00_build_solution.py --foundry-only
-    
+
     # Start from a specific step
     python scripts/00_build_solution.py --from 04
 
@@ -25,6 +25,7 @@ Steps:
 Foundry-only mode skips Fabric (02-05) and creates a search-only agent.
 """
 
+from load_env import load_all_env
 import argparse
 import subprocess
 import sys
@@ -46,11 +47,12 @@ STEPS = {
     "07": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent", "time": "~10s"},
     "07-search": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent (Search Only)", "time": "~10s", "args": ["--foundry-only"]},
     "08": {"script": "08_test_foundry_agent.py", "name": "Test Foundry Agent", "time": "interactive"},
+    "cu-defaults": {"script": None, "name": "Configure Content Understanding Defaults", "time": "~5s"},
 }
 
 # Default pipeline order
 DEFAULT_PIPELINE = ["01", "02", "03", "04", "05", "06", "07"]
-FOUNDRY_ONLY_PIPELINE = ["01", "06", "07-search"]
+FOUNDRY_ONLY_PIPELINE = ["cu-defaults", "01", "06", "07-search"]
 
 # ============================================================================
 # Parse Arguments
@@ -71,9 +73,9 @@ Examples:
 
 parser.add_argument("--foundry-only", action="store_true",
                     help="Foundry-only mode: skip Fabric entirely, use AI Search only")
-parser.add_argument("--industry", type=str, 
+parser.add_argument("--industry", type=str,
                     help="Industry for data generation (overrides .env)")
-parser.add_argument("--usecase", type=str, 
+parser.add_argument("--usecase", type=str,
                     help="Use case for data generation (overrides .env)")
 parser.add_argument("--size", choices=["small", "medium", "large"],
                     help="Data size for generation (overrides .env)")
@@ -134,12 +136,14 @@ if args.skip_agents:
 
 # Check all scripts exist
 for step in pipeline:
-    script_path = os.path.join(script_dir, STEPS[step]["script"])
+    script_file = STEPS[step]["script"]
+    if script_file is None:
+        continue
+    script_path = os.path.join(script_dir, script_file)
     if not os.path.exists(script_path):
-        print(f"WARNING: Script not found: {STEPS[step]['script']}")
+        print(f"WARNING: Script not found: {script_file}")
 
 # Load environment from azd + project .env
-from load_env import load_all_env
 load_all_env()
 
 # Data generation arguments: CLI > .env
@@ -147,7 +151,7 @@ if "01" in pipeline:
     args.industry = args.industry or os.getenv("INDUSTRY")
     args.usecase = args.usecase or os.getenv("USECASE")
     args.size = args.size or os.getenv("DATA_SIZE", "small")
-    
+
     if not args.industry or not args.usecase:
         print("\n" + "="*60)
         print("Data Generation")
@@ -176,12 +180,14 @@ if "01" in pipeline:
         if not args.industry:
             args.industry = input("Industry: ").strip()
             if not args.industry:
-                print("ERROR: Industry is required. Set INDUSTRY in .env or pass --industry")
+                print(
+                    "ERROR: Industry is required. Set INDUSTRY in .env or pass --industry")
                 sys.exit(1)
         if not args.usecase:
             args.usecase = input("Use Case: ").strip()
             if not args.usecase:
-                print("ERROR: Use case is required. Set USECASE in .env or pass --usecase")
+                print(
+                    "ERROR: Use case is required. Set USECASE in .env or pass --usecase")
                 sys.exit(1)
 
 # ============================================================================
@@ -213,49 +219,80 @@ print()
 # Run Pipeline
 # ============================================================================
 
+
 def run_step(step_id):
     """Run a single pipeline step."""
     info = STEPS[step_id]
-    script_path = os.path.join(script_dir, info["script"])
-    
+    script_path = os.path.join(
+        script_dir, info["script"]) if info["script"] else None
+
     print(f"> [{step_id}] {info['name']}...", end=" ", flush=True)
-    
-    if not os.path.exists(script_path):
+
+    # Inline step: configure Content Understanding defaults
+    if step_id == "cu-defaults":
+        try:
+            from azure.ai.contentunderstanding import ContentUnderstandingClient
+            from azure.identity import DefaultAzureCredential
+            endpoint = os.getenv("AZURE_AI_ENDPOINT")
+            if not endpoint:
+                print("SKIP (no AZURE_AI_ENDPOINT)")
+                return True
+            client = ContentUnderstandingClient(
+                endpoint=endpoint, credential=DefaultAzureCredential())
+            try:
+                defaults = client.get_defaults()
+                if defaults.get("modelDeployments"):
+                    print("[OK] (already configured)")
+                    return True
+            except Exception:
+                pass
+            client.update_defaults(model_deployments={
+                "gpt-4.1-mini": "gpt-4.1-mini",
+                "text-embedding-3-large": "text-embedding-3-large",
+            })
+            print("[OK]")
+            return True
+        except Exception as exc:
+            print(f"SKIP ({exc})")
+            return True
+
+    if not script_path or not os.path.exists(script_path):
         print("SKIP (not found)")
         return True
-    
+
     # Build command
     cmd = [sys.executable, script_path]
-    
+
     # Add step-specific arguments defined in STEPS
     if "args" in info:
         cmd.extend(info["args"])
-    
+
     # Add arguments for data generation script
     if step_id == "01" and args.industry:
         cmd.extend(["--industry", args.industry])
         cmd.extend(["--usecase", args.usecase])
         if args.size:
             cmd.extend(["--size", args.size])
-    
+
     # Pass --clean to step 02 if requested
     if step_id == "02" and args.clean:
         cmd.append("--clean")
-    
+
     # Create a clean environment that forces re-reading from .env
     # Remove DATA_FOLDER so child process reads fresh value from .env
     clean_env = os.environ.copy()
     clean_env.pop("DATA_FOLDER", None)
-    
+
     # Run with output captured
-    result = subprocess.run(cmd, cwd=os.path.dirname(script_dir), 
-                           capture_output=True, text=True, env=clean_env)
-    
+    result = subprocess.run(cmd, cwd=os.path.dirname(script_dir),
+                            capture_output=True, text=True, env=clean_env)
+
     if result.returncode != 0:
         print("[FAIL] FAILED")
-        print(f"\n  Error output:\n{result.stderr[-500:] if result.stderr else result.stdout[-500:]}")
+        print(
+            f"\n  Error output:\n{result.stderr[-500:] if result.stderr else result.stdout[-500:]}")
         return False
-    
+
     print("[OK]")
     return True
 
@@ -267,11 +304,12 @@ failed = False
 for step in pipeline:
     success = run_step(step)
     results[step] = success
-    
+
     if not success:
         failed = True
         if not args.continue_on_error:
-            print(f"\nPipeline stopped. Use --continue-on-error to continue despite failures.")
+            print(
+                f"\nPipeline stopped. Use --continue-on-error to continue despite failures.")
             break
 
 # ============================================================================

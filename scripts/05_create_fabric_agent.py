@@ -1,5 +1,11 @@
 """
-05 - Create Fabric Data Agent
+05 - Create Fabric Data Agent  [DEPRECATED]
+
+⚠️  This script is deprecated. The workshop now uses Foundry Agent
+    (scripts/07_create_foundry_agent.py) as the primary agent path.
+    This script is kept for reference only and is not included in
+    any default or foundry-only pipeline.
+
 Creates a Data Agent in Fabric workspace and links it to the Ontology.
 
 Usage:
@@ -14,6 +20,9 @@ What this script does:
     2. Updates its definition to use the Ontology as data source
 """
 
+import requests
+from azure.identity import AzureCliCredential
+from load_env import load_all_env
 import os
 import sys
 import json
@@ -24,11 +33,8 @@ import base64
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Load environment from azd + project .env
-from load_env import load_all_env
 load_all_env()
 
-from azure.identity import AzureCliCredential
-import requests
 
 # ============================================================================
 # Configuration
@@ -83,16 +89,20 @@ print(f"Data Agent Name: {DATA_AGENT_NAME}")
 
 credential = AzureCliCredential()
 
+
 def get_headers():
     """Get fresh headers with token"""
-    token = credential.get_token("https://api.fabric.microsoft.com/.default").token
+    token = credential.get_token(
+        "https://api.fabric.microsoft.com/.default").token
     return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
 
 def make_request(method, url, **kwargs):
     """Make request with retry logic for 429 rate limiting"""
     max_retries = 5
     for attempt in range(max_retries):
-        response = requests.request(method, url, headers=get_headers(), **kwargs)
+        response = requests.request(
+            method, url, headers=get_headers(), **kwargs)
         if response.status_code == 429:
             retry_after = int(response.headers.get("Retry-After", 30))
             print(f"  Rate limited. Waiting {retry_after}s...")
@@ -100,6 +110,7 @@ def make_request(method, url, **kwargs):
             continue
         return response
     return response
+
 
 def wait_for_lro(operation_url, operation_name="Operation", timeout=300):
     """Wait for long-running operation to complete"""
@@ -119,6 +130,7 @@ def wait_for_lro(operation_url, operation_name="Operation", timeout=300):
     print(f"  [FAIL] {operation_name} timed out")
     return None
 
+
 def encode_to_base64(data):
     """Encode data to base64 string"""
     if isinstance(data, dict):
@@ -128,6 +140,7 @@ def encode_to_base64(data):
 # ============================================================================
 # Load Schema and Ontology Config for Instructions
 # ============================================================================
+
 
 # Load ontology config for scenario-specific instructions
 config_path = os.path.join(config_dir, "ontology_config.json")
@@ -153,6 +166,8 @@ else:
     schema_prompt = ""
 
 # Build scenario-specific instructions
+
+
 def build_agent_instructions(config, schema):
     """Build agent instructions based on scenario"""
     scenario = config.get("scenario", "")
@@ -160,18 +175,19 @@ def build_agent_instructions(config, schema):
     desc = config.get("description", "")
     tables = config.get("tables", {})
     relationships = config.get("relationships", [])
-    
+
     # Build entity descriptions
     entity_list = []
     for table_name, table_def in tables.items():
         cols = ", ".join(table_def.get("columns", []))
         entity_list.append(f"- {table_name.title()}: {cols}")
-    
+
     # Build relationship descriptions
     rel_list = []
     for rel in relationships:
-        rel_list.append(f"- {rel['from'].title()} -> {rel['to'].title()} (via {rel['fromKey']})")
-    
+        rel_list.append(
+            f"- {rel['from'].title()} -> {rel['to'].title()} (via {rel['fromKey']})")
+
     instructions = f"""You are a helpful assistant that answers questions about {name} data.
 
 {desc}
@@ -184,19 +200,20 @@ Relationships:
 
 When answering questions:
 1. Use the data to provide accurate answers
-2. Support aggregations and group by operations  
+2. Support aggregations and group by operations
 3. Provide clear, concise answers based on the data
 4. If you cannot find the answer, explain what data would be needed
 
 {schema}
 
 Support group by in GQL."""
-    
+
     return instructions
 
 # ============================================================================
 # Step 1: Create Data Agent
 # ============================================================================
+
 
 print(f"\n[1/2] Creating Data Agent...")
 
@@ -215,7 +232,8 @@ final_agent_name = DATA_AGENT_NAME
 
 if existing_agent:
     data_agent_id = existing_agent["id"]
-    print(f"  [OK] Using existing Data Agent: {DATA_AGENT_NAME} ({data_agent_id})")
+    print(
+        f"  [OK] Using existing Data Agent: {DATA_AGENT_NAME} ({data_agent_id})")
 else:
     # Try to create Data Agent, with suffix retry if name not available
     max_suffix = 10
@@ -224,47 +242,52 @@ else:
             agent_name = DATA_AGENT_NAME
         else:
             agent_name = f"{DATA_AGENT_NAME}_{suffix}"
-        
+
         payload = {
             "displayName": agent_name,
             "type": "DataAgent",
             "description": f"Data Agent for {SOLUTION_NAME} Ontology"
         }
-        
+
         url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/items/"
         resp = make_request("POST", url, json=payload)
-        
+
         if resp.status_code == 201:
             data_agent_id = resp.json()["id"]
             final_agent_name = agent_name
             print(f"  [OK] Created Data Agent: {agent_name} ({data_agent_id})")
             break
         elif resp.status_code == 202:
-            result = wait_for_lro(resp.headers.get("Location"), "Data Agent creation")
+            result = wait_for_lro(resp.headers.get(
+                "Location"), "Data Agent creation")
             if result:
                 resource_location = result.get("resourceLocation")
                 if resource_location:
                     res_resp = make_request("GET", resource_location)
                     data_agent_id = res_resp.json()["id"]
                     final_agent_name = agent_name
-                    print(f"  [OK] Created Data Agent: {agent_name} ({data_agent_id})")
+                    print(
+                        f"  [OK] Created Data Agent: {agent_name} ({data_agent_id})")
                     break
         elif resp.status_code == 400:
             error_data = resp.json()
             if error_data.get("errorCode") == "ItemDisplayNameNotAvailableYet":
-                print(f"  Name '{agent_name}' not available, trying with suffix...")
+                print(
+                    f"  Name '{agent_name}' not available, trying with suffix...")
                 continue
             else:
-                print(f"  [FAIL] Failed to create Data Agent: {resp.status_code}")
+                print(
+                    f"  [FAIL] Failed to create Data Agent: {resp.status_code}")
                 print(f"    Response: {resp.text}")
                 sys.exit(1)
         else:
             print(f"  [FAIL] Failed to create Data Agent: {resp.status_code}")
             print(f"    Response: {resp.text}")
             sys.exit(1)
-    
+
     if not data_agent_id:
-        print(f"  [FAIL] Failed to create Data Agent after {max_suffix} retries")
+        print(
+            f"  [FAIL] Failed to create Data Agent after {max_suffix} retries")
         sys.exit(1)
 
 # ============================================================================
@@ -309,7 +332,8 @@ if resp.status_code in [200, 202]:
         wait_for_lro(resp.headers.get("Location"), "Definition update")
     print(f"  [OK] Data Agent configured with Ontology source")
 else:
-    print(f"  ⚠ Could not update Data Agent definition via API: {resp.status_code}")
+    print(
+        f"  ⚠ Could not update Data Agent definition via API: {resp.status_code}")
     print(f"    Response: {resp.text}")
     print("    You may need to configure the Ontology source manually in Fabric portal:")
     print(f"    1. Go to workspace and open '{final_agent_name}'")
@@ -329,7 +353,7 @@ env_path = os.path.join(script_dir, "..", ".env")
 if os.path.exists(env_path):
     with open(env_path, "r") as f:
         env_content = f.read()
-    
+
     lines = env_content.split("\n")
     updated = False
     for i, line in enumerate(lines):
@@ -337,7 +361,7 @@ if os.path.exists(env_path):
             lines[i] = f"FABRIC_AGENT_ID={data_agent_id}"
             updated = True
             break
-    
+
     if updated:
         with open(env_path, "w") as f:
             f.write("\n".join(lines))
@@ -368,5 +392,3 @@ Next steps:
     python scripts/07_create_foundry_agent.py
     python scripts/08_test_foundry_agent.py
 """)
-
-

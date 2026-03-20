@@ -15,6 +15,11 @@ import requests
 from load_env import load_all_env
 from optional_demo_utils import finish_skip, resolve_env_value, resolve_image_model_deployment
 
+try:
+    from azure.identity import DefaultAzureCredential
+except ImportError:
+    DefaultAzureCredential = None
+
 load_all_env()
 
 
@@ -49,9 +54,28 @@ def main():
     )
     deployment, deployment_name = resolve_image_model_deployment()
 
-    if not endpoint or not key:
+    # Support AAD bearer-token auth when no API key is set
+    bearer_token = None
+    if not key:
+        if DefaultAzureCredential is None:
+            finish_skip(
+                "Azure OpenAI API key is not configured and azure-identity is not installed.",
+                strict=args.strict,
+            )
+        try:
+            cred = DefaultAzureCredential()
+            bearer_token = cred.get_token(
+                "https://cognitiveservices.azure.com/.default").token
+            key_name = "DefaultAzureCredential (bearer token)"
+        except Exception as exc:
+            finish_skip(
+                f"Azure OpenAI API key is not configured and AAD auth failed ({exc}).",
+                strict=args.strict,
+            )
+
+    if not endpoint:
         finish_skip(
-            "Azure OpenAI endpoint/key are not configured for image generation.",
+            "Azure OpenAI endpoint is not configured for image generation.",
             strict=args.strict,
         )
 
@@ -87,13 +111,16 @@ def main():
     print(f"Deployment: {deployment}")
     print(f"Output: {output_path}")
 
+    headers = {"Content-Type": "application/json"}
+    if bearer_token:
+        headers["Authorization"] = f"Bearer {bearer_token}"
+    else:
+        headers["api-key"] = key
+
     try:
         response = requests.post(
             url,
-            headers={
-                "api-key": key,
-                "Content-Type": "application/json",
-            },
+            headers=headers,
             json=body,
             timeout=180,
         )

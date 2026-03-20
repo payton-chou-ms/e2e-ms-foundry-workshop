@@ -41,19 +41,23 @@ def resolve_image_model_deployment():
     if direct_value:
         return direct_value, direct_name
 
+    def _is_image_model(model_name):
+        lower = (model_name or "").lower()
+        return "image" in lower or "dall-e" in lower
+
     summaries = parse_json_env("AZURE_DEPLOYED_MODEL_SUMMARIES") or []
     for item in summaries:
         deployment_name = item.get("deploymentName") or item.get("name")
-        model_name = (item.get("modelName") or item.get("model") or "").lower()
-        if deployment_name and "image" in model_name:
+        model_name = item.get("modelName") or item.get("model") or ""
+        if deployment_name and _is_image_model(model_name):
             return deployment_name, "AZURE_DEPLOYED_MODEL_SUMMARIES"
 
     optional_deployments = parse_json_env(
         "AZURE_OPTIONAL_MODEL_DEPLOYMENTS") or []
     for item in optional_deployments:
         deployment_name = item.get("deploymentName")
-        model_name = (item.get("modelName") or "").lower()
-        if deployment_name and "image" in model_name:
+        model_name = item.get("modelName") or ""
+        if deployment_name and _is_image_model(model_name):
             return deployment_name, "AZURE_OPTIONAL_MODEL_DEPLOYMENTS"
 
     return None, None

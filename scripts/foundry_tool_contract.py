@@ -32,7 +32,7 @@ TOOL_CONTRACT_ROWS = [
         "mode": "all",
         "use_for": "Policies, procedures, FAQs, guidance, and other unstructured document content.",
         "avoid_for": "Calculations or broad table scans.",
-        "input_schema": "query: string, top?: integer",
+        "input_schema": "query: string",
         "result_shape": "Cited passages with source, title, and page metadata.",
     },
 ]
@@ -43,12 +43,6 @@ SEARCH_DOCUMENTS_PARAMETERS = {
         "query": {
             "type": "string",
             "description": "Natural-language search query for finding relevant passages in indexed documents.",
-        },
-        "top": {
-            "type": "integer",
-            "description": f"Optional maximum number of search results to return. Use a value between 1 and {MAX_SEARCH_TOP}.",
-            "minimum": 1,
-            "maximum": MAX_SEARCH_TOP,
         },
     },
     "required": ["query"],
@@ -139,7 +133,6 @@ Do not use it for:
 - Listing records from structured tables
 Parameters:
 - query (string, required): natural-language document search query
-- top (integer, optional): maximum number of results to return, from 1 to {MAX_SEARCH_TOP}
 Returns:
 - One or more cited passages with source, title, and page metadata
 
@@ -191,7 +184,6 @@ Do not use it for:
 - Questions that need a full table scan of business records
 Parameters:
 - query (string, required): natural-language document search query
-- top (integer, optional): maximum number of results to return, from 1 to {MAX_SEARCH_TOP}
 Returns:
 - One or more cited passages with source, title, and page metadata
 

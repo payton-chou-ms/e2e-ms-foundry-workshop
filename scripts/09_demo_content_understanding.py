@@ -127,6 +127,12 @@ def build_skip_message(error):
             "page or configure resource-level defaults before running the demo."
         )
 
+    if "defaultsnotset" in lowered:
+        return (
+            "Content Understanding defaults have not been configured. "
+            "Run with --auto-defaults or call client.update_defaults() first."
+        )
+
     if "region" in lowered or "location" in lowered or status_code == 400:
         return (
             "the resource region or processing location is not supported for this capability. "
@@ -244,7 +250,34 @@ def main():
 
         summarize_document(result.contents[0], args.max_markdown_chars)
     except (ClientAuthenticationError, HttpResponseError) as exc:
-        finish_skip(build_skip_message(exc), strict=args.strict)
+        # Auto-configure defaults if they haven't been set
+        inner = getattr(exc, "error", None)
+        inner_code = getattr(inner, "code", "") or ""
+        inner_msg = str(getattr(inner, "message", "")) if inner else ""
+        if "DefaultsNotSet" in inner_code or "DefaultsNotSet" in inner_msg or "DefaultsNotSet" in str(exc):
+            print("Content Understanding defaults not configured. Auto-configuring...")
+            try:
+                client.update_defaults(model_deployments={
+                    "gpt-4.1-mini": "gpt-4.1-mini",
+                    "text-embedding-3-large": "text-embedding-3-large",
+                })
+                print("Defaults configured. Retrying analysis...")
+                poller = client.begin_analyze_binary(
+                    analyzer_id="prebuilt-documentSearch",
+                    binary_input=file_bytes,
+                    processing_location=args.processing_location,
+                )
+                result = poller.result()
+                if not getattr(result, "contents", None):
+                    finish_skip(
+                        "analysis completed but returned no content after configuring defaults.",
+                        strict=args.strict,
+                    )
+                summarize_document(result.contents[0], args.max_markdown_chars)
+            except (ClientAuthenticationError, HttpResponseError) as retry_exc:
+                finish_skip(build_skip_message(retry_exc), strict=args.strict)
+        else:
+            finish_skip(build_skip_message(exc), strict=args.strict)
     finally:
         close_method = getattr(credential, "close", None)
         if callable(close_method):

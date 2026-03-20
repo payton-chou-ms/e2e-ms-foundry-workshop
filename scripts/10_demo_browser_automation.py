@@ -21,10 +21,14 @@ try:
     from azure.ai.projects import AIProjectClient
     from azure.ai.projects.models import (
         PromptAgentDefinition,
-        BrowserAutomationPreviewTool,
         BrowserAutomationToolParameters,
         BrowserAutomationToolConnectionParameters,
     )
+    # SDK renamed BrowserAutomationPreviewTool → BrowserAutomationAgentTool
+    try:
+        from azure.ai.projects.models import BrowserAutomationAgentTool
+    except ImportError:
+        from azure.ai.projects.models import BrowserAutomationPreviewTool as BrowserAutomationAgentTool
 except ImportError as exc:  # pragma: no cover - runtime dependent
     IMPORT_ERROR = exc
 
@@ -88,7 +92,7 @@ def main():
     )
     openai = project.get_openai_client()
 
-    tool = BrowserAutomationPreviewTool(
+    tool = BrowserAutomationAgentTool(
         browser_automation_preview=BrowserAutomationToolParameters(
             connection=BrowserAutomationToolConnectionParameters(
                 project_connection_id=connection_id,

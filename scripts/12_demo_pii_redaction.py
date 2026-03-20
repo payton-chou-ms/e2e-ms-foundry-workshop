@@ -19,6 +19,7 @@ try:
     from azure.ai.textanalytics import TextAnalyticsClient
     from azure.core.credentials import AzureKeyCredential
     from azure.core.exceptions import ClientAuthenticationError, HttpResponseError
+    from azure.identity import DefaultAzureCredential
 except ImportError as exc:  # pragma: no cover - runtime dependent
     IMPORT_ERROR = exc
 
@@ -49,33 +50,43 @@ def main():
     endpoint, endpoint_name = resolve_env_value(
         "AZURE_LANGUAGE_ENDPOINT",
         "LANGUAGE_ENDPOINT",
+        "AZURE_AI_ENDPOINT",
     )
     key, key_name = resolve_env_value(
         "AZURE_LANGUAGE_KEY",
         "LANGUAGE_KEY",
+        "AZURE_AI_KEY",
     )
 
-    if not endpoint or not key:
+    if not endpoint:
         finish_skip(
-            "Language endpoint/key are not configured. Set AZURE_LANGUAGE_ENDPOINT and AZURE_LANGUAGE_KEY to run the PII demo.",
+            "Language endpoint is not configured. Set AZURE_LANGUAGE_ENDPOINT or AZURE_AI_ENDPOINT to run the PII demo.",
             strict=args.strict,
         )
+
+    if key:
+        credential = AzureKeyCredential(key)
+        cred_source = key_name
+    else:
+        credential = DefaultAzureCredential()
+        cred_source = "DefaultAzureCredential"
 
     print("\n" + "=" * 60)
     print("PII Redaction Demo")
     print("=" * 60)
     print(f"Endpoint source: {endpoint_name}")
-    print(f"Credential source: {key_name}")
+    print(f"Credential source: {cred_source}")
     print(f"Input text: {args.text}")
 
     client = TextAnalyticsClient(
         endpoint=endpoint,
-        credential=AzureKeyCredential(key),
+        credential=credential,
     )
 
     try:
-        result = next(client.recognize_pii_entities(
-            [args.text], language=args.language))
+        results = client.recognize_pii_entities(
+            [args.text], language=args.language)
+        result = results[0]
     except (ClientAuthenticationError, HttpResponseError) as exc:
         finish_skip(
             f"PII detection is not available in this environment yet ({exc})",
