@@ -1,14 +1,21 @@
 # Foundry 代理程式：執行階段編排
 
-## 本頁說明的內容
+## Summary
 
-工作坊並非使用通用的聊天完成加上臨時拼湊的程式碼。它在 Microsoft Foundry 中建立一個具名的提示詞代理程式，然後在執行階段測試時重複使用該定義。
+這個工作坊不是每次提問時都臨時拼一段 prompt。它會先在 Microsoft Foundry 裡建立一個 agent 定義，再由測試腳本把這個 agent 叫出來執行。
 
-這種設計很重要，因為客戶通常會問三個不同的問題：
+你可以把它想成：
 
-- 代理程式定義儲存在哪裡？
-- 代理程式如何知道它可以呼叫哪些工具？
-- 從本機測試轉移到發佈時，什麼會改變？
+- Foundry 負責保存 agent 的設定
+- 本機 runtime 負責執行工具與回傳結果
+
+## 這頁要學什麼
+
+看完這頁，你應該知道：
+
+- agent 定義裡面包含哪些東西。
+- agent 為什麼知道自己可以呼叫哪些工具。
+- 本機測試與後續發佈之間有什麼差別。
 
 ## 代理程式定義
 
@@ -20,7 +27,7 @@
 | `instructions` | `build_agent_instructions(...)` | 告訴代理程式何時使用 SQL、搜尋或兩者 |
 | `tools` | `foundry_tool_contract.py` | 定義可呼叫的函式工具及嚴格的 JSON 結構描述 |
 
-換句話說，Foundry 專案將代理程式儲存為可重複使用的執行階段物件，而非僅僅是本機的 Python 提示詞字串。
+換句話說，Foundry 專案把 agent 保存成一個可重複使用的物件，而不是只存在本機程式裡的一段文字。
 
 ## 指令的組成方式
 
@@ -41,7 +48,7 @@
 3. 唯讀存取的 SQL 規則
 4. 多步驟問題的回應迴圈指引
 
-這就是為什麼代理程式能與實際生成的資料集保持一致，而非依賴固定的範例提示詞。
+這也是為什麼 agent 的行為會跟目前工作坊情境一致，而不是只會回答固定範例。
 
 ## 工具選擇模式
 
@@ -57,7 +64,7 @@
 - `build_search_documents_tool()` 始終包含
 - `build_execute_sql_tool(...)` 僅在未設定 `--foundry-only` 時才新增
 
-這表示提示詞和工具清單保持一致。僅搜尋的代理程式不僅僅是被告知要忽略 SQL。它根本就是在沒有 SQL 函式的情況下建立的。
+這表示 prompt 和工具清單會一起被設計好。若是 search-only 模式，agent 並不是「知道有 SQL 但不要用」，而是根本沒有 SQL 工具可用。
 
 ## 建立、取得與測試流程
 
@@ -80,7 +87,7 @@ flowchart LR
     M --> N[Return final answer]
 ```
 
-測試腳本不會重新定義代理程式。它從專案中擷取已儲存的代理程式定義，讀取最新的模型、指令和工具中繼資料，然後在本機驅動對話迴圈。
+測試腳本不會重建一個新的 agent，而是讀取已經存好的 agent 定義，再用本機程式驅動整個問答流程。
 
 ## 為什麼執行階段在本機執行工具
 
@@ -92,7 +99,7 @@ flowchart LR
 - 本機執行階段決定**函式如何被執行**
 - 原始輸出作為 `function_call_output` 傳回給模型
 
-這也是為什麼工作坊可以在示範期間顯示確切的 SQL 查詢和搜尋酬載。
+所以在 demo 時，你可以真的看到送出的 SQL 或搜尋查詢，而不是只看到最終答案。
 
 ## 追蹤行為
 
@@ -114,7 +121,7 @@ flowchart LR
 - 缺少遙測配線只會產生警告
 - 代理程式建立和聊天在沒有 Application Insights 的情況下仍應正常運作
 
-這符合工作坊的目標：可觀測性很有價值，但它不能成為主要示範路徑的阻礙。
+這代表可觀測性是加分項，不是卡住主流程的必要條件。
 
 ## 發佈路徑及其獨立的原因
 
@@ -132,7 +139,7 @@ flowchart LR
 - 下游的 RBAC 可能需要重新指派
 - Teams 和 Microsoft 365 Copilot 封裝會增加額外的治理步驟
 
-因此工作坊先在 Foundry 內部驗證代理程式，然後將發佈視為受控的第二階段。
+所以工作坊先把「agent 能不能正常工作」確認好，再進入發佈這個第二階段。
 
 ## 客戶對話要點
 
@@ -156,15 +163,11 @@ flowchart LR
 
 「Foundry 擁有代理程式定義。工作坊執行階段擁有本機工具執行迴圈。」
 
-## 營運要點
+## 官方延伸閱讀
 
-Foundry 代理程式是工作坊的編排邊界：
-
-- 模型部署處理推理
-- 指令描述情境和工具規則
-- 工具結構描述限制可呼叫的內容
-- 本機執行階段執行工具並回饋結果
-- 發佈是可行的，但刻意視為後續的環境步驟
+- [Microsoft Foundry quickstart](https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code)
+- [Build with agents, conversations, and responses](https://learn.microsoft.com/azure/foundry/agents/concepts/runtime-components)
+- [Develop an AI agent with Azure AI Foundry Agent Service](https://learn.microsoft.com/training/modules/develop-ai-agent-azure/)
 
 ---
 

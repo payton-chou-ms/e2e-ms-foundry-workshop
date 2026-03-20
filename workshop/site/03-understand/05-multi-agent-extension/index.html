@@ -1239,10 +1239,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本頁說明的內容
+        這頁要學什麼
       
     </span>
   </a>
@@ -1402,7 +1413,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1565,10 +1576,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本頁說明的內容
+        這頁要學什麼
       
     </span>
   </a>
@@ -1728,7 +1750,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1753,16 +1775,16 @@
 
 
 <h1 id="multi-agent-extension">Multi-Agent Extension: 情境工作流</h1>
-<h2 id="_1">本頁說明的內容</h2>
-<p>主 workshop 故意維持單代理程式主路徑，方便部署、解說與驗證。但當客戶開始問「如果後面要拆成不同角色、不同責任、不同治理邊界的多代理程式系統，要怎麼往前走？」時，repo 現在也提供一條清楚的延伸路徑。</p>
-<p>這條延伸路徑位於：</p>
+<h2 id="summary">Summary</h2>
+<p>主工作坊採用單一 agent，因為這樣最容易部署、教學和驗證。Multi-agent extension 則是在回答另一個問題：如果未來想把工作拆給不同角色，該怎麼擴充？</p>
+<p>所以這一頁不是在講「取代主流程」，而是在講「主流程之後怎麼往前走」。</p>
+<h2 id="_1">這頁要學什麼</h2>
+<p>看完這頁，你應該知道：</p>
 <ul>
-<li><code>multi_agent/workflow.yaml</code></li>
-<li><code>scripts/14_create_multi_agent_workflow.py</code></li>
-<li><code>scripts/15_test_multi_agent_workflow.py</code></li>
-<li><code>scripts/foundry_multi_agent_runtime.py</code></li>
+<li>為什麼有人會想把一個 agent 拆成多個角色。</li>
+<li>這個 repo 現在怎麼定義這些角色。</li>
+<li>multi-agent 其實重用了哪些現有能力。</li>
 </ul>
-<p>它不是要取代主 workshop，而是示範如何在沿用既有資料、搜尋索引與 tool contract 的前提下，把單代理程式 PoC 擴成情境化 multi-agent workflow。</p>
 <h2 id="_2">為什麼這條延伸路徑存在</h2>
 <p>主 workshop 已經回答了「一個 agent 如何同時查文件與查資料」。</p>
 <p>多代理程式延伸要回答的是另一組問題：</p>
@@ -1804,7 +1826,7 @@
 </tr>
 </tbody>
 </table>
-<p>這個分工刻意讓不同角色只拿到自己該拿的能力，而不是讓每個 agent 都同時擁有所有工具。</p>
+<p>這個分工的重點是，讓每個角色只拿到自己需要的能力。</p>
 <h2 id="_3">宣告式設計長什麼樣子</h2>
 <p><code>multi_agent/workflow.yaml</code> 是這條延伸路徑的中心。它同時定義：</p>
 <ol>
@@ -1813,7 +1835,7 @@
 <li>workflow steps</li>
 <li>scenario catalog</li>
 </ol>
-<p>這樣做的重點是，把「情境設計」從 Python orchestration code 裡抽出來。</p>
+<p>這樣做的好處是，新增情境時不一定要改 Python orchestration 程式。</p>
 <p>你可以把它理解成兩層：</p>
 <ul>
 <li>Python 負責執行與接線</li>
@@ -1845,7 +1867,7 @@
 <li>data findings</li>
 <li>final synthesized answer</li>
 </ol>
-<p>這對 demo 很有用，因為它讓使用者清楚看見「規劃」、「找政策」、「查資料」、「彙整」是不同責任，而不是全部都藏在單一 agent 的黑盒子裡。</p>
+<p>這對教學很有幫助，因為學員可以直接看到不同責任是怎麼被拆開的。</p>
 <h2 id="workshop">與主 workshop 的關係</h2>
 <p>這條延伸路徑不是重新發明一套新的底層能力。它直接重用目前 workshop 已經存在的基礎：</p>
 <table>
@@ -1874,7 +1896,7 @@
 </tr>
 </tbody>
 </table>
-<p>這代表 multi-agent extension 改變的是 orchestration shape，而不是資料來源或核心 grounding 路徑。</p>
+<p>也就是說，multi-agent 改變的是協作方式，不是資料來源本身。</p>
 <h2 id="tool-execution">為什麼仍然保留本機 tool execution</h2>
 <p>即使角色數變多，這條延伸路徑仍然沿用目前 workshop 的設計原則：</p>
 <ul>
@@ -1943,15 +1965,12 @@
 <p>因為這樣比較容易新增 scenario、調整角色指令、或更換 workflow 順序，而不必每次都改 orchestration code。</p>
 <h3 id="_8">這頁最簡潔的對話要點是什麼？</h3>
 <p>「主 workshop 展示單代理程式主路徑；multi-agent extension 展示如何沿用同一批 grounding 能力，把它演進成多角色情境工作流。」</p>
-<h2 id="_9">營運要點</h2>
-<p>這條 multi-agent extension 提供的是一個可治理的延伸方向：</p>
+<h2 id="_9">官方延伸閱讀</h2>
 <ul>
-<li>角色有清楚責任</li>
-<li>工具有清楚邊界</li>
-<li>scenario 用宣告式設定管理</li>
-<li>底層 grounding 資產仍與主 workshop 共用</li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/runtime-components">Build with agents, conversations, and responses</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code">Microsoft Foundry quickstart</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation">Automate browser tasks with the Browser Automation tool</a></li>
 </ul>
-<p>因此它很適合作為從 demo 到更完整 solution architecture 對話之間的過渡層。</p>
 <hr />
 <p><a href="../04-control-plane/">← Foundry Control Plane: 資源拓撲</a> | <a href="../../04-cleanup/">刪除資源 →</a></p>
 

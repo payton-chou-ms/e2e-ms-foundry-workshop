@@ -1099,10 +1099,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本頁說明的內容
+        這頁要學什麼
       
     </span>
   </a>
@@ -1251,7 +1262,7 @@
   <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1554,10 +1565,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本頁說明的內容
+        這頁要學什麼
       
     </span>
   </a>
@@ -1706,7 +1728,7 @@
   <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1731,13 +1753,19 @@
 
 
 <h1 id="foundry">Foundry 代理程式：執行階段編排</h1>
-<h2 id="_1">本頁說明的內容</h2>
-<p>工作坊並非使用通用的聊天完成加上臨時拼湊的程式碼。它在 Microsoft Foundry 中建立一個具名的提示詞代理程式，然後在執行階段測試時重複使用該定義。</p>
-<p>這種設計很重要，因為客戶通常會問三個不同的問題：</p>
+<h2 id="summary">Summary</h2>
+<p>這個工作坊不是每次提問時都臨時拼一段 prompt。它會先在 Microsoft Foundry 裡建立一個 agent 定義，再由測試腳本把這個 agent 叫出來執行。</p>
+<p>你可以把它想成：</p>
 <ul>
-<li>代理程式定義儲存在哪裡？</li>
-<li>代理程式如何知道它可以呼叫哪些工具？</li>
-<li>從本機測試轉移到發佈時，什麼會改變？</li>
+<li>Foundry 負責保存 agent 的設定</li>
+<li>本機 runtime 負責執行工具與回傳結果</li>
+</ul>
+<h2 id="_1">這頁要學什麼</h2>
+<p>看完這頁，你應該知道：</p>
+<ul>
+<li>agent 定義裡面包含哪些東西。</li>
+<li>agent 為什麼知道自己可以呼叫哪些工具。</li>
+<li>本機測試與後續發佈之間有什麼差別。</li>
 </ul>
 <h2 id="_2">代理程式定義</h2>
 <p>主要的建立流程位於 <code>scripts/07_create_foundry_agent.py</code> 中，使用三個核心輸入建構 <code>PromptAgentDefinition</code>：</p>
@@ -1767,7 +1795,7 @@
 </tr>
 </tbody>
 </table>
-<p>換句話說，Foundry 專案將代理程式儲存為可重複使用的執行階段物件，而非僅僅是本機的 Python 提示詞字串。</p>
+<p>換句話說，Foundry 專案把 agent 保存成一個可重複使用的物件，而不是只存在本機程式裡的一段文字。</p>
 <h2 id="_3">指令的組成方式</h2>
 <p>工作坊從情境設定中構建指令，而非硬編碼單一的靜態系統提示詞。</p>
 <p>組成步驟中使用的輸入：</p>
@@ -1800,7 +1828,7 @@
 <li>唯讀存取的 SQL 規則</li>
 <li>多步驟問題的回應迴圈指引</li>
 </ol>
-<p>這就是為什麼代理程式能與實際生成的資料集保持一致，而非依賴固定的範例提示詞。</p>
+<p>這也是為什麼 agent 的行為會跟目前工作坊情境一致，而不是只會回答固定範例。</p>
 <h2 id="_4">工具選擇模式</h2>
 <p>代理程式有兩種支援的運作模式。</p>
 <table>
@@ -1829,7 +1857,7 @@
 <li><code>build_search_documents_tool()</code> 始終包含</li>
 <li><code>build_execute_sql_tool(...)</code> 僅在未設定 <code>--foundry-only</code> 時才新增</li>
 </ul>
-<p>這表示提示詞和工具清單保持一致。僅搜尋的代理程式不僅僅是被告知要忽略 SQL。它根本就是在沒有 SQL 函式的情況下建立的。</p>
+<p>這表示 prompt 和工具清單會一起被設計好。若是 search-only 模式，agent 並不是「知道有 SQL 但不要用」，而是根本沒有 SQL 工具可用。</p>
 <h2 id="_5">建立、取得與測試流程</h2>
 <p>目前的執行階段路徑如下：</p>
 <pre class="mermaid"><code>flowchart LR
@@ -1846,7 +1874,7 @@
     K --&gt; L[Handle function calls locally]
     L --&gt; M[Submit function_call_output]
     M --&gt; N[Return final answer]</code></pre>
-<p>測試腳本不會重新定義代理程式。它從專案中擷取已儲存的代理程式定義，讀取最新的模型、指令和工具中繼資料，然後在本機驅動對話迴圈。</p>
+<p>測試腳本不會重建一個新的 agent，而是讀取已經存好的 agent 定義，再用本機程式驅動整個問答流程。</p>
 <h2 id="_6">為什麼執行階段在本機執行工具</h2>
 <p>代理程式定義包含工具結構描述，但工作坊仍然在 <code>scripts/08_test_foundry_agent.py</code> 中執行實際的工具邏輯。</p>
 <p>這種分離讓示範易於檢視：</p>
@@ -1855,7 +1883,7 @@
 <li>本機執行階段決定<strong>函式如何被執行</strong></li>
 <li>原始輸出作為 <code>function_call_output</code> 傳回給模型</li>
 </ul>
-<p>這也是為什麼工作坊可以在示範期間顯示確切的 SQL 查詢和搜尋酬載。</p>
+<p>所以在 demo 時，你可以真的看到送出的 SQL 或搜尋查詢，而不是只看到最終答案。</p>
 <h2 id="_7">追蹤行為</h2>
 <p>追蹤是選擇性加入的，透過 <code>scripts/foundry_trace.py</code> 路由。</p>
 <p>支援的環境旗標：</p>
@@ -1895,7 +1923,7 @@
 <li>缺少遙測配線只會產生警告</li>
 <li>代理程式建立和聊天在沒有 Application Insights 的情況下仍應正常運作</li>
 </ul>
-<p>這符合工作坊的目標：可觀測性很有價值，但它不能成為主要示範路徑的阻礙。</p>
+<p>這代表可觀測性是加分項，不是卡住主流程的必要條件。</p>
 <h2 id="_8">發佈路徑及其獨立的原因</h2>
 <p>發佈在 <code>scripts/09_publish_foundry_agent.py</code> 中被刻意處理為一個有防護的後續步驟，而非主要建置管線的一部分。</p>
 <p>該輔助程式做三件事：</p>
@@ -1910,7 +1938,7 @@
 <li>下游的 RBAC 可能需要重新指派</li>
 <li>Teams 和 Microsoft 365 Copilot 封裝會增加額外的治理步驟</li>
 </ul>
-<p>因此工作坊先在 Foundry 內部驗證代理程式，然後將發佈視為受控的第二階段。</p>
+<p>所以工作坊先把「agent 能不能正常工作」確認好，再進入發佈這個第二階段。</p>
 <h2 id="_9">客戶對話要點</h2>
 <table>
 <thead>
@@ -1941,14 +1969,11 @@
 <p>因為測試腳本要證明已儲存的專案定義是可重複使用的。它不只是在測試本機提示詞字串。它是在測試 Foundry 專案中建立的代理程式物件。</p>
 <h3 id="_12">本頁最簡潔的對話要點是什麼？</h3>
 <p>「Foundry 擁有代理程式定義。工作坊執行階段擁有本機工具執行迴圈。」</p>
-<h2 id="_13">營運要點</h2>
-<p>Foundry 代理程式是工作坊的編排邊界：</p>
+<h2 id="_13">官方延伸閱讀</h2>
 <ul>
-<li>模型部署處理推理</li>
-<li>指令描述情境和工具規則</li>
-<li>工具結構描述限制可呼叫的內容</li>
-<li>本機執行階段執行工具並回饋結果</li>
-<li>發佈是可行的，但刻意視為後續的環境步驟</li>
+<li><a href="https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code">Microsoft Foundry quickstart</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/runtime-components">Build with agents, conversations, and responses</a></li>
+<li><a href="https://learn.microsoft.com/training/modules/develop-ai-agent-azure/">Develop an AI agent with Azure AI Foundry Agent Service</a></li>
 </ul>
 <hr />
 <p><a href="../01-foundry-iq/">← Foundry IQ：文件</a> | <a href="../03-foundry-tool/">Foundry 工具：函式合約 →</a></p>

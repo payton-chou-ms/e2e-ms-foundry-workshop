@@ -1127,10 +1127,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本頁說明的內容
+        這頁要學什麼
       
     </span>
   </a>
@@ -1318,7 +1329,7 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1593,10 +1604,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        本頁說明的內容
+        這頁要學什麼
       
     </span>
   </a>
@@ -1784,7 +1806,7 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1809,14 +1831,20 @@
 
 
 <h1 id="foundry">Foundry 工具：函式合約</h1>
-<h2 id="_1">本頁說明的內容</h2>
-<p>工作坊不會將任意 Python 函式暴露給模型。它使用一個小型且明確的函式工具合約，讓代理程式能夠在商業資料和文件上進行推理，而不會偏離至不安全或不明確的行為。</p>
-<p>該工具合約存放在 <code>scripts/foundry_tool_contract.py</code> 中，作為以下內容的單一事實來源：</p>
+<h2 id="summary">Summary</h2>
+<p>這個工作坊不會把所有 Python 函式都直接開給模型用。它只提供少數、用途明確的工具，並且用固定的 JSON schema 限制輸入格式。</p>
+<p>這樣做的好處是：</p>
 <ul>
-<li>工具結構描述</li>
-<li>工具職責邊界</li>
-<li>提示詞指令區塊</li>
-<li>本機回應迴圈摘要</li>
+<li>agent 比較不容易亂用工具</li>
+<li>行為更容易追蹤</li>
+<li>SQL 和文件搜尋的邊界更清楚</li>
+</ul>
+<h2 id="_1">這頁要學什麼</h2>
+<p>看完這頁，你應該知道：</p>
+<ul>
+<li>工作坊有哪些核心工具。</li>
+<li>每個工具適合做什麼，不適合做什麼。</li>
+<li>為什麼工具合約要集中定義在同一個模組。</li>
 </ul>
 <h2 id="_2">工作坊中的主要工具</h2>
 <p>目前的主要路徑有兩個函式工具。</p>
@@ -1902,7 +1930,7 @@
 <li>政策和敘述性指引交給 <code>search_documents</code></li>
 <li>綜合性問題可能需要依序使用兩個工具</li>
 </ul>
-<p>這對面向客戶的示範很重要，因為它讓編排邏輯變得可理解。工具選擇不是魔法。它編碼在提示詞工具合約中，且在程式碼中可見。</p>
+<p>這代表工具選擇不是黑盒子，而是有規則可循的。</p>
 <h2 id="_6">實務中的執行迴圈</h2>
 <p><code>scripts/08_test_foundry_agent.py</code> 中的本機執行階段遵循工具合約中描述的相同迴圈。</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -1969,8 +1997,8 @@
 <ul>
 <li><code>09_demo_content_understanding.py</code> 已能直接運作，前提是部署後已設定 Content Understanding defaults</li>
 <li><code>10_demo_browser_automation.py</code> 與 <code>11_demo_web_search.py</code> 已對齊目前 <code>azure-ai-projects</code> SDK 類型名稱</li>
-<li><code>12_demo_pii_redaction.py</code> 已支援 AAD，不再強制要求獨立 Language key</li>
-<li><code>13_demo_image_generation.py</code> 已支援 AAD，但仍受限於目標區域是否有可部署的 image model</li>
+<li><code>12_demo_pii_redaction.py</code> 已支援 Microsoft Entra ID，不再強制要求獨立 Language key</li>
+<li><code>13_demo_image_generation.py</code> 已支援 Microsoft Entra ID，但仍受限於目標區域是否有可部署的 image model</li>
 </ul>
 <p>這種分層是刻意的。</p>
 <ul>
@@ -2018,13 +2046,12 @@
 <p>因為每個擴充都有不同的風險特性、相依性範圍和示範故事。將它們分開可以保留穩定的核心合約，並讓不支援的功能可以乾淨地跳過。</p>
 <h3 id="_13">本頁最簡潔的對話要點是什麼？</h3>
 <p>「兩個核心工具、一份嚴格合約，加上明確的執行階段防護措施。」</p>
-<h2 id="_14">營運要點</h2>
-<p>Foundry 工具層刻意保持精簡：</p>
+<h2 id="_14">官方延伸閱讀</h2>
 <ul>
-<li>一個標準合約模組</li>
-<li>兩個用於主要路徑的穩定工具</li>
-<li>嚴格的結構描述加上執行階段防護措施</li>
-<li>選用功能獨立示範，直到它們有足夠理由被納入核心合約</li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/runtime-components">Build with agents, conversations, and responses</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/tools/function-calling">Azure AI Agents function calling</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation">Automate browser tasks with the Browser Automation tool</a></li>
+<li><a href="https://learn.microsoft.com/azure/ai-services/content-understanding/overview">What is Azure Content Understanding in Foundry Tools?</a></li>
 </ul>
 <hr />
 <p><a href="../02-foundry-agent/">← Foundry 代理程式：執行階段編排</a> | <a href="../02-fabric-iq/">Fabric IQ：資料 →</a></p>

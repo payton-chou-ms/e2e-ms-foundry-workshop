@@ -1,15 +1,22 @@
 # Foundry 工具：函式合約
 
-## 本頁說明的內容
+## Summary
 
-工作坊不會將任意 Python 函式暴露給模型。它使用一個小型且明確的函式工具合約，讓代理程式能夠在商業資料和文件上進行推理，而不會偏離至不安全或不明確的行為。
+這個工作坊不會把所有 Python 函式都直接開給模型用。它只提供少數、用途明確的工具，並且用固定的 JSON schema 限制輸入格式。
 
-該工具合約存放在 `scripts/foundry_tool_contract.py` 中，作為以下內容的單一事實來源：
+這樣做的好處是：
 
-- 工具結構描述
-- 工具職責邊界
-- 提示詞指令區塊
-- 本機回應迴圈摘要
+- agent 比較不容易亂用工具
+- 行為更容易追蹤
+- SQL 和文件搜尋的邊界更清楚
+
+## 這頁要學什麼
+
+看完這頁，你應該知道：
+
+- 工作坊有哪些核心工具。
+- 每個工具適合做什麼，不適合做什麼。
+- 為什麼工具合約要集中定義在同一個模組。
 
 ## 工作坊中的主要工具
 
@@ -68,7 +75,7 @@ SQL 執行階段會套用額外的強制措施：
 - 政策和敘述性指引交給 `search_documents`
 - 綜合性問題可能需要依序使用兩個工具
 
-這對面向客戶的示範很重要，因為它讓編排邏輯變得可理解。工具選擇不是魔法。它編碼在提示詞工具合約中，且在程式碼中可見。
+這代表工具選擇不是黑盒子，而是有規則可循的。
 
 ## 實務中的執行迴圈
 
@@ -118,8 +125,8 @@ sequenceDiagram
 
 - `09_demo_content_understanding.py` 已能直接運作，前提是部署後已設定 Content Understanding defaults
 - `10_demo_browser_automation.py` 與 `11_demo_web_search.py` 已對齊目前 `azure-ai-projects` SDK 類型名稱
-- `12_demo_pii_redaction.py` 已支援 AAD，不再強制要求獨立 Language key
-- `13_demo_image_generation.py` 已支援 AAD，但仍受限於目標區域是否有可部署的 image model
+- `12_demo_pii_redaction.py` 已支援 Microsoft Entra ID，不再強制要求獨立 Language key
+- `13_demo_image_generation.py` 已支援 Microsoft Entra ID，但仍受限於目標區域是否有可部署的 image model
 
 這種分層是刻意的。
 
@@ -162,14 +169,12 @@ sequenceDiagram
 
 「兩個核心工具、一份嚴格合約，加上明確的執行階段防護措施。」
 
-## 營運要點
+## 官方延伸閱讀
 
-Foundry 工具層刻意保持精簡：
-
-- 一個標準合約模組
-- 兩個用於主要路徑的穩定工具
-- 嚴格的結構描述加上執行階段防護措施
-- 選用功能獨立示範，直到它們有足夠理由被納入核心合約
+- [Build with agents, conversations, and responses](https://learn.microsoft.com/azure/foundry/agents/concepts/runtime-components)
+- [Azure AI Agents function calling](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/function-calling)
+- [Automate browser tasks with the Browser Automation tool](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation)
+- [What is Azure Content Understanding in Foundry Tools?](https://learn.microsoft.com/azure/ai-services/content-understanding/overview)
 
 ---
 

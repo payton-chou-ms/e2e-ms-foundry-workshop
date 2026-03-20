@@ -84,6 +84,8 @@ azd up --subscription <SUBSCRIPTION_ID>
 
 `azd up` 可以直接指定 `--subscription`，但 Tenant 要由 Azure CLI 登入內容決定；如果你已經登入，也可以先用 `az account set --subscription <SUBSCRIPTION_ID>` 再執行 `azd up`。
 
+> 建議設定：如果這次要使用 repo 目前預設的 `gpt-5.4-mini`，請把 `AZURE_ENV_AI_DEPLOYMENTS_LOCATION` 設成 `eastus2`，或在建立 azd 環境時直接選擇支援 `gpt-5.4-mini` 的 AI deployment 區域。`eastus` 可繼續當作資源群組主要區域，但 `gpt-5.4-mini` 本身建議部署在 `eastus2`。
+
 取得方式：
 - **Subscription ID**：Azure Portal 的 **Subscriptions** 頁面，或執行 `az account list --output table`
 - **Tenant ID**：Azure Portal 的 **Microsoft Entra ID** 頁面，或先執行 `az login` / `az account show`
@@ -96,6 +98,8 @@ azd up --subscription <SUBSCRIPTION_ID>
 - Azure AI Search (Basic tier with semantic search)
 - Azure Storage Account
 - Application Insights
+
+其中如果你沿用目前 repo 的模型預設，最穩定的組合是：`AZURE_LOCATION=eastus`，`AZURE_ENV_AI_DEPLOYMENTS_LOCATION=eastus2`。
 
 所有 Azure endpoint 都會自動儲存到 `.azure/<env>/.env`，並由腳本讀取。
 

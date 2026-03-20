@@ -104,7 +104,7 @@ python scripts/00_build_solution.py
 | `09_demo_content_understanding.py` | 可用 | 依賴已部署的 CU defaults |
 | `10_demo_browser_automation.py` | 條件式可用 | `azd up` 會自動建立 Playwright Workspace，但仍需先在 Portal 產生 Playwright access token 並建立 Browser Automation connection |
 | `11_demo_web_search.py` | 可用 | 已對齊新版 SDK 類型 |
-| `12_demo_pii_redaction.py` | 可用 | 支援 AAD，不需額外 Language key |
+| `12_demo_pii_redaction.py` | 可用 | 支援 Microsoft Entra ID，不需額外 Language key |
 | `13_demo_image_generation.py` | 可用 | `azd up` 會自動建立獨立 image resource，腳本預設讀取 `AZURE_IMAGE_OPENAI_ENDPOINT` 與 `AZURE_IMAGE_MODEL_DEPLOYMENT` |
 
 ### Browser Automation 手動收尾

@@ -1,17 +1,18 @@
 # Multi-Agent Extension: 情境工作流
 
-## 本頁說明的內容
+## Summary
 
-主 workshop 故意維持單代理程式主路徑，方便部署、解說與驗證。但當客戶開始問「如果後面要拆成不同角色、不同責任、不同治理邊界的多代理程式系統，要怎麼往前走？」時，repo 現在也提供一條清楚的延伸路徑。
+主工作坊採用單一 agent，因為這樣最容易部署、教學和驗證。Multi-agent extension 則是在回答另一個問題：如果未來想把工作拆給不同角色，該怎麼擴充？
 
-這條延伸路徑位於：
+所以這一頁不是在講「取代主流程」，而是在講「主流程之後怎麼往前走」。
 
-- `multi_agent/workflow.yaml`
-- `scripts/14_create_multi_agent_workflow.py`
-- `scripts/15_test_multi_agent_workflow.py`
-- `scripts/foundry_multi_agent_runtime.py`
+## 這頁要學什麼
 
-它不是要取代主 workshop，而是示範如何在沿用既有資料、搜尋索引與 tool contract 的前提下，把單代理程式 PoC 擴成情境化 multi-agent workflow。
+看完這頁，你應該知道：
+
+- 為什麼有人會想把一個 agent 拆成多個角色。
+- 這個 repo 現在怎麼定義這些角色。
+- multi-agent 其實重用了哪些現有能力。
 
 ## 為什麼這條延伸路徑存在
 
@@ -34,7 +35,7 @@
 | `data_specialist` | 對 Fabric SQL 做唯讀查詢並萃取關鍵數據 | `sql` |
 | `synthesizer` | 組合前面三者輸出，產生最終回答 | `none` |
 
-這個分工刻意讓不同角色只拿到自己該拿的能力，而不是讓每個 agent 都同時擁有所有工具。
+這個分工的重點是，讓每個角色只拿到自己需要的能力。
 
 ## 宣告式設計長什麼樣子
 
@@ -45,7 +46,7 @@
 3. workflow steps
 4. scenario catalog
 
-這樣做的重點是，把「情境設計」從 Python orchestration code 裡抽出來。
+這樣做的好處是，新增情境時不一定要改 Python orchestration 程式。
 
 你可以把它理解成兩層：
 
@@ -89,7 +90,7 @@ flowchart LR
 3. data findings
 4. final synthesized answer
 
-這對 demo 很有用，因為它讓使用者清楚看見「規劃」、「找政策」、「查資料」、「彙整」是不同責任，而不是全部都藏在單一 agent 的黑盒子裡。
+這對教學很有幫助，因為學員可以直接看到不同責任是怎麼被拆開的。
 
 ## 與主 workshop 的關係
 
@@ -102,7 +103,7 @@ flowchart LR
 | `foundry_multi_agent_runtime.py` | 與主路徑相同的本機 tool execution 模型 |
 | scenario context | `ontology_config.json`、`schema_prompt.txt`、`fabric_ids.json` |
 
-這代表 multi-agent extension 改變的是 orchestration shape，而不是資料來源或核心 grounding 路徑。
+也就是說，multi-agent 改變的是協作方式，不是資料來源本身。
 
 ## 為什麼仍然保留本機 tool execution
 
@@ -152,16 +153,11 @@ flowchart LR
 
 「主 workshop 展示單代理程式主路徑；multi-agent extension 展示如何沿用同一批 grounding 能力，把它演進成多角色情境工作流。」
 
-## 營運要點
+## 官方延伸閱讀
 
-這條 multi-agent extension 提供的是一個可治理的延伸方向：
-
-- 角色有清楚責任
-- 工具有清楚邊界
-- scenario 用宣告式設定管理
-- 底層 grounding 資產仍與主 workshop 共用
-
-因此它很適合作為從 demo 到更完整 solution architecture 對話之間的過渡層。
+- [Build with agents, conversations, and responses](https://learn.microsoft.com/azure/foundry/agents/concepts/runtime-components)
+- [Microsoft Foundry quickstart](https://learn.microsoft.com/azure/foundry/quickstarts/get-started-code)
+- [Automate browser tasks with the Browser Automation tool](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation)
 
 ---
 

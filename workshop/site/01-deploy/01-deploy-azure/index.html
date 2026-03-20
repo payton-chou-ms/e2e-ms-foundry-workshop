@@ -1621,13 +1621,23 @@
 <li><code>azd up</code> 可以直接用 <code>--subscription</code> 指定 <strong>Subscription</strong></li>
 <li><code>azd up</code> <strong>不能直接</strong>用旗標指定 <strong>Tenant</strong>；Tenant 會跟著你目前 Azure CLI 的登入內容</li>
 </ul>
+<div class="admonition tip">
+<p class="admonition-title">gpt-5.4-mini 的區域建議</p>
+<p>如果你要使用目前 repo 的預設模型 <code>gpt-5.4-mini</code>，建議把 <strong>AI deployment location</strong> 設為 <code>eastus2</code>。</p>
+<p>實務上可以維持資源群組主區域為 <code>eastus</code>，但把 <code>AZURE_ENV_AI_DEPLOYMENTS_LOCATION</code> 設成 <code>eastus2</code>。這是目前這份 workshop 模板驗證過、較穩定的組合。</p>
+</div>
 <p>最直接的做法是先登入正確 Tenant，再執行 <code>azd up</code>：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>az<span class="w"> </span>login<span class="w"> </span>--tenant<span class="w"> </span>&lt;TENANT_ID&gt;
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>azd<span class="w"> </span>up<span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
 </code></pre></div>
+<p>如果你要在 azd 環境裡明確固定這個設定，可以先這樣做：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>azd<span class="w"> </span>env<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AZURE_LOCATION<span class="w"> </span>eastus
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>azd<span class="w"> </span>env<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AZURE_ENV_AI_DEPLOYMENTS_LOCATION<span class="w"> </span>eastus2
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>azd<span class="w"> </span>up<span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
+</code></pre></div>
 <p>如果你已經登入 Azure，只想切換到正確的訂用帳戶，也可以先這樣做：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>azd<span class="w"> </span>up
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>azd<span class="w"> </span>up
 </code></pre></div>
 <h3 id="subscription-tenant">Subscription 與 Tenant 從哪裡拿？</h3>
 <p>你可以用 Azure Portal 或 Azure CLI 取得。</p>
@@ -1637,20 +1647,20 @@
 <li><strong>Tenant ID</strong>：到 <strong>Microsoft Entra ID</strong>，在 Overview / Basic information 查看 <strong>Tenant ID</strong></li>
 </ul>
 <p><strong>從 Azure CLI：</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 列出你目前可用的訂用帳戶與對應 tenant</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 查看目前預設中的 subscription / tenant</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>az<span class="w"> </span>account<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 列出你目前可用的訂用帳戶與對應 tenant</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 查看目前預設中的 subscription / tenant</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>az<span class="w"> </span>account<span class="w"> </span>show
 </code></pre></div>
 <p>如果你有多個 tenant，先指定 tenant 再查看會更清楚：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>az<span class="w"> </span>login<span class="w"> </span>--tenant<span class="w"> </span>&lt;TENANT_ID&gt;
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>az<span class="w"> </span>login<span class="w"> </span>--tenant<span class="w"> </span>&lt;TENANT_ID&gt;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>az<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
 </code></pre></div>
 <h3 id="_4">想避免每次重選？</h3>
 <p>你也可以在建立 azd 環境時先把 subscription 固定下來：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>azd<span class="w"> </span>env<span class="w"> </span>new<span class="w"> </span>&lt;environment-name&gt;<span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;<span class="w"> </span>--location<span class="w"> </span>&lt;AZURE_LOCATION&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>azd<span class="w"> </span>up<span class="w"> </span>--environment<span class="w"> </span>&lt;environment-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>azd<span class="w"> </span>env<span class="w"> </span>new<span class="w"> </span>&lt;environment-name&gt;<span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;<span class="w"> </span>--location<span class="w"> </span>&lt;AZURE_LOCATION&gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>azd<span class="w"> </span>up<span class="w"> </span>--environment<span class="w"> </span>&lt;environment-name&gt;
 </code></pre></div>
 <p>第一次成功部署後，<code>azd</code> 會把這次環境使用的 <code>AZURE_SUBSCRIPTION_ID</code> 與 <code>AZURE_TENANT_ID</code> 寫進 <code>.azure/&lt;env&gt;/.env</code>。</p>
 <p>這個部署現在除了主要 chat + embedding 模型外，也會一併建立 Content Understanding 需要的延伸聊天模型：</p>

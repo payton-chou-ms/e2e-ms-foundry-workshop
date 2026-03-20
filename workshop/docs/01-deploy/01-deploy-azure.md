@@ -54,10 +54,23 @@ azd up
 - `azd up` 可以直接用 `--subscription` 指定 **Subscription**
 - `azd up` **不能直接**用旗標指定 **Tenant**；Tenant 會跟著你目前 Azure CLI 的登入內容
 
+!!! tip "gpt-5.4-mini 的區域建議"
+    如果你要使用目前 repo 的預設模型 `gpt-5.4-mini`，建議把 **AI deployment location** 設為 `eastus2`。
+
+    實務上可以維持資源群組主區域為 `eastus`，但把 `AZURE_ENV_AI_DEPLOYMENTS_LOCATION` 設成 `eastus2`。這是目前這份 workshop 模板驗證過、較穩定的組合。
+
 最直接的做法是先登入正確 Tenant，再執行 `azd up`：
 
 ```bash
 az login --tenant <TENANT_ID>
+azd up --subscription <SUBSCRIPTION_ID>
+```
+
+如果你要在 azd 環境裡明確固定這個設定，可以先這樣做：
+
+```bash
+azd env set AZURE_LOCATION eastus
+azd env set AZURE_ENV_AI_DEPLOYMENTS_LOCATION eastus2
 azd up --subscription <SUBSCRIPTION_ID>
 ```
 

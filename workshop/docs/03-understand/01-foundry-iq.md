@@ -1,21 +1,34 @@
 # Foundry IQ：文件智慧
 
-## 什麼是 Foundry IQ？
+## Summary
 
-在這個 workshop 裡，Foundry IQ 指的是「文件接地」這條路徑：先把 PDF 文件整理、切塊並上傳到 Azure AI Search，再讓 Foundry agent 透過 `search_documents` 工具取回帶來源資訊的段落。
+Foundry IQ 這一頁講的是「文件怎麼變成可以被 agent 查詢的知識」。
+
+在這個工作坊裡，流程很直接：
+
+1. 把文件整理成可搜尋內容。
+2. 上傳到 Azure AI Search。
+3. agent 在需要時呼叫 `search_documents`。
+4. 再把找到的段落整理成答案。
+
+## 這頁要學什麼
+
+看完這頁，你應該知道：
+
+- 文件是怎麼被放進搜尋系統的。
+- agent 什麼時候會去查文件。
+- 為什麼最後的回答可以帶出來源資訊。
 
 ## 主要功能
 
-| 功能 | 說明 |
-|------|------|
-| **文件索引** | 由腳本建立 Azure AI Search index，並寫入頁面與來源欄位 |
-| **引用段落** | `search_documents` 回傳包含來源、標題與頁碼的片段 |
-| **Entra ID 驗證** | Workshop 腳本以 Azure 身分直接呼叫 Search 與 Foundry |
-| **多格式支援** | PDF、Word、PowerPoint 及非結構化文字 |
+| 功能 | 你可以怎麼理解 |
+|------|----------------|
+| 文件索引 | 把文件內容整理後放進 Azure AI Search |
+| 引用段落 | 搜尋結果會附上來源、標題、頁碼 |
+| Microsoft Entra ID 驗證 | 腳本可用 Azure 身分呼叫 Search 與 Foundry |
+| 多格式支援 | PDF、Word、PowerPoint 與一般文字都能處理 |
 
-## 目前 workshop 的文件路徑
-
-目前的主路徑不是 Foundry 原生 agentic retrieval，而是下列可檢視、可追蹤的流程：
+## 文件路徑怎麼運作
 
 ```
 User: "What's our policy for notifying customers during extended outages?"
@@ -51,25 +64,20 @@ User: "What's our policy for notifying customers during extended outages?"
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 為什麼這對客戶很重要
+## 為什麼這條路徑重要
 
-### 為什麼這樣的設計值得展示
+因為很多企業問題不是在資料表裡，而是在文件裡，例如：
 
-這條路徑的重點不是宣稱平台自動替你做完整知識推理，而是讓客戶清楚看見：
+- 政策
+- 作業流程
+- 例外處理規則
+- FAQ
 
-- 文件如何被索引
-- agent 何時決定需要文件證據
-- runtime 實際送出了什麼搜尋
-- 最終答案引用的是哪個來源與頁碼
+如果 agent 只會查資料、不會查文件，就很難回答這類問題。
 
-### 目前頁面應如何對外說明
+## 你應該記住的重點
 
-比較精準的說法是：
-
-1. 文件接地目前由 Azure AI Search 提供索引與檢索
-2. Foundry agent 透過受控函式工具決定何時查文件
-3. 本機 runtime 負責把搜尋結果回傳給 agent
-4. 引用資訊來自實際索引欄位，而不是隱藏的黑盒流程
+這個工作坊不是把文件直接塞給模型，而是先透過 Azure AI Search 建立可搜尋的知識層，再讓 agent 在需要時查詢。這樣比較透明，也比較容易驗證答案來源。
 
 ## 客戶對話要點
 
@@ -79,9 +87,7 @@ User: "What's our policy for notifying customers during extended outages?"
 | 「幻覺問題怎麼辦？」 | 「文件答案來自實際搜尋結果，結果裡保留 source、title 與 page metadata，方便人工驗證。」 |
 | 「能處理我們複雜的政策嗎？」 | 「可以先從目前的 Search-grounded 路徑示範；如果後續要進一步擴成更複雜的檢索策略，那是下一階段延伸，而不是本 workshop 目前已經自動具備的能力。」 |
 
-## 技術細節
-
-### 文件處理管線
+## 文件處理管線
 
 ```
 PDFs/Word/PPT → Text Extraction → Chunking → Embedding → Vector Index
@@ -101,6 +107,12 @@ results = search_client.search(
     select=["content", "title", "source", "page_number"],
 )
 ```
+
+## 官方延伸閱讀
+
+- [Vector search in Azure AI Search](https://learn.microsoft.com/azure/search/vector-search-overview)
+- [Quickstart: Vector search](https://learn.microsoft.com/azure/search/search-get-started-vector)
+- [Connect an Azure AI Search index to Foundry agents](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/ai-search)
 
 ---
 

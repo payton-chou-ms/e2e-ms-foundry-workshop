@@ -1211,10 +1211,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#foundry-control-plane_1" class="md-nav__link">
+  <a href="#summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Foundry Control Plane 掌管的範圍
+        Summary
       
     </span>
   </a>
@@ -1225,18 +1225,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        核心資源
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#foundry-control-plane_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Foundry Control Plane 與執行階段路徑
+        這頁要學什麼
       
     </span>
   </a>
@@ -1247,7 +1236,29 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        為什麼專案很重要
+        核心資源
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundry-control-plane_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundry Control Plane 與執行階段路徑
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundry-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼 Foundry project 很重要
       
     </span>
   </a>
@@ -1322,7 +1333,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#foundry-control-plane_3" class="md-nav__link">
+  <a href="#foundry-control-plane_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Foundry Control Plane 和使用者體驗是同一件事嗎？
@@ -1352,7 +1363,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1543,10 +1554,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#foundry-control-plane_1" class="md-nav__link">
+  <a href="#summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Foundry Control Plane 掌管的範圍
+        Summary
       
     </span>
   </a>
@@ -1557,18 +1568,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        核心資源
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#foundry-control-plane_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Foundry Control Plane 與執行階段路徑
+        這頁要學什麼
       
     </span>
   </a>
@@ -1579,7 +1579,29 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        為什麼專案很重要
+        核心資源
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundry-control-plane_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundry Control Plane 與執行階段路徑
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundry-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        為什麼 Foundry project 很重要
       
     </span>
   </a>
@@ -1654,7 +1676,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#foundry-control-plane_3" class="md-nav__link">
+  <a href="#foundry-control-plane_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Foundry Control Plane 和使用者體驗是同一件事嗎？
@@ -1684,7 +1706,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        營運要點
+        官方延伸閱讀
       
     </span>
   </a>
@@ -1709,9 +1731,23 @@
 
 
 <h1 id="foundry-control-plane">Foundry Control Plane：資源拓撲</h1>
-<h2 id="foundry-control-plane_1">Foundry Control Plane 掌管的範圍</h2>
-<p>工作坊的執行階段之所以感覺簡單，是因為 Foundry Control Plane 在背後建立並串聯了更大規模的 Azure 資源。本頁說明這些資源，以及它們與執行階段路徑的關係。</p>
-<h2 id="_1">核心資源</h2>
+<h2 id="summary">Summary</h2>
+<p>你在工作坊裡看到的問答流程其實很簡單，但背後有一層 Azure 資源在支撐它。這一層就是這裡說的 control plane。</p>
+<p>你可以把它理解成「後台基礎設施」：</p>
+<ul>
+<li>模型部署在哪裡</li>
+<li>Search 在哪裡</li>
+<li>專案和連線放在哪裡</li>
+<li>遙測與額外 demo 資源放在哪裡</li>
+</ul>
+<h2 id="_1">這頁要學什麼</h2>
+<p>看完這頁，你應該知道：</p>
+<ul>
+<li>工作坊背後有哪些主要 Azure 資源。</li>
+<li>這些資源和執行中的 agent 有什麼關係。</li>
+<li>為什麼學員看到的主流程可以保持簡單。</li>
+</ul>
+<h2 id="_2">核心資源</h2>
 <table>
 <thead>
 <tr>
@@ -1754,7 +1790,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="foundry-control-plane_2">Foundry Control Plane 與執行階段路徑</h2>
+<h2 id="foundry-control-plane_1">Foundry Control Plane 與執行階段路徑</h2>
 <pre class="mermaid"><code>flowchart TB
     subgraph ControlPlane[Foundry Control Plane]
         A[Microsoft Foundry]
@@ -1793,7 +1829,7 @@
     K --&gt; L
     K --&gt; M
     J -. optional tracing .-&gt; E</code></pre>
-<h2 id="_2">為什麼專案很重要</h2>
+<h2 id="foundry-project">為什麼 Foundry project 很重要</h2>
 <p>Foundry project 是將工作坊串聯在一起的邏輯邊界。它為腳本提供一個端點來使用，同時平台持續追蹤：</p>
 <ul>
 <li>代理程式定義</li>
@@ -1801,7 +1837,7 @@
 <li>模型可用性</li>
 <li>追蹤設定</li>
 </ul>
-<p>這就是為什麼大多數工作坊腳本只需要 Foundry project 端點加上認證資訊。</p>
+<p>所以大多數腳本只要知道 project 端點和認證，就能運作。</p>
 <h2 id="_3">專案連線</h2>
 <p>連線代表代理程式或專案可以使用的相依性，無需在腳本中硬編碼密碼。</p>
 <p>在本工作坊中，應把「已部署的 project connection」和「主路徑實際怎麼執行」分開理解。</p>
@@ -1864,7 +1900,7 @@
 </tr>
 </tbody>
 </table>
-<p>確切的角色指派取決於環境的治理方式，但設計假設很明確：部署權限和執行階段使用權限可能不是同一個身分。</p>
+<p>這表示部署的人和實際操作工作坊的人，不一定要是同一個 Azure 身分。</p>
 <h2 id="_5">客戶對話要點</h2>
 <table>
 <thead>
@@ -1891,19 +1927,16 @@
 <h2 id="_6">常見問題</h2>
 <h3 id="_7">為什麼工作坊大量討論專案端點？</h3>
 <p>因為 Foundry project 端點是 agent 定義與部分平台能力的交接點。但本 workshop 的核心工具執行仍保留在本機 runtime，這樣比較透明，也更容易教學與除錯。</p>
-<h3 id="foundry-control-plane_3">Foundry Control Plane 和使用者體驗是同一件事嗎？</h3>
+<h3 id="foundry-control-plane_2">Foundry Control Plane 和使用者體驗是同一件事嗎？</h3>
 <p>不是。Foundry Control Plane 是支援性的 Azure 拓撲。你實際互動的是代理程式體驗，但它之所以能運作，是因為這層控制平面在背後佈建了模型、連線、儲存體、搜尋和可觀測性。</p>
 <h3 id="_8">本頁最簡潔的對話要點是什麼？</h3>
 <p>「Foundry Control Plane 是讓簡單的執行階段示範成為可能的 Azure 鷹架。」</p>
-<h2 id="_9">營運要點</h2>
-<p>控制平面賦予您可重複性：</p>
+<h2 id="_9">官方延伸閱讀</h2>
 <ul>
-<li>Bicep 定義資源</li>
-<li>輸出公開重要的識別碼</li>
-<li>腳本透過環境變數使用這些輸出</li>
-<li>可以新增選用功能而無需重新設計主要執行階段</li>
+<li><a href="https://learn.microsoft.com/azure/foundry/concepts/authentication-authorization-foundry">Authentication and authorization in Microsoft Foundry</a></li>
+<li><a href="https://learn.microsoft.com/azure/ai-foundry/openai/how-to/managed-identity">How to configure Azure OpenAI in Azure AI Foundry Models with Microsoft Entra ID authentication</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/foundry-models/how-to/configure-entra-id">Configure keyless authentication with Microsoft Entra ID</a></li>
 </ul>
-<p>這也包含後續的 multi-agent 延伸。新增角色與 workflow 時，通常不需要重做整個 Azure 拓撲，而是重用既有的 Foundry project、模型部署、Search 索引、Fabric SQL 端點，以及身分驗證設定。真正新增的是 orchestration 層，而不是另一套 Foundry Control Plane。</p>
 <hr />
 <p><a href="../02-fabric-iq/">← Fabric IQ：資料</a> | <a href="../05-multi-agent-extension/">Multi-Agent Extension：情境工作流 →</a></p>
 

@@ -18,6 +18,9 @@ Output structure:
         documents/  - PDF files
 """
 
+from azure.ai.projects import AIProjectClient
+from azure.identity import DefaultAzureCredential
+from load_env import load_all_env
 import argparse
 import os
 import sys
@@ -26,10 +29,8 @@ from datetime import datetime
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Load environment from azd + project .env
-from load_env import load_all_env
 load_all_env()
 
-from azure.identity import DefaultAzureCredential
 
 # ============================================================================
 # Configuration
@@ -47,9 +48,11 @@ if not FOUNDRY_ENDPOINT:
 # Parse Arguments
 # ============================================================================
 
-p = argparse.ArgumentParser(description="Generate sample data using AI for any industry/use case")
+p = argparse.ArgumentParser(
+    description="Generate sample data using AI for any industry/use case")
 p.add_argument("--industry", help="Industry name (overrides .env INDUSTRY)")
-p.add_argument("--usecase", help="Use case description (overrides .env USECASE)")
+p.add_argument(
+    "--usecase", help="Use case description (overrides .env USECASE)")
 p.add_argument("--size", choices=["small", "medium", "large"],
                help="Data size (overrides .env DATA_SIZE)")
 args = p.parse_args()
@@ -111,10 +114,11 @@ print(f"{'='*60}")
 print("\nInitializing AI client...")
 credential = DefaultAzureCredential()
 
-from azure.ai.projects import AIProjectClient
-project_client = AIProjectClient(endpoint=FOUNDRY_ENDPOINT, credential=credential)
+project_client = AIProjectClient(
+    endpoint=FOUNDRY_ENDPOINT, credential=credential)
 client = project_client.get_openai_client()
-model = os.getenv("AZURE_CHAT_MODEL") or os.getenv("MODEL_DEPLOYMENT", "gpt-5.4-mini")
+model = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
+    "MODEL_DEPLOYMENT", "gpt-5.4-mini")
 
 print("[OK] AI client initialized")
 
@@ -150,7 +154,7 @@ Think about what questions would be interesting for {industry}:
 STEP 2: Design Data Schema to Support Questions
 For each question, ensure the required columns exist:
 - "Average appointment duration" needs a duration_minutes column
-- "Appointments by type" needs an appointment_type column  
+- "Appointments by type" needs an appointment_type column
 - "Patients over age threshold" needs date_of_birth with VARIED ages
 - "Wait time exceeds policy" needs actual_wait_minutes in data AND max_wait in policy docs
 
@@ -200,7 +204,7 @@ config = {{
         "drivers": {{
             "columns": ["driver_id", "name", "assigned_vehicle"],
             "types": {{"driver_id": "String", "name": "String", "assigned_vehicle": "String"}},
-            "key": "driver_id", 
+            "key": "driver_id",
             "source_table": "drivers"
         }}
     }},
@@ -278,15 +282,15 @@ wait_times = [30] * NUM_APPOINTMENTS  # Can't analyze patterns!
 CATEGORIES - Use realistic distributions:
 ```python
 # GOOD - weighted realistic mix
-appt_types = random.choices(['Checkup', 'Urgent', 'Specialist', 'Lab'], 
+appt_types = random.choices(['Checkup', 'Urgent', 'Specialist', 'Lab'],
                            weights=[40, 20, 25, 15], k=NUM_APPOINTMENTS)
-statuses = random.choices(['Completed', 'Cancelled', 'NoShow'], 
+statuses = random.choices(['Completed', 'Cancelled', 'NoShow'],
                          weights=[80, 15, 5], k=NUM_APPOINTMENTS)
 ```
 
 NAMES - Use realistic variety:
 ```python
-first_names = ['James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda', 
+first_names = ['James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda',
                'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica']
 last_names = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis']
 names = [f"{{random.choice(first_names)}} {{random.choice(last_names)}}" for _ in range(NUM_ROWS)]
@@ -324,7 +328,7 @@ def create_pdf(title, sections, filename):
 
 # Example - EACH content string must be 50+ words like this:
 sections = [
-    ("1. Scheduling Requirements", 
+    ("1. Scheduling Requirements",
      "All delivery requests must be submitted at least 48 hours before the requested delivery date. "
      "Rush orders may be accommodated with a 25% surcharge, subject to vehicle availability. "
      "Deliveries scheduled for weekends or holidays require 72 hours advance notice and incur an "
@@ -401,7 +405,7 @@ The COMBINED questions MUST follow the pattern: get data from SQL, compare again
 Every question MUST be answerable with the actual data you generate!
 
 STEP 1: Design your data schema with specific columns and category values
-STEP 2: Write policy documents with specific numeric thresholds (e.g., "maximum 30 minutes", "required every 12 months")  
+STEP 2: Write policy documents with specific numeric thresholds (e.g., "maximum 30 minutes", "required every 12 months")
 STEP 3: Write questions that ONLY reference columns/values that actually exist
 
 VALIDATION RULES:
@@ -410,7 +414,7 @@ VALIDATION RULES:
 - Every SQL question must reference columns that exist in your tables
 - Every combined question must reference BOTH a data column AND a policy threshold
 
-DO NOT write questions about data that doesn't exist. If you don't generate "Screening" as an appointment type, 
+DO NOT write questions about data that doesn't exist. If you don't generate "Screening" as an appointment type,
 don't ask about screening appointments. Instead, ask about types you DID generate.
 
 OUTPUT FORMAT:
@@ -430,7 +434,8 @@ prompt = SCRIPT_PROMPT.format(
     usecase=usecase,
     primary_rows=size_config['primary'],
     secondary_rows=size_config['secondary'],
-    data_dir=data_dir.replace("\\", "/")  # Use forward slashes for cross-platform
+    # Use forward slashes for cross-platform
+    data_dir=data_dir.replace("\\", "/")
 )
 
 SYSTEM_INSTRUCTIONS = """You are an expert Python developer generating data scripts for a workshop.
@@ -455,14 +460,14 @@ for attempt in range(1, MAX_RETRIES + 1):
         retry_prompt = f"{prompt}\n\n=== PREVIOUS ATTEMPT FAILED ===\nError: {last_error}\nPlease fix this issue in your new code."
     else:
         retry_prompt = prompt
-    
+
     # Use the responses API (available through project client)
     response = client.responses.create(
         model=model,
         instructions=SYSTEM_INSTRUCTIONS,
         input=retry_prompt
     )
-    
+
     # Extract text from response
     generated_script = ""
     for item in response.output:
@@ -470,26 +475,27 @@ for attempt in range(1, MAX_RETRIES + 1):
             for content in item.content:
                 if hasattr(content, 'text'):
                     generated_script += content.text
-    
+
     # Clean up the script (remove markdown if present)
     if generated_script.startswith("```"):
         lines = generated_script.split("\n")
         lines = [l for l in lines if not l.strip().startswith("```")]
         generated_script = "\n".join(lines)
-    
+
     # Save the generated script for reference
     script_path = os.path.join(data_dir, "_generated_script.py")
     os.makedirs(data_dir, exist_ok=True)
     with open(script_path, "w", encoding="utf-8") as f:
         f.write(generated_script)
-    
+
     if attempt == 1:
         print(f"[OK] Script generated ({len(generated_script)} chars)")
         print(f"  Saved to: {script_path}")
-    
+
     # Try to execute
-    print(f"\n[Step 2/2] Executing generated script..." if attempt == 1 else "  Executing...")
-    
+    print(f"\n[Step 2/2] Executing generated script..." if attempt ==
+          1 else "  Executing...")
+
     try:
         exec_globals = {"__name__": "__main__"}
         exec(generated_script, exec_globals)
@@ -501,18 +507,19 @@ for attempt in range(1, MAX_RETRIES + 1):
         if attempt < MAX_RETRIES:
             print(f"[WARN] Attempt {attempt} failed: {e}")
         else:
-            print(f"[FAIL] Script execution error after {MAX_RETRIES} attempts: {e}")
+            print(
+                f"[FAIL] Script execution error after {MAX_RETRIES} attempts: {e}")
 
 if last_error:
     print("\nThe generated script has been saved. You can review and fix it:")
     print(f"  {script_path}")
     print("\nTrying to create basic structure anyway...")
-    
+
     # Create basic folder structure at minimum
     os.makedirs(os.path.join(data_dir, "config"), exist_ok=True)
     os.makedirs(os.path.join(data_dir, "tables"), exist_ok=True)
     os.makedirs(os.path.join(data_dir, "documents"), exist_ok=True)
-    
+
     # Save error info
     with open(os.path.join(data_dir, "_error.txt"), "w") as f:
         f.write(f"Error executing generated script:\n{last_error}\n")
@@ -530,8 +537,10 @@ tables_dir = os.path.join(data_dir, "tables")
 docs_dir = os.path.join(data_dir, "documents")
 
 # Check what was created
-csv_files = [f for f in os.listdir(tables_dir) if f.endswith('.csv')] if os.path.exists(tables_dir) else []
-pdf_files = [f for f in os.listdir(docs_dir) if f.endswith('.pdf')] if os.path.exists(docs_dir) else []
+csv_files = [f for f in os.listdir(tables_dir) if f.endswith(
+    '.csv')] if os.path.exists(tables_dir) else []
+pdf_files = [f for f in os.listdir(docs_dir) if f.endswith(
+    '.pdf')] if os.path.exists(docs_dir) else []
 config_files = os.listdir(config_dir) if os.path.exists(config_dir) else []
 
 # Validate ontology_config.json is valid JSON
@@ -598,7 +607,7 @@ env_path = os.path.join(script_dir, "..", ".env")
 if os.path.exists(env_path):
     with open(env_path, "r") as f:
         env_content = f.read()
-    
+
     lines = env_content.split("\n")
     updated = False
     for i, line in enumerate(lines):
@@ -606,12 +615,11 @@ if os.path.exists(env_path):
             lines[i] = f"DATA_FOLDER={data_dir}"
             updated = True
             break
-    
+
     if not updated:
         lines.append(f"DATA_FOLDER={data_dir}")
-    
+
     with open(env_path, "w") as f:
         f.write("\n".join(lines))
-    
-    print(f"[OK] Updated .env with DATA_FOLDER={data_dir}")
 
+    print(f"[OK] Updated .env with DATA_FOLDER={data_dir}")

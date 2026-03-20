@@ -1,8 +1,18 @@
 # Fabric IQ：資料智慧
 
-## 什麼是 Fabric IQ？
+## Summary
 
-在這個 workshop 裡，Fabric IQ 指的是「資料接地」這條路徑：agent 先讀取情境設定與 schema prompt，再透過 `execute_sql` 產生唯讀 T-SQL，最後由本機 runtime 對 Fabric Lakehouse SQL endpoint 執行查詢。
+Fabric IQ 這一頁講的是「自然語言問題怎麼變成資料查詢」。
+
+在這個工作坊裡，agent 會先理解情境與資料表結構，再透過 `execute_sql` 產生唯讀 SQL，最後由本機 runtime 到 Fabric Lakehouse SQL analytics endpoint 查資料。
+
+## 這頁要學什麼
+
+看完這頁，你應該知道：
+
+- agent 怎麼知道可以查哪些資料表。
+- 自然語言問題怎麼被轉成 SQL。
+- 為什麼這個流程是唯讀而且可控的。
 
 ## 目前實際會用到哪些資料脈絡？
 
@@ -52,22 +62,15 @@ User: "Which outages had the most customer impact last month?"
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 為什麼這條路徑值得展示
+## 為什麼這條路徑重要
 
-這個 workshop 要展示的不是一個完整的 Fabric-native semantic platform，而是比較透明、容易教學的三段式流程：
+因為很多企業問題需要的是數字、排名、比較、趨勢，這些答案通常來自資料表，而不是文件。
 
-- 用情境與 schema 把問題接地
-- 用受控函式工具產生唯讀 SQL
-- 在實際 Fabric 資料上執行並回傳結果
+這個工作坊展示的是一條容易理解的路徑：
 
-### 目前頁面應如何對外說明
-
-比較精準的說法是：
-
-1. repo 目前確實有情境設定與資料表關係脈絡
-2. agent 會依據這些脈絡選擇或產生 SQL
-3. 真正的查詢仍由本機 runtime 執行並套用 guardrails
-4. 若要談更完整的 ontology / action layer，應列為延伸方向，而不是主流程既有能力
+1. 先用情境設定和 schema 把問題說清楚。
+2. 再產生唯讀 SQL。
+3. 最後到 Fabric 查出結果。
 
 ## 結合智慧的力量
 
@@ -142,6 +145,16 @@ Agent thinking:
   ]
 }
 ```
+
+## 你應該記住的重點
+
+Fabric IQ 的價值不是「自動幫你做所有資料治理」，而是讓 agent 能在受控範圍內，把自然語言問題轉成可執行的查詢。
+
+## 官方延伸閱讀
+
+- [What is the SQL analytics endpoint for a lakehouse?](https://learn.microsoft.com/fabric/data-engineering/lakehouse-sql-analytics-endpoint)
+- [What is a lakehouse in Microsoft Fabric?](https://learn.microsoft.com/fabric/data-engineering/lakehouse-overview#lakehouse-sql-analytics-endpoint)
+- [Better together: the lakehouse and warehouse](https://learn.microsoft.com/fabric/data-warehouse/get-started-lakehouse-sql-analytics-endpoint)
 
 ---
 
