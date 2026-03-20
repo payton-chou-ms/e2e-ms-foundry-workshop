@@ -10,6 +10,11 @@
 
 - Microsoft Fabric 容量（建議 F2 或更高）
 - 工作區管理員權限
+- 工作區已啟用 Ontology / Fabric IQ 所需功能
+
+!!! warning "容量不足不等於功能可用"
+	即使工作區已綁定 Fabric 容量，Ontology API 仍可能回傳 `FeatureNotAvailable`。
+	如果發生這種情況，代表目前工作區尚未開通本 workshop 所需的 Ontology 功能。此時完整 Fabric 路徑無法執行，請改用已啟用該功能的工作區，或先使用 `--foundry-only` 路徑完成 Search-only workshop。
 
 ## 建立 Fabric 工作區
 

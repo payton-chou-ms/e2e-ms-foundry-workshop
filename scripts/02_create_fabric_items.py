@@ -15,10 +15,12 @@ What this script does:
     2. Creates Ontology with EntityTypes matching CSV schema
     3. Adds DataBindings to connect Ontology to Lakehouse tables
     4. Creates Relationships between entities
-    
+
 Note: Data upload is handled by 03_load_fabric_data.py
 """
 
+import requests
+from azure.identity import AzureCliCredential
 import argparse
 import os
 import sys
@@ -33,15 +35,13 @@ from load_env import load_all_env
 load_all_env()
 
 # Azure imports
-from azure.identity import AzureCliCredential
-import requests
 
 # ============================================================================
 # Configuration
 # ============================================================================
 
 p = argparse.ArgumentParser(description="Setup Fabric Lakehouse and Ontology")
-p.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"), 
+p.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
                help="Path to data folder (default: from .env)")
 p.add_argument("--solutionname", default=os.getenv("SOLUTION_NAME") or os.getenv("SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
                help="Solution name prefix (default: from SOLUTION_NAME or SOLUTION_PREFIX)")
@@ -100,20 +100,24 @@ print(f"Tables: {', '.join(ontology_config['tables'].keys())}")
 
 credential = AzureCliCredential()
 
+
 def get_headers():
     """Get fresh headers with token"""
-    token = credential.get_token("https://api.fabric.microsoft.com/.default").token
+    token = credential.get_token(
+        "https://api.fabric.microsoft.com/.default").token
     return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
 # ============================================================================
 # Helper Functions
 # ============================================================================
 
+
 def make_request(method, url, **kwargs):
     """Make request with retry logic for 429 rate limiting"""
     max_retries = 5
     for attempt in range(max_retries):
-        response = requests.request(method, url, headers=get_headers(), **kwargs)
+        response = requests.request(
+            method, url, headers=get_headers(), **kwargs)
         if response.status_code == 429:
             retry_after = int(response.headers.get("Retry-After", 30))
             print(f"  Rate limited. Waiting {retry_after}s...")
@@ -121,6 +125,7 @@ def make_request(method, url, **kwargs):
             continue
         return response
     return response
+
 
 def wait_for_lro(operation_url, timeout=300):
     """Wait for long-running operation to complete"""
@@ -143,6 +148,7 @@ def wait_for_lro(operation_url, timeout=300):
         time.sleep(3)
     raise TimeoutError("Operation timed out")
 
+
 def find_item(item_type, display_name):
     """Find a Fabric item by type and name"""
     url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/items?type={item_type}"
@@ -152,6 +158,7 @@ def find_item(item_type, display_name):
             if item["displayName"] == display_name:
                 return item
     return None
+
 
 def find_ontology(display_name):
     """Find an ontology by name using the ontologies endpoint"""
@@ -163,6 +170,7 @@ def find_ontology(display_name):
                 return ont
     return None
 
+
 def delete_item(item_type, item_id, item_name):
     """Delete a Fabric item"""
     url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/{item_type.lower()}s/{item_id}"
@@ -171,8 +179,10 @@ def delete_item(item_type, item_id, item_name):
         print(f"  [OK] Deleted {item_type}: {item_name}")
         return True
     else:
-        print(f"  [WARN] Could not delete {item_type} {item_name}: {resp.status_code}")
+        print(
+            f"  [WARN] Could not delete {item_type} {item_name}: {resp.status_code}")
         return False
+
 
 def delete_ontology(ontology_id, ontology_name):
     """Delete an ontology"""
@@ -182,8 +192,10 @@ def delete_ontology(ontology_id, ontology_name):
         print(f"  [OK] Deleted Ontology: {ontology_name}")
         return True
     else:
-        print(f"  [WARN] Could not delete Ontology {ontology_name}: {resp.status_code}")
+        print(
+            f"  [WARN] Could not delete Ontology {ontology_name}: {resp.status_code}")
         return False
+
 
 def b64encode(content):
     """Encode content to base64"""
@@ -196,6 +208,7 @@ def b64encode(content):
 # ============================================================================
 # Step 0: Determine lakehouse/ontology names (use local tracking, minimize API calls)
 # ============================================================================
+
 
 # Track suffix in a GLOBAL file (scripts folder) to persist across data folder changes
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -210,7 +223,8 @@ else:
 if args.clean:
     # Just increment suffix - don't bother deleting (Fabric will clean up old ones eventually)
     new_suffix = current_suffix + 1
-    print(f"\n[0/4] Using new suffix: {new_suffix} (previous: {current_suffix})")
+    print(
+        f"\n[0/4] Using new suffix: {new_suffix} (previous: {current_suffix})")
 else:
     new_suffix = current_suffix
 
@@ -230,12 +244,13 @@ print(f"\n[1/4] Creating Lakehouse...")
 existing_lakehouse = find_item("Lakehouse", lakehouse_name)
 if existing_lakehouse:
     lakehouse_id = existing_lakehouse["id"]
-    print(f"  [OK] Using existing Lakehouse: {lakehouse_name} ({lakehouse_id})")
+    print(
+        f"  [OK] Using existing Lakehouse: {lakehouse_name} ({lakehouse_id})")
 else:
     url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/items"
     payload = {"displayName": lakehouse_name, "type": "Lakehouse"}
     resp = make_request("POST", url, json=payload)
-    
+
     if resp.status_code == 201:
         lakehouse_id = resp.json()["id"]
         print(f"  [OK] Created Lakehouse: {lakehouse_name} ({lakehouse_id})")
@@ -246,7 +261,8 @@ else:
         lakehouse_id = result.get("id")
         print(f"  [OK] Created Lakehouse: {lakehouse_name} ({lakehouse_id})")
     else:
-        print(f"  [FAIL] Failed to create Lakehouse: {resp.status_code} {resp.text}")
+        print(
+            f"  [FAIL] Failed to create Lakehouse: {resp.status_code} {resp.text}")
         sys.exit(1)
 
 # Wait for Lakehouse to be ready
@@ -268,16 +284,17 @@ else:
     entity_ids = {}
     property_ids = {}
     databinding_ids = {}
-    
+
     for i, (table_name, table_def) in enumerate(ontology_config["tables"].items()):
         entity_id = str(base_ts + i * 1000)
         entity_ids[table_name] = entity_id
         databinding_ids[table_name] = str(uuid.uuid4())
-        
+
         property_ids[table_name] = {}
         for j, col in enumerate(table_def["columns"]):
-            property_ids[table_name][col] = str(base_ts + 100000000 + i * 1000 + j)
-    
+            property_ids[table_name][col] = str(
+                base_ts + 100000000 + i * 1000 + j)
+
     # Build platform metadata
     platform_metadata = {
         "metadata": {
@@ -285,10 +302,10 @@ else:
             "displayName": ontology_name
         }
     }
-    
+
     # Empty definition.json
     definition_json = {}
-    
+
     # Build definition parts
     definition_parts = [
         {
@@ -302,7 +319,7 @@ else:
             "payloadType": "InlineBase64"
         }
     ]
-    
+
     # Type mapping
     type_map = {
         "String": "String",
@@ -311,14 +328,14 @@ else:
         "Boolean": "Boolean",
         "DateTime": "DateTime"
     }
-    
+
     # Add EntityTypes and DataBindings for each table
     for table_name, table_def in ontology_config["tables"].items():
         entity_id = entity_ids[table_name]
         entity_name = table_name.title().replace("_", "")
         key_col = table_def["key"]
         key_prop_id = property_ids[table_name][key_col]
-        
+
         # Build properties
         properties = []
         for col in table_def["columns"]:
@@ -330,7 +347,7 @@ else:
                 "baseTypeNamespaceType": None,
                 "valueType": type_map.get(col_type, "String")
             })
-        
+
         # Entity Type definition
         entity_type = {
             "id": entity_id,
@@ -344,13 +361,13 @@ else:
             "properties": properties,
             "timeseriesProperties": []
         }
-        
+
         definition_parts.append({
             "path": f"EntityTypes/{entity_id}/definition.json",
             "payload": b64encode(entity_type),
             "payloadType": "InlineBase64"
         })
-        
+
         # Data Binding - use dataBindingConfiguration structure
         property_bindings = []
         for col in table_def["columns"]:
@@ -358,7 +375,7 @@ else:
                 "sourceColumnName": col,
                 "targetPropertyId": property_ids[table_name][col]
             })
-        
+
         data_binding = {
             "id": databinding_ids[table_name],
             "dataBindingConfiguration": {
@@ -372,15 +389,15 @@ else:
                 }
             }
         }
-        
+
         definition_parts.append({
             "path": f"EntityTypes/{entity_id}/DataBindings/{databinding_ids[table_name]}.json",
             "payload": b64encode(data_binding),
             "payloadType": "InlineBase64"
         })
-        
+
         print(f"  + Entity: {entity_name} ({len(properties)} properties)")
-    
+
     # Add Relationships
     for i, rel in enumerate(ontology_config.get("relationships", [])):
         from_table = rel["from"]
@@ -389,7 +406,7 @@ else:
         to_entity_id = entity_ids[to_table]
         rel_id = str(base_ts + 900000 + i)
         contextualization_id = str(uuid.uuid4())
-        
+
         # Relationship Type
         relationship_type = {
             "id": rel_id,
@@ -399,51 +416,59 @@ else:
             "source": {"entityTypeId": from_entity_id},
             "target": {"entityTypeId": to_entity_id}
         }
-        
+
         definition_parts.append({
             "path": f"RelationshipTypes/{rel_id}/definition.json",
             "payload": b64encode(relationship_type),
             "payloadType": "InlineBase64"
         })
-        
+
         # Relationship Contextualization (how to join the data)
         # The dataBindingTable should be the table that contains the foreign key
         # For a relationship from A -> B where B has a FK to A:
         #   - dataBindingTable = B (the table with the FK column)
         #   - sourceKeyRefBindings = maps FK column to source entity's PK property
         #   - targetKeyRefBindings = maps target's PK column to target entity's PK property
-        
-        from_key = ontology_config["tables"][from_table]["key"]  # PK of source entity (e.g., drivers.id)
+
+        # PK of source entity (e.g., drivers.id)
+        from_key = ontology_config["tables"][from_table]["key"]
         from_key_prop_id = property_ids[from_table][from_key]
-        
-        to_key_col = rel["toKey"]  # FK column in target table (e.g., orders.driver_id)
-        to_table_pk = ontology_config["tables"][to_table]["key"]  # PK of target entity (e.g., orders.id)
+
+        # FK column in target table (e.g., orders.driver_id)
+        to_key_col = rel["toKey"]
+        # PK of target entity (e.g., orders.id)
+        to_table_pk = ontology_config["tables"][to_table]["key"]
         to_key_prop_id = property_ids[to_table][to_table_pk]
-        
+
         contextualization = {
             "id": contextualization_id,
             "dataBindingTable": {
                 "workspaceId": WORKSPACE_ID,
                 "itemId": lakehouse_id,
-                "sourceTableName": to_table,  # Use target table (the one with FK)
+                # Use target table (the one with FK)
+                "sourceTableName": to_table,
                 "sourceType": "LakehouseTable"
             },
             "sourceKeyRefBindings": [
-                {"sourceColumnName": to_key_col, "targetPropertyId": from_key_prop_id}  # FK col -> source PK prop
+                # FK col -> source PK prop
+                {"sourceColumnName": to_key_col,
+                    "targetPropertyId": from_key_prop_id}
             ],
             "targetKeyRefBindings": [
-                {"sourceColumnName": to_table_pk, "targetPropertyId": to_key_prop_id}  # target PK col -> target PK prop
+                # target PK col -> target PK prop
+                {"sourceColumnName": to_table_pk,
+                    "targetPropertyId": to_key_prop_id}
             ]
         }
-        
+
         definition_parts.append({
             "path": f"RelationshipTypes/{rel_id}/Contextualizations/{contextualization_id}.json",
             "payload": b64encode(contextualization),
             "payloadType": "InlineBase64"
         })
-        
+
         print(f"  + Relationship: {from_table} -> {to_table}")
-    
+
     # Create Ontology using dedicated ontologies endpoint
     ontology_payload = {
         "displayName": ontology_name,
@@ -452,10 +477,10 @@ else:
             "parts": definition_parts
         }
     }
-    
+
     url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/ontologies"
     resp = make_request("POST", url, json=ontology_payload)
-    
+
     if resp.status_code == 201:
         ontology_id = resp.json()["id"]
         print(f"  [OK] Created Ontology: {ontology_name} ({ontology_id})")
@@ -469,6 +494,12 @@ else:
             ontology_id = created_ont["id"] if created_ont else None
         print(f"  [OK] Created Ontology: {ontology_name} ({ontology_id})")
     else:
+        if resp.status_code == 403 and "FeatureNotAvailable" in resp.text:
+            print("  [FAIL] Failed to create Ontology: 403")
+            print(
+                "    Response: the current Fabric workspace does not have the Ontology feature enabled.")
+            print("    Action: use a Fabric workspace with Ontology enabled, or run the workshop with --foundry-only.")
+            sys.exit(1)
         print(f"  [FAIL] Failed to create Ontology: {resp.status_code}")
         print(f"    Response: {resp.text}")
         sys.exit(1)
@@ -505,7 +536,7 @@ print(f"{'='*60}")
 print(f"""
 Lakehouse: {lakehouse_name}
   ID: {lakehouse_id}
-  
+
 Ontology: {ontology_name}
   ID: {ontology_id}
   Entities: {', '.join([t.title().replace('_', '') for t in ontology_config['tables'].keys()])}
@@ -524,5 +555,3 @@ Manual step required:
   - Create Data Agent in Fabric portal and map to Ontology
   - (Data Agent API doesn't support definition configuration yet)
 """)
-
-

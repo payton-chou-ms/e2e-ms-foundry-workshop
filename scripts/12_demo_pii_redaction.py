@@ -7,6 +7,7 @@ unless --strict is used.
 
 import argparse
 import os
+import time
 
 from load_env import load_all_env
 from optional_demo_utils import finish_skip, resolve_env_value
@@ -18,7 +19,7 @@ IMPORT_ERROR = None
 try:
     from azure.ai.textanalytics import TextAnalyticsClient
     from azure.core.credentials import AzureKeyCredential
-    from azure.core.exceptions import ClientAuthenticationError, HttpResponseError
+    from azure.core.exceptions import ClientAuthenticationError, HttpResponseError, ServiceRequestError
     from azure.identity import DefaultAzureCredential
 except ImportError as exc:  # pragma: no cover - runtime dependent
     IMPORT_ERROR = exc
@@ -84,10 +85,21 @@ def main():
     )
 
     try:
-        results = client.recognize_pii_entities(
-            [args.text], language=args.language)
-        result = results[0]
-    except (ClientAuthenticationError, HttpResponseError) as exc:
+        last_error = None
+        for attempt in range(3):
+            try:
+                results = client.recognize_pii_entities(
+                    [args.text], language=args.language)
+                result = results[0]
+                break
+            except ServiceRequestError as exc:
+                last_error = exc
+                if attempt == 2:
+                    raise
+                time.sleep(2)
+        else:
+            raise last_error
+    except (ClientAuthenticationError, HttpResponseError, ServiceRequestError) as exc:
         finish_skip(
             f"PII detection is not available in this environment yet ({exc})",
             strict=args.strict,
