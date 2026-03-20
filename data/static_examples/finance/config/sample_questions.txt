@@ -1,0 +1,5 @@
+Which loan applications currently meet our approval conditions?
+What are the compliance requirements for large transactions?
+Which applications still need senior credit review?
+Which business accounts need a beneficial ownership refresh?
+What risk score threshold requires manual underwriting?

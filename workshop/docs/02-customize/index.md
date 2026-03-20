@@ -29,11 +29,17 @@
 | **本體（Ontology）** | 用於 NL→SQL 的商業規則與關係 |
 | **範例問題** | 用來測試方案的問題集 |
 
+!!! note "固定範例資產"
+    為了讓每個 tab 都對應到 repo 中可下載的實體檔案，本 repository 現在提供固定樣本資產於 `data/static_examples/<scenario>/`。
+    每個固定樣本資料夾也都包含 `config/sample_questions.txt`，可直接對應該 tab 的問題集。
+
 ## 範例轉換
 
 === "電信"
 
     **輸入：** "含停機追蹤與障礙單管理的網路營運"
+
+    **固定範例路徑：** `data/static_examples/telecommunications/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -44,12 +50,17 @@
 
     **範例問題：**
 
-    - "哪些停機事件超過了我們的最大持續時間政策？"
-    - "高影響停機事件的升級程序是什麼？"
+    - "Which outage events exceeded our maximum duration policy?"
+    - "What is the escalation procedure for high-impact outages?"
+    - "Which open trouble tickets are linked to outages still under monitoring?"
+    - "How many affected customers were involved in high-impact fiber outages?"
+    - "When must customer updates be issued during a major outage?"
 
 === "零售"
 
     **輸入：** "含季節性庫存與退貨的時尚電子商務"
+
+    **固定範例路徑：** `data/static_examples/retail/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -60,12 +71,17 @@
 
     **範例問題：**
 
-    - "特價商品的退貨政策是什麼？"
-    - "春季系列中哪些產品庫存偏低？"
+    - "What is the return policy for discounted electronics?"
+    - "Which spring products are already below their reorder point?"
+    - "Which orders were returned after delivery?"
+    - "Do any products in the spring catalog need immediate replenishment?"
+    - "When do orders qualify for free standard shipping?"
 
 === "製造"
 
     **輸入：** "含品質控管與供應商的汽車零件"
+
+    **固定範例路徑：** `data/static_examples/manufacturing/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -76,12 +92,17 @@
 
     **範例問題：**
 
-    - "哪些機器已超過維護期限？"
-    - "關鍵零件的 QC 流程是什麼？"
+    - "Which machines are overdue for preventive maintenance?"
+    - "What are the QC thresholds for critical automotive components?"
+    - "Which suppliers have the longest lead times for key components?"
+    - "Which production equipment is near or past its maintenance due date?"
+    - "When must a supplier corrective action request be issued?"
 
 === "保險"
 
     **輸入：** "含理賠與保單管理的產物保險"
+
+    **固定範例路徑：** `data/static_examples/insurance/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -92,12 +113,17 @@
 
     **範例問題：**
 
-    - "哪些理賠案件即將到達 SLA 期限？"
-    - "標準房屋保險涵蓋哪些項目？"
+    - "Which open claims are approaching their SLA deadline?"
+    - "What does the standard homeowners policy cover?"
+    - "Which claims require supervisor review within 48 hours?"
+    - "Which policy types have the highest coverage limits?"
+    - "What is the escalation path for catastrophic loss claims?"
 
 === "金融"
 
     **輸入：** "含貸款與合規的區域銀行"
+
+    **固定範例路徑：** `data/static_examples/finance/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -108,12 +134,17 @@
 
     **範例問題：**
 
-    - "哪些貸款申請符合我們的核准條件？"
-    - "大額交易的合規要求是什麼？"
+    - "Which loan applications currently meet our approval conditions?"
+    - "What are the compliance requirements for large transactions?"
+    - "Which applications still need senior credit review?"
+    - "Which business accounts need a beneficial ownership refresh?"
+    - "What risk score threshold requires manual underwriting?"
 
 === "能源"
 
     **輸入：** "含電網監控與停電回應的電力公用事業"
+
+    **固定範例路徑：** `data/static_examples/energy/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -124,12 +155,17 @@
 
     **範例問題：**
 
-    - "哪些變電站的運轉容量超過 80%？"
-    - "關鍵設施的復電優先順序是什麼？"
+    - "Which substations are operating above 80 percent load?"
+    - "What is the restoration priority for critical facilities?"
+    - "Which outages should trigger regional command activation?"
+    - "Which sites support critical facilities and are nearing capacity?"
+    - "What safety checks are required before switching work begins?"
 
 === "教育"
 
     **輸入：** "含選課管理與課程排程的大學"
+
+    **固定範例路徑：** `data/static_examples/education/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -140,12 +176,17 @@
 
     **範例問題：**
 
-    - "哪些課程有選課不足的風險？"
-    - "進階工程課程的先修條件是什麼？"
+    - "Which courses are at risk of under-enrollment?"
+    - "What are the prerequisites for advanced engineering courses?"
+    - "Which students are requesting or carrying overload credit loads?"
+    - "Which courses are already at full capacity?"
+    - "When can students add courses during the term?"
 
 === "旅宿"
 
     **輸入：** "含訂房與賓客服務的連鎖飯店"
+
+    **固定範例路徑：** `data/static_examples/hospitality/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -156,12 +197,17 @@
 
     **範例問題：**
 
-    - "今天抵達的賓客中，哪些房間需要整理服務？"
-    - "延遲退房的政策是什麼？"
+    - "Which arriving guests require priority room readiness?"
+    - "What is the policy for late checkout?"
+    - "Which rooms need housekeeping attention before same-day arrivals?"
+    - "Which reservations are marked as VIP arrivals?"
+    - "When do same-day cancellations incur a room charge?"
 
 === "物流"
 
     **輸入：** "含配送追蹤與駕駛合規的車隊管理"
+
+    **固定範例路徑：** `data/static_examples/logistics/`（含 `config/sample_questions.txt`）
 
     | 產生項目 | 說明 |
     |----------|------|
@@ -172,8 +218,11 @@
 
     **範例問題：**
 
-    - "哪些駕駛正在接近工時上限？"
-    - "延遲配送的政策是什麼？"
+    - "Which drivers are close to the weekly driving-hour limit?"
+    - "What is the policy for delayed deliveries over 60 minutes?"
+    - "Which vehicles cannot be dispatched because of inspection status?"
+    - "Which deliveries are currently delayed or at risk?"
+    - "When is customer notification required for a route delay?"
 
 !!! tip "越具體越好"
     AI 會根據你的描述產生適當的實體名稱、真實的資料關係、產業專屬文件，以及相關的範例問題。

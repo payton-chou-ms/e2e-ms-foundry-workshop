@@ -1,0 +1,6 @@
+supplier_id,supplier_name,component_family,lead_time_days,quality_rating,preferred_supplier
+SUP-501,Apex Metals,Brake Housing,18,4.8,Yes
+SUP-502,NorthForge,Gear Assembly,26,4.2,No
+SUP-503,Precision Flux,Sensor Mount,12,4.7,Yes
+SUP-504,Delta Polymers,Interior Clips,21,4.1,No
+SUP-505,Titan Cast,Engine Bracket,34,3.9,No

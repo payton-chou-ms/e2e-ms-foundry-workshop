@@ -13,7 +13,7 @@
 
 完整部署路徑包含：
 
-- 部署 **Microsoft Foundry control plane** 與支援 Azure 資源，包括 AI Services / project、模型部署、AI Search、Storage、Application Insights，以及選配的 image OpenAI 與 Playwright Workspace
+- 部署 **Microsoft Foundry Control Plane** 與支援 Azure 資源，包括 Foundry project、模型部署、AI Search、Storage、Application Insights，以及選配的 image OpenAI 與 Playwright Workspace
 - 設定 **Microsoft Fabric** 連線
 - 設定開發環境
 - 讓代理程式對範例資料實際運作

@@ -117,7 +117,7 @@ def build_skip_message(error):
     if "model" in lowered and "deployment" in lowered:
         return (
             "Content Understanding default model deployments are not configured. "
-            "Configure the resource defaults for gpt-4.1-mini and text-embedding-3-large "
+            "Configure the resource defaults for gpt-4.1-mini and the primary text-embedding-3-large deployment "
             "before running the demo."
         )
 

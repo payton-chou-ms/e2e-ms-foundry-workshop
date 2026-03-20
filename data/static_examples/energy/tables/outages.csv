@@ -1,0 +1,6 @@
+outage_id,region,start_time,customers_affected,restoration_eta,priority_class
+ENG-1101,East,2026-03-02 04:10,18200,2026-03-02 09:00,Critical
+ENG-1102,West,2026-03-05 13:20,6400,2026-03-05 16:00,High
+ENG-1103,North,2026-03-08 21:45,3200,2026-03-09 00:30,Medium
+ENG-1104,Central,2026-03-10 07:15,980,2026-03-10 08:10,Low
+ENG-1105,East,2026-03-12 18:05,7600,2026-03-12 22:00,High

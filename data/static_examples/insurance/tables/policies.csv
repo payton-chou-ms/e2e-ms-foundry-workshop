@@ -1,0 +1,6 @@
+policy_id,policy_type,customer_name,coverage_limit,premium_monthly,effective_date,sla_days
+POL-601,Homeowners,Lina Chen,500000,145,2025-09-01,10
+POL-602,Auto,Marco Ruiz,80000,92,2025-11-15,7
+POL-603,Commercial Property,Aster Retail Co,1200000,680,2025-08-01,14
+POL-604,Homeowners,Jamie Park,450000,132,2026-01-10,10
+POL-605,Umbrella,Blue Harbor LLC,2000000,410,2025-12-05,14

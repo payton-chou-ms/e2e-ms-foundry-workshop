@@ -8,8 +8,8 @@
 
 | 資源 | 在本工作坊中的用途 |
 |------|-------------------|
-| **Azure AI Services 帳戶** | Foundry 專案功能與模型部署的父帳戶 |
-| **Foundry 專案** | 代理程式、工具、連線與可觀測性的工作區邊界 |
+| **Microsoft Foundry** | Foundry project 功能與模型部署的父層平台 |
+| **Foundry project** | 代理程式、工具、連線與可觀測性的工作區邊界 |
 | **模型部署** | 工作坊使用的聊天、向量嵌入及選用模型端點 |
 | **Dedicated image OpenAI resource** | 讓 image generation demo 可使用獨立區域與配額，而不影響主要聊天路徑 |
 | **Azure AI Search** | `search_documents` 的文件索引建立與檢索 |
@@ -22,7 +22,7 @@
 ```mermaid
 flowchart TB
     subgraph ControlPlane[Foundry Control Plane]
-        A[Azure AI Services account]
+        A[Microsoft Foundry]
         B[Foundry project]
         C[Model deployments]
         C2[Dedicated image OpenAI]
@@ -62,14 +62,14 @@ flowchart TB
 
 ## 為什麼專案很重要
 
-Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供一個端點來使用，同時平台持續追蹤：
+Foundry project 是將工作坊串聯在一起的邏輯邊界。它為腳本提供一個端點來使用，同時平台持續追蹤：
 
 - 代理程式定義
 - 專案連線
 - 模型可用性
 - 追蹤設定
 
-這就是為什麼大多數工作坊腳本只需要 Foundry 專案端點加上認證資訊。
+這就是為什麼大多數工作坊腳本只需要 Foundry project 端點加上認證資訊。
 
 ## 專案連線
 
@@ -101,8 +101,8 @@ Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供
 | 操作 | 通常需要的權限 |
 |------|---------------|
 | 部署基礎架構 | 訂閱或資源群組的部署權限 |
-| 建立專案資源和連線 | Foundry 專案管理權限 |
-| 執行代理程式腳本 | 可存取 Foundry 專案的 Azure 登入 |
+| 建立專案資源和連線 | Foundry project 管理權限 |
+| 執行代理程式腳本 | 可存取 Foundry project 的 Azure 登入 |
 | 讀取遙測 | 對已連結 Application Insights 資源的存取權限 |
 
 確切的角色指派取決於環境的治理方式，但設計假設很明確：部署權限和執行階段使用權限可能不是同一個身分。
@@ -111,7 +111,7 @@ Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供
 
 | 問題 | 實務回答 |
 |------|---------|
-| 「代理程式實際上存在哪裡？」 | 「代理程式定義存在 Foundry 專案中，而模型部署存在 Azure AI Services 帳戶下。」 |
+| 「代理程式實際上存在哪裡？」 | 「代理程式定義存在 Foundry project 中，而模型部署存在 Microsoft Foundry 底下。」 |
 | 「什麼將代理程式連接到搜尋？」 | 「目前要分兩層看：agent 定義來自 Foundry project，但主 workshop 的 `search_documents` 仍是由本機 runtime 直接呼叫 Azure AI Search。」 |
 | 「追蹤是否一直開啟？」 | 「不是。工作坊將遙測設為選用，因此缺少可觀測性設定永遠不會阻擋示範。」 |
 
@@ -119,7 +119,7 @@ Foundry 專案是將工作坊串聯在一起的邏輯邊界。它為腳本提供
 
 ### 為什麼工作坊大量討論專案端點？
 
-因為專案端點是 agent 定義與部分平台能力的交接點。但本 workshop 的核心工具執行仍保留在本機 runtime，這樣比較透明，也更容易教學與除錯。
+因為 Foundry project 端點是 agent 定義與部分平台能力的交接點。但本 workshop 的核心工具執行仍保留在本機 runtime，這樣比較透明，也更容易教學與除錯。
 
 ### Foundry Control Plane 和使用者體驗是同一件事嗎？
 

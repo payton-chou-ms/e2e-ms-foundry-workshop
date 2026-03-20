@@ -56,7 +56,7 @@ load_all_env()
 # Azure services - from azd environment
 ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 MODEL = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
-    "MODEL_DEPLOYMENT", "gpt-4o-mini")
+    "MODEL_DEPLOYMENT", "gpt-5.4-mini")
 SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
 
 # Project settings - from .env

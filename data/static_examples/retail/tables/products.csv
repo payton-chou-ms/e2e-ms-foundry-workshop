@@ -1,0 +1,6 @@
+sku,product_name,category,season,unit_price,stock_on_hand,reorder_point
+SKU-1001,Aster Smart Jacket,Outerwear,Spring,189.0,24,18
+SKU-1002,Nova Wireless Earbuds,Electronics,Spring,129.0,11,15
+SKU-1003,Solstice Knit Dress,Apparel,Summer,98.0,37,20
+SKU-1004,Orbit Crossbody Bag,Accessories,Spring,76.0,9,12
+SKU-1005,Pulse Running Tee,Activewear,Summer,44.0,63,25

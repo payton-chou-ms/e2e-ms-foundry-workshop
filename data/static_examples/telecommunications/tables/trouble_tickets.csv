@@ -1,0 +1,6 @@
+ticket_id,outage_id,opened_time,priority,team,customer_count_flagged,status
+TT-2001,OUT-1001,2026-03-01 08:20,P1,Core Network,540,Closed
+TT-2002,OUT-1001,2026-03-01 08:32,P1,Field Ops,210,Closed
+TT-2003,OUT-1003,2026-03-05 19:36,P1,Core Network,812,Closed
+TT-2004,OUT-1005,2026-03-12 11:18,P2,Transport,154,Open
+TT-2005,OUT-1002,2026-03-03 14:11,P2,Customer Care,73,Closed

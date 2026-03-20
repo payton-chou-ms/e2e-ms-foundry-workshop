@@ -33,6 +33,20 @@
 
 [前往參與者執行與驗證](00-participant-run-validate.md)
 
+## Azure 權限對照 { #azure-permissions }
+
+如果你只想跑通 workshop，和如果你要負責部署整套環境，所需的 Azure 權限層級並不一樣。
+
+| 情境 | 典型操作 | Azure 權限重點 | 明確不需要的權限 | 什麼時候代表你不屬於這條路徑 |
+|------|----------|----------------|------------------|------------------------------|
+| **學員只要跑 workshop** | 登入、設定本機 `.env`、驗證既有情境、測試 agent | 需要已被授予現成環境的存取權，並能登入正確租用戶與使用既有 Azure 資源 | 不需要 `Owner`、不需要 `Contributor`、不需要 `User Access Administrator`、不需要 `Role Based Access Control Administrator`、不需要 `Microsoft.Authorization/roleAssignments/write` | 如果你要自己跑 `azd up`、重建角色指派、建立新的 Azure 資源，或替其他人開權限，就不再是這條路徑 |
+| **管理員要能部署** | 執行 `azd up`、建立資源、建立 RBAC 指派、整理共用環境 | 需要同時具備「資源建立 / 更新」與「角色指派建立」兩類權限。最直接是 `Owner`；較常見的最小組合是 `Contributor` + `User Access Administrator`，或 `Contributor` + `Role Based Access Control Administrator` | 不適合只有 `Contributor` 單獨使用 | 如果你無法建立 Azure 資源，或無法在目標 scope 建立角色指派，部署通常會在 Bicep 建立 RBAC 時失敗 |
+
+補充判斷方式：
+
+- 如果環境已經有人幫你準備好，而你只需要登入並執行範例，請走「參與者執行與驗證」。
+- 如果你要從零佈建 Azure 資源，或要幫別人準備可重複使用的環境，請走「管理員部署與分享」。
+
 ## 架構
 
 ![Architecture Diagram](../assets/architecture.png)
@@ -56,14 +70,14 @@
 | **Foundry Agent** | 在專案範圍內建立代理程式定義，並在執行時重複使用 |
 | **Foundry Tool** | 執行時依賴嚴格的 SQL + 搜尋函式工具合約 |
 | **Foundry IQ + Fabric IQ** | Search 與 Fabric 資源為代理程式提供文件與資料接地 |
-| **Foundry Control Plane** | Azure AI Services、Foundry 專案、Search、Storage、遙測與 RBAC 串連整個環境 |
+| **Foundry Control Plane** | Foundry project、模型部署、Search、Storage、遙測與 RBAC 串連整個環境 |
 | **Multi-Agent Extension** | 重用同一套模型、工具與接地能力，往後延伸成情境化工作流 |
 
 換言之，你在前面操作時看到的會是一個簡潔的對話式 PoC，但部署背後其實已準備好完整的技術骨架。
 
 - **Microsoft Fabric** 提供資料層，包括 Lakehouse、Warehouse，以及 Fabric IQ 語意層的自然語言轉 SQL
 - **Microsoft Foundry** 託管提示詞代理程式、工具合約，以及 Foundry IQ 文件擷取
-- **Azure AI Services** 驅動 workshop 使用的 chat 與 embedding 模型部署
+- **Microsoft Foundry** 驅動 workshop 使用的 chat 與 embedding 模型部署
 - **Azure AI Search** 儲存文件向量以供語意擷取
 - **Application Insights** 在啟用可觀測性時可選擇性接收追蹤資料
 

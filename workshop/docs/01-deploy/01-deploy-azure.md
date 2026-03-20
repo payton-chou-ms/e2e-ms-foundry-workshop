@@ -4,12 +4,13 @@
     本頁主要供**管理員部署與分享**路徑使用。
     如果已有人為你準備好環境，請從 [參與者執行與驗證](00-participant-run-validate.md) 開始。
 
-## 複製 Repository
+## 開啟專案目錄
 
 ```bash
-git clone https://github.com/nchandhi/nc-iq-workshop.git
 cd nc-iq-workshop
 ```
+
+如果你取得的是壓縮封裝、內部鏡像，或課程環境中已提供的專案副本，請先解壓或切換到專案根目錄，再從這裡開始執行部署步驟。
 
 ## 登入 Azure
 
@@ -20,8 +21,25 @@ azd auth login
 這會開啟瀏覽器進行驗證。
 
 !!! warning "部署權限"
-    本 repository 會在部署過程中建立 Azure 角色指派。
-    如果 `azd up` 在 RBAC 建立時失敗，請確認你的身分可以在目標範圍內建立角色指派。
+    本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限。
+
+    實務上請用下列其中一種權限模型：
+
+    - `Owner`：最直接，既能建立資源，也能建立角色指派。
+    - `Contributor` + `User Access Administrator`：較符合最小權限原則。
+    - `Contributor` + `Role Based Access Control Administrator`：同樣可行，適合把資源建立與 RBAC 指派拆開管理。
+    - 等效的自訂角色組合：同時涵蓋資源寫入，以及 `Microsoft.Authorization/roleAssignments/write`。
+
+    `Contributor` 單獨使用通常會失敗，因為它不能建立 Azure RBAC 角色指派。
+
+!!! note "這個模板實際會建立哪些 RBAC 指派"
+    目前的 Bicep 模板會在部署期間建立多組角色指派，包含：
+
+    - 對 **Foundry project 的 managed identity** 指派 Search 與 Storage 相關角色。
+    - 對 **Azure AI Search 的 managed identity** 指派 `Cognitive Services OpenAI User` 與 `Storage Blob Data Reader`。
+    - 對 **執行部署的使用者身分** 指派 `Cognitive Services User`、`Azure AI User`、`Search Index Data Contributor`、`Search Service Contributor`、`Storage Blob Data Contributor`。
+
+    也就是說，部署不只是「把資源建出來」，還會順便把執行 workshop 主流程所需的資料平面 / 控制平面存取補齊。
 
 ## 部署資源
 
@@ -31,10 +49,67 @@ azd up
 
 依照提示選擇你的環境名稱、訂用帳戶與位置等。
 
-這個部署現在除了主要 chat + embedding 模型外，也會一併建立 Content Understanding 所需的延伸模型部署：
+如果你想明確指定部署目標，請注意：
+
+- `azd up` 可以直接用 `--subscription` 指定 **Subscription**
+- `azd up` **不能直接**用旗標指定 **Tenant**；Tenant 會跟著你目前 Azure CLI 的登入內容
+
+最直接的做法是先登入正確 Tenant，再執行 `azd up`：
+
+```bash
+az login --tenant <TENANT_ID>
+azd up --subscription <SUBSCRIPTION_ID>
+```
+
+如果你已經登入 Azure，只想切換到正確的訂用帳戶，也可以先這樣做：
+
+```bash
+az account set --subscription <SUBSCRIPTION_ID>
+azd up
+```
+
+### Subscription 與 Tenant 從哪裡拿？
+
+你可以用 Azure Portal 或 Azure CLI 取得。
+
+**從 Azure Portal：**
+
+- **Subscription ID**：到 **Subscriptions**，打開目標訂用帳戶，在 Overview / Essentials 查看 **Subscription ID**
+- **Tenant ID**：到 **Microsoft Entra ID**，在 Overview / Basic information 查看 **Tenant ID**
+
+**從 Azure CLI：**
+
+```bash
+# 列出你目前可用的訂用帳戶與對應 tenant
+az account list --output table
+
+# 查看目前預設中的 subscription / tenant
+az account show
+```
+
+如果你有多個 tenant，先指定 tenant 再查看會更清楚：
+
+```bash
+az login --tenant <TENANT_ID>
+az account list --output table
+```
+
+### 想避免每次重選？
+
+你也可以在建立 azd 環境時先把 subscription 固定下來：
+
+```bash
+azd env new <environment-name> --subscription <SUBSCRIPTION_ID> --location <AZURE_LOCATION>
+azd up --environment <environment-name>
+```
+
+第一次成功部署後，`azd` 會把這次環境使用的 `AZURE_SUBSCRIPTION_ID` 與 `AZURE_TENANT_ID` 寫進 `.azure/<env>/.env`。
+
+這個部署現在除了主要 chat + embedding 模型外，也會一併建立 Content Understanding 需要的延伸聊天模型：
 
 - `gpt-4.1-mini`
-- `text-embedding-3-large`
+
+主要的 `text-embedding-3-large` 會同時作為工作坊主路徑與 Content Understanding 預設所使用的 embedding 部署。
 
 此外，部署流程也會自動建立兩個選配能力所需的控制平面資源：
 
@@ -46,12 +121,23 @@ azd up
 
 ## 驗證部署
 
-在 [Azure Portal](https://portal.azure.com/) 中確認你的資源群組包含所有資源：
+在 [Azure Portal](https://portal.azure.com/) 中確認你的資源群組至少包含下列資源：
 
 - Microsoft Foundry
+- Foundry project
 - Azure AI Search
 - Storage Account
 - Application Insights
+- Log Analytics workspace
+
+如果你使用目前預設的完整部署設定，還會另外看到：
+
+- Dedicated image-capable Azure OpenAI resource
+- Playwright Workspace
+
+!!! note "補充說明"
+    chat、embedding 與其他選配模型部署會掛在 Microsoft Foundry 底下，
+    不一定會在資源群組清單中以獨立頂層資源顯示。
 
 ## 環境變數
 
@@ -61,10 +147,15 @@ azd up
     你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取。
 
 !!! note "Browser Automation 的最後一段仍需手動"
-    `azd up` 現在會自動建立 Playwright Workspace，但 Browser Automation 仍需要你在 Azure Portal 產生一次性的 Playwright access token，並在 Foundry project 中建立 Browser Automation connection。
+    `azd up` 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection。
 
-!!! note "Image Generation 已納入正式部署流程"
-    `azd up` 現在會自動建立獨立的 image-capable Azure OpenAI resource，並把 `AZURE_IMAGE_OPENAI_ENDPOINT` / `AZURE_IMAGE_MODEL_DEPLOYMENT` 寫入 azd 環境輸出。
+    - **從哪邊拿資料**：到 Azure Portal 的 Playwright Workspace，進入 **Settings** > **Access Management** 產生一次性的 **Access token**；再到 Workspace 的 **Overview** 複製 **Browser endpoint**（`wss://...`）
+    - **貼到哪邊**：到 Foundry project 的 **Build** > **Tools** > **Connect a tool** > **Browser Automation**，把 **Browser endpoint** 貼到 *Playwright workspace region endpoint*，把 **Access token** 貼到 *Access token*
+    - **最後要保存的值**：connection 建好後，將該工具頁面上的 **Project connection ID** 寫入專案根目錄 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
+    - **官網連結**：
+      [Browser Automation setup](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation#set-up-browser-automation)
+      [Manage Playwright workspaces](https://aka.ms/pww/docs/manage-workspaces)
+      [Generate Playwright access token](https://aka.ms/pww/docs/manage-access-tokens)
 
 ---
 

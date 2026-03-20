@@ -1,0 +1,6 @@
+outage_id,region,service_type,start_time,duration_minutes,impact_level,affected_customers,status
+OUT-1001,North,Fiber,2026-03-01 08:15,145,High,18400,Resolved
+OUT-1002,Central,Mobile,2026-03-03 14:05,42,Medium,6200,Resolved
+OUT-1003,South,Broadband,2026-03-05 19:30,215,High,25100,Resolved
+OUT-1004,East,Voice,2026-03-08 06:50,28,Low,1300,Resolved
+OUT-1005,West,Fiber,2026-03-12 11:10,96,Medium,9400,Monitoring

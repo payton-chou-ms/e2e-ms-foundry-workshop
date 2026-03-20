@@ -1,0 +1,6 @@
+course_code,course_title,capacity,enrolled_count,schedule_slot,prerequisite_required
+CS401,Distributed Systems,40,38,Tue 10:00,CS301
+ME220,Materials Lab,24,21,Wed 14:00,ME110
+BA330,Forecasting Models,35,19,Thu 09:00,STAT201
+NU105,Foundations of Care,28,27,Mon 08:00,None
+EE410,Embedded Control,30,30,Fri 13:00,EE305

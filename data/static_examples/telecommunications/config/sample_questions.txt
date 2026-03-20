@@ -1,0 +1,5 @@
+Which outage events exceeded our maximum duration policy?
+What is the escalation procedure for high-impact outages?
+Which open trouble tickets are linked to outages still under monitoring?
+How many affected customers were involved in high-impact fiber outages?
+When must customer updates be issued during a major outage?

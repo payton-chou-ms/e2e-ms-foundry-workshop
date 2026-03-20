@@ -3,7 +3,7 @@
 ## 先決條件
 
 - 具備 Contributor 權限的 Azure subscription
-- `gpt-4o-mini` 與 `text-embedding-ada-002` 的模型容量
+- `gpt-5.4-mini` 與 `text-embedding-3-large` 的模型容量
 - Microsoft Fabric 工作區（供 Fabric IQ 功能使用）
 
 - [Visual Studio Code](https://code.visualstudio.com/download)
@@ -11,10 +11,7 @@
 - [Python 3.10+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads)
 
-
-[![Open in GitHub Codespaces](https://img.shields.io/badge/GitHub-Codespaces-blue?logo=github)](https://codespaces.new/nchandhi/nc-iq-workshop)
-[![Open in VS Code](https://img.shields.io/badge/VS%20Code-Dev%20Containers-blue?logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/nchandhi/nc-iq-workshop)
-[![Open in VS Code Web](https://img.shields.io/badge/VS%20Code-Open%20in%20Web-blue?logo=visualstudiocode)](https://vscode.dev/azure/?vscode-azure-exp=foundry&agentPayload=eyJiYXNlVXJsIjogImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9uY2hhbmRoaS9uYy1pcS13b3Jrc2hvcC9tYWluL2luZnJhL3ZzY29kZV93ZWIiLCAiaW5kZXhVcmwiOiAiL2luZGV4Lmpzb24iLCAidmFyaWFibGVzIjogeyJhZ2VudElkIjogIiIsICJjb25uZWN0aW9uU3RyaW5nIjogIiIsICJ0aHJlYWRJZCI6ICIiLCAidXNlck1lc3NhZ2UiOiAiIiwgInBsYXlncm91bmROYW1lIjogIiIsICJsb2NhdGlvbiI6ICIiLCAic3Vic2NyaXB0aW9uSWQiOiAiIiwgInJlc291cmNlSWQiOiAiIiwgInByb2plY3RSZXNvdXJjZUlkIjogIiIsICJlbmRwb2ludCI6ICIifSwgImNvZGVSb3V0ZSI6IFsiYWktcHJvamVjdHMtc2RrIiwgInB5dGhvbiIsICJkZWZhdWx0LWF6dXJlLWF1dGgiLCAiZW5kcG9pbnQiXX0=)
+請先在你的本機環境、訓練環境或既有的開發容器中開啟這份 workshop 專案，再依照本頁與後續章節完成設定。
 
 !!! tip "使用 GitHub Copilot 尋求協助"
     如果卡在某個步驟，可以詢問 GitHub Copilot Chat：

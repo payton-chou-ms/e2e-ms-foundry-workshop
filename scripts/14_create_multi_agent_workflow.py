@@ -119,7 +119,7 @@ def main():
                     **context)
                 tools = runtime.build_tools_for_mode(template["tool_mode"])
                 definition = PromptAgentDefinition(
-                    model=model or "gpt-4o-mini",
+                    model=model or "gpt-5.4-mini",
                     instructions=instructions,
                     tools=tools,
                 )

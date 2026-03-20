@@ -1,0 +1,6 @@
+order_id,order_date,sku,channel,quantity,order_status,return_requested
+ORD-3001,2026-03-02,SKU-1002,Web,2,Delivered,No
+ORD-3002,2026-03-04,SKU-1001,Mobile,1,Delivered,Yes
+ORD-3003,2026-03-05,SKU-1004,Marketplace,3,Shipped,No
+ORD-3004,2026-03-08,SKU-1003,Web,1,Delivered,No
+ORD-3005,2026-03-09,SKU-1002,Store,1,Returned,Yes

@@ -20,10 +20,10 @@ param createdBy string = contains(deployer(), 'userPrincipalName')
 param deploymentType string = 'GlobalStandard'
 
 @description('Name of the GPT model to deploy:')
-param gptModelName string = 'gpt-4o-mini'
+param gptModelName string = 'gpt-5.4-mini'
 
 @description('Version of the GPT model to deploy:')
-param gptModelVersion string = '2024-07-18'
+param gptModelVersion string = '2026-03-17'
 
 @minValue(10)
 @description('Capacity of the GPT deployment:')
@@ -41,7 +41,7 @@ param tags resourceInput<'Microsoft.Resources/resourceGroups@2025-04-01'>.tags =
   'text-embedding-3-small'
   'text-embedding-3-large'
 ])
-param embeddingModel string = 'text-embedding-ada-002'
+param embeddingModel string = 'text-embedding-3-large'
 
 @minValue(10)
 @description('Capacity of the Embedding Model deployment')
@@ -111,8 +111,8 @@ var resolvedBrowserAutomationLocation = !empty(browserAutomationLocation)
   azd: {
     type: 'location'
     usageName: [
-      'OpenAI.GlobalStandard.gpt-4o-mini,150'
-      // 'OpenAI.GlobalStandard.text-embedding-ada-002,80'
+      'OpenAI.GlobalStandard.gpt-5.4-mini,150'
+      // 'OpenAI.Standard.text-embedding-3-large,80'
     ]
   }
 })

@@ -76,7 +76,7 @@ def main():
         )
 
     model = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
-        "MODEL_DEPLOYMENT") or "gpt-4o-mini"
+        "MODEL_DEPLOYMENT") or "gpt-5.4-mini"
 
     print("\n" + "=" * 60)
     print("Browser Automation Demo")

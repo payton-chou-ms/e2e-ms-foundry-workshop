@@ -6,15 +6,67 @@
 
 ## 執行完整流程
 
-一個命令即可建置方案，包括資料處理與代理程式建立：
+如果你想先看「每一支 script 是做什麼、什麼時候該跑、要怎麼跑」，請先看 [腳本用途與執行順序](05-script-sequence.md)。
+
+這個命令的意思是：
+
+- 使用 repo 內已經附好的預設資料集 `data/default`
+- 從 pipeline 的 **步驟 02** 開始往後執行
+- 一路做到建立 Foundry agent 為止
+
+也就是說，它**不會重新產生範例資料**，而是直接接手後面的建置流程。
+
+```text
+01 產生範例資料        ← 這一步會跳過
+02 建立 Fabric 項目    ← 從這裡開始
+03 載入資料到 Fabric
+04 產生 NL2SQL 提示詞
+05 建立 Fabric 資料代理程式
+06 上傳文件到 Azure AI Search
+07 建立協調代理程式
+```
+
+一個命令即可完成上述建置：
 
 ```bash
 python scripts/00_build_solution.py --from 02
 ```
 
+### 為什麼是 `--from 02`
+
+`scripts/00_build_solution.py` 的完整預設流程其實是從 `01` 到 `07`。
+
+但在這個 workshop 的預設部署路徑裡，`data/default` 已經存在，所以不需要每次都重跑資料生成。文件這裡用 `--from 02`，是要讓你：
+
+- 跳過耗時較長的資料生成步驟
+- 直接把現成的預設資料載入 Fabric
+- 建好後續 prompt、Fabric agent、Search 索引與 Foundry agent
+
+### 什麼情況適合用這個命令
+
+適合：
+
+- 你在跑 repo 內建的預設情境
+- `data/default` 已存在，且你不打算重做資料內容
+- 你只是要把預設 workshop 環境建好或驗證一次
+
+不適合：
+
+- 你要產生新的產業 / use case 資料
+- 你剛修改過 `INDUSTRY`、`USECASE` 或資料生成設定
+- 你想從頭完整重跑含資料生成的全流程
+
+如果你要從頭連資料一起重建，請改用：
+
+```bash
+python scripts/00_build_solution.py
+```
+
+這會從步驟 `01` 開始，先產生新的範例資料，再往後完成整條 pipeline。
+
 如果環境已經完全為你準備好，而且範例建置已成功執行過，你可能只需要本頁稍後的測試步驟。
 
-這使用 `data/default` 資料夾並執行所有設定步驟：
+下面這張表，就是 `--from 02` 這個命令實際會執行的步驟：
 
 | 步驟 | 執行內容 | 時間 |
 |------|----------|------|
@@ -146,4 +198,4 @@ You: quit
 
     ---
 
-[← 設定開發環境](03-configure.md) | [為你的使用案例自訂 →](../02-customize/index.md)
+[← 設定開發環境](03-configure.md) | [腳本用途與執行順序 →](05-script-sequence.md)

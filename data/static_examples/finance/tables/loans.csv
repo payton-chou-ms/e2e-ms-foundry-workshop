@@ -1,0 +1,6 @@
+loan_id,customer_name,loan_type,requested_amount,risk_score,application_status,decision_due_date
+LOAN-901,Nadia Ibrahim,Mortgage,420000,612,Under Review,2026-03-18
+LOAN-902,Victor Lane,Working Capital,120000,684,Approved,2026-03-12
+LOAN-903,Elm Street Dental,Equipment,310000,571,Under Review,2026-03-20
+LOAN-904,Harper Zhou,Auto,38000,701,Approved,2026-03-11
+LOAN-905,Silverline Imports,Trade Finance,650000,545,Escalated,2026-03-19

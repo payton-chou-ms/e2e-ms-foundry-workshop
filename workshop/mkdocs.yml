@@ -1,6 +1,5 @@
 site_name: 使用 Solution Accelerators 更快建構方案 – Foundry IQ + Fabric IQ
 site_description: 實作型 workshop，示範如何建構同時結合非結構化文件知識與結構化企業資料的 AI 代理程式
-site_url: https://nchandhi.github.io/nc-iq-workshop
 
 theme:
   name: material
@@ -28,7 +27,11 @@ theme:
 markdown_extensions:
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.highlight:
@@ -45,11 +48,6 @@ markdown_extensions:
 plugins:
   - search
 
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/nchandhi/nc-iq-workshop
-
 nav:
   - 總覽: index.md
   - 快速開始:
@@ -63,6 +61,7 @@ nav:
       - 建立 Fabric 工作區: 01-deploy/02-setup-fabric.md
       - 設定開發環境: 01-deploy/03-configure.md
       - 建置方案: 01-deploy/04-run-scenario.md
+      - 腳本用途與執行順序: 01-deploy/05-script-sequence.md
   - 依使用案例自訂:
       - 總覽: 02-customize/index.md
       - 產生與建置: 02-customize/02-generate.md

@@ -1,0 +1,6 @@
+claim_id,policy_id,claim_type,filed_date,status,claimed_amount,sla_deadline
+CLM-701,POL-601,Water Damage,2026-03-01,Open,18000,2026-03-11
+CLM-702,POL-602,Collision,2026-03-02,Review,7200,2026-03-09
+CLM-703,POL-603,Fire,2026-03-03,Open,144000,2026-03-17
+CLM-704,POL-604,Theft,2026-03-07,Pending Docs,9500,2026-03-17
+CLM-705,POL-605,Liability,2026-03-08,Open,65000,2026-03-22

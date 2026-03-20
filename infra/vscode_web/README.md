@@ -1,8 +1,8 @@
-# VS Code for the Web - Azure AI Foundry Templates
+# VS Code for the Web - Microsoft Foundry Templates
 
 我們已為你產生一個簡單的開發環境來部署這些範本。
 
-Azure AI Foundry 擴充功能提供工具，協助你直接在 VS Code 中建構、測試與部署 AI 模型及 AI 應用程式。它提供簡化的操作方式，讓你不需要離開開發環境就能與模型、代理程式和執行緒互動。點選左側的 Azure AI Foundry 圖示以查看更多。
+Microsoft Foundry 擴充功能提供工具，協助你直接在 VS Code 中建構、測試與部署 AI 模型及 AI 應用程式。它提供簡化的操作方式，讓你不需要離開開發環境就能與模型、代理程式和執行緒互動。點選左側的 Microsoft Foundry 圖示以查看更多。
 
 請依照以下操作說明開始！
 
@@ -40,4 +40,4 @@ azd down
 
 ## 疑難排解
 
-- 如果你透過 Azure AI Foundry 專案的端點初始化 client，請確認 `.env` 中設定的端點格式為 https://{your-foundry-resource-name}.services.ai.azure.com/api/projects/{your-foundry-project-name}
+- 如果你透過 Foundry project 的端點初始化 client，請確認 `.env` 中設定的端點格式為 https://{your-foundry-resource-name}.services.ai.azure.com/api/projects/{your-foundry-project-name}

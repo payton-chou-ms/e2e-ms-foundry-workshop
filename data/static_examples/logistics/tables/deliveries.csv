@@ -1,0 +1,6 @@
+delivery_id,vehicle_id,origin,destination,scheduled_arrival,delivery_status,delay_minutes
+DLV-1501,VEH-1401,Hub A,Store 17,2026-03-15 09:30,Delivered,0
+DLV-1502,VEH-1402,Hub B,Depot 4,2026-03-15 11:00,In Transit,35
+DLV-1503,VEH-1403,Hub C,Port 2,2026-03-15 13:20,Delayed,95
+DLV-1504,VEH-1404,Hub A,Store 31,2026-03-15 10:15,Delivered,5
+DLV-1505,VEH-1405,Hub D,Depot 8,2026-03-15 15:40,Scheduled,0

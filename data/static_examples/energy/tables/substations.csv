@@ -1,0 +1,6 @@
+substation_id,region,capacity_mw,current_load_pct,critical_facility_supported,inspection_status
+SUB-1001,North,180,76,Yes,Current
+SUB-1002,East,240,84,Yes,Current
+SUB-1003,South,150,68,No,Current
+SUB-1004,West,210,81,Yes,Past Due
+SUB-1005,Central,190,73,No,Current

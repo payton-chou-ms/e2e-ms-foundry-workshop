@@ -1,0 +1,6 @@
+vehicle_id,driver_name,route_type,last_inspection_date,hours_driven_week,maintenance_status
+VEH-1401,Carla Mendez,Urban,2026-02-20,46,Ready
+VEH-1402,Ethan Cole,Regional,2026-01-28,58,Inspection Due
+VEH-1403,Priya Nair,Long Haul,2026-02-10,61,Ready
+VEH-1404,Jonas Lee,Urban,2026-03-01,39,Ready
+VEH-1405,Maria Costa,Regional,2026-02-02,55,Maintenance Scheduled

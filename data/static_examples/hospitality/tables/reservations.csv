@@ -1,0 +1,6 @@
+reservation_id,arrival_date,guest_name,room_type,nights,vip_flag,housekeeping_required
+RES-1301,2026-03-15,Ava Thompson,Suite,3,Yes,Yes
+RES-1302,2026-03-15,Noah Singh,Standard King,2,No,Yes
+RES-1303,2026-03-16,Mina Park,Deluxe Twin,4,No,Yes
+RES-1304,2026-03-16,Oliver Chen,Suite,1,Yes,Priority
+RES-1305,2026-03-17,Sara Alvarez,Accessible Queen,2,No,Yes

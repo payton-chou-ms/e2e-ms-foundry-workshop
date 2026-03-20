@@ -55,7 +55,7 @@ from pypdf import PdfReader
 # Azure services - from azd environment
 AZURE_AI_ENDPOINT = os.getenv("AZURE_AI_ENDPOINT") or os.getenv("AZURE_AI_PROJECT_ENDPOINT", "").split("/api/projects")[0]
 AZURE_AI_SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
-EMBEDDING_MODEL = os.getenv("AZURE_EMBEDDING_MODEL") or os.getenv("EMBEDDING_MODEL", "text-embedding-ada-002")
+EMBEDDING_MODEL = os.getenv("AZURE_EMBEDDING_MODEL") or os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
 
 # Project settings - from .env
 DATA_FOLDER = os.getenv("DATA_FOLDER")

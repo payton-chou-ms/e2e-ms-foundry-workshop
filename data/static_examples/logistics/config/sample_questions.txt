@@ -1,0 +1,5 @@
+Which drivers are close to the weekly driving-hour limit?
+What is the policy for delayed deliveries over 60 minutes?
+Which vehicles cannot be dispatched because of inspection status?
+Which deliveries are currently delayed or at risk?
+When is customer notification required for a route delay?

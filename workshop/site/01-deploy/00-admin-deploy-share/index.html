@@ -10,8 +10,6 @@
       
       
       
-        <link rel="canonical" href="https://nchandhi.github.io/nc-iq-workshop/01-deploy/00-admin-deploy-share/">
-      
       
         <link rel="prev" href="../">
       
@@ -926,6 +924,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-script-sequence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    腳本用途與執行順序
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1646,6 +1672,7 @@
 <li>你想自己建立或選擇 Fabric 工作區</li>
 <li>你想整理出一套可重複使用的 workshop 環境</li>
 </ul>
+<p>如果你想先快速判斷自己是否需要 Azure 部署權限，先看 <a href="../#azure-permissions">部署總覽中的 Azure 權限對照</a>。</p>
 <h2 id="_3">這條路徑涵蓋的內容</h2>
 <ol>
 <li>部署 Azure 資源。</li>
@@ -1657,15 +1684,20 @@
 <h2 id="_4">開始之前</h2>
 <p>請確認你具備：</p>
 <ul>
-<li>訂用帳戶與資源群組的 Azure 部署權限。</li>
-<li>如果使用提供的 Bicep 範本，需要建立 Azure 角色指派的權限。</li>
+<li>目標資源群組（或其上層 scope）的 Azure 資源建立權限。</li>
+<li>目標資源群組（或其上層 scope）的 Azure 角色指派建立權限。</li>
 <li>Fabric 工作區管理員或同等撰寫權限。</li>
 <li>所選 Azure 區域的必要模型容量與配額。</li>
 </ul>
 <div class="admonition warning">
-<p class="admonition-title">Contributor 可能不足</p>
-<p>基礎架構會建立 Azure RBAC 角色指派。
-在許多訂用帳戶中，部署身分需要 <code>Owner</code>、<code>User Access Administrator</code>，或其他包含 <code>Microsoft.Authorization/roleAssignments/write</code> 的角色。</p>
+<p class="admonition-title">Contributor 單獨使用通常不夠</p>
+<p>這套基礎架構不只會建立資源，也會在部署過程中建立 Azure RBAC 角色指派。</p>
+<p>文件上建議用下面兩種寫法理解：</p>
+<ul>
+<li>最簡單：部署身分在目標資源群組或訂用帳戶上具備 <code>Owner</code>。</li>
+<li>最小實務組合：部署身分同時具備「可建立資源的角色」與「可建立角色指派的角色」。常見組合是 <code>Contributor</code> + <code>User Access Administrator</code>，或 <code>Contributor</code> + <code>Role Based Access Control Administrator</code>。</li>
+</ul>
+<p>如果你使用的是自訂角色，至少要同時涵蓋資源建立所需的寫入權限，以及 <code>Microsoft.Authorization/roleAssignments/write</code>。</p>
 </div>
 <h2 id="_5">建議執行順序</h2>
 <h3 id="1-azure">1. 部署 Azure 資源</h3>
@@ -1754,22 +1786,6 @@
     Made with
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
-    </a>
-  
-</div>
-      
-        
-<div class="md-social">
-  
-    
-    
-    
-    
-      
-      
-    
-    <a href="https://github.com/nchandhi/nc-iq-workshop" target="_blank" rel="noopener" title="github.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>

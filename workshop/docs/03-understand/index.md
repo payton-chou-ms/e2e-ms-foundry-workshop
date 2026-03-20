@@ -55,7 +55,7 @@ flowchart LR
 | **Foundry Tool** | 函式工具結構描述、執行迴圈與選配擴充分層 |
 | **Foundry IQ** | 文件如何進入 Azure AI Search，並透過 `search_documents` 提供引用段落 |
 | **Fabric IQ** | 情境與 schema 脈絡如何引導 agent 產生唯讀 SQL 查詢 Fabric 資料 |
-| **Foundry Control Plane** | Foundry 專案、連線、遙測與資源拓撲 |
+| **Foundry Control Plane** | Foundry project、連線、遙測與資源拓撲 |
 | **Multi-Agent Extension** | 宣告式 YAML、角色分工、情境工作流與延伸教學策略 |
 
 ## 哪個頁面回答哪個問題

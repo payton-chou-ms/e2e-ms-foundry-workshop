@@ -10,10 +10,8 @@
       
       
       
-        <link rel="canonical" href="https://nchandhi.github.io/nc-iq-workshop/02-customize/">
       
-      
-        <link rel="prev" href="../01-deploy/04-run-scenario/">
+        <link rel="prev" href="../01-deploy/05-script-sequence/">
       
       
         <link rel="next" href="02-generate/">
@@ -734,6 +732,34 @@
     
   
     建置方案
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-deploy/05-script-sequence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    腳本用途與執行順序
   
 
     
@@ -1514,11 +1540,17 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">固定範例資產</p>
+<p>為了讓每個 tab 都對應到 repo 中可下載的實體檔案，本 repository 現在提供固定樣本資產於 <code>data/static_examples/&lt;scenario&gt;/</code>。
+每個固定樣本資料夾也都包含 <code>config/sample_questions.txt</code>，可直接對應該 tab 的問題集。</p>
+</div>
 <h2 id="_4">範例轉換</h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:9"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><input id="__tabbed_1_6" name="__tabbed_1" type="radio" /><input id="__tabbed_1_7" name="__tabbed_1" type="radio" /><input id="__tabbed_1_8" name="__tabbed_1" type="radio" /><input id="__tabbed_1_9" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">電信</label><label for="__tabbed_1_2">零售</label><label for="__tabbed_1_3">製造</label><label for="__tabbed_1_4">保險</label><label for="__tabbed_1_5">金融</label><label for="__tabbed_1_6">能源</label><label for="__tabbed_1_7">教育</label><label for="__tabbed_1_8">旅宿</label><label for="__tabbed_1_9">物流</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含停機追蹤與障礙單管理的網路營運"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/telecommunications/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1547,12 +1579,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"哪些停機事件超過了我們的最大持續時間政策？"</li>
-<li>"高影響停機事件的升級程序是什麼？"</li>
+<li>"Which outage events exceeded our maximum duration policy?"</li>
+<li>"What is the escalation procedure for high-impact outages?"</li>
+<li>"Which open trouble tickets are linked to outages still under monitoring?"</li>
+<li>"How many affected customers were involved in high-impact fiber outages?"</li>
+<li>"When must customer updates be issued during a major outage?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含季節性庫存與退貨的時尚電子商務"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/retail/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1581,12 +1617,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"特價商品的退貨政策是什麼？"</li>
-<li>"春季系列中哪些產品庫存偏低？"</li>
+<li>"What is the return policy for discounted electronics?"</li>
+<li>"Which spring products are already below their reorder point?"</li>
+<li>"Which orders were returned after delivery?"</li>
+<li>"Do any products in the spring catalog need immediate replenishment?"</li>
+<li>"When do orders qualify for free standard shipping?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含品質控管與供應商的汽車零件"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/manufacturing/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1615,12 +1655,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"哪些機器已超過維護期限？"</li>
-<li>"關鍵零件的 QC 流程是什麼？"</li>
+<li>"Which machines are overdue for preventive maintenance?"</li>
+<li>"What are the QC thresholds for critical automotive components?"</li>
+<li>"Which suppliers have the longest lead times for key components?"</li>
+<li>"Which production equipment is near or past its maintenance due date?"</li>
+<li>"When must a supplier corrective action request be issued?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含理賠與保單管理的產物保險"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/insurance/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1649,12 +1693,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"哪些理賠案件即將到達 SLA 期限？"</li>
-<li>"標準房屋保險涵蓋哪些項目？"</li>
+<li>"Which open claims are approaching their SLA deadline?"</li>
+<li>"What does the standard homeowners policy cover?"</li>
+<li>"Which claims require supervisor review within 48 hours?"</li>
+<li>"Which policy types have the highest coverage limits?"</li>
+<li>"What is the escalation path for catastrophic loss claims?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含貸款與合規的區域銀行"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/finance/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1683,12 +1731,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"哪些貸款申請符合我們的核准條件？"</li>
-<li>"大額交易的合規要求是什麼？"</li>
+<li>"Which loan applications currently meet our approval conditions?"</li>
+<li>"What are the compliance requirements for large transactions?"</li>
+<li>"Which applications still need senior credit review?"</li>
+<li>"Which business accounts need a beneficial ownership refresh?"</li>
+<li>"What risk score threshold requires manual underwriting?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含電網監控與停電回應的電力公用事業"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/energy/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1717,12 +1769,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"哪些變電站的運轉容量超過 80%？"</li>
-<li>"關鍵設施的復電優先順序是什麼？"</li>
+<li>"Which substations are operating above 80 percent load?"</li>
+<li>"What is the restoration priority for critical facilities?"</li>
+<li>"Which outages should trigger regional command activation?"</li>
+<li>"Which sites support critical facilities and are nearing capacity?"</li>
+<li>"What safety checks are required before switching work begins?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含選課管理與課程排程的大學"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/education/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1751,12 +1807,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"哪些課程有選課不足的風險？"</li>
-<li>"進階工程課程的先修條件是什麼？"</li>
+<li>"Which courses are at risk of under-enrollment?"</li>
+<li>"What are the prerequisites for advanced engineering courses?"</li>
+<li>"Which students are requesting or carrying overload credit loads?"</li>
+<li>"Which courses are already at full capacity?"</li>
+<li>"When can students add courses during the term?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含訂房與賓客服務的連鎖飯店"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/hospitality/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1785,12 +1845,16 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"今天抵達的賓客中，哪些房間需要整理服務？"</li>
-<li>"延遲退房的政策是什麼？"</li>
+<li>"Which arriving guests require priority room readiness?"</li>
+<li>"What is the policy for late checkout?"</li>
+<li>"Which rooms need housekeeping attention before same-day arrivals?"</li>
+<li>"Which reservations are marked as VIP arrivals?"</li>
+<li>"When do same-day cancellations incur a room charge?"</li>
 </ul>
 </div>
 <div class="tabbed-block">
 <p><strong>輸入：</strong> "含配送追蹤與駕駛合規的車隊管理"</p>
+<p><strong>固定範例路徑：</strong> <code>data/static_examples/logistics/</code>（含 <code>config/sample_questions.txt</code>）</p>
 <table>
 <thead>
 <tr>
@@ -1819,8 +1883,11 @@
 </table>
 <p><strong>範例問題：</strong></p>
 <ul>
-<li>"哪些駕駛正在接近工時上限？"</li>
-<li>"延遲配送的政策是什麼？"</li>
+<li>"Which drivers are close to the weekly driving-hour limit?"</li>
+<li>"What is the policy for delayed deliveries over 60 minutes?"</li>
+<li>"Which vehicles cannot be dispatched because of inspection status?"</li>
+<li>"Which deliveries are currently delayed or at risk?"</li>
+<li>"When is customer notification required for a route delay?"</li>
 </ul>
 </div>
 </div>
@@ -1871,22 +1938,6 @@
     Made with
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
-    </a>
-  
-</div>
-      
-        
-<div class="md-social">
-  
-    
-    
-    
-    
-      
-      
-    
-    <a href="https://github.com/nchandhi/nc-iq-workshop" target="_blank" rel="noopener" title="github.com" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>

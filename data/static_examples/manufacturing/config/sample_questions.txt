@@ -1,0 +1,5 @@
+Which machines are overdue for preventive maintenance?
+What are the QC thresholds for critical automotive components?
+Which suppliers have the longest lead times for key components?
+Which production equipment is near or past its maintenance due date?
+When must a supplier corrective action request be issued?

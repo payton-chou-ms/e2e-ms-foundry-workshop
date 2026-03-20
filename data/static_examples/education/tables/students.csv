@@ -1,0 +1,6 @@
+student_id,program,year_level,enrollment_status,advisor,credit_load
+STU-1201,Computer Science,3,Enrolled,Dr. Lin,18
+STU-1202,Mechanical Engineering,2,Enrolled,Prof. Rao,16
+STU-1203,Business Analytics,4,Waitlisted,Dr. Gomez,12
+STU-1204,Nursing,1,Enrolled,Prof. Wu,15
+STU-1205,Electrical Engineering,3,Enrolled,Dr. Malik,21

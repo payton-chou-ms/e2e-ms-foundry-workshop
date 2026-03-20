@@ -1,0 +1,6 @@
+room_number,room_type,status,last_cleaned,late_checkout_flag,amenity_package
+801,Suite,Occupied,2026-03-14 11:20,No,Executive
+612,Standard King,Vacant Clean,2026-03-14 15:05,No,Standard
+417,Deluxe Twin,Occupied,2026-03-14 09:50,Yes,Family
+905,Suite,Out of Order,2026-03-10 13:00,No,Executive
+308,Accessible Queen,Vacant Dirty,2026-03-14 10:10,No,Accessible

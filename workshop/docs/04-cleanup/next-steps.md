@@ -39,7 +39,7 @@ python scripts/00_build_solution.py --clean \
 
 ### 資源
 
-- [Azure AI Foundry 文件](https://learn.microsoft.com/azure/ai-studio/)
+- [Microsoft Foundry 文件](https://learn.microsoft.com/azure/ai-studio/)
 - [Microsoft Fabric 文件](https://learn.microsoft.com/fabric/)
 - [負責任 AI 實務](https://www.microsoft.com/ai/responsible-ai)
 

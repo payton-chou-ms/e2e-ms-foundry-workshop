@@ -1,0 +1,6 @@
+equipment_id,line,equipment_type,last_maintenance_date,next_maintenance_due,status,efficiency_pct
+EQ-401,Line A,CNC Mill,2026-01-10,2026-03-10,Overdue,87
+EQ-402,Line A,Laser Cutter,2026-02-14,2026-04-14,Active,93
+EQ-403,Line B,Stamping Press,2025-12-20,2026-03-20,Due Soon,81
+EQ-404,Line C,Robotic Arm,2026-02-01,2026-05-01,Active,95
+EQ-405,Line B,Heat Treat Oven,2026-01-05,2026-03-05,Overdue,78

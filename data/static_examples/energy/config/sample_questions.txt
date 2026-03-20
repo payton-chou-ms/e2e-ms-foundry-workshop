@@ -1,0 +1,5 @@
+Which substations are operating above 80 percent load?
+What is the restoration priority for critical facilities?
+Which outages should trigger regional command activation?
+Which sites support critical facilities and are nearing capacity?
+What safety checks are required before switching work begins?

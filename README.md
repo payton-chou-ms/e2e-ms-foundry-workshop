@@ -11,7 +11,7 @@
 這個實作練習會建立一個智慧代理程式，具備以下能力：
 
 - **部署必要模型**，供對話與向量嵌入使用，並將選配延伸模型獨立管理
-- **建立提示詞代理程式**，在 Azure AI Foundry 中協調 grounded reasoning
+- **建立提示詞代理程式**，在 Microsoft Foundry 中協調 grounded reasoning
 - **定義嚴格的 tool contract**，以明確 guardrail 執行 SQL 與文件檢索
 - **從文件建立 knowledge base**，透過 agentic retrieval（plan、iterate、reflect）取得答案
 - **定義商業本體（business ontology）**，理解實體、關聯與規則
@@ -51,9 +51,9 @@
 
 | Component | Technology | Description |
 |-----------|------------|-------------|
-| Model deployments | Azure AI Services / Foundry | 必要的 chat + embedding 部署，以及選配延伸模型 |
-| AI Agent | Azure AI Foundry | 協調工具並產生回應 |
-| Tool contract | Azure AI Foundry + local runtime | 以明確 guardrail 執行 SQL 與文件檢索 |
+| Model deployments | Microsoft Foundry | 必要的 chat + embedding 部署，以及選配延伸模型 |
+| AI Agent | Microsoft Foundry | 協調工具並產生回應 |
+| Tool contract | Microsoft Foundry + local runtime | 以明確 guardrail 執行 SQL 與文件檢索 |
 | Knowledge Base | Foundry IQ | 對文件做 agentic retrieval |
 | Business Ontology | Fabric IQ | 實體、關聯與 NL→SQL |
 | Sample Data | AI-Generated | 針對任意產業與使用案例產生客製資料 |
@@ -77,13 +77,20 @@
 # 登入 Azure
 azd auth login
 
-# 部署 Microsoft Foundry control plane 與支援 Azure 資源
-azd up
+# 先登入正確 Tenant，再部署到指定 Subscription
+az login --tenant <TENANT_ID>
+azd up --subscription <SUBSCRIPTION_ID>
 ```
 
-這會部署完整的 Foundry control plane 與支援資源，包括：
-- Azure AI Services (Foundry) with GPT-4o-mini and text-embedding-3-large
-- Optional Content Understanding defaults: gpt-4.1-mini and text-embedding-3-large
+`azd up` 可以直接指定 `--subscription`，但 Tenant 要由 Azure CLI 登入內容決定；如果你已經登入，也可以先用 `az account set --subscription <SUBSCRIPTION_ID>` 再執行 `azd up`。
+
+取得方式：
+- **Subscription ID**：Azure Portal 的 **Subscriptions** 頁面，或執行 `az account list --output table`
+- **Tenant ID**：Azure Portal 的 **Microsoft Entra ID** 頁面，或先執行 `az login` / `az account show`
+
+這會部署完整的 Microsoft Foundry Control Plane 與支援資源，包括：
+- Microsoft Foundry 與 Foundry project，內含 GPT-5.4-mini 和 text-embedding-3-large 部署
+- Content Understanding defaults: gpt-4.1-mini plus the primary text-embedding-3-large deployment
 - Dedicated image-capable Azure OpenAI resource for `13_demo_image_generation.py`
 - Playwright Workspace for `10_demo_browser_automation.py`
 - Azure AI Search (Basic tier with semantic search)

@@ -8,6 +8,8 @@
 - 你想自己建立或選擇 Fabric 工作區
 - 你想整理出一套可重複使用的 workshop 環境
 
+如果你想先快速判斷自己是否需要 Azure 部署權限，先看 [部署總覽中的 Azure 權限對照](index.md#azure-permissions)。
+
 ## 這條路徑涵蓋的內容
 
 1. 部署 Azure 資源。
@@ -20,14 +22,20 @@
 
 請確認你具備：
 
-- 訂用帳戶與資源群組的 Azure 部署權限。
-- 如果使用提供的 Bicep 範本，需要建立 Azure 角色指派的權限。
+- 目標資源群組（或其上層 scope）的 Azure 資源建立權限。
+- 目標資源群組（或其上層 scope）的 Azure 角色指派建立權限。
 - Fabric 工作區管理員或同等撰寫權限。
 - 所選 Azure 區域的必要模型容量與配額。
 
-!!! warning "Contributor 可能不足"
-    基礎架構會建立 Azure RBAC 角色指派。
-    在許多訂用帳戶中，部署身分需要 `Owner`、`User Access Administrator`，或其他包含 `Microsoft.Authorization/roleAssignments/write` 的角色。
+!!! warning "Contributor 單獨使用通常不夠"
+    這套基礎架構不只會建立資源，也會在部署過程中建立 Azure RBAC 角色指派。
+
+    文件上建議用下面兩種寫法理解：
+
+    - 最簡單：部署身分在目標資源群組或訂用帳戶上具備 `Owner`。
+    - 最小實務組合：部署身分同時具備「可建立資源的角色」與「可建立角色指派的角色」。常見組合是 `Contributor` + `User Access Administrator`，或 `Contributor` + `Role Based Access Control Administrator`。
+
+    如果你使用的是自訂角色，至少要同時涵蓋資源建立所需的寫入權限，以及 `Microsoft.Authorization/roleAssignments/write`。
 
 ## 建議執行順序
 
