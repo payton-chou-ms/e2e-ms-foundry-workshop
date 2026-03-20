@@ -84,7 +84,9 @@
 | 英文 | 建議繁中 | 使用規則 |
 | --- | --- | --- |
 | Azure | Azure | 產品名稱不翻 |
-| Azure AI Foundry | Azure AI Foundry | 產品正式名稱不翻 |
+| Microsoft Foundry | Microsoft Foundry | 本 repo 的正式平台名稱統一使用此寫法 |
+| Foundry project | Foundry project | 專案邊界名稱不翻 |
+| Foundry Control Plane | Foundry Control Plane | 控制面名稱不翻 |
 | Microsoft Fabric | Microsoft Fabric | 產品正式名稱不翻 |
 | Foundry IQ | Foundry IQ | 功能名稱不翻 |
 | Fabric IQ | Fabric IQ | 功能名稱不翻 |
@@ -114,6 +116,11 @@
 | cleanup | 清理 | 標題可譯為 清理 或 清理資源 |
 | source of truth | 唯一內容來源 | 文件治理用語 |
 | generated artifact | 產生物 | 也可依語境寫 建置產物 |
+
+補充規則：
+
+- 本 repo 不再使用 `Azure AI Foundry` 作為對外正式名稱
+- 若文件同時提到平台、專案與控制面，請分別使用 `Microsoft Foundry`、`Foundry project`、`Foundry Control Plane`
 
 ## 常見混用提醒
 

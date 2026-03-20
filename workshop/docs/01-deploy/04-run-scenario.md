@@ -95,28 +95,23 @@ python scripts/00_build_solution.py
        | 06 | 上傳文件到 Azure AI Search | ~1min |
        | 07-search | 建立 Search-only Foundry agent | ~10s |
 
-## 選配 demo 驗證狀態
+## 選配 demo 先怎麼理解
 
-部署完成後，可額外驗證以下獨立 demo：
+如果你是第一次接觸這個 workshop，這一段可以先簡單記住：
 
-| 腳本 | 目前狀態 | 備註 |
-|------|----------|------|
-| `09_demo_content_understanding.py` | 可用 | 依賴已部署的 CU defaults |
-| `10_demo_browser_automation.py` | 條件式可用 | `azd up` 會自動建立 Playwright Workspace，但仍需先在 Portal 產生 Playwright access token 並建立 Browser Automation connection |
-| `11_demo_web_search.py` | 可用 | 已對齊新版 SDK 類型 |
-| `12_demo_pii_redaction.py` | 可用 | 支援 Microsoft Entra ID，不需額外 Language key |
-| `13_demo_image_generation.py` | 可用 | `azd up` 會自動建立獨立 image resource，腳本預設讀取 `AZURE_IMAGE_OPENAI_ENDPOINT` 與 `AZURE_IMAGE_MODEL_DEPLOYMENT` |
+- `09` 到 `13` 都是**額外示範**，不是主流程必要步驟
+- 主流程先跑通就好，不需要第一次就把這些都測完
+- 如果某個選配 demo 還沒準備好，腳本通常會顯示 `SKIP:`，不會把主流程卡住
 
-### Browser Automation 手動收尾
+目前最容易理解的方式是：
 
-`10_demo_browser_automation.py` 的最短手動收尾如下：
+- `09_demo_content_understanding.py`：額外示範文件理解
+- `10_demo_browser_automation.py`：額外示範瀏覽器自動化
+- `11_demo_web_search.py`：額外示範網頁搜尋
+- `12_demo_pii_redaction.py`：額外示範 PII 遮蔽
+- `13_demo_image_generation.py`：額外示範影像生成
 
-1. 在 Portal 的 Playwright Workspace 產生 access token
-2. 在 Foundry project 建立 Browser Automation connection
-3. 將 connection resource ID 填入 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
-4. 執行 `python scripts/10_demo_browser_automation.py --strict`
-
-如果沒有 `AZURE_PLAYWRIGHT_CONNECTION_ID`，腳本會直接 `SKIP:`，這是預期行為。
+其中只有 Browser Automation 需要額外手動補一段 connection 設定。若沒有設定好 `AZURE_PLAYWRIGHT_CONNECTION_ID`，腳本會直接 `SKIP:`，這是正常行為。
 
 ## 預期輸出
 

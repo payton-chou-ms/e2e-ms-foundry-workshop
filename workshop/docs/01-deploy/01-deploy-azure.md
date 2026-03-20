@@ -15,10 +15,10 @@ cd nc-iq-workshop
 ## 登入 Azure
 
 ```bash
-azd auth login
+azd auth login --tenant-id <TENANT_ID>
 ```
 
-這會開啟瀏覽器進行驗證。
+這會開啟瀏覽器進行驗證，並直接把登入範圍鎖定到你要使用的 Tenant。
 
 !!! warning "部署權限"
     本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限
@@ -44,26 +44,34 @@ azd auth login
 ## 部署資源
 
 ```bash
-azd up
+azd up --subscription <SUBSCRIPTION_ID>
 ```
 
-依照提示選擇你的環境名稱、訂用帳戶與位置等。
+依照提示選擇你的環境名稱與位置等。
 
-如果你想明確指定部署目標，請注意：
+對第一次部署來說，最簡單的做法就是：
 
-- `azd up` 可以直接用 `--subscription` 指定 **Subscription**
-- `azd up` **不能直接**用旗標指定 **Tenant**；Tenant 會跟著你目前 Azure CLI 的登入內容
+1. 在 `azd auth login` 時直接指定 `--tenant-id`
+2. 在 `azd up` 時直接指定 `--subscription`
+
+這樣就不用先登入一次、再手動切 Tenant、再另外切 Subscription。
 
 !!! tip "gpt-5.4-mini 的區域建議"
     如果你要使用目前 repo 的預設模型 `gpt-5.4-mini`，建議把 **AI deployment location** 設為 `eastus2`
 
     實務上可以維持資源群組主區域為 `eastus`，但把 `AZURE_ENV_AI_DEPLOYMENTS_LOCATION` 設成 `eastus2`。這是目前這份 workshop 模板驗證過、較穩定的組合
 
-最直接的做法是先登入正確 Tenant，再執行 `azd up`：
+建議的最短流程如下：
+
+```bash
+azd auth login --tenant-id <TENANT_ID>
+azd up --subscription <SUBSCRIPTION_ID>
+```
+
+如果你後面還需要直接執行 Azure CLI 指令，例如 `az account list` 或 `az account show`，再另外登入 Azure CLI 即可：
 
 ```bash
 az login --tenant <TENANT_ID>
-azd up --subscription <SUBSCRIPTION_ID>
 ```
 
 如果你要在 azd 環境裡明確固定這個設定，可以先這樣做：
@@ -74,7 +82,7 @@ azd env set AZURE_ENV_AI_DEPLOYMENTS_LOCATION eastus2
 azd up --subscription <SUBSCRIPTION_ID>
 ```
 
-如果你已經登入 Azure，只想切換到正確的訂用帳戶，也可以先這樣做：
+如果你已經用 Azure CLI 登入，只想切換到正確的訂用帳戶，也可以先這樣做：
 
 ```bash
 az account set --subscription <SUBSCRIPTION_ID>
@@ -89,6 +97,11 @@ azd up
 
 - **Subscription ID**：到 **Subscriptions**，打開目標訂用帳戶，在 Overview / Essentials 查看 **Subscription ID**
 - **Tenant ID**：到 **Microsoft Entra ID**，在 Overview / Basic information 查看 **Tenant ID**
+
+官網入口：
+
+- **Subscriptions**：https://portal.azure.com/#view/Microsoft_Azure_Billing/SubscriptionsBlade
+- **Microsoft Entra ID**：https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Overview
 
 **從 Azure CLI：**
 

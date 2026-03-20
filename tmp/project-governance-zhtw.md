@@ -24,13 +24,13 @@
 Deep dive 區段目前採用下列主軸組織技術敘事：
 
 1. Foundry Model
-2. Foundry IQ
-3. Foundry Agent
-4. Foundry Tool
-5. Fabric IQ
-6. Control Plane
+2. Foundry Agent
+3. Foundry Tool
+4. 智慧接地層（Foundry IQ + Fabric IQ）
+5. Foundry Control Plane
+6. 多代理程式延伸
 
-這個結構的目標是把原本偏向 `Foundry IQ + Fabric IQ` 的展示，補齊成可完整講解 Foundry 平台能力與控制面的教學路徑。
+這個結構的目標，是先用五個核心主軸講清楚單代理程式 workshop 的主要技術敘事，再把多角色工作流放到第六個延伸主題中，避免高層導覽和實際頁面結構脫節。
 
 ### 教學優先順序
 
@@ -87,7 +87,7 @@ Deep dive 區段目前採用下列主軸組織技術敘事：
 ### 語系策略
 
 - 英文主文件先穩定
-- 繁體中文內容在英文架構穩定後整批落地
+- 繁體中文內容在英文架構穩定後整批落地，並以 `Microsoft Foundry`、`Foundry project`、`Foundry Control Plane` 為正式對外用語
 - 目前先以單源翻譯規範治理，不預先綁定雙語站台架構
 
 ## 實作與維護原則

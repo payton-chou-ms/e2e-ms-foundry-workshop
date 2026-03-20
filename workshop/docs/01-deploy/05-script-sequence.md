@@ -316,6 +316,37 @@ python scripts/15_test_multi_agent_workflow.py --scenario policy_gap_analysis
 python scripts/15_test_multi_agent_workflow.py --scenario exception_triage --question "We saw an unusual spike in escalations. What policy applies and what does the data suggest?"
 ```
 
+### 最新 Agent Framework 小範例
+
+如果你想把上面的 multi-agent 概念，對照到新版 Microsoft Agent Framework API，可以直接看 `scripts/16_agent_framework_workflow_example.py`。這支是幫你理解新版寫法的最小範例，不是本 repo 目前 workshop 主流程的正式實作。
+
+建議先固定目前常見的 preview 版本：
+
+```bash
+pip install --pre "agent-framework-core==1.0.0rc3" "agent-framework-azure-ai==1.0.0rc3"
+```
+
+如果你之後要把 workflow 包成 HTTP 服務，再另外補裝 hosting adapter：
+
+```bash
+pip install --pre "azure-ai-agentserver-core==1.0.0b16" "azure-ai-agentserver-agentframework==1.0.0b16"
+```
+
+執行方式：
+
+```bash
+python scripts/16_agent_framework_workflow_example.py
+python scripts/16_agent_framework_workflow_example.py --question "Summarize the policy risk and next step."
+```
+
+這支腳本示範兩個 agents 串成一條 workflow，再把 workflow 包成一個 agent 來執行。它也刻意用新版較常見的 `WorkflowBuilder(start_executor=...)` 寫法。
+
+你可以把它對照成這個 workshop 的縮小版心智模型：
+
+- `policy-researcher` 類似先產出 `policy_findings` 或 `data_findings`
+- `answer-synthesizer` 類似最後整理成 `final_answer`
+- `WorkflowBuilder(start_executor=...)` 則是新版 API 比較常見的 workflow 起手式
+
 ## 學員最常用的兩條路
 
 ### 路徑 A：標準 workshop

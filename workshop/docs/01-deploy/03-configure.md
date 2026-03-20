@@ -6,6 +6,11 @@
 
 ## Python 環境
 
+!!! note "如果你使用 Dev Container 或 Codespaces"
+    這個 repo 的 Dev Container 會在建立環境時自動安裝 `scripts/requirements.txt` 與 `workshop/requirements.txt`
+    如果你是用 Dev Container 或 Codespaces 開啟 repo，通常可以直接跳過下面的安裝步驟
+    只有在你是本機 Python 環境、或想重新安裝相依套件時，才需要手動執行
+
 ### 建立並啟用
 
 ```bash
@@ -26,13 +31,13 @@ python -m venv .venv
 
 ### 安裝相依套件
 
-=== "快速（建議）"
+=== "本機快速安裝（選用）"
 
     ```bash
     pip install uv && uv pip install -r scripts/requirements.txt
     ```
 
-=== "標準"
+=== "本機標準安裝"
 
     ```bash
     pip install -r scripts/requirements.txt
@@ -46,6 +51,10 @@ python -m venv .venv
 
 !!! note "目前沒有根目錄 requirements.txt"
     Workshop 腳本相依套件在 `scripts/requirements.txt`，MkDocs 站台相依套件在 `workshop/requirements.txt`
+
+!!! note "`uv` 不是 Dev Container 的預設必要前提"
+    如果你想用 `uv`，可以像上面那樣先安裝再使用
+    但對第一次操作的同仁來說，直接執行標準安裝就夠了
 
 ### 驗證設定
 
@@ -82,6 +91,19 @@ FABRIC_WORKSPACE_ID=your-workspace-id-here
 # --- Data Folder (pre-populated with default scenario) ---
 DATA_FOLDER=data/default
 ```
+
+如果你是第一次跑 workshop，建議先只填 `FABRIC_WORKSPACE_ID`，其他資料產生設定先保留 `.env.example` 的預設值即可。
+
+### AI 資料產生設定要不要先改？
+
+這一段主要是給 **Step 2 客製化** 使用，不是第一次跑主流程的必要步驟。
+
+- 第一次操作時，可以先保留 `.env.example` 內建的預設值
+- 如果你暫時不想做客製化，也不需要先自己改成別的產業
+- 如果你把 `INDUSTRY` 和 `USECASE` 註解掉，之後跑到資料生成步驟時，腳本會改成互動式詢問你要輸入什麼
+- 如果 `DATA_SIZE` 沒填，腳本會預設使用 `small`
+
+換句話說，第一次接觸這個 workshop 時，最省事的做法就是：**先不要改這三個值，等你真的要做 Step 2 再改**。
 
 !!! note "Azure 服務變數不需要手動抄寫"
     只要你是透過 `azd up` 建立環境，像是 `AZURE_AI_PROJECT_ENDPOINT`、`AZURE_AI_ENDPOINT`、`AZURE_OPENAI_ENDPOINT`、`AZURE_IMAGE_OPENAI_ENDPOINT`、`AZURE_PLAYWRIGHT_DATAPLANE_URI` 等值都會自動從 `.azure/<env>/.env` 載入

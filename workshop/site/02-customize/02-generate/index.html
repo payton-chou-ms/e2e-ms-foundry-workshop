@@ -1670,6 +1670,11 @@
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--usecase<span class="w"> </span><span class="s2">&quot;Property insurance with claims processing and policy management&quot;</span>
 </code></pre></div>
 <h2 id="_3">產生流程</h2>
+<div class="admonition note">
+<p class="admonition-title">關於下面的輸出範例</p>
+</div>
+<p>下列區塊是腳本常見的實際 console 輸出範例
+  訊息語言與細節可能會隨腳本版本略有不同，請以步驟順序與成功標記為準</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>============================================================
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Generating Custom Data with AI
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>============================================================
@@ -1713,55 +1718,47 @@
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cat<span class="w"> </span>data/*/config/sample_questions.txt
 </code></pre></div>
 <h3 id="_5">範例問題（保險案例）</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Structured data questions (Fabric IQ)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>How many open claims do we have?
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>What&#39;s the total value of claims filed this month?
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Which agents have the most policies?
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a># Unstructured data questions (Foundry IQ)
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>What&#39;s our process for filing a property claim?
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>What does our standard homeowner policy cover?
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>What are our underwriting criteria for high-risk properties?
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a># Combined questions (Both)
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>Which open claims are approaching our SLA deadline based on our process guidelines?
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>Do any current claims involve coverage types not in our standard policy?
-</code></pre></div>
+<p>你大致會看到三類問題：</p>
+<ul>
+<li>結構化資料問題：目前有多少件未結案理賠、這個月理賠總金額是多少、哪位 agent 管理最多保單</li>
+<li>文件問題：房屋保險理賠流程是什麼、標準住宅保單涵蓋哪些內容、高風險物件的核保條件是什麼</li>
+<li>混合問題：哪些未結案理賠快接近 SLA 截止時間、目前是否有理賠項目超出標準保單範圍</li>
+</ul>
 <h2 id="_6">預期輸出</h2>
 <p>完整建置約需 5 分鐘：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>============================================================
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Building Solution: Insurance
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>============================================================
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>[01a/07] Generating AI data...
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  ✓ Ontology, CSVs, PDFs, and questions generated
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>[02/07] Setting up Fabric workspace...
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  ✓ Cleaned previous artifacts
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  ✓ Lakehouse: iqworkshop_lakehouse
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>  ✓ Warehouse: iqworkshop_warehouse
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>[03/07] Loading data into Fabric...
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  ✓ policies.csv → 16 rows
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  ✓ claims.csv → 40 rows
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>  ✓ customers.csv → 20 rows
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  ✓ agents.csv → 8 rows
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>[04/07] Generating NL2SQL prompt...
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  ✓ Schema prompt created for insurance domain
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>[05/07] Creating Fabric Data Agent...
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  ✓ Agent: fabric-agent-insurance
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>[06/07] Uploading documents to AI Search...
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>  ✓ 3 documents → 24 chunks indexed
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>[07/07] Creating Orchestrator Agent...
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>  ✓ Agent: insurance-multi-agent
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>============================================================
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>Build complete! Ready for customer PoC.
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>============================================================
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>============================================================
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Building Solution: Insurance
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>============================================================
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>[01a/07] Generating AI data...
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  ✓ Ontology, CSVs, PDFs, and questions generated
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>[02/07] Setting up Fabric workspace...
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  ✓ Cleaned previous artifacts
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  ✓ Lakehouse: iqworkshop_lakehouse
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  ✓ Warehouse: iqworkshop_warehouse
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>[03/07] Loading data into Fabric...
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  ✓ policies.csv → 16 rows
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  ✓ claims.csv → 40 rows
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>  ✓ customers.csv → 20 rows
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  ✓ agents.csv → 8 rows
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>[04/07] Generating NL2SQL prompt...
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  ✓ Schema prompt created for insurance domain
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>[05/07] Creating Fabric Data Agent...
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  ✓ Agent: fabric-agent-insurance
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>[06/07] Uploading documents to AI Search...
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>  ✓ 3 documents → 24 chunks indexed
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>[07/07] Creating Orchestrator Agent...
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>  ✓ Agent: insurance-multi-agent
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>============================================================
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>Build complete! Ready for customer PoC.
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>============================================================
 </code></pre></div>
 <h2 id="_7">疑難排解</h2>
 <h3 id="ai_1">AI 產生逾時</h3>
@@ -1773,7 +1770,7 @@
 <h3 id="-clean-fabric">--clean 時出現 Fabric 錯誤</h3>
 <ul>
 <li>確認 <code>FABRIC_WORKSPACE_ID</code> 正確</li>
-<li>確認你對工作區有 Contributor 存取權</li>
+<li>確認你對工作區具備可建立與清理 Fabric 產物的權限</li>
 <li>等待一分鐘後重試（Fabric 操作可能較慢）</li>
 </ul>
 <hr />

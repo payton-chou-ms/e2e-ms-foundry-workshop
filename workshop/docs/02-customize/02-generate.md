@@ -24,6 +24,10 @@ python scripts/00_build_solution.py --clean \
 
 ## 產生流程
 
+!!! note "關於下面的輸出範例"
+  下列區塊是腳本常見的實際 console 輸出範例
+  訊息語言與細節可能會隨腳本版本略有不同，請以步驟順序與成功標記為準
+
 ```
 ============================================================
 Generating Custom Data with AI
@@ -74,21 +78,11 @@ cat data/*/config/sample_questions.txt
 
 ### 範例問題（保險案例）
 
-```
-# Structured data questions (Fabric IQ)
-How many open claims do we have?
-What's the total value of claims filed this month?
-Which agents have the most policies?
+你大致會看到三類問題：
 
-# Unstructured data questions (Foundry IQ)
-What's our process for filing a property claim?
-What does our standard homeowner policy cover?
-What are our underwriting criteria for high-risk properties?
-
-# Combined questions (Both)
-Which open claims are approaching our SLA deadline based on our process guidelines?
-Do any current claims involve coverage types not in our standard policy?
-```
+- 結構化資料問題：目前有多少件未結案理賠、這個月理賠總金額是多少、哪位 agent 管理最多保單
+- 文件問題：房屋保險理賠流程是什麼、標準住宅保單涵蓋哪些內容、高風險物件的核保條件是什麼
+- 混合問題：哪些未結案理賠快接近 SLA 截止時間、目前是否有理賠項目超出標準保單範圍
 
 ## 預期輸出
 
@@ -141,7 +135,7 @@ Build complete! Ready for customer PoC.
 ### --clean 時出現 Fabric 錯誤
 
 - 確認 `FABRIC_WORKSPACE_ID` 正確
-- 確認你對工作區有 Contributor 存取權
+- 確認你對工作區具備可建立與清理 Fabric 產物的權限
 - 等待一分鐘後重試（Fabric 操作可能較慢）
 
 ---

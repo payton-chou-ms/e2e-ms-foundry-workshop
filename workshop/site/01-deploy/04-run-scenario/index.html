@@ -831,27 +831,10 @@
   <a href="#demo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        選配 demo 驗證狀態
+        選配 demo 先怎麼理解
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="選配 demo 驗證狀態">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#browser-automation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Browser Automation 手動收尾
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1553,27 +1536,10 @@
   <a href="#demo" class="md-nav__link">
     <span class="md-ellipsis">
       
-        選配 demo 驗證狀態
+        選配 demo 先怎麼理解
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="選配 demo 驗證狀態">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#browser-automation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Browser Automation 手動收尾
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1777,53 +1743,22 @@
 </tbody>
 </table>
 </div>
-<h2 id="demo">選配 demo 驗證狀態</h2>
-<p>部署完成後，可額外驗證以下獨立 demo：</p>
-<table>
-<thead>
-<tr>
-<th>腳本</th>
-<th>目前狀態</th>
-<th>備註</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>09_demo_content_understanding.py</code></td>
-<td>可用</td>
-<td>依賴已部署的 CU defaults</td>
-</tr>
-<tr>
-<td><code>10_demo_browser_automation.py</code></td>
-<td>條件式可用</td>
-<td><code>azd up</code> 會自動建立 Playwright Workspace，但仍需先在 Portal 產生 Playwright access token 並建立 Browser Automation connection</td>
-</tr>
-<tr>
-<td><code>11_demo_web_search.py</code></td>
-<td>可用</td>
-<td>已對齊新版 SDK 類型</td>
-</tr>
-<tr>
-<td><code>12_demo_pii_redaction.py</code></td>
-<td>可用</td>
-<td>支援 Microsoft Entra ID，不需額外 Language key</td>
-</tr>
-<tr>
-<td><code>13_demo_image_generation.py</code></td>
-<td>可用</td>
-<td><code>azd up</code> 會自動建立獨立 image resource，腳本預設讀取 <code>AZURE_IMAGE_OPENAI_ENDPOINT</code> 與 <code>AZURE_IMAGE_MODEL_DEPLOYMENT</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="browser-automation">Browser Automation 手動收尾</h3>
-<p><code>10_demo_browser_automation.py</code> 的最短手動收尾如下：</p>
-<ol>
-<li>在 Portal 的 Playwright Workspace 產生 access token</li>
-<li>在 Foundry project 建立 Browser Automation connection</li>
-<li>將 connection resource ID 填入 <code>.env</code> 的 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code></li>
-<li>執行 <code>python scripts/10_demo_browser_automation.py --strict</code></li>
-</ol>
-<p>如果沒有 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code>，腳本會直接 <code>SKIP:</code>，這是預期行為。</p>
+<h2 id="demo">選配 demo 先怎麼理解</h2>
+<p>如果你是第一次接觸這個 workshop，這一段可以先簡單記住：</p>
+<ul>
+<li><code>09</code> 到 <code>13</code> 都是<strong>額外示範</strong>，不是主流程必要步驟</li>
+<li>主流程先跑通就好，不需要第一次就把這些都測完</li>
+<li>如果某個選配 demo 還沒準備好，腳本通常會顯示 <code>SKIP:</code>，不會把主流程卡住</li>
+</ul>
+<p>目前最容易理解的方式是：</p>
+<ul>
+<li><code>09_demo_content_understanding.py</code>：額外示範文件理解</li>
+<li><code>10_demo_browser_automation.py</code>：額外示範瀏覽器自動化</li>
+<li><code>11_demo_web_search.py</code>：額外示範網頁搜尋</li>
+<li><code>12_demo_pii_redaction.py</code>：額外示範 PII 遮蔽</li>
+<li><code>13_demo_image_generation.py</code>：額外示範影像生成</li>
+</ul>
+<p>其中只有 Browser Automation 需要額外手動補一段 connection 設定。若沒有設定好 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code>，腳本會直接 <code>SKIP:</code>，這是正常行為。</p>
 <h2 id="_4">預期輸出</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>&gt; [02] Create Fabric Items... [OK]
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>&gt; [03] Load Data into Fabric... [OK]

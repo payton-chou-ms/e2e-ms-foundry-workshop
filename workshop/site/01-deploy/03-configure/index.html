@@ -845,6 +845,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI 資料產生設定要不要先改？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#browser-automation-sop" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1589,6 +1600,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI 資料產生設定要不要先改？
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#browser-automation-sop" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1639,6 +1661,12 @@
 如果你拿到的是現成環境，本頁會幫你把本機 checkout 連接上去</p>
 </div>
 <h2 id="python">Python 環境</h2>
+<div class="admonition note">
+<p class="admonition-title">如果你使用 Dev Container 或 Codespaces</p>
+<p>這個 repo 的 Dev Container 會在建立環境時自動安裝 <code>scripts/requirements.txt</code> 與 <code>workshop/requirements.txt</code>
+如果你是用 Dev Container 或 Codespaces 開啟 repo，通常可以直接跳過下面的安裝步驟
+只有在你是本機 Python 環境、或想重新安裝相依套件時，才需要手動執行</p>
+</div>
 <h3 id="_2">建立並啟用</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 </code></pre></div>
@@ -1655,7 +1683,7 @@
 </div>
 </div>
 <h3 id="_3">安裝相依套件</h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">快速（建議）</label><label for="__tabbed_2_2">標準</label><label for="__tabbed_2_3">如果你也要本機建置文件站台</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">本機快速安裝（選用）</label><label for="__tabbed_2_2">本機標準安裝</label><label for="__tabbed_2_3">如果你也要本機建置文件站台</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>uv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>scripts/requirements.txt
@@ -1674,6 +1702,11 @@
 <div class="admonition note">
 <p class="admonition-title">目前沒有根目錄 requirements.txt</p>
 <p>Workshop 腳本相依套件在 <code>scripts/requirements.txt</code>，MkDocs 站台相依套件在 <code>workshop/requirements.txt</code></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title"><code>uv</code> 不是 Dev Container 的預設必要前提</p>
+<p>如果你想用 <code>uv</code>，可以像上面那樣先安裝再使用
+但對第一次操作的同仁來說，直接執行標準安裝就夠了</p>
 </div>
 <h3 id="_4">驗證設定</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import azure.ai.projects; print(&#39;Ready!&#39;)&quot;</span>
@@ -1698,6 +1731,16 @@
 <a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a># --- Data Folder (pre-populated with default scenario) ---
 <a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>DATA_FOLDER=data/default
 </code></pre></div>
+<p>如果你是第一次跑 workshop，建議先只填 <code>FABRIC_WORKSPACE_ID</code>，其他資料產生設定先保留 <code>.env.example</code> 的預設值即可。</p>
+<h3 id="ai">AI 資料產生設定要不要先改？</h3>
+<p>這一段主要是給 <strong>Step 2 客製化</strong> 使用，不是第一次跑主流程的必要步驟。</p>
+<ul>
+<li>第一次操作時，可以先保留 <code>.env.example</code> 內建的預設值</li>
+<li>如果你暫時不想做客製化，也不需要先自己改成別的產業</li>
+<li>如果你把 <code>INDUSTRY</code> 和 <code>USECASE</code> 註解掉，之後跑到資料生成步驟時，腳本會改成互動式詢問你要輸入什麼</li>
+<li>如果 <code>DATA_SIZE</code> 沒填，腳本會預設使用 <code>small</code></li>
+</ul>
+<p>換句話說，第一次接觸這個 workshop 時，最省事的做法就是：<strong>先不要改這三個值，等你真的要做 Step 2 再改</strong>。</p>
 <div class="admonition note">
 <p class="admonition-title">Azure 服務變數不需要手動抄寫</p>
 <p>只要你是透過 <code>azd up</code> 建立環境，像是 <code>AZURE_AI_PROJECT_ENDPOINT</code>、<code>AZURE_AI_ENDPOINT</code>、<code>AZURE_OPENAI_ENDPOINT</code>、<code>AZURE_IMAGE_OPENAI_ENDPOINT</code>、<code>AZURE_PLAYWRIGHT_DATAPLANE_URI</code> 等值都會自動從 <code>.azure/&lt;env&gt;/.env</code> 載入</p>
