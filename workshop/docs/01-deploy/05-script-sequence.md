@@ -8,7 +8,8 @@
 |----------|----------------|
 | 只想快速跑通 workshop | [快速建置與測試](05a-script-core-paths.md) |
 | 想理解主流程的核心腳本 | [主流程腳本 01-08](05b-script-core-pipeline.md) |
-| 想在 Foundry portal 內直接測文件知識 | [手動實驗流程](04a-manual-experiments.md) |
+| 想在 Foundry portal 內做 guided demo | [Microsoft Foundry 手動 Demo](04a-manual-experiments.md) |
+| 想手動驗證 Fabric 資料物件 | [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md) |
 | 想看選配 demo | [選配 demo 09-13](05c-script-optional-demos.md) |
 | 要測 Browser Automation | [Browser Automation 補充設定](05d-browser-automation-setup.md) |
 | 想看 multi-agent 與新版 Agent Framework 範例 | [Multi-agent 與進階範例](05e-script-advanced.md) |
@@ -45,7 +46,7 @@ python scripts/08b_test_foundry_iq_agent.py
 
 ---
 
-[← Microsoft Foundry / Fabric 手動實驗流程](04a-manual-experiments.md) | [快速建置與測試 →](05a-script-core-paths.md)
+[← Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md) | [快速建置與測試 →](05a-script-core-paths.md)
 
 ---
 

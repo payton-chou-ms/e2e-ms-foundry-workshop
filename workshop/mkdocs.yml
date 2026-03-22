@@ -66,7 +66,8 @@ nav:
       - 建立 Fabric 工作區: 01-deploy/02-setup-fabric.md
       - 設定開發環境: 01-deploy/03-configure.md
       - 建置方案: 01-deploy/04-run-scenario.md
-      - Microsoft Foundry / Fabric 手動實驗流程: 01-deploy/04a-manual-experiments.md
+      - Microsoft Foundry 手動 Demo: 01-deploy/04a-manual-experiments.md
+      - Microsoft Fabric 手動驗證: 01-deploy/04b-fabric-manual-validation.md
       - 腳本用途與執行順序:
           - 總覽: 01-deploy/05-script-sequence.md
           - 快速建置與測試: 01-deploy/05a-script-core-paths.md

@@ -76,4 +76,4 @@ python scripts/08_test_foundry_agent.py
 
     ---
 
-[← 設定開發環境](03-configure.md) | [Microsoft Foundry / Fabric 手動實驗流程 →](04a-manual-experiments.md)
+[← 設定開發環境](03-configure.md) | [Microsoft Foundry 手動 Demo →](04a-manual-experiments.md)

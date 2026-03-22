@@ -38,7 +38,8 @@ python scripts/08_test_foundry_agent.py
 
 接著看 [主流程腳本 01-08](05b-script-core-pipeline.md)。
 
-如果你想改走 Foundry portal 內比較原生的文件型 agent，請看 [Microsoft Foundry / Fabric 手動實驗流程](04a-manual-experiments.md)。
+如果你想回到 Foundry portal 做 guided demo，請看 [Microsoft Foundry 手動 Demo](04a-manual-experiments.md)。
+如果你想手動驗證 Lakehouse、tables 與 ontology，請看 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
 
 ---
 

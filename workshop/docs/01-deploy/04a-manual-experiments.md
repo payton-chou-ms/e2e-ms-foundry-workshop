@@ -1,440 +1,412 @@
-# Microsoft Foundry / Fabric 手動實驗流程
+# Microsoft Foundry 手動 Demo
 
-這一頁給「已經跑過腳本，但想回到 portal 直接觀察」的人使用。
+這一頁是給「剛完成部署，現在要回到 Microsoft Foundry portal 確認這次到底建立了哪些資源」的人使用。
 
-如果你是第一次接觸 Microsoft Foundry 和 Microsoft Fabric，請把這一頁當成**看畫面、確認資源、做最小實驗**的入門頁，不要一開始就想把所有功能都點完。
+請先把這一頁當成部署完成後的 summary 頁，而不是完整產品導覽。目標很單純：
+
+1. 先找出這次部署完成後產生的 Foundry project 和相關資產
+2. 確認 agent、knowledge、tools、models 都真的存在
+3. 再從這些已建立的資產出發，開始認識 Discover / Build / Operate
+
+這裡不再混講 Fabric。Fabric 的資料物件驗證請看 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
+
+## 先找出這次剛部署完的資源
+
+在開始前，先確認你打開的是這次部署出來的資源，而不是其他專案或舊環境。
+
+### 先看這幾個地方
+
+如果你是照 [建置方案](04-run-scenario.md) 跑完，先回頭確認：
+
+- `.azure/<env>/.env` 裡的 `AZURE_AI_PROJECT_NAME`
+- `.azure/<env>/.env` 裡的 `AZURE_AI_PROJECT_ENDPOINT`
+- `data/default/config/sample_questions.txt` 或你自訂 scenario 對應的 `config/sample_questions.txt`
+
+如果你走的是自訂 use case，也請同步確認你現在使用的是哪一組：
+
+- `documents`
+- `tables`
+- `sample_questions.txt`
+
+### 你在 portal 中應該先找到什麼
+
+進入 Foundry 之後，先不要急著到處點。請先確認下面幾類資產：
+
+1. 這次部署用的 Foundry project
+2. 這次建立的 agent
+3. 這次掛上的 knowledge 或知識來源
+4. 這次使用的 model deployment
+5. 這次配置的 tools 或 connections
 
 ## 這頁怎麼讀
 
-第一次使用時，建議用最簡單的順序：
+建議照下面順序操作：
 
-1. 先看 **最短檢查路徑**，只確認環境真的有起來
-2. 再看 **Foundry 路徑**，認識 project、agent、tools 在哪裡
-3. 最後看 **Fabric 路徑**，確認 lakehouse、tables 和 SQL endpoint
+1. 先找到這次部署完的 project 與資產
+2. 再用 **Build** 確認主要資產都存在
+3. 最後再回頭看 **Discover** 與 **Operate**，理解它們在整個平台中的位置
 
-如果你只是第一次上手，先做到下面三件事就夠了：
-
-1. 在 Foundry 找到正確的 project
-2. 在 Fabric 找到正確的 lakehouse
-3. 確認 tables 裡真的有資料
-
-你不需要先把所有名詞都搞懂。對第一次使用者來說，只要先分清楚兩件事就夠了：
-
-1. **Foundry** 是看 agent、model、tools 的地方
-2. **Fabric** 是看 lakehouse、tables、SQL endpoint 的地方
-
-你可以把它理解成兩條平行路徑：
-
-- **Foundry 路徑**：看 agent、model、tool、playground、trace
-- **Fabric 路徑**：看 workspace、lakehouse、tables、SQL endpoint、ontology
-
-## 先分清楚 Foundry 的兩條路
-
-這個 workshop 在 Foundry 相關操作上，實際上有兩條不同路徑。
-
-### 路徑 A：Foundry-native 文件問答
-
-如果你想在 Foundry portal 中直接看到比較原生的文件問答體驗，可以先跑：
-
-```bash
-python scripts/06b_upload_to_foundry_knowledge.py
-python scripts/07b_create_foundry_iq_agent.py
-```
-
-這條路會使用 Foundry IQ knowledge base + MCP tool，比較適合在 portal 內直接看文件型問答。
-
-如果你想另外在本機 terminal 做一次互動測試，再額外跑：
-
-```bash
-python scripts/08b_test_foundry_iq_agent.py
-```
-
-### 路徑 B：主流程 workshop agent
-
-如果你走的是主流程：
-
-```bash
-python scripts/07_create_foundry_agent.py
-python scripts/08_test_foundry_agent.py
-```
-
-那麼 agent 定義雖然會存進 Foundry project，但實際互動測試主要還是在**本機終端機**完成。
-
-第一次使用時，請先記住這句話：
-
-- **路徑 A 比較適合在 portal 內直接聊天測試**
-- **路徑 B 比較適合在 terminal 測試，再回 portal 看設定和 traces**
-
-如果你只是想確認 script 有沒有成功，不需要每個畫面都點完。先照下面的「最短檢查路徑」做即可。
+如果你只是第一次操作，不需要把每個功能都點完。先把「這次部署產生了哪些東西」看清楚即可。
 
 !!! note "UI 名稱可能有小幅變動"
-	 Microsoft Foundry 和 Microsoft Fabric 的 portal 介面更新頻率高。
-	 如果你看到的按鈕名稱和本頁有一點差異，通常先找相同層級的頁面即可，例如 `Build`、`Agents`、`Tools`、`Models + endpoints`、`SQL analytics endpoint`。
+	 Foundry portal 更新很快。
+	 如果你的畫面名稱和本頁不同，請先找對應層級，例如 `Discover`、`Build`、`Operate`、`Agents`、`Knowledge`、`Guardrails`。
 
 ## 最短檢查路徑
 
-如果你只有 5 到 10 分鐘，建議只做下面幾件事：
+1. 開啟正確的 Foundry project
+2. 在 **Build > Agents** 打開 workshop agent 或 Foundry IQ agent
+3. 在 **Build > Knowledge** 或相關區塊確認文件知識來源
+4. 在 **Build > Tools** 確認已配置的工具或連線
+5. 在 **Build > Models** 確認這次使用的部署
+6. 在 **Operate** 搜尋這個 solution name 相關資產，打開資產詳細頁
 
-1. 到 Microsoft Foundry 開啟這次部署用的 **project**
-2. 到 **Build** > **Agents** 找到 workshop agent，確認 instructions 與 tools 存在
-3. 如果你有跑 `06b / 07b / 08b`，再到 **Agents playground** 手動問一題文件問題
-4. 如果你走的是 `07 / 08` 主流程，就先把 Foundry 當成檢查 agent 設定的地方，不要期待所有互動都直接在 portal 完成
-5. 到 Microsoft Fabric 開啟你的 workspace
-6. 找到 `*_lakehouse_*`，確認 **Tables** 底下真的有資料表
-7. 切到 **SQL analytics endpoint**，用預覽或查詢確認表格有資料
+如果你需要驗證 Lakehouse、tables、SQL endpoint 或 ontology，請改去 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
 
-!!! note "第一次使用者先記這一點就好"
-	 如果你走的是主流程 `07_create_foundry_agent.py` + `08_test_foundry_agent.py`，真正的互動測試主要還是在本機終端機完成。
-	 Foundry portal 這裡先把它當成「看 agent 定義、資源和 traces 有沒有建立成功」即可。
+## 先知道你要找哪個 project
 
-## Path 1: 在 Microsoft Foundry 手動做實驗
+如果你是自己部署的，通常可以從下面幾個來源找回正確 project：
+
+1. 專案根目錄 `.azure/<env>/.env` 的 `AZURE_AI_PROJECT_NAME`
+2. Azure Portal resource group 中的 Foundry project 名稱
+3. `AZURE_AI_PROJECT_ENDPOINT`
+
+如果你是使用別人分享的環境，先向管理員確認你該進哪一個 project。
 
 Portal URL:
 
 - Microsoft Foundry: <https://ai.azure.com/>
 - Azure Portal: <https://portal.azure.com/>
 
-### 這條路徑適合做什麼
+參考：
 
-- 確認 project、models、agents 和 tools 都已建立
-- 在適合的路徑下手動測 prompt
-- 檢查 Search / Browser Automation 等 connection 是否存在
-- 從 playground 直接看 thread logs、tool calls、evaluations
+- [Microsoft Foundry portal 官方說明](https://learn.microsoft.com/azure/foundry/what-is-foundry#foundry-portal)
+- [新版 Foundry portal 功能位置對照](https://learn.microsoft.com/azure/foundry/how-to/navigate-from-classic#navigate-the-portal)
 
-### Step 0. 先知道你要找哪個 project
+## Discover
 
-如果你是自己部署的，通常可以從下面幾個來源找回正確 project：
+先把 Discover 當成入口頁。這一區的重點不是把所有能力都看完，而是先建立基本概念：目前這個平台有哪些模型、工具和模板入口，哪些和你現在的 scenario 有關。
 
-1. 專案根目錄 `.azure/<env>/.env` 的 `AZURE_AI_PROJECT_NAME`
-2. Azure Portal 資源群組中的 Foundry project 名稱
-3. `AZURE_AI_PROJECT_ENDPOINT`
+參考：
 
-如果你是使用別人分享的環境，先向管理員確認你該進哪一個 Foundry project。
+- [Foundry portal 功能狀態與 Discover / Build / Operate 導覽](https://learn.microsoft.com/azure/foundry/concepts/general-availability#feature-readiness-at-ga)
+- [What is Microsoft Foundry](https://learn.microsoft.com/azure/foundry/what-is-foundry)
 
-### Step 1. 開啟 Foundry project
+### Browse the catalog
 
-1. 開啟 <https://ai.azure.com/>
-2. 使用和部署環境相同的 Azure 帳號登入
-3. 如果首頁先看到資源或 project 清單，選擇這次 workshop 使用的 **project**
-4. 進入 project 後，先停 10 秒看左側導覽，確認至少看得到下列群組：
-	- **Build**
-	- **Agents** 或 **Build > Agents**
-	- **Tools**
-	- **Models + endpoints**
+在 catalog 這裡，你不用把每一個項目都看完。比較好的做法是先知道 Foundry 有哪些大類能力，然後回頭對照這個 workshop 實際用到哪些。
 
-### Step 2. 確認模型部署是否存在
+在這個 workshop 中，catalog 比較適合當成導覽起點，但不用停在產品瀏覽層太久。重點是把它對回目前 scenario 的已部署資產，例如：
 
-這一步的目的，是先分清楚「主 Foundry 模型」和「獨立 image OpenAI resource」。
+- 這次 PoC 主要使用的模型類型
+- 這次使用的 agent 類型
+- 這次有沒有額外用到 image、browser automation 或 evaluation 能力
 
-1. 在左側進入 **Models + endpoints**
-2. 查看 chat 與 embedding 相關 deployment 是否存在
-3. 如有看到 `gpt-4.1-mini`，代表選配文字模型也有建立
-4. 不要把這一頁當成 image model 的唯一檢查點
+如果你走的是自訂 use case，也請記得：
 
-!!! note "`gpt-image-1.5` 的位置和主模型不同"
-	 這個 repo 的 image generation 預設走獨立 Azure OpenAI resource，不一定出現在主 Foundry project 的同一份模型清單裡。
-	 你如果要驗證 image demo，應優先檢查 `.azure/<env>/.env` 裡的 `AZURE_IMAGE_OPENAI_ENDPOINT` 與 `AZURE_IMAGE_MODEL_DEPLOYMENT`，或回 Azure Portal 看獨立的 image OpenAI resource。
+- 文件與資料都已經換成該 use case 的內容
+- catalog 裡看到的是平台能力，實際操作仍要回到你現在的 scenario 資產
 
-### Step 3. 到 Agents 頁面檢查 workshop agent
+官方文件：
 
-1. 在左側進入 **Build** > **Agents**
-2. 找這次 workshop 建立的 agent
-3. 點進 agent 後，依序檢查：
-	- **Name** 是否合理
-	- **Instructions** 是否已填入
-	- **Model** 是否綁到正確 deployment
-	- **Tools** 區塊是否看得到工具設定
+- [What is Microsoft Foundry](https://learn.microsoft.com/azure/foundry/what-is-foundry)
 
-如果你是第一次使用者，這裡最重要的不是看懂所有設定，而是先確認：
+### Models
 
-1. agent 已經存在
-2. agent 頁面打得開
-3. tools 和 instructions 不是空的
+在 Discover 看 models 時，重點不是把所有模型都點過一輪，而是確認你現在這個 scenario 實際用到哪些部署：
 
-### Step 4. 如果你走 Foundry-native 路徑，再用 Agents playground 手動測一題
+1. chat model
+2. embedding model
+3. 選配的 image model 或其他專用模型
 
-這一步比較適合已經跑過 `06b / 07b` 的人。
+- Foundry IQ 主要依賴 chat 與 embedding 模型
+- 如果是自訂 use case，模型可能不變，但 documents / tables / sample questions 已經換掉
 
-如果你走的是主流程 `07 / 08`，可以先跳過這一步，之後改用 terminal 測試，再回來看 traces。
+官方文件：
 
-1. 在 agent 詳細頁面選 **Try in playground**，或直接開 **Agents playground**
-2. 在輸入框先測一題文件型問題，例如：
+- [Microsoft Foundry Models overview](https://learn.microsoft.com/azure/foundry/concepts/foundry-models-overview)
 
-```text
-這個 workshop 的主要目標是什麼？
-```
+### Tools
 
-3. 再測一題偏結構化的問題，例如：
+在 Discover 看 tools 時，重點是先知道 Foundry 支援哪些工具型態，然後立刻對回 workshop 已配置的工具或連線。
 
-```text
-這個方案除了文件問答，還能結合哪一類企業資料？
-```
+這個 workshop 最常對應的是：
 
-4. 觀察回答時，重點看三件事：
-	- 有沒有正常產出答案
-	- 回答是否像是 grounded 在 workshop 文件內容
-	- 若有 tool call 顯示，是否能看出 agent 有使用搜尋或其他工具
+- 文件相關能力
+- Search 相關能力
+- 選配的 Browser Automation
 
-### Step 5. 如果你走主流程 `07 / 08`，請改在 terminal 測試
+如果你現在只是在驗證主流程，就不用把每種 tool 都展開。只要先確認目前這個 use case 實際有掛哪些工具即可。
 
-如果你走的是主流程 workshop agent，先用：
+官方文件：
 
-```bash
-python scripts/08_test_foundry_agent.py
-```
+- [Foundry Agent Service tool catalog](https://learn.microsoft.com/azure/foundry/agents/concepts/tool-catalog)
 
-或 Foundry-only 模式：
+### Solution templates
 
-```bash
-python scripts/08_test_foundry_agent.py --foundry-only
-```
+這裡可以補充一個平台視角：Foundry 不只是單一 agent playground，也有模板化建構路徑。
 
-測完之後，再回 Foundry portal 檢查 agent、tools、trace 和相關資源。
+但在這個 workshop 裡，不建議把 solution templates 當成主線。比較適合的理解方式是：
 
-### Step 6. 回看 instructions 和 tools
+- solution templates 是平台入口
+- 本 workshop 是已經準備好的 end-to-end solution accelerator
+- 現在看的，是這個 accelerator 建好的實際資產，而不是從 template 重新建立一次
 
-如果你想知道 agent 為什麼這樣回答，回到 agent 設定頁，重點檢查這幾塊：
+官方文件：
 
-1. **Instructions**
-	- 看系統提示是否描述了文件問答、Fabric 查詢、工具使用規則
-2. **Tools**
-	- 確認是否有 workshop 使用的 tool 或相應連線
-3. **Knowledge** 或相似區塊
-	- 如果 portal 中有顯示，可順手確認是否已掛上相關知識來源
+- [Foundry portal 功能狀態與 Discover 區說明](https://learn.microsoft.com/azure/foundry/concepts/general-availability#feature-readiness-at-ga)
 
-這一步最適合拿來對照 [05-script-sequence.md](05-script-sequence.md) 裡的腳本用途，而不是單純「看畫面」。
+## Build
 
-### Step 7. 檢查專案連線與 Browser Automation 狀態
+Build 是這一頁最重要的區域。你在這裡看到的，不是抽象功能，而是這次 workshop 已經建好的 agent、knowledge、tools、模型配置和治理能力。
 
-這一步只是在 portal 裡確認「能不能用」，不是要求你現在就把所有 demo 都手動跑完。
+### Agents
 
-1. 在 project 中進入 **Build** > **Tools**
-2. 查看是否已有 Azure AI Search、Browser Automation 或其他工具連線
-3. 如果你只是跑主流程，看到 Search 相關資源已存在即可
-4. 如果你要驗證 Browser Automation：
-	- 選 **Connect a tool**
-	- 在 **Configured** 或相近頁籤找 **Browser Automation**
-	- 確認是否已建立 connection
-	- 若未建立，代表目前仍停留在「Playwright Workspace 已建立，但 Foundry connection 尚未補」的狀態
+這是 04a 最核心的區塊。
 
-如果你真的要補 Browser Automation，請回頭看 [05d-browser-automation-setup.md](05d-browser-automation-setup.md)。
+先在 **Build > Agents** 確認兩種可能路徑：
 
-### Step 8. 如果你剛剛是在 playground 內測試，再看 thread logs、runs、tool calls
+1. 主流程 workshop agent
+2. Foundry-native 文件問答 agent
 
-這一步最適合拿來做「為什麼這題回答成這樣」的觀察。
+對應腳本：
 
-如果你剛剛沒有在 Foundry playground 裡送出問題，而是只在 terminal 測試，這一步可以先跳過。
+- `07_create_foundry_agent.py`
+- `07b_create_foundry_iq_agent.py`
 
-1. 回到 **Agents playground**
-2. 找到剛剛測過的對話 thread
-3. 選 **Thread logs**
-4. 依序看：
-	- thread 基本資訊
-	- run 狀態
-	- step 順序
-	- tool call 與其輸入輸出
-	- 最後回覆內容
+打開 agent 時，重點檢查：
 
-如果畫面右上角看得到 **Metrics** 或 evaluation 設定：
+1. agent 名稱是否對應現在的 solution / scenario
+2. instructions 是否不是空的
+3. model 是否綁到正確 deployment
+4. tools / knowledge 是否已掛上
 
-1. 先確認目前有沒有勾選 evaluator
-2. 如有勾選，再送一次測試問題
-3. 回頭看該次對話是否出現 AI quality 或 risk and safety 類型的評估結果
+如果你走的是自訂 use case，這裡最值得確認的是：
 
-!!! note "不是每個環境都一定要開 evaluation"
-	 這個 workshop 的主線不是靠 playground evaluation 才能成立。
-	 如果你只是要驗證 agent 能不能工作，先看 thread logs 和 tool calls 就夠了。
+- agent 外觀可能相似
+- 但 instructions、documents、knowledge 與 sample questions 已經換成你的 use case
 
-### Step 9. 用 Azure Portal 交叉確認底層資源
+官方文件：
 
-當 Foundry portal 顯示正常，但你仍想確認底層 Azure 資源時，再做這一步。
+- [Build agents in Foundry](https://learn.microsoft.com/azure/foundry/agents/quickstarts/quickstart-hosted-agent)
 
-1. 開啟 <https://portal.azure.com/>
-2. 進入這次部署的 resource group
-3. 確認至少有：
-	- Microsoft Foundry
-	- Foundry project
-	- Azure AI Search
-	- Storage Account
-	- Application Insights
-	- Playwright Workspace
-4. 如果你要追 image demo，再額外找獨立的 image OpenAI resource
+### Models
 
-## Path 2: 在 Microsoft Fabric 手動做實驗
+在 Build 看 models，重點是從「可用模型」切到「目前 build 出來實際綁定的模型」。
 
-Portal URL:
+- 主流程 agent 綁的是哪個 chat deployment
+- 文件知識路徑需要哪個 embedding deployment
+- 如果有 image 功能，模型在另一個資源中，不一定全都顯示在同一視角
 
-- Microsoft Fabric: <https://app.fabric.microsoft.com/>
+官方文件：
 
-### 這條路徑適合做什麼
+- [Microsoft Foundry Models overview](https://learn.microsoft.com/azure/foundry/concepts/foundry-models-overview)
 
-- 確認 Lakehouse、Ontology 和表格是否真的建立成功
-- 直接在 UI 看資料是否載入
-- 用 SQL analytics endpoint 做最簡單的人工驗證
-- 對照腳本輸出的 `fabric_ids.json` 和 portal 裡的實際 item
+### Fine-tune
 
-### Step 0. 先知道你要找哪些 Fabric item
+這個 workshop 主流程不依賴 fine-tune。
 
-這個 repo 的 Fabric 物件命名不是隨機的。
+所以這裡不用深挖，只要先知道：
 
-`02_create_fabric_items.py` 會建立：
+- Fine-tune 是平台能力之一
+- 這個 solution accelerator 的主線是 retrieval + tools + enterprise data integration
+- 如果未來某個 use case 要做風格或分類器微調，才是下一階段議題
 
-- `lakehouse_name = <solution_name>_lakehouse_<suffix>`
-- `ontology_name = <solution_name>_ontology_<suffix>`
+官方文件：
 
-而且它會把結果寫到資料資料夾下的 `config/fabric_ids.json`。
+- [Fine-tuning considerations in Foundry](https://learn.microsoft.com/azure/foundry/openai/concepts/fine-tuning-considerations)
 
-如果你不知道這次要找哪個 lakehouse 或 ontology，先去看：
+### Tools
 
-1. `DATA_FOLDER/config/fabric_ids.json`
-2. 其中的 `lakehouse_name`
-3. 其中的 `ontology_name`
-4. 其中的 `solution_name`
+這裡要看的不是「有沒有 tool 這個功能」，而是「目前這個 scenario 的 agent 掛了哪些 tool / connection」。
 
-### Step 1. 開啟 Fabric workspace
+對這個 workshop，最常見的觀察點是：
 
-1. 開啟 <https://app.fabric.microsoft.com/>
-2. 使用和 workshop 相同的帳號登入
-3. 左側進入 **Workspaces**
-4. 如果你知道 workspace 名稱，就直接從清單中打開
-5. 如果你只有 `FABRIC_WORKSPACE_ID`，可以用下面這種 URL 形式開啟：
+1. Search 或知識檢索相關設定
+2. Browser Automation 是否已建立 connection
+3. 其他選配功能是否有額外工具資產
 
-```text
-https://app.fabric.microsoft.com/groups/<workspace-id>/...
-```
+如果你現在看的是企業 use case，這裡可以直接對照：
 
-6. 進入 workspace 後，先確認你看得到 item 清單，而不是權限不足的畫面
+- tools 決定 agent 可以怎麼接外部能力
+- documents 與 tables 決定 agent 能回答什麼內容
 
-### Step 2. 找到這次腳本建立的 Lakehouse
+官方文件：
 
-1. 在 workspace item 清單中搜尋 `lakehouse`
-2. 找名稱像 `<solution_name>_lakehouse_<suffix>` 的項目
-3. 點進該 **Lakehouse**
-4. 進入後，先檢查左側或主畫面的 **Tables**、**Files** 區塊是否存在
+- [Foundry Agent Service tool catalog](https://learn.microsoft.com/azure/foundry/agents/concepts/tool-catalog)
 
-如果完全找不到 lakehouse，通常表示：
+### Knowledge
 
-1. `02_create_fabric_items.py` 沒成功完成
-2. 你開錯 workspace
-3. 你現在看的 suffix 不是這次最後一次建立的那組
+這裡是最適合確認「use case 已經套用」的地方。
 
-### Step 3. 確認 CSV 是否真的進到 Lakehouse Files
+請重點確認：
 
-這一步是在對照 `03_load_fabric_data.py` 的上傳行為。
+1. 現在掛上的 knowledge 是否對應你當前的 documents
+2. 名稱是否對應目前 scenario 或 solution
+3. 如果你走的是 Foundry IQ 路徑，是否能看到 knowledge base 或相近知識來源配置
 
-1. 在 Lakehouse 畫面切到 **Files**
-2. 找 CSV 檔，檔名通常會和資料表名稱一致，例如 `customers.csv`、`orders.csv` 或其他情境資料表
-3. 如果你看得到檔案，代表檔案至少已上傳到 OneLake 對應路徑
+如果你走的是自訂 use case，建議直接確認：
 
-### Step 4. 確認 Tables 底下真的有 Delta tables
+- 這裡不是示意資料
+- 這裡掛的是你剛剛生成或建置的那套 use case 文件
 
-這一步是在對照 `03_load_fabric_data.py` 的 table load 行為。
+官方文件：
 
-1. 在同一個 Lakehouse 畫面切到 **Tables**
-2. 確認 `ontology_config.json` 中列出的每張表都有出現
-3. 任選一張表打開預覽
-4. 看前幾列資料是否合理
+- [Foundry IQ overview](https://learn.microsoft.com/azure/foundry/agents/concepts/what-is-foundry-iq)
+- [Connect a Foundry IQ knowledge base to Agent Service](https://learn.microsoft.com/azure/foundry/agents/how-to/foundry-iq-connect)
 
-如果你看得到 CSV，但 **Tables** 沒資料，通常代表檔案有上傳成功，但「載入為 Delta table」那一步沒有完成。
+### Data
 
-### Step 5. 切到 SQL analytics endpoint 做最簡單驗證
+Build 裡看到 Data 時，請把它當成 Foundry 視角的資料入口，不要在這一頁深挖 Fabric 細節。
 
-這一步最接近 agent 之後執行 SQL 查詢時看到的資料面。
+這一頁只需要說明：
 
-1. 在 lakehouse 畫面右上方或上方功能列，從 **Lakehouse** 下拉切到 **SQL analytics endpoint**
-2. 等 schema 和 tables 載入
-3. 如果一開始沒看到表，按一次 **Refresh**
-4. 在表格清單裡展開 `dbo` 或預設 schema
-5. 任選一張表，先用預覽確認有資料
-6. 如果畫面支援查詢編輯器，再跑最小查詢，例如：
+- 這個 workshop 會結合文件與企業資料
+- 資料的實際物件驗證請看 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)
+- 如果你現在只是先確認 Foundry portal 裡的資產，這裡知道有資料面就夠了
 
-```sql
-SELECT TOP 10 *
-FROM <table_name>
-```
+官方文件：
 
-你只需要確認「查得到資料」，不需要在這一步驗證所有商業邏輯。
+- [Foundry architecture: projects and project assets](https://learn.microsoft.com/azure/foundry/concepts/architecture#how-resources-relate-in-foundry)
 
-### Step 6. 檢查 semantic model
+### Evaluation
 
-如果你想從報表或 Direct Lake 視角確認資料結構，可以再做這一步。
+這裡適合用來理解「怎麼評估 agent 品質」，但第一次操作不需要展開完整評估流程。
 
-1. 保持在 **SQL analytics endpoint** 或 lakehouse 頁面
-2. 找 **New semantic model** 或相近按鈕
-3. 檢查 workspace 中是否已存在預設 semantic model
-4. 如需手動建立：
-	- 選 **New semantic model**
-	- 輸入名稱
-	- 勾選要納入的 tables
-	- 選 **Confirm**
+先知道下面三點即可：
 
-這不是 workshop 主流程必要步驟，但很適合用來跟業務同仁展示「同一組 Lakehouse tables 之後也能接報表層」。
+1. Foundry 有 evaluation 能力
+2. 你可以對 agent 的回答做 quality / safety / task-level 檢查
+3. 這個 workshop 主流程不要求先把 evaluation 設好才算成功
 
-### Step 7. 找到 Ontology 並確認結構
+如果你有時間，再用 sample question 補一題，說明 evaluation 可以如何接到當前 scenario。
 
-這一步是在對照 `02_create_fabric_items.py` 建 ontology 與 relationships 的行為。
+官方文件：
 
-1. 回到 workspace item 清單
-2. 搜尋 `ontology`
-3. 找名稱像 `<solution_name>_ontology_<suffix>` 的項目
-4. 點開後，檢查：
-	- entity types 是否存在
-	- properties 是否對應各表欄位
-	- relationships 是否出現
-	- data bindings 是否綁到正確的 lakehouse tables
+- [Evaluate generative AI applications in Foundry](https://learn.microsoft.com/azure/foundry/how-to/evaluate-generative-ai-app)
 
-如果 ontology item 存在但內容不完整，優先懷疑：
+### Guardrails
 
-1. `ontology_config.json` 內容本身缺欄位或 relationships
-2. `02_create_fabric_items.py` 在建立 bindings 或 relationships 時中途中斷
+Guardrails 比較適合放在後面理解，當作治理與風險控制的延伸。
 
-### Step 8. 用 Fabric 視角驗證 agent 之後會問的問題
+先把它理解成：
 
-這一步不是要你在 portal 重建 agent，而是用人工方式驗證「agent 應該能從資料裡回答什麼」。
+- 這個 workshop 先示範怎麼把 documents 與 enterprise data 接上 agent
+- guardrails 則是把回答邊界、風險控制與生產治理補齊
 
-建議手動檢查三類問題：
+第一次操作不需要把所有 policy 都設完，但可以先知道這一層在 Foundry 裡的位置。
 
-1. **總量 / 聚合**
-	- 例如總客戶數、總訂單數、總營收
-2. **排行 / 分群**
-	- 例如前 5 大產品、前 5 個區域
-3. **關聯 / join 類型**
-	- 例如客戶與訂單、門市與交易、設備與事件之間的關聯
+官方文件：
 
-做法：
+- [Guardrails and controls overview](https://learn.microsoft.com/azure/foundry/guardrails/guardrails-overview)
+- [How to configure guardrails in Foundry](https://learn.microsoft.com/azure/foundry/guardrails/how-to-create-guardrails)
 
-1. 先在 ontology 看 relationship 是否存在
-2. 再到 SQL analytics endpoint 用簡單 SQL 驗證資料真的能 join 起來
-3. 最後再回 agent 測試同一題，看回答是否和你人工驗證結果一致
+## Operate
 
-## Script 路徑和 Portal 操作對照表
+Operate 適合放在最後看。前面是確認這個 use case 有沒有建好，這一段則是確認這些資產能不能被管理、搜尋、治理和追蹤。
 
-| Script / 成果 | 你在 portal 應該去哪裡看 | 你要確認什麼 |
-|---------------|--------------------------|----------------|
-| `azd up` | Azure Portal resource group | Foundry、Search、Storage、App Insights、Playwright Workspace 都存在 |
-| `07_create_foundry_agent.py` | Foundry `Build > Agents` | workshop agent 已建立，可打開設定頁 |
-| `08_test_foundry_agent.py` | 本機 terminal + Foundry traces | 問答能正常進行，之後可回 Foundry 看 traces 或 agent 設定 |
-| `07b_create_foundry_iq_agent.py` | Foundry `Build > Agents` | Foundry IQ knowledge base agent 已建立 |
-| `08b_test_foundry_iq_agent.py` | 本機 terminal | 可用本機方式對 Foundry-native 文件問答 agent 再做一次互動測試 |
-| `10_demo_browser_automation.py` | Foundry `Build > Tools` | Browser Automation connection 是否已建立 |
-| `13_demo_image_generation.py` | Azure Portal 或 env 輸出 | image OpenAI resource 與 deployment 是否存在 |
-| `02_create_fabric_items.py` | Fabric workspace | `*_lakehouse_*` 與 `*_ontology_*` 是否出現 |
-| `03_load_fabric_data.py` | Fabric Lakehouse `Files` / `Tables` | CSV 已上傳，表格已載入 |
-| `04_generate_agent_prompt.py` | 本機檔案，不在 portal | 主要看 `schema_prompt.txt` 是否產生 |
+參考：
 
-## 什麼情況下建議你優先看 portal，而不是重跑 script
+- [Foundry Control Plane overview](https://learn.microsoft.com/azure/foundry/control-plane/overview)
+- [Operate / Assets / Compliance / Quota / Admin 功能總覽](https://learn.microsoft.com/azure/foundry/control-plane/overview#key-features)
 
-1. 你只想確認資源是否存在
-2. 你懷疑 tool / connection 沒掛上
-3. 你想看 agent 實際做了哪些 tool calls
-4. 你想驗證 Fabric 裡的資料與 relationships 是否合理
+### Assets
+
+這裡適合回答「這個 solution 現在到底建立了哪些東西」。
+
+建議你用 solution name、scenario name 或 agent name 當搜尋關鍵字，快速找到：
+
+- agent
+- knowledge
+- tool / connection
+- model deployment 關聯資產
+
+官方文件：
+
+- [Manage agents in Foundry Control Plane](https://learn.microsoft.com/azure/foundry/control-plane/how-to-manage-agents)
+- [Assets pane in Foundry Control Plane](https://learn.microsoft.com/azure/foundry/control-plane/overview#key-features)
+
+### Compliance
+
+這裡不是 workshop 主流程的必跑區，但很適合用來理解平台不只是 build agent，也包含治理與合規視角。
+
+官方文件：
+
+- [Manage compliance and security in Microsoft Foundry](https://learn.microsoft.com/azure/foundry/control-plane/how-to-manage-compliance-security)
+
+### Quota
+
+Quota 很適合拿來理解「這個 PoC 如果往正式環境走，容量與限制在哪裡」。
+
+你不一定要現場逐項解釋，只需要指出：
+
+- model deployment 有容量限制
+- 某些能力可能受 quota 或區域可用性影響
+- 這些都屬於 operate / admin 階段要關注的問題
+
+官方文件：
+
+- [Quota pane overview](https://learn.microsoft.com/azure/foundry/control-plane/overview#key-features)
+- [Azure OpenAI in Foundry quotas and limits](https://learn.microsoft.com/azure/foundry/openai/quotas-limits#regional-quota-capacity-limits)
+
+### Admin
+
+Admin 主要對應多人共用、權限管理和正式化之後的管理面。
+
+如果你想知道管理員要做哪些事，可以對照 [管理員部署並分享](00-admin-deploy-share.md)。
+
+官方文件：
+
+- [Admin pane overview](https://learn.microsoft.com/azure/foundry/control-plane/overview#key-features)
+
+### Search and filter assets
+
+這一段很適合直接實際操作一次：
+
+1. 用 solution name 搜尋
+2. 用 asset type 篩選
+3. 找出 agent、knowledge、tool 或其他相關資產
+
+這樣比只看單一頁面更容易理解 Foundry 不是只有聊天介面，而是完整資產平面。
+
+官方文件：
+
+- [Assets pane in Foundry Control Plane](https://learn.microsoft.com/azure/foundry/control-plane/overview#key-features)
+- [Manage agents in Foundry Control Plane](https://learn.microsoft.com/azure/foundry/control-plane/how-to-manage-agents)
+
+### View asset details and lineage
+
+如果你想理解「這個 agent 後面連了什麼」，lineage 是很好的檢查方式。
+
+重點可以放在：
+
+1. 這個 agent 綁了哪個 model
+2. 這個 agent 用了哪些 knowledge / tools
+3. 這些資產如何回到目前的 use case 或 scenario
+
+對 workshop 而言，這一步最能把 Discover、Build、Operate 三塊串起來。
+
+官方文件：
+
+- [Foundry Control Plane overview](https://learn.microsoft.com/azure/foundry/control-plane/overview)
+- [Assets pane in Foundry Control Plane](https://learn.microsoft.com/azure/foundry/control-plane/overview#key-features)
+
+## 什麼時候要跳去看 Fabric
+
+如果你接下來想確認的是資料物件本身，而不是 Foundry portal 裡的 agent 和資產，這時就不要繼續留在 04a：
+
+1. 想確認 lakehouse / ontology 是否存在
+2. 想驗證 tables 是否真的載入
+3. 想在 SQL analytics endpoint 手動查詢
+4. 想從資料角度驗證 agent 之後會回答什麼
+
+這些請直接改看 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
 
 ## Portal URL
 
 - Microsoft Foundry: <https://ai.azure.com/>
 - Azure Portal: <https://portal.azure.com/>
-- Microsoft Fabric: <https://app.fabric.microsoft.com/>
 
 ---
 
-[← 建置方案](04-run-scenario.md) | [腳本用途與執行順序總覽 →](05-script-sequence.md)
+[← 建置方案](04-run-scenario.md) | [Microsoft Fabric 手動驗證 →](04b-fabric-manual-validation.md)
