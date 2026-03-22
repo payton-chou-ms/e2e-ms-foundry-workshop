@@ -1,4 +1,4 @@
-# 建置與測試（客戶 PoC）
+# 建置與測試（自訂 PoC）
 
 ## 測試你的方案
 
@@ -104,9 +104,9 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
 "Which [items] don't comply with our [policy/guidelines]?"
 ```
 
-## 準備你的測試腳本
+## 準備你的測試問題
 
-在客戶會議之前，準備 5-7 個問題：
+在你正式 demo 或自行驗證之前，建議先準備 5-7 個問題：
 
 | # | 問題類型 | 範例 |
 |---|----------|------|
@@ -118,12 +118,12 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
 | 6 | **組合式** | "Which open claims are approaching our SLA deadline based on our process guidelines?" |
 | 7 | **組合式** | "Do any current claims involve coverage types not in our standard policy?" |
 
-!!! tip "讓客戶自己提問"
-    在你準備好的問題之後，讓客戶提出自己的問題。這能展示方案可以處理真實情境，而不只是照稿演出
+!!! tip "再加一題臨場問題"
+    在你準備好的問題之後，再補一題你沒有先寫好的問題。這樣最容易驗證 agent 是真的在查資料與文件，而不是只是照稿演出
 
 ## 檢查點
 
-!!! success "客戶 PoC 已就緒"
+!!! success "自訂 PoC 已就緒"
     你的自訂 PoC 應該：
 
     - [x] 準確回答結構化資料問題
@@ -136,7 +136,7 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
 ## 快速參考：替另一個產業使用案例重新產生
 
 ```bash
-# 修改 .env 中新客戶的產業與使用案例，然後：
+# 修改 `.env` 中新的產業與使用案例，然後：
 python scripts/00_build_solution.py --clean
 
 # 或內嵌：

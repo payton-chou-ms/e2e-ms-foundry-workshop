@@ -460,7 +460,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        如何理解這套架構
+        如何理解這套內容
       
     </span>
   </a>
@@ -1467,7 +1467,7 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        如何理解這套架構
+        如何理解這套內容
       
     </span>
   </a>
@@ -1492,15 +1492,15 @@
 
 
 <h1 id="_1">總覽</h1>
-<p>這個 workshop 的目標，是讓你親手完成一個能同時回答文件問題與資料問題的 AI PoC。你會從可運作的範例開始，理解它的部署方式、接地方式，以及後續如何改成自己的情境。</p>
-<p>你可以把這套內容當成一條學習路徑：先把 PoC 跑起來，再回頭理解底層設計，最後再把它改成自己的 use case。</p>
+<p>這個 workshop 的目標，是讓你親手完成一個能同時回答文件問題與資料問題的 AI PoC。你會先從可運作的範例開始，確認它真的能回答問題，再一步一步理解它為什麼能運作，最後把它改成自己的情境。</p>
+<p>閱讀這套內容時，最有效率的方式不是一開始就鑽進底層細節，而是先把主流程跑通，再回頭把每個步驟和背後設計對起來。</p>
 <h2 id="_2">先掌握主線，再逐步展開</h2>
-<p>這個 workshop 的 runtime 先刻意維持簡潔，讓你可以先把主流程跑通，再逐步理解背後的技術設計：</p>
+<p>這個 workshop 刻意把主流程維持得很單純，讓你先抓住「問題怎麼被回答」，再往下看背後的設計：</p>
 <ul>
 <li>完整模式下：一個 prompt agent、兩個 core tools、兩條 grounding path：文件走 Foundry IQ，商業資料走 Fabric IQ</li>
 <li>Foundry-only 模式下：一個 prompt agent、一個 core tool、一條 grounding path：只走 Foundry IQ 文件路徑</li>
 </ul>
-<p>當你把主線跑通之後，可以再從首頁先認識五個核心主軸；<code>多代理程式延伸</code> 會另外放在延伸主題中介紹：</p>
+<p>當你把主線跑通之後，再回頭看下面五個核心主軸會比較容易。它們不是要你一開始全部背起來，而是幫你把剛剛跑過的流程拆開看清楚：</p>
 <table>
 <thead>
 <tr>
@@ -1511,28 +1511,28 @@
 <tbody>
 <tr>
 <td><strong>Foundry Model</strong></td>
-<td>說明哪些模型部署提供推理能力，哪些部署提供嵌入與其他延伸能力</td>
+<td>哪些模型真的在主流程裡用到，哪些只是延伸選配</td>
 </tr>
 <tr>
 <td><strong>Foundry Agent</strong></td>
-<td>說明 agent 如何結合 instructions 與 tools 來協調回應</td>
+<td>agent 怎麼決定何時查文件、何時查資料、何時整合答案</td>
 </tr>
 <tr>
 <td><strong>Foundry Tool</strong></td>
-<td>說明 agent 如何透過內建工具與自訂函式安全地取用資料或執行動作</td>
+<td>agent 可以呼叫哪些工具，以及這些工具怎麼避免亂查亂做</td>
 </tr>
 <tr>
 <td><strong>Foundry IQ + Fabric IQ</strong></td>
-<td>說明答案如何 grounded 到文件與資料</td>
+<td>文件答案和資料答案分別是怎麼接地出來的</td>
 </tr>
 <tr>
 <td><strong>Foundry Control Plane</strong></td>
-<td>說明 Foundry project、connections、managed identity 與 Azure RBAC 如何治理資源存取</td>
+<td>背後有哪些 Azure 資源在支撐整個體驗，以及你現在其實不用一次記住全部</td>
 </tr>
 </tbody>
 </table>
-<p>首頁這裡先幫你抓住主線；等你對 PoC 的執行方式有感覺之後，再回頭看這五個主軸，會比較容易把技術細節對上實際操作。</p>
-<p>如果你要再往後延伸成更多角色與工作流，請到深入解析章節查看第六個主題：<strong>多代理程式延伸</strong>。</p>
+<p>首頁先幫你抓住主線。等你對 PoC 的執行方式有感覺之後，再回頭看這五個主軸，技術細節才比較不會變成一串抽象名詞。</p>
+<p>如果你後面想把單一 agent 再拆成多個角色協作，請到深入解析章節查看第六個延伸主題：<strong>多代理程式延伸</strong>。</p>
 <h2 id="_3">選擇你的路徑</h2>
 <p>這個 workshop 提供兩種起點，請依照你現在手上的環境來選：</p>
 <table>
@@ -1547,7 +1547,7 @@
 <tr>
 <td><strong>管理員部署</strong></td>
 <td>你要自己把整套 Azure 與 Fabric 環境準備好</td>
-<td>部署 Azure 資源、設定 Fabric，並整理出可重複使用的環境</td>
+<td>部署 Azure 資源、設定 Fabric，並整理出其他學員也能直接使用的環境</td>
 </tr>
 <tr>
 <td><strong>學員執行與驗證</strong></td>
@@ -1556,7 +1556,7 @@
 </tr>
 </tbody>
 </table>
-<p>如果你是從零開始準備環境，建議先走「管理員部署」，之後再回到「學員執行與驗證」把主流程完整跑過一次</p>
+<p>如果你是從零開始準備環境，建議先走「管理員部署」，之後再回到「學員執行與驗證」把主流程完整跑過一次。</p>
 <h2 id="workshop">Workshop 流程</h2>
 <table>
 <thead>
@@ -1579,7 +1579,7 @@
 </tr>
 <tr>
 <td><strong>3. 深入解析</strong></td>
-<td>回頭理解這個 PoC 背後的模型、代理程式、工具、接地流程與控制平面，方便你回答 Q&amp;A 或往後延伸</td>
+<td>回頭理解這個 PoC 背後的模型、代理程式、工具、接地流程與支撐資源，方便你把剛剛做過的事看懂</td>
 <td>~15 min</td>
 </tr>
 <tr>
@@ -1589,7 +1589,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_4">如何理解這套架構</h2>
+<h2 id="_4">如何理解這套內容</h2>
 <p>如果你是第一次接觸這套 workshop，建議你把它看成一條由外到內的學習路徑：先看最後做出來的成果，再回頭理解執行時路徑，最後才展開底層技術主軸。</p>
 <pre class="mermaid"><code>flowchart TD
     U[學員先看到的成果\n一個 agent 同時回答文件與資料問題]
@@ -1601,7 +1601,7 @@
     IQ --&gt; A[Foundry Agent\n誰負責協調問題與工具]
     A --&gt; T[Foundry Tool\n工具合約與 guardrails]
     A --&gt; M[Foundry Model\n哪些模型負責推理與嵌入]
-    IQ --&gt; C[Foundry Control Plane\n哪些 Azure 資源與權限支撐執行]
+    IQ --&gt; C[Foundry Control Plane\n哪些 Azure 資源在背後支撐執行]
     C -. 進階延伸 .-&gt; MA[多代理程式延伸\n需要更多角色與工作流時再看]</code></pre>
 <p>你可以用下面這個順序來讀這張圖：</p>
 <ul>
@@ -1625,9 +1625,9 @@
 </ol>
 </div>
 <div class="admonition note">
-<p class="admonition-title">文件位置</p>
-<p>本 workshop 的完整文件請直接參考本網站內容
-若需要查看原始 Markdown 檔案，位置在 <code>workshop/docs/</code></p>
+<p class="admonition-title">閱讀建議</p>
+<p>如果你是第一次接觸這套內容，先專注在「把流程跑通」和「理解答案從哪裡來」就夠了
+像 RBAC、project connection、追蹤設定這類細節，等你需要部署或延伸時再回頭看就可以</p>
 </div>
 <hr />
 <p><a href="00-get-started/">快速開始 →</a></p>

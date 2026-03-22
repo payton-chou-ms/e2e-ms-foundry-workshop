@@ -98,13 +98,11 @@ Agent thinking:
    (target: 8 hours), and Medium averages 18.5 hours (target: 24 hours)."
 ```
 
-## 客戶對話要點
+## 先記住這三件事
 
-| 問題 | 回應 |
-|------|------|
-| 「為什麼不直接讓使用者寫 SQL？」 | 「大多數使用者不會寫 SQL。即使會寫的人也未必了解結構描述。自然語言讓任何人都能查詢資料。」 |
-| 「如何處理模糊的術語？」 | 「目前 workshop 主要靠 scenario config、schema prompt 與明確的 SQL tool 指令來縮小歧義，而不是依賴另一層隱藏的語意平台。」 |
-| 「效能如何？」 | 「真正昂貴的部分仍是 LLM 產生查詢與 Fabric 執行查詢本身；文件頁不應把這段說成已經由另一個 Fabric IQ 平台層自動吸收。」 |
+1. 使用者不需要自己寫 SQL，agent 會在受控範圍內代為生成唯讀查詢
+2. scenario config 和 schema prompt 會幫助 agent 縮小資料語意上的歧義
+3. 這一頁的重點不是平台神奇自動化，而是自然語言如何被轉成可執行查詢
 
 ## 技術細節
 

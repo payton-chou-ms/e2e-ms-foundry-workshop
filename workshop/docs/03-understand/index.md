@@ -1,28 +1,31 @@
 # 深入解析
 
-本節協助你把前面跑過的流程，對應回底層技術設計。
+本節不是要把你變成這套方案的維運者，而是幫你把前面跑過的流程一一對回去，弄清楚「剛剛到底發生了什麼」。
 
-## 六個技術主題
+如果你已經把 workshop 主流程跑過一次，現在最適合做的事不是背術語，而是把這六個學習主題和你剛剛看到的體驗對起來。
 
-Workshop 的技術故事現在掛在六個技術主題上。前五個主題解釋核心單代理程式路徑，第六個主題說明如何在不破壞核心教學的情況下，往後延伸成情境化多代理程式工作流。
+## 六個學習主題
+
+前五個主題對應單一 agent 主流程，第六個主題則是主線跑通之後的延伸閱讀，幫你理解怎麼把同一套能力拆成多角色工作流。
 
 | 主軸 | 核心問題 | 主要頁面 |
 |------|----------|----------|
-| **Foundry Model** | 哪些模型部署是必要的？哪些是選配的？ | [Foundry Model: 部署策略](00-foundry-model.md) |
-| **Foundry Agent** | 協調發生在哪裡？執行時迴圈如何運作？ | [Foundry Agent: 執行時協調](02-foundry-agent.md) |
-| **Foundry Tool** | 代理程式可以呼叫什麼函式？有什麼防護措施？ | [Foundry Tool: 函式工具合約](03-foundry-tool.md) |
-| **智慧接地層** | 方案如何在文件與商業資料中接地答案？ | [Foundry IQ: 文件](01-foundry-iq.md) 和 [Fabric IQ: 資料](02-fabric-iq.md) |
-| **Foundry Control Plane** | 哪些 Azure 資源、連線與權限支撐執行時？ | [Foundry Control Plane: 資源拓撲](04-control-plane.md) |
-| **多代理程式延伸** | 如果後面要加更多情境，如何拆成多個角色與工作流？ | [多代理程式延伸：情境工作流](05-multi-agent-extension.md) |
+| **Foundry Model** | 你看到的回答，背後到底用了哪些模型？哪些是主線必要，哪些是延伸選配？ | [Foundry Model: 部署策略](00-foundry-model.md) |
+| **Foundry Agent** | 問題進來之後，agent 怎麼決定下一步？ | [Foundry Agent: 執行時協調](02-foundry-agent.md) |
+| **Foundry Tool** | agent 可以做哪些事？哪些事它不能做？ | [Foundry Tool: 函式工具合約](03-foundry-tool.md) |
+| **智慧接地層** | 為什麼它回答的是你的文件和你的資料，而不是一般常識？ | [Foundry IQ: 文件](01-foundry-iq.md) 和 [Fabric IQ: 資料](02-fabric-iq.md) |
+| **Foundry Control Plane** | 背後有哪些 Azure 資源在支撐整個體驗？你現在先需要記住哪些？ | [Foundry Control Plane: 資源拓撲](04-control-plane.md) |
+| **多代理程式延伸** | 如果以後不想把所有事都塞給同一個 agent，可以怎麼拆角色？ | [多代理程式延伸：情境工作流](05-multi-agent-extension.md) |
 
 ## 關係圖
 
-如果你想找到從基礎架構到答案品質的最短路徑，請按此順序閱讀。
+如果你想用最少的心力把這一章看懂，建議順序不是從 Azure 資源開始，而是從「問題怎麼被回答」開始，再慢慢往下追。
 
 ```mermaid
 flowchart LR
+    U[使用者問題] --> A[Foundry Agent]
     C[Foundry Control Plane] --> M[Foundry Model]
-    C --> A[Foundry Agent]
+    C --> A
     C --> T[Foundry Tool]
     M --> A
     A --> T
@@ -34,62 +37,61 @@ flowchart LR
     A -. 延伸 .-> MA[多代理程式工作流]
     T -. 共用工具 .-> MA
     IQ -. 共用接地能力 .-> MA
-    U[使用者問題] --> A
 ```
 
-## 各頁面如何互相連接
+## 各頁面怎麼讀最順
 
-1. **Model** 說明部署了什麼，以及為什麼主流程保持精簡
-2. **Agent** 說明提示詞代理程式如何建立、取得、追蹤，以及最後發佈
-3. **Tool** 說明嚴格的函式工具合約和本機執行迴圈
-4. **IQ** 說明答案如何在文件與資料中接地
-5. **Foundry Control Plane** 說明哪些 Azure 資源和身分支撐上述所有內容
-6. **多代理程式延伸** 說明如何把既有工具與 grounding 能力拆成多角色工作流，新增更長的客戶情境
+1. **先看 IQ**，先理解答案為什麼不是憑空生成
+2. **再看 Agent**，理解誰在協調工具和回答節奏
+3. **接著看 Tool**，確認 agent 實際可呼叫的能力和限制
+4. **再回頭看 Model**，補上模型部署在整條路徑中的角色
+5. **最後看 Control Plane**，理解背後有哪些 Azure 資源在支撐體驗
+6. **多代理程式延伸** 留到最後，等你先把單一 agent 主線看懂之後再看
 
 ## 目前可用的深入解析頁面
 
 | 頁面 | 重點 |
 |------|------|
-| **Foundry Model** | 必要與選配模型部署，以及 skip 策略 |
-| **Foundry Agent** | 提示詞代理程式定義、執行時迴圈、追蹤與發佈邊界 |
-| **Foundry Tool** | 函式工具結構描述、執行迴圈與選配擴充分層 |
-| **Foundry IQ** | 文件如何進入 Azure AI Search，並透過 `search_documents` 提供引用段落 |
-| **Fabric IQ** | 情境與 schema 脈絡如何引導 agent 產生唯讀 SQL 查詢 Fabric 資料 |
-| **Foundry Control Plane** | Foundry project、連線、遙測與資源拓撲 |
-| **多代理程式延伸** | 宣告式 YAML、角色分工、情境工作流與延伸教學策略 |
+| **Foundry Model** | 主流程用到哪些模型，以及你可以先忽略哪些選配部署 |
+| **Foundry Agent** | agent 定義怎麼建立，以及執行時誰負責做什麼 |
+| **Foundry Tool** | 工具合約、執行迴圈，以及哪些 guardrails 在保護主流程 |
+| **Foundry IQ** | 文件如何被索引、搜尋，最後變成可引用的答案片段 |
+| **Fabric IQ** | 資料問題如何被引導成唯讀 SQL，最後回到答案中 |
+| **Foundry Control Plane** | 支撐這些流程的 Azure 資源地圖，以及你先需要記住的最少概念 |
+| **多代理程式延伸** | 單一 agent 看懂後，如何把同一套能力拆成多角色工作流 |
 
-## 哪個頁面回答哪個問題
+## 你卡在哪裡，就先看哪一頁
 
-| 如果客戶問… | 從這裡開始 |
-|-------------|-----------|
-| "為什麼部署這些模型？" | **Foundry Model** |
-| "代理程式實際上如何運作？" | **Foundry Agent** |
-| "你們如何控制工具行為和安全性？" | **Foundry Tool** |
-| "為什麼我應該信任這個答案？" | **Foundry IQ** 和 **Fabric IQ** |
-| "需要哪些 Azure 資源？" | **Foundry Control Plane** |
-| "如果我要把這個 PoC 擴成 multi-agent 體驗？" | **多代理程式延伸** |
+| 如果你現在卡在… | 從這裡開始 |
+|-------------------|-----------|
+| 「我知道它能回答，但還不懂它為什麼知道答案」 | **Foundry IQ** 和 **Fabric IQ** |
+| 「我不確定 agent 什麼時候會查工具」 | **Foundry Agent** |
+| 「我想知道它能做哪些事、不能做哪些事」 | **Foundry Tool** |
+| 「我不確定主流程實際依賴了哪些模型」 | **Foundry Model** |
+| 「我看到很多 Azure 名詞，但不知道哪些才是主線必要」 | **Foundry Control Plane** |
+| 「我想把單一 agent 再拆成多個角色」 | **多代理程式延伸** |
 
 ## 常見學習問題
 
-### "這跟 ChatGPT 有什麼不同？"
+### 這跟一般聊天模型有什麼不同？
 
-> **你的回答：** "ChatGPT 使用一般網路知識。這個代理程式是接地在你的文件和你的資料上。它不會虛構你的停機政策，因為它擷取的是實際政策。它不會編造工單指標，因為它查詢的是你的實際資料庫。"
+你可以先這樣理解：一般聊天模型主要靠通用知識回答；這個 workshop 的主線則是讓模型先去查你的文件和你的資料，再把查到的內容組合成答案。
 
-### "我們的資料安全嗎？"
+### 資料是怎麼被保護的？
 
-> **你的回答：** "一切都在你的 Azure 租用戶中執行。文件留在你的 AI Search 索引中。資料留在你的 Fabric 工作區中。AI 模型是 Azure OpenAI，不是公用端點。驗證使用你的 Entra ID。"
+先記住主線就好：文件留在 Azure AI Search，資料留在 Fabric，模型與驗證都走 Azure 內的資源與身分。等你需要部署或治理細節時，再回頭看各頁的補充說明。
 
-### "準確嗎？"
+### 為什麼這個答案比較值得信任？
 
-> **你的回答：** "這個 workshop 的主路徑不是黑盒產品功能，而是透明的兩段接地流程。文件部分先進 Azure AI Search，再由 `search_documents` 回傳帶來源與頁碼的段落；資料部分則由 agent 根據情境與 schema 脈絡產生唯讀 SQL，並在實際 Fabric 資料上執行。"
+因為這個 workshop 的主路徑不是黑盒回答。文件答案會回到實際索引的文件片段，資料答案會回到實際執行的唯讀 SQL 結果。你不是只能看到一句答案，而是能沿路追到它用過哪些證據。
 
-### "設定有多難？"
+### 需要一次看懂所有底層細節嗎？
 
-> **你的回答：** "這個 PoC 的最小可行版本可以在幾十分鐘內完成。對於正式環境，你只需連接你的真實文件和資料來源。加速器處理所有底層工作——向量嵌入、索引建立、代理程式設定。"
+不用。你先看懂「答案從哪裡來」和「agent 怎麼決定下一步」就夠了。像連線、追蹤、角色指派這些底層細節，等你要部署、治理或延伸時再回頭補就可以。
 
 !!! note "導覽順序說明"
     深入解析導覽會把 **智慧接地層** 拆成兩頁來講：先是 **Foundry IQ**，再是 **Fabric IQ**
-    因此導覽列會看到七個頁面項目，但底層仍然是這裡定義的六個技術主題
+    所以導覽列看起來會比這裡多一頁，但你可以把它們當成同一個學習主題的上下兩半來讀
 
 ## 深入解析頁面
 
@@ -98,8 +100,8 @@ flowchart LR
 - **[Foundry Tool: 函式工具合約](03-foundry-tool.md)**：核心工具、結構描述、執行迴圈與擴充策略
 - **[Foundry IQ: 文件](01-foundry-iq.md)**：文件如何被索引到 Azure AI Search，並由 `search_documents` 取回引用段落
 - **[Fabric IQ: 資料](02-fabric-iq.md)**：情境設定與 schema prompt 如何引導唯讀 NL→SQL
-- **[Foundry Control Plane: 資源拓撲](04-control-plane.md)**：專案資源、連線與追蹤拓撲
-- **[多代理程式延伸：情境工作流](05-multi-agent-extension.md)**：如何用 YAML 和額外腳本，把單代理程式 workshop 延伸成多角色情境流程
+- **[Foundry Control Plane: 資源拓撲](04-control-plane.md)**：支撐主流程的 Azure 資源地圖，以及你先需要知道的最少概念
+- **[多代理程式延伸：情境工作流](05-multi-agent-extension.md)**：單一 agent 主線看懂後，如何再往多角色工作流延伸
 
 ---
 

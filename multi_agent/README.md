@@ -13,6 +13,30 @@ It is intentionally separate from the main pipeline:
 - `workflow.yaml`: declarative scenario and agent design
 - `scripts/14_create_multi_agent_workflow.py`: creates scenario-specific prompt agents in Foundry
 - `scripts/15_test_multi_agent_workflow.py`: runs the planner → policy → data → synthesis workflow
+- `scripts/16_agent_framework_workflow_example.py`: minimal code-first workflow using Microsoft Agent Framework
+
+## Architecture
+
+The extension now has two parallel learning paths:
+
+- a declarative YAML path for scenario-driven multi-agent orchestration
+- a code-first Agent Framework path for a minimal programmable workflow
+
+Both paths reuse the same workshop foundations.
+
+![Workshop multi-agent architecture](assets/multi-agent-architecture.svg)
+
+File mapping for the diagram:
+
+- Workflow YAML = `multi_agent/workflow.yaml`
+- Create workflow script = `scripts/14_create_multi_agent_workflow.py`
+- Test workflow script = `scripts/15_test_multi_agent_workflow.py`
+- Agent Framework example script = `scripts/16_agent_framework_workflow_example.py`
+
+Read the diagram left to right as two ways to extend the same workshop:
+
+- the YAML path emphasizes reusable scenarios, role templates, and governed tool surfaces
+- the Agent Framework path emphasizes the smallest possible code sample for a sequential multi-agent workflow
 
 ## Agent roles
 

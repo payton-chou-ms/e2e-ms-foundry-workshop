@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880" role="img" aria-labelledby="title desc">
+  <title id="title">Workshop Multi-Agent Extension Architecture</title>
+  <desc id="desc">Architecture diagram showing shared workshop foundations feeding both the declarative YAML path and the Agent Framework path.</desc>
+  <defs>
+    <style>
+      .title { font: 700 28px 'Segoe UI', Arial, sans-serif; fill: #122033; }
+      .label { font: 600 18px 'Segoe UI', Arial, sans-serif; fill: #122033; }
+      .text { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #22344a; }
+      .small { font: 500 13px 'Segoe UI', Arial, sans-serif; fill: #42566e; }
+      .group { fill: #f6f9fc; stroke: #c8d6e5; stroke-width: 2; rx: 22; }
+      .foundation { fill: #eef6ff; stroke: #78a6d4; stroke-width: 2; rx: 16; }
+      .yaml { fill: #eef9f1; stroke: #7fba8a; stroke-width: 2; rx: 16; }
+      .agent { fill: #fff4e8; stroke: #d8a86f; stroke-width: 2; rx: 16; }
+      .arrow { stroke: #5b7088; stroke-width: 2.5; fill: none; marker-end: url(#arrowhead); }
+      .line { stroke: #90a4b8; stroke-width: 2; fill: none; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5b7088" />
+    </marker>
+  </defs>
+
+  <rect x="24" y="24" width="1352" height="832" fill="#ffffff" stroke="#d9e2ec" stroke-width="2" rx="24" />
+  <text x="60" y="72" class="title">Workshop Multi-Agent Extension</text>
+  <text x="60" y="102" class="small">Two extension paths reuse the same workshop foundations: declarative YAML orchestration and a code-first Agent Framework workflow.</text>
+
+  <rect x="60" y="138" width="1280" height="160" class="group" />
+  <text x="90" y="176" class="label">Shared workshop foundations</text>
+
+  <rect x="90" y="200" width="360" height="68" class="foundation" />
+  <text x="270" y="240" text-anchor="middle" class="text">Foundry project endpoint and model</text>
+
+  <rect x="520" y="200" width="360" height="68" class="foundation" />
+  <text x="700" y="240" text-anchor="middle" class="text">Workshop data and search assets</text>
+
+  <rect x="950" y="200" width="360" height="68" class="foundation" />
+  <text x="1130" y="240" text-anchor="middle" class="text">Local runtime and tool contract</text>
+
+  <rect x="60" y="340" width="610" height="460" class="group" />
+  <text x="90" y="380" class="label">Declarative YAML path</text>
+  <text x="90" y="406" class="small">Scenario-driven orchestration with reusable role templates and governed tool surfaces</text>
+
+  <rect x="100" y="438" width="230" height="62" class="yaml" />
+  <text x="215" y="474" text-anchor="middle" class="text">multi_agent/workflow.yaml</text>
+
+  <rect x="400" y="438" width="230" height="62" class="yaml" />
+  <text x="515" y="466" text-anchor="middle" class="text">scripts/14_create_</text>
+  <text x="515" y="486" text-anchor="middle" class="text">multi_agent_workflow.py</text>
+
+  <rect x="250" y="548" width="230" height="62" class="yaml" />
+  <text x="365" y="576" text-anchor="middle" class="text">Prompt agents in Foundry</text>
+  <text x="365" y="596" text-anchor="middle" class="small">planner, policy, data, synthesis</text>
+
+  <rect x="250" y="658" width="230" height="62" class="yaml" />
+  <text x="365" y="686" text-anchor="middle" class="text">scripts/15_test_</text>
+  <text x="365" y="706" text-anchor="middle" class="text">multi_agent_workflow.py</text>
+
+  <line x1="330" y1="469" x2="400" y2="469" class="arrow" />
+  <line x1="515" y1="500" x2="515" y2="548" class="arrow" />
+  <line x1="365" y1="610" x2="365" y2="658" class="arrow" />
+
+  <rect x="730" y="340" width="610" height="460" class="group" />
+  <text x="760" y="380" class="label">Agent Framework path</text>
+  <text x="760" y="406" class="small">Minimal code-first workflow that shows the same multi-agent idea in a programmable form</text>
+
+  <rect x="810" y="438" width="450" height="62" class="agent" />
+  <text x="1035" y="466" text-anchor="middle" class="text">scripts/16_agent_framework_workflow_example.py</text>
+  <text x="1035" y="486" text-anchor="middle" class="small">AzureAIClient + WorkflowBuilder</text>
+
+  <rect x="770" y="548" width="220" height="62" class="agent" />
+  <text x="880" y="576" text-anchor="middle" class="text">policy-researcher</text>
+  <text x="880" y="596" text-anchor="middle" class="small">find policy points</text>
+
+  <rect x="1090" y="548" width="220" height="62" class="agent" />
+  <text x="1200" y="576" text-anchor="middle" class="text">answer-synthesizer</text>
+  <text x="1200" y="596" text-anchor="middle" class="small">turn findings into next steps</text>
+
+  <rect x="930" y="658" width="210" height="62" class="agent" />
+  <text x="1035" y="686" text-anchor="middle" class="text">WorkflowBuilder</text>
+  <text x="1035" y="706" text-anchor="middle" class="small">sequential workflow</text>
+
+  <line x1="1035" y1="500" x2="1035" y2="548" class="arrow" />
+  <line x1="990" y1="579" x2="1090" y2="579" class="line" />
+  <line x1="880" y1="610" x2="980" y2="658" class="arrow" />
+  <line x1="1140" y1="658" x2="1200" y2="610" class="arrow" />
+
+  <rect x="590" y="766" width="220" height="46" fill="#ffffff" stroke="#b7c6d8" stroke-width="1.5" rx="12" />
+  <text x="700" y="795" text-anchor="middle" class="text">User question enters either path</text>
+
+  <line x1="270" y1="268" x2="270" y2="340" class="arrow" />
+  <line x1="700" y1="268" x2="700" y2="340" class="arrow" />
+  <line x1="1130" y1="268" x2="1130" y2="340" class="arrow" />
+
+  <line x1="700" y1="812" x2="365" y2="720" class="arrow" />
+  <line x1="700" y1="812" x2="1035" y2="720" class="arrow" />
+</svg>

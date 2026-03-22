@@ -318,7 +318,7 @@ python scripts/15_test_multi_agent_workflow.py --scenario exception_triage --que
 
 ### 最新 Agent Framework 小範例
 
-如果你想把上面的 multi-agent 概念，對照到新版 Microsoft Agent Framework API，可以直接看 `scripts/16_agent_framework_workflow_example.py`。這支是幫你理解新版寫法的最小範例，不是本 repo 目前 workshop 主流程的正式實作。
+如果你想把上面的 multi-agent 概念，對照到新版 Microsoft Agent Framework API，可以直接看 `scripts/16_agent_framework_workflow_example.py`。這支是幫你理解新版寫法的最小範例，不是目前 workshop 主流程的正式實作。
 
 建議先固定目前常見的 preview 版本：
 

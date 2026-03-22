@@ -1582,6 +1582,7 @@
 <p>本頁主要供<strong>管理員部署</strong>路徑使用
 如果已有人為你準備好環境，請從 <a href="../00-participant-run-validate/">參與者執行與驗證</a> 開始</p>
 </div>
+<p>如果你是第一次負責這條路徑，請把目標縮小成三件事：登入正確租用戶、用正確權限執行 <code>azd up</code>、確認資源真的建立成功。</p>
 <h2 id="_2">開啟專案目錄</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>nc-iq-workshop
 </code></pre></div>
@@ -1592,7 +1593,7 @@
 <p>這會開啟瀏覽器進行驗證，並直接把登入範圍鎖定到你要使用的 Tenant。</p>
 <div class="admonition warning">
 <p class="admonition-title">部署權限</p>
-<p>本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限</p>
+<p>這份 workshop 模板會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限</p>
 <p>實務上請用下列其中一種權限模型：</p>
 <ul>
 <li><code>Owner</code>：最直接，既能建立資源，也能建立角色指派</li>
@@ -1600,7 +1601,7 @@
 <li><code>Contributor</code> + <code>Role Based Access Control Administrator</code>：同樣可行，適合把資源建立與 RBAC 指派拆開管理</li>
 <li>等效的自訂角色組合：同時涵蓋資源寫入，以及 <code>Microsoft.Authorization/roleAssignments/write</code></li>
 </ul>
-<p><code>Contributor</code> 單獨使用通常會失敗，因為它不能建立 Azure RBAC 角色指派</p>
+<p>如果你只有 <code>Contributor</code>，部署通常會失敗，因為它不能建立 Azure RBAC 角色指派</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">這個模板實際會建立哪些 RBAC 指派</p>
@@ -1610,7 +1611,7 @@
 <li>對 <strong>Azure AI Search 的 managed identity</strong> 指派 <code>Cognitive Services OpenAI User</code> 與 <code>Storage Blob Data Reader</code></li>
 <li>對 <strong>執行部署的使用者身分</strong> 指派 <code>Cognitive Services User</code>、<code>Azure AI User</code>、<code>Search Index Data Contributor</code>、<code>Search Service Contributor</code>、<code>Storage Blob Data Contributor</code></li>
 </ul>
-<p>也就是說，部署不只是「把資源建出來」，還會順便把執行 workshop 主流程所需的資料平面 / 控制平面存取補齊</p>
+<p>你可以把這段理解成：部署不只是「把資源建出來」，也會順便把執行 workshop 主流程所需的存取補齊</p>
 </div>
 <h2 id="_3">部署資源</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>azd<span class="w"> </span>up<span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
@@ -1627,24 +1628,24 @@
 <p>如果你要使用目前 repo 的預設模型 <code>gpt-5.4-mini</code>，建議把 <strong>AI deployment location</strong> 設為 <code>eastus2</code></p>
 <p>實務上可以維持資源群組主區域為 <code>eastus</code>，但把 <code>AZURE_ENV_AI_DEPLOYMENTS_LOCATION</code> 設成 <code>eastus2</code>。這是目前這份 workshop 模板驗證過、較穩定的組合</p>
 </div>
-<p>建議的最短流程如下：</p>
+<p>如果你只想先把第一次部署做成功，照下面最短流程走就可以：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>azd<span class="w"> </span>auth<span class="w"> </span>login<span class="w"> </span>--tenant-id<span class="w"> </span>&lt;TENANT_ID&gt;
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>azd<span class="w"> </span>up<span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
 </code></pre></div>
 <p>如果你後面還需要直接執行 Azure CLI 指令，例如 <code>az account list</code> 或 <code>az account show</code>，再另外登入 Azure CLI 即可：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>az<span class="w"> </span>login<span class="w"> </span>--tenant<span class="w"> </span>&lt;TENANT_ID&gt;
 </code></pre></div>
-<p>如果你要在 azd 環境裡明確固定這個設定，可以先這樣做：</p>
+<p>如果你想把環境設定固定下來，避免之後重跑時忘記區域或 subscription，可以再做下面這一步：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>azd<span class="w"> </span>env<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AZURE_LOCATION<span class="w"> </span>eastus
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>azd<span class="w"> </span>env<span class="w"> </span><span class="nb">set</span><span class="w"> </span>AZURE_ENV_AI_DEPLOYMENTS_LOCATION<span class="w"> </span>eastus2
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>azd<span class="w"> </span>up<span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
 </code></pre></div>
-<p>如果你已經用 Azure CLI 登入，只想切換到正確的訂用帳戶，也可以先這樣做：</p>
+<p>如果你已經用 Azure CLI 登入，只想切到正確的訂用帳戶，也可以先這樣做：</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span>&lt;SUBSCRIPTION_ID&gt;
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>azd<span class="w"> </span>up
 </code></pre></div>
 <h3 id="subscription-tenant">Subscription 與 Tenant 從哪裡拿？</h3>
-<p>你可以用 Azure Portal 或 Azure CLI 取得。</p>
+<p>你可以用 Azure Portal 或 Azure CLI 取得。這一段是查資料用，不需要全部背起來。</p>
 <p><strong>從 Azure Portal：</strong></p>
 <ul>
 <li><strong>Subscription ID</strong>：到 <strong>Subscriptions</strong>，打開目標訂用帳戶，在 Overview / Essentials 查看 <strong>Subscription ID</strong></li>
@@ -1677,7 +1678,7 @@
 <li><code>gpt-4.1-mini</code></li>
 </ul>
 <p>主要的 <code>text-embedding-3-large</code> 會同時作為工作坊主路徑與 Content Understanding 預設所使用的 embedding 部署。</p>
-<p>此外，部署流程也會自動建立兩個選配能力所需的控制平面資源：</p>
+<p>此外，部署流程也會自動建立兩個選配能力所需的資源：</p>
 <ul>
 <li>一個專用的 image-capable Azure OpenAI resource，用於 <code>13_demo_image_generation.py</code></li>
 <li>一個 Playwright Workspace，用於 <code>10_demo_browser_automation.py</code></li>
@@ -1687,7 +1688,7 @@
 <p>部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作</p>
 </div>
 <h2 id="_5">驗證部署</h2>
-<p>在 <a href="https://portal.azure.com/">Azure Portal</a> 中確認你的資源群組至少包含下列資源：</p>
+<p>在 <a href="https://portal.azure.com/">Azure Portal</a> 中確認你的資源群組至少包含下列資源。這一步的目的不是逐一檢查細節，而是確認主流程需要的骨幹都有出現：</p>
 <ul>
 <li>Microsoft Foundry</li>
 <li>Foundry project</li>
@@ -1715,10 +1716,11 @@
 <div class="admonition note">
 <p class="admonition-title">Browser Automation 的最後一段仍需手動</p>
 <p><code>azd up</code> 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection</p>
+<div class="highlight"><pre><span></span><code>- **從哪邊拿資料**：到 Azure Portal 的 Playwright Workspace，進入 **Settings** &gt; **Access Management** 產生一次性的 **Access token**；再到 Workspace 的 **Overview** 複製 **Browser endpoint**（`wss://...`）
+- **貼到哪邊**：到 Foundry project 的 **Build** &gt; **Tools** &gt; **Connect a tool** &gt; **Browser Automation**，把 **Browser endpoint** 貼到 *Playwright workspace region endpoint*，把 **Access token** 貼到 *Access token*
+- **最後要保存的值**：connection 建好後，將該工具頁面上的 **Project connection ID** 寫入專案根目錄 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
+</code></pre></div>
 <ul>
-<li><strong>從哪邊拿資料</strong>：到 Azure Portal 的 Playwright Workspace，進入 <strong>Settings</strong> &gt; <strong>Access Management</strong> 產生一次性的 <strong>Access token</strong>；再到 Workspace 的 <strong>Overview</strong> 複製 <strong>Browser endpoint</strong>（<code>wss://...</code>）</li>
-<li><strong>貼到哪邊</strong>：到 Foundry project 的 <strong>Build</strong> &gt; <strong>Tools</strong> &gt; <strong>Connect a tool</strong> &gt; <strong>Browser Automation</strong>，把 <strong>Browser endpoint</strong> 貼到 <em>Playwright workspace region endpoint</em>，把 <strong>Access token</strong> 貼到 <em>Access token</em></li>
-<li><strong>最後要保存的值</strong>：connection 建好後，將該工具頁面上的 <strong>Project connection ID</strong> 寫入專案根目錄 <code>.env</code> 的 <code>AZURE_PLAYWRIGHT_CONNECTION_ID</code></li>
 <li><strong>官網連結</strong>：
   <a href="https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation#set-up-browser-automation">Browser Automation setup</a>
   <a href="https://aka.ms/pww/docs/manage-workspaces">Manage Playwright workspaces</a>

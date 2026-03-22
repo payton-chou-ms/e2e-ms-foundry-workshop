@@ -4,6 +4,8 @@
     本頁主要供**管理員部署**路徑使用
     如果已有人為你準備好環境，請從 [參與者執行與驗證](00-participant-run-validate.md) 開始
 
+如果你是第一次負責這條路徑，請把目標縮小成三件事：登入正確租用戶、用正確權限執行 `azd up`、確認資源真的建立成功。
+
 ## 開啟專案目錄
 
 ```bash
@@ -21,7 +23,7 @@ azd auth login --tenant-id <TENANT_ID>
 這會開啟瀏覽器進行驗證，並直接把登入範圍鎖定到你要使用的 Tenant。
 
 !!! warning "部署權限"
-    本 repository 會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限
+    這份 workshop 模板會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限
 
     實務上請用下列其中一種權限模型：
 
@@ -30,7 +32,7 @@ azd auth login --tenant-id <TENANT_ID>
     - `Contributor` + `Role Based Access Control Administrator`：同樣可行，適合把資源建立與 RBAC 指派拆開管理
     - 等效的自訂角色組合：同時涵蓋資源寫入，以及 `Microsoft.Authorization/roleAssignments/write`
 
-    `Contributor` 單獨使用通常會失敗，因為它不能建立 Azure RBAC 角色指派
+    如果你只有 `Contributor`，部署通常會失敗，因為它不能建立 Azure RBAC 角色指派
 
 !!! note "這個模板實際會建立哪些 RBAC 指派"
     目前的 Bicep 模板會在部署期間建立多組角色指派，包含：
@@ -39,7 +41,7 @@ azd auth login --tenant-id <TENANT_ID>
     - 對 **Azure AI Search 的 managed identity** 指派 `Cognitive Services OpenAI User` 與 `Storage Blob Data Reader`
     - 對 **執行部署的使用者身分** 指派 `Cognitive Services User`、`Azure AI User`、`Search Index Data Contributor`、`Search Service Contributor`、`Storage Blob Data Contributor`
 
-    也就是說，部署不只是「把資源建出來」，還會順便把執行 workshop 主流程所需的資料平面 / 控制平面存取補齊
+    你可以把這段理解成：部署不只是「把資源建出來」，也會順便把執行 workshop 主流程所需的存取補齊
 
 ## 部署資源
 
@@ -61,7 +63,7 @@ azd up --subscription <SUBSCRIPTION_ID>
 
     實務上可以維持資源群組主區域為 `eastus`，但把 `AZURE_ENV_AI_DEPLOYMENTS_LOCATION` 設成 `eastus2`。這是目前這份 workshop 模板驗證過、較穩定的組合
 
-建議的最短流程如下：
+如果你只想先把第一次部署做成功，照下面最短流程走就可以：
 
 ```bash
 azd auth login --tenant-id <TENANT_ID>
@@ -74,7 +76,7 @@ azd up --subscription <SUBSCRIPTION_ID>
 az login --tenant <TENANT_ID>
 ```
 
-如果你要在 azd 環境裡明確固定這個設定，可以先這樣做：
+如果你想把環境設定固定下來，避免之後重跑時忘記區域或 subscription，可以再做下面這一步：
 
 ```bash
 azd env set AZURE_LOCATION eastus
@@ -82,7 +84,7 @@ azd env set AZURE_ENV_AI_DEPLOYMENTS_LOCATION eastus2
 azd up --subscription <SUBSCRIPTION_ID>
 ```
 
-如果你已經用 Azure CLI 登入，只想切換到正確的訂用帳戶，也可以先這樣做：
+如果你已經用 Azure CLI 登入，只想切到正確的訂用帳戶，也可以先這樣做：
 
 ```bash
 az account set --subscription <SUBSCRIPTION_ID>
@@ -91,7 +93,7 @@ azd up
 
 ### Subscription 與 Tenant 從哪裡拿？
 
-你可以用 Azure Portal 或 Azure CLI 取得。
+你可以用 Azure Portal 或 Azure CLI 取得。這一段是查資料用，不需要全部背起來。
 
 **從 Azure Portal：**
 
@@ -137,7 +139,7 @@ azd up --environment <environment-name>
 
 主要的 `text-embedding-3-large` 會同時作為工作坊主路徑與 Content Understanding 預設所使用的 embedding 部署。
 
-此外，部署流程也會自動建立兩個選配能力所需的控制平面資源：
+此外，部署流程也會自動建立兩個選配能力所需的資源：
 
 - 一個專用的 image-capable Azure OpenAI resource，用於 `13_demo_image_generation.py`
 - 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`
@@ -147,7 +149,7 @@ azd up --environment <environment-name>
 
 ## 驗證部署
 
-在 [Azure Portal](https://portal.azure.com/) 中確認你的資源群組至少包含下列資源：
+在 [Azure Portal](https://portal.azure.com/) 中確認你的資源群組至少包含下列資源。這一步的目的不是逐一檢查細節，而是確認主流程需要的骨幹都有出現：
 
 - Microsoft Foundry
 - Foundry project
@@ -175,9 +177,9 @@ azd up --environment <environment-name>
 !!! note "Browser Automation 的最後一段仍需手動"
     `azd up` 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection
 
-    - **從哪邊拿資料**：到 Azure Portal 的 Playwright Workspace，進入 **Settings** > **Access Management** 產生一次性的 **Access token**；再到 Workspace 的 **Overview** 複製 **Browser endpoint**（`wss://...`）
-    - **貼到哪邊**：到 Foundry project 的 **Build** > **Tools** > **Connect a tool** > **Browser Automation**，把 **Browser endpoint** 貼到 *Playwright workspace region endpoint*，把 **Access token** 貼到 *Access token*
-    - **最後要保存的值**：connection 建好後，將該工具頁面上的 **Project connection ID** 寫入專案根目錄 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
+        - **從哪邊拿資料**：到 Azure Portal 的 Playwright Workspace，進入 **Settings** > **Access Management** 產生一次性的 **Access token**；再到 Workspace 的 **Overview** 複製 **Browser endpoint**（`wss://...`）
+        - **貼到哪邊**：到 Foundry project 的 **Build** > **Tools** > **Connect a tool** > **Browser Automation**，把 **Browser endpoint** 貼到 *Playwright workspace region endpoint*，把 **Access token** 貼到 *Access token*
+        - **最後要保存的值**：connection 建好後，將該工具頁面上的 **Project connection ID** 寫入專案根目錄 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
     - **官網連結**：
       [Browser Automation setup](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation#set-up-browser-automation)
       [Manage Playwright workspaces](https://aka.ms/pww/docs/manage-workspaces)

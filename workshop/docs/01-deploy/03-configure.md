@@ -7,8 +7,8 @@
 ## Python 環境
 
 !!! note "如果你使用 Dev Container 或 Codespaces"
-    這個 repo 的 Dev Container 會在建立環境時自動安裝 `scripts/requirements.txt` 與 `workshop/requirements.txt`
-    如果你是用 Dev Container 或 Codespaces 開啟 repo，通常可以直接跳過下面的安裝步驟
+    這份 workshop 的 Dev Container 會在建立環境時自動安裝 `scripts/requirements.txt` 與 `workshop/requirements.txt`
+    如果你是用 Dev Container 或 Codespaces 開啟專案，通常可以直接跳過下面的安裝步驟
     只有在你是本機 Python 環境、或想重新安裝相依套件時，才需要手動執行
 
 ### 建立並啟用

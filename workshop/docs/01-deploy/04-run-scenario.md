@@ -10,7 +10,7 @@
 
 這個命令的意思是：
 
-- 使用 repo 內已經附好的預設資料集 `data/default`
+- 使用專案內已經附好的預設資料集 `data/default`
 - 從 pipeline 的 **步驟 02** 開始往後執行
 - 一路做到建立 Foundry agent 為止
 
@@ -46,7 +46,7 @@ python scripts/00_build_solution.py --from 02
 
 適合：
 
-- 你在跑 repo 內建的預設情境
+- 你在跑專案內建的預設情境
 - `data/default` 已存在，且你不打算重做資料內容
 - 你只是要把預設 workshop 環境建好或驗證一次
 
