@@ -267,7 +267,7 @@ resource optionalDeployments 'Microsoft.CognitiveServices/accounts/deployments@2
             }
       )
     }
-    dependsOn: [embeddingDeployment]
+    dependsOn: deployImageModel ? [imageDeployment] : [embeddingDeployment]
   }
 ]
 
