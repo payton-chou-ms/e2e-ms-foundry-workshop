@@ -247,4 +247,4 @@ python scripts/08_test_foundry_agent.py
 
 ---
 
-[← 管理員部署](00-admin-deploy-share.md) | [設定開發環境 →](03-configure.md)
+[← 建立 Fabric 工作區](02-setup-fabric.md) | [設定開發環境 →](03-configure.md)

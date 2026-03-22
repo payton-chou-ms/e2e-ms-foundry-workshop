@@ -90,4 +90,4 @@
 
 ---
 
-[← 部署總覽](index.md) | [參與者執行與驗證 →](00-participant-run-validate.md)
+[← 部署總覽](index.md) | [部署 Azure 資源 →](01-deploy-azure.md)

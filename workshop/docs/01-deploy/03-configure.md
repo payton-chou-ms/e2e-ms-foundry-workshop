@@ -110,4 +110,4 @@ DATA_FOLDER=data/default
 
 ---
 
-[← 建立 Fabric 工作區](02-setup-fabric.md) | [建置解決方案 →](04-run-scenario.md)
+[← 參與者執行與驗證](00-participant-run-validate.md) | [建置解決方案 →](04-run-scenario.md)

@@ -3,8 +3,8 @@
 建立並設定你的 Microsoft Fabric 工作區以使用 Fabric IQ。
 
 !!! info "主要適用對象"
-本頁主要供**管理員部署**路徑使用
-參與者應使用已經準備好並分享給他們的工作區。
+	本頁主要供**管理員部署**路徑使用
+	參與者應使用已經準備好並分享給他們的工作區。
 
 ## 先決條件
 
@@ -40,4 +40,4 @@
 | Workspace name | 工作區設定 |
 
 
-[← 部署 Azure 資源](01-deploy-azure.md) | [設定開發環境 →](03-configure.md)
+[← 部署 Azure 資源](01-deploy-azure.md) | [參與者執行與驗證 →](00-participant-run-validate.md)
