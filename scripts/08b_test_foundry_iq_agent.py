@@ -76,6 +76,13 @@ if not sample_questions:
         "How is customer impact classified in our documentation?",
     ]
 
+
+def print_sample_questions():
+    print("Sample document questions:")
+    for question in sample_questions:
+        print(f"  - {question}")
+
+
 project_client = AIProjectClient(
     endpoint=PROJECT_ENDPOINT,
     credential=DefaultAzureCredential(),
@@ -91,6 +98,7 @@ print(f"\n{'='*60}")
 print("Foundry IQ Agent Chat")
 print(f"{'='*60}")
 print(f"Agent Name: {agent.name}")
+print_sample_questions()
 print("Type 'quit' to exit, 'help' for sample questions")
 
 
@@ -133,9 +141,8 @@ while True:
     if user_input.lower() in ["quit", "exit", "q"]:
         break
     if user_input.lower() == "help":
-        print("\nSample document questions:")
-        for question in sample_questions:
-            print(f"  - {question}")
+        print()
+        print_sample_questions()
         continue
 
     response = openai_client.responses.create(

@@ -134,6 +134,55 @@ else:
             solution_name = json.load(f).get("solution_name", "demo")
     INDEX_NAME = f"{solution_name}-documents"
 
+# ============================================================================
+# Load Sample Questions
+# ============================================================================
+
+
+def load_sample_questions():
+    questions_path = os.path.join(config_dir, "sample_questions.txt")
+    questions = []
+    target_section = "DOCUMENT QUESTIONS" if FOUNDRY_ONLY else "COMBINED INSIGHT QUESTIONS"
+    in_target_section = False
+
+    if os.path.exists(questions_path):
+        with open(questions_path, "r") as f:
+            for line in f.read().splitlines():
+                if target_section in line:
+                    in_target_section = True
+                    continue
+                if in_target_section and line.startswith("==="):
+                    break
+                if in_target_section and line.strip().startswith("- "):
+                    questions.append(line.strip()[2:])
+
+    if questions:
+        return questions
+
+    if FOUNDRY_ONLY:
+        return [
+            "What are the policies for notifying customers of outages?",
+            "How is customer impact classified in our documentation?",
+        ]
+
+    return [
+        "What insights can you provide from the data?",
+        "How does the data compare to our documented policies?",
+    ]
+
+
+def print_sample_questions():
+    if FOUNDRY_ONLY:
+        print("Sample document questions:")
+    else:
+        print("Sample questions (that may use BOTH tools):")
+
+    for question in sample_questions:
+        print(f"  - {question}")
+
+
+sample_questions = load_sample_questions()
+
 print(f"\n{'='*60}")
 if FOUNDRY_ONLY:
     print("AI Agent Chat (Search Only)")
@@ -143,6 +192,7 @@ print(f"{'='*60}")
 print("Available tools:")
 for line in get_tool_summary_lines(FOUNDRY_ONLY):
     print(f"  {line}")
+print_sample_questions()
 print("Type 'quit' to exit, 'help' for sample questions\n")
 
 # ============================================================================
@@ -319,39 +369,9 @@ def search_documents(query, top=3):
         return f"Search Error: {str(e)}"
 
 # ============================================================================
-# Load Sample Questions
-# ============================================================================
-
-
-questions_path = os.path.join(config_dir, "sample_questions.txt")
-sample_questions = []
-
-if os.path.exists(questions_path):
-    with open(questions_path, "r") as f:
-        content = f.read()
-
-    # Parse the COMBINED INSIGHT QUESTIONS section (best demonstrates multi-tool)
-    in_combined_section = False
-    for line in content.split("\n"):
-        if "COMBINED INSIGHT QUESTIONS" in line:
-            in_combined_section = True
-            continue
-        if in_combined_section:
-            if line.startswith("==="):  # Next section
-                break
-            if line.strip().startswith("- "):
-                sample_questions.append(line.strip()[2:])
-
-# Fallback if no questions loaded
-if not sample_questions:
-    sample_questions = [
-        "What insights can you provide from the data?",
-        "How does the data compare to our documented policies?",
-    ]
-
-# ============================================================================
 # Initialize Client
 # ============================================================================
+
 
 credential = DefaultAzureCredential()
 project_client = AIProjectClient(
@@ -509,9 +529,8 @@ while True:
         break
 
     if user_input.lower() == "help":
-        print("\nSample questions (that may use BOTH tools):")
-        for q in sample_questions:
-            print(f"  - {q}")
+        print()
+        print_sample_questions()
         continue
 
     print("\nAgent: ", end="", flush=True)
