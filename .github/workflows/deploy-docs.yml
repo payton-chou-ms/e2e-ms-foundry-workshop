@@ -34,12 +34,12 @@ jobs:
       - name: Build site
         run: |
           cd workshop
-          mkdocs build --site-dir ../site
+          mkdocs build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ./workshop/site
 
   deploy:
     environment:

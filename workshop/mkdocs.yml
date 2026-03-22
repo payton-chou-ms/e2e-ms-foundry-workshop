@@ -1,5 +1,6 @@
 site_name: 使用 Solution Accelerators 更快建構方案 – Foundry IQ + Fabric IQ
 site_description: 實作型 workshop，示範如何建構同時結合非結構化文件知識與結構化企業資料的 AI 代理程式
+use_directory_urls: false
 
 theme:
   name: material
@@ -47,6 +48,10 @@ markdown_extensions:
 
 plugins:
   - search
+
+extra_javascript:
+  - https://unpkg.com/mermaid@11.6.0/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
 
 nav:
   - 總覽: index.md

@@ -6,8 +6,8 @@
 
 請將 `workshop/docs/` 視為所有面向使用者的 workshop 內容之唯一主要來源。
 
-- `workshop/site/` 是本機 MkDocs build 的產生輸出。
-- root `site/` 是 GitHub Pages workflow 產生的輸出。
+- `workshop/site/` 是唯一的建置輸出目錄，供本機 MkDocs build 與 GitHub Pages workflow 共用。
+- root `site/` 不再使用，也不應再納入版本控管。
 - `guides/` 應只放發佈產生物或審閱備註，而不是同一套教學內容的第二份手寫副本。
 
 ## 本機開發
@@ -32,9 +32,13 @@ mkdocs serve
 mkdocs build
 ```
 
-輸出會位於 `site/` 資料夾。
+輸出會位於 `workshop/site/` 資料夾。
 
 ## 部署到 GitHub Pages
+
+GitHub Pages 以 `.github/workflows/deploy-docs.yml` 自動建置與部署 `workshop/site/`。
+
+如果要在本機手動部署到 `gh-pages` branch，可執行：
 
 ```bash
 mkdocs gh-deploy
