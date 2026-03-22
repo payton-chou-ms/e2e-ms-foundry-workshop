@@ -10,7 +10,7 @@ import os
 import time
 
 from load_env import load_all_env
-from optional_demo_utils import finish_skip, resolve_env_value
+from optional_demo_utils import finish_skip, print_demo_header, resolve_env_value
 
 load_all_env()
 
@@ -42,6 +42,25 @@ def parse_args():
 def main():
     args = parse_args()
 
+    print_demo_header(
+        title="PII Redaction Demo",
+        description="Send a short text sample to Azure Language and show the redacted result plus detected entities.",
+        env_items=[
+            {"name": "AZURE_LANGUAGE_ENDPOINT",
+                "value": os.getenv("AZURE_LANGUAGE_ENDPOINT")},
+            {"name": "LANGUAGE_ENDPOINT",
+                "value": os.getenv("LANGUAGE_ENDPOINT")},
+            {"name": "AZURE_AI_ENDPOINT",
+                "value": os.getenv("AZURE_AI_ENDPOINT")},
+            {"name": "AZURE_LANGUAGE_KEY", "value": os.getenv(
+                "AZURE_LANGUAGE_KEY"), "mask": True},
+            {"name": "LANGUAGE_KEY", "value": os.getenv(
+                "LANGUAGE_KEY"), "mask": True},
+            {"name": "AZURE_AI_KEY", "value": os.getenv(
+                "AZURE_AI_KEY"), "mask": True},
+        ],
+    )
+
     if IMPORT_ERROR is not None:
         finish_skip(
             "azure-ai-textanalytics is not installed. Run 'pip install -r requirements.txt'.",
@@ -72,9 +91,6 @@ def main():
         credential = DefaultAzureCredential()
         cred_source = "DefaultAzureCredential"
 
-    print("\n" + "=" * 60)
-    print("PII Redaction Demo")
-    print("=" * 60)
     print(f"Endpoint source: {endpoint_name}")
     print(f"Credential source: {cred_source}")
     print(f"Input text: {args.text}")

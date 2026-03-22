@@ -9,7 +9,7 @@ import argparse
 import os
 
 from load_env import load_all_env
-from optional_demo_utils import finish_skip, resolve_env_value, safe_delete_agent_version
+from optional_demo_utils import finish_skip, print_demo_header, resolve_env_value, safe_delete_agent_version
 
 load_all_env()
 
@@ -41,6 +41,17 @@ def parse_args():
 def main():
     args = parse_args()
 
+    print_demo_header(
+        title="Web Search Demo",
+        description="Create a temporary agent that uses the Web Search tool to answer a public-web question.",
+        env_items=[
+            {"name": "AZURE_AI_PROJECT_ENDPOINT",
+                "value": os.getenv("AZURE_AI_PROJECT_ENDPOINT")},
+            {"name": "AZURE_CHAT_MODEL",
+                "value": os.getenv("AZURE_CHAT_MODEL")},
+        ],
+    )
+
     if IMPORT_ERROR is not None:
         finish_skip(
             "Web Search tool types are not available in the installed azure-ai-projects package.",
@@ -55,9 +66,6 @@ def main():
     model = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
         "MODEL_DEPLOYMENT") or "gpt-5.4-mini"
 
-    print("\n" + "=" * 60)
-    print("Web Search Demo")
-    print("=" * 60)
     print(f"Endpoint source: {endpoint_name}")
     print(f"Model: {model}")
 

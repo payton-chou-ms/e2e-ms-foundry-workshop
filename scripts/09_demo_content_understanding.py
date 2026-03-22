@@ -15,10 +15,10 @@ Use --strict to convert skip conditions into exit code 1 for debugging.
 
 import argparse
 import os
-import sys
 from pathlib import Path
 
 from load_env import load_all_env
+from optional_demo_utils import finish_skip, print_demo_header, resolve_env_value
 
 load_all_env()
 
@@ -57,19 +57,6 @@ def parse_args():
         help="Exit with code 1 on skip conditions instead of returning success.",
     )
     return parser.parse_args()
-
-
-def finish_skip(message, strict=False):
-    print(f"SKIP: {message}")
-    sys.exit(1 if strict else 0)
-
-
-def resolve_env_value(*names):
-    for name in names:
-        value = os.getenv(name)
-        if value:
-            return value, name
-    return None, None
 
 
 def resolve_default_file():
@@ -178,6 +165,37 @@ def summarize_document(content, max_markdown_chars):
 def main():
     args = parse_args()
 
+    if args.file:
+        file_path = Path(args.file)
+        if not file_path.is_absolute():
+            file_path = Path(__file__).resolve().parent.parent / file_path
+    else:
+        file_path = resolve_default_file()
+
+    print_demo_header(
+        title="Content Understanding Demo",
+        description="Analyze a local workshop PDF with the prebuilt-documentSearch analyzer.",
+        env_items=[
+            {"name": "CONTENTUNDERSTANDING_ENDPOINT",
+                "value": os.getenv("CONTENTUNDERSTANDING_ENDPOINT")},
+            {"name": "CONTENT_UNDERSTANDING_ENDPOINT",
+                "value": os.getenv("CONTENT_UNDERSTANDING_ENDPOINT")},
+            {"name": "AZURE_AI_ENDPOINT",
+                "value": os.getenv("AZURE_AI_ENDPOINT")},
+            {"name": "CONTENTUNDERSTANDING_KEY", "value": os.getenv(
+                "CONTENTUNDERSTANDING_KEY"), "mask": True},
+            {"name": "CONTENT_UNDERSTANDING_KEY", "value": os.getenv(
+                "CONTENT_UNDERSTANDING_KEY"), "mask": True},
+            {"name": "AZURE_AI_KEY", "value": os.getenv(
+                "AZURE_AI_KEY"), "mask": True},
+            {"name": "DATA_FOLDER", "value": os.getenv("DATA_FOLDER")},
+        ],
+    )
+    print(f"Input file: {file_path or '(not found)'}")
+    print("Analyzer: prebuilt-documentSearch")
+    if args.processing_location:
+        print(f"Processing location override: {args.processing_location}")
+
     if IMPORT_ERROR is not None:
         finish_skip(
             "azure-ai-contentunderstanding is not installed. Run 'pip install -r requirements.txt'.",
@@ -201,13 +219,6 @@ def main():
         "AZURE_AI_KEY",
     )
 
-    if args.file:
-        file_path = Path(args.file)
-        if not file_path.is_absolute():
-            file_path = Path(__file__).resolve().parent.parent / file_path
-    else:
-        file_path = resolve_default_file()
-
     if not file_path or not file_path.exists():
         finish_skip(
             "no local PDF was found for the demo. Generate sample data first or provide --file.",
@@ -218,13 +229,8 @@ def main():
     client = ContentUnderstandingClient(
         endpoint=endpoint, credential=credential)
 
-    print("\n" + "=" * 60)
-    print("Content Understanding Demo")
-    print("=" * 60)
     print(f"Endpoint source: {endpoint_name}")
     print(f"Credential source: {key_name or 'DefaultAzureCredential'}")
-    print(f"Input file: {file_path}")
-    print("Analyzer: prebuilt-documentSearch")
     if args.processing_location:
         print(f"Processing location: {args.processing_location}")
 

@@ -13,6 +13,44 @@ def finish_skip(message, strict=False):
     sys.exit(1 if strict else 0)
 
 
+def mask_secret_value(value):
+    if value is None or value == "":
+        return "(not set)"
+
+    text = str(value)
+    if len(text) <= 6:
+        return "*" * len(text)
+
+    visible = 3 if len(text) > 10 else 2
+    masked = max(4, len(text) - (visible * 2))
+    return f"{text[:visible]}{'*' * masked}{text[-visible:]}"
+
+
+def format_env_value(name, value, mask=False):
+    if value is None or value == "":
+        return "(not set)"
+
+    if mask or any(token in name.upper() for token in ["KEY", "TOKEN", "SECRET", "PASSWORD"]):
+        return mask_secret_value(value)
+
+    return str(value)
+
+
+def print_demo_header(title, description, env_items=None):
+    print("\n" + "=" * 60)
+    print(title)
+    print("=" * 60)
+    print(f"Demo: {description}")
+
+    if env_items:
+        print("\nEnvironment variables:")
+        for item in env_items:
+            name = item["name"]
+            value = item.get("value")
+            mask = item.get("mask", False)
+            print(f"  - {name} = {format_env_value(name, value, mask)}")
+
+
 def resolve_env_value(*names):
     for name in names:
         value = os.getenv(name)

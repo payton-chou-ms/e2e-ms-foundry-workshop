@@ -13,7 +13,7 @@ from pathlib import Path
 import requests
 
 from load_env import load_all_env
-from optional_demo_utils import finish_skip, resolve_env_value, resolve_image_model_deployment
+from optional_demo_utils import finish_skip, print_demo_header, resolve_env_value, resolve_image_model_deployment
 
 try:
     from azure.identity import DefaultAzureCredential
@@ -42,6 +42,33 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    print_demo_header(
+        title="Image Generation Demo",
+        description="Call the Azure OpenAI image generation API and save one generated PNG locally.",
+        env_items=[
+            {"name": "AZURE_IMAGE_OPENAI_ENDPOINT",
+                "value": os.getenv("AZURE_IMAGE_OPENAI_ENDPOINT")},
+            {"name": "AZURE_IMAGE_ENDPOINT",
+                "value": os.getenv("AZURE_IMAGE_ENDPOINT")},
+            {"name": "AZURE_OPENAI_ENDPOINT",
+                "value": os.getenv("AZURE_OPENAI_ENDPOINT")},
+            {"name": "AZURE_AI_ENDPOINT",
+                "value": os.getenv("AZURE_AI_ENDPOINT")},
+            {"name": "AZURE_IMAGE_OPENAI_API_KEY", "value": os.getenv(
+                "AZURE_IMAGE_OPENAI_API_KEY"), "mask": True},
+            {"name": "AZURE_IMAGE_API_KEY", "value": os.getenv(
+                "AZURE_IMAGE_API_KEY"), "mask": True},
+            {"name": "AZURE_OPENAI_API_KEY", "value": os.getenv(
+                "AZURE_OPENAI_API_KEY"), "mask": True},
+            {"name": "AZURE_AI_KEY", "value": os.getenv(
+                "AZURE_AI_KEY"), "mask": True},
+            {"name": "AZURE_IMAGE_MODEL_DEPLOYMENT",
+                "value": os.getenv("AZURE_IMAGE_MODEL_DEPLOYMENT")},
+            {"name": "AZURE_IMAGE_MODEL",
+                "value": os.getenv("AZURE_IMAGE_MODEL")},
+        ],
+    )
 
     endpoint, endpoint_name = resolve_env_value(
         "AZURE_IMAGE_OPENAI_ENDPOINT",
@@ -106,9 +133,6 @@ def main():
         "output_format": "png",
     }
 
-    print("\n" + "=" * 60)
-    print("Image Generation Demo")
-    print("=" * 60)
     print(f"Endpoint source: {endpoint_name}")
     print(f"Credential source: {key_name}")
     print(f"Deployment source: {deployment_name}")

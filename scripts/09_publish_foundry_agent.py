@@ -34,6 +34,7 @@ from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 
 from load_env import load_all_env
+from optional_demo_utils import print_demo_header
 
 
 def warn(message: str) -> None:
@@ -112,9 +113,17 @@ load_all_env()
 ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 DATA_FOLDER = os.getenv("DATA_FOLDER")
 
-print(f"\n{'=' * 60}")
-print("Foundry Agent Publish Precheck")
-print(f"{'=' * 60}")
+print_demo_header(
+    title="Foundry Agent Publish Precheck",
+    description="Check whether an existing Foundry agent is ready for the manual publish flow.",
+    env_items=[
+        {"name": "AZURE_AI_PROJECT_ENDPOINT", "value": ENDPOINT},
+        {"name": "DATA_FOLDER", "value": DATA_FOLDER},
+        {"name": "FOUNDRY_AGENT_ID", "value": os.getenv("FOUNDRY_AGENT_ID")},
+        {"name": "FOUNDRY_AGENT_NAME",
+            "value": os.getenv("FOUNDRY_AGENT_NAME")},
+    ],
+)
 
 if not ENDPOINT:
     exit_skip("AZURE_AI_PROJECT_ENDPOINT not set. Run 'azd up' first.", args.strict)
@@ -128,6 +137,7 @@ if not agent_id and not agent_name:
     )
 
 account_name, project_name = parse_project_endpoint(ENDPOINT)
+info("This demo does not publish automatically. It only checks prerequisites and prints the next manual steps.")
 ok(f"Project endpoint loaded: {ENDPOINT}")
 if account_name and project_name:
     ok(f"Foundry account: {account_name}")

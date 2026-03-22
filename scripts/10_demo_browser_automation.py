@@ -10,7 +10,7 @@ import json
 import os
 
 from load_env import load_all_env
-from optional_demo_utils import finish_skip, resolve_env_value, safe_delete_agent_version
+from optional_demo_utils import finish_skip, print_demo_header, resolve_env_value, safe_delete_agent_version
 
 load_all_env()
 
@@ -54,6 +54,21 @@ def parse_args():
 def main():
     args = parse_args()
 
+    print_demo_header(
+        title="Browser Automation Demo",
+        description="Create a temporary agent that opens a trusted Microsoft Learn page and reports what it finds.",
+        env_items=[
+            {"name": "AZURE_AI_PROJECT_ENDPOINT",
+                "value": os.getenv("AZURE_AI_PROJECT_ENDPOINT")},
+            {"name": "AZURE_PLAYWRIGHT_CONNECTION_ID",
+                "value": os.getenv("AZURE_PLAYWRIGHT_CONNECTION_ID")},
+            {"name": "AZURE_BROWSER_AUTOMATION_CONNECTION_ID",
+                "value": os.getenv("AZURE_BROWSER_AUTOMATION_CONNECTION_ID")},
+            {"name": "AZURE_CHAT_MODEL",
+                "value": os.getenv("AZURE_CHAT_MODEL")},
+        ],
+    )
+
     if IMPORT_ERROR is not None:
         finish_skip(
             "Browser Automation preview types are not available in the installed azure-ai-projects package.",
@@ -78,9 +93,6 @@ def main():
     model = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
         "MODEL_DEPLOYMENT") or "gpt-5.4-mini"
 
-    print("\n" + "=" * 60)
-    print("Browser Automation Demo")
-    print("=" * 60)
     print(f"Endpoint source: {endpoint_name}")
     print(f"Model: {model}")
     print(f"Connection ID: {connection_id}")
