@@ -74,34 +74,34 @@
 | 需要自己部署 Azure 與 Fabric 環境 | `workshop/docs/01-deploy/00-admin-deploy-share.md` |
 | 已經拿到現成環境，只要執行與驗證 | `workshop/docs/01-deploy/00-participant-run-validate.md` |
 | 想換成自己的產業與使用案例 | `workshop/docs/02-customize/` |
-| 想回答客戶的技術問題或做 deeper dive | `workshop/docs/03-understand/` |
-| 示範完成後要清理資源 | `workshop/docs/04-cleanup/` |
+| 想 deep dive | `workshop/docs/03-understand/` |
+| 清理資源 | `workshop/docs/04-cleanup/` |
 
 ## 最短啟動方式
 
-如果你只是要先進入 lab 或快速確認 repo 可用，做這三件事就夠了：
+如果你只是要先快速跑起來，可先照下面順序做：
 
-1. 開啟 repo
-2. 依你的角色閱讀 `workshop/docs/` 對應頁面
-3. 再照文件執行部署、驗證或客製化步驟
+用 Codespaces 開啟這個 repo </br>
+[![Open in GitHub Codespaces](https://img.shields.io/badge/GitHub-Codespaces-blue?logo=github)](https://codespaces.new/payton-chou-ms/e2e-ms-foundry-workshop)
 
-最常見的主流程入口是：
-
+再執行下面的命令
 ```bash
-python scripts/00_build_solution.py
-python scripts/08_test_foundry_agent.py
+# Login and deploy
+azd auth login --tenant-id <TENANT_ID>  --use-device-code
+azd up --subscription <SUBSCRIPTION_ID>
+# After deploy, upload doc and create agent to test
+python scripts/00_build_solution.py --foundry-only
+python scripts/08_test_foundry_agent.py --foundry-only
+python scripts/00_build_solution.py --foundry-iq
+python scripts/08b_test_foundry_iq_agent.py
 ```
 
-如果你沒有 Microsoft Fabric，可改走 `--foundry-only` 路徑；完整說明請看 `workshop/docs/01-deploy/04-run-scenario.md`。
+參考頁面：
 
-## 第一次接觸時，先這樣理解就好
-
-如果你是第一次接觸這個 workshop，先記住兩件事就夠了：
-
-1. 完整模式可以同時回答**文件問題**和**資料問題**
-2. `--foundry-only` 模式可以先只跑**文件路徑**
-
-等你把 PoC 跑通之後，再回頭看深入解析章節，理解模型、代理程式、工具、接地流程與控制平面的細節。
+- [Workshop 部署總覽](workshop/docs/01-deploy/index.md)
+- [建置方案](workshop/docs/01-deploy/04-run-scenario.md)
+- [主流程腳本 01-08](workshop/docs/01-deploy/05b-script-core-pipeline.md)
+- [快速建置與測試](workshop/docs/01-deploy/05a-script-core-paths.md)
 
 ## 正式文件位置
 
@@ -119,18 +119,6 @@ python scripts/08_test_foundry_agent.py
 如果你偏好網站閱讀，可直接使用：
 
 - Workshop：https://payton-chou-ms.github.io/e2e-ms-foundry-workshop/
-
-## 先決條件與細節去哪裡看
-
-以下資訊請直接看正式文件，不再在 README 維護第二份版本：
-
-- Azure 與 Fabric 權限需求
-- `azd up`、環境設定與 `.env` 欄位說明
-- `--foundry-only`、`--clean`、`--from`、`--only`、`--skip` 等 pipeline 細節
-- 選配 demo 的前置條件、限制與 `SKIP:` 行為
-- 清理資源、成本估算與疑難排解
-
----
 
 ## 授權
 
