@@ -27,16 +27,6 @@
 - Fabric 工作區管理員或同等撰寫權限
 - 所選 Azure 區域的必要模型容量與配額
 
-!!! warning "Contributor 單獨使用通常不夠"
-    這套基礎架構不只會建立資源，也會在部署過程中建立 Azure RBAC 角色指派
-
-    文件上建議用下面兩種寫法理解：
-
-    - 最簡單：部署身分在目標資源群組或訂用帳戶上具備 `Owner`
-    - 最小實務組合：部署身分同時具備「可建立資源的角色」與「可建立角色指派的角色」。常見組合是 `Contributor` + `User Access Administrator`，或 `Contributor` + `Role Based Access Control Administrator`
-
-    如果你使用的是自訂角色，至少要同時涵蓋資源建立所需的寫入權限，以及 `Microsoft.Authorization/roleAssignments/write`
-
 ## 建議執行順序
 
 ### 1. 部署 Azure 資源

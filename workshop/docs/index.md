@@ -51,17 +51,17 @@
 
 ```mermaid
 flowchart TD
-    U[學員先看到的成果\n一個 agent 同時回答文件與資料問題]
+    U[學員先看到的成果<br/>一個 agent 同時回答文件與資料問題]
     U --> R{你走哪條執行路徑？}
-    R --> F[完整模式\nprompt agent + execute_sql + search_documents]
-    R --> S[Foundry-only 模式\nprompt agent + search_documents]
-    F --> IQ[答案如何接地\nFoundry IQ 文件 + Fabric IQ 資料]
+    R --> F[完整模式<br/>prompt agent + execute_sql + search_documents]
+    R --> S[Foundry-only 模式<br/>prompt agent + search_documents]
+    F --> IQ[答案如何接地<br/>Foundry IQ 文件 + Fabric IQ 資料]
     S --> IQ
-    IQ --> A[Foundry Agent\n誰負責協調問題與工具]
-    A --> T[Foundry Tool\n工具合約與 guardrails]
-    A --> M[Foundry Model\n哪些模型負責推理與嵌入]
-    IQ --> C[Foundry Control Plane\n哪些 Azure 資源在背後支撐執行]
-    C -. 進階延伸 .-> MA[多代理程式延伸\n需要更多角色與工作流時再看]
+    IQ --> A[Foundry Agent<br/>誰負責協調問題與工具]
+    A --> T[Foundry Tool<br/>工具合約與 guardrails]
+    A --> M[Foundry Model<br/>哪些模型負責推理與嵌入]
+    IQ --> C[Foundry Control Plane<br/>哪些 Azure 資源在背後支撐執行]
+    C -. 進階延伸 .-> MA[多代理程式延伸<br/>需要更多角色與工作流時再看]
 ```
 
 你可以用下面這個順序來讀這張圖：

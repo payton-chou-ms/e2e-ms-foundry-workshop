@@ -42,15 +42,23 @@
 - 你只需要登入、設定 `.env`、跑範例，通常就是學員路徑
 - 你需要建立 Azure 資源或幫別人準備共用環境，才是管理員路徑
 
-| 情境 | 典型操作 | Azure 權限重點 | 明確不需要的權限 | 什麼時候代表你不屬於這條路徑 |
-|------|----------|----------------|------------------|------------------------------|
-| **學員只要跑 workshop** | 登入、設定本機 `.env`、驗證既有情境、測試 agent | 需要已被授予現成環境的存取權，並能登入正確租用戶與使用既有 Azure 資源 | 不需要 `Owner`、不需要 `Contributor`、不需要 `User Access Administrator`、不需要 `Role Based Access Control Administrator`、不需要 `Microsoft.Authorization/roleAssignments/write` | 如果你要自己跑 `azd up`、重建角色指派、建立新的 Azure 資源，或替其他人開權限，就不再是這條路徑 |
-| **管理員要能部署** | 執行 `azd up`、建立資源、建立 RBAC 指派、整理共用環境 | 需要同時具備「資源建立 / 更新」與「角色指派建立」兩類權限。最直接是 `Owner`；較常見的最小組合是 `Contributor` + `User Access Administrator`，或 `Contributor` + `Role Based Access Control Administrator` | 不適合只有 `Contributor` 單獨使用 | 如果你無法建立 Azure 資源，或無法在目標 scope 建立角色指派，部署通常會在 Bicep 建立 RBAC 時失敗 |
+| 情境 | 典型操作 | Azure 權限重點 | 明確需要的權限 |
+|------|----------|----------------|------------------|
+| **學員只要跑 workshop** | 登入、設定本機 `.env`、驗證既有情境、測試 agent | 只需要使用既有環境，不需要負責部署或 RBAC 指派 | `Azure AI User` |
+| **管理員要能部署** | 執行 `azd up`、建立資源、建立 RBAC 指派、整理共用環境 | 需要同時具備「建立 / 更新資源」與「建立角色指派」兩類能力 | `Owner`，或 `Contributor` + `User Access Administrator`，或 `Contributor` + `Role Based Access Control Administrator` |
 
 補充判斷方式：
 
 - 如果環境已經有人幫你準備好，而你只需要登入並執行範例，請走「參與者執行與驗證」
 - 如果你要從零佈建 Azure 資源，或要幫別人準備可重複使用的環境，請走「管理員部署」
+
+官方文件：
+
+- `Azure AI User` 角色說明：<https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry#built-in-roles>
+- `Azure AI User` 內建角色定義：<https://learn.microsoft.com/azure/role-based-access-control/built-in-roles/ai-machine-learning#azure-ai-user>
+- 管理員替學員授與 `Azure AI User` 的官方步驟：<https://learn.microsoft.com/azure/foundry/tutorials/quickstart-create-foundry-resources#for-administrators---grant-access>
+- 用 Azure Portal 指派 RBAC 角色的官方步驟：<https://learn.microsoft.com/azure/role-based-access-control/role-assignments-portal>
+- 可授與角色的管理員權限說明：<https://learn.microsoft.com/azure/role-based-access-control/role-assignments-portal#prerequisites>
 
 ## 架構
 
@@ -84,13 +92,6 @@
 - **Microsoft Foundry** 負責保存 agent 定義與模型部署
 - **Azure AI Search** 提供文件搜尋與片段擷取能力
 - **Application Insights** 在需要時可接收追蹤資料，但不是主流程必要條件
-
-!!! tip "卡住了？問 Copilot"
-    使用 GitHub Copilot Chat（`Ctrl+I`）協助排除錯誤
-
-!!! note "唯一內容來源"
-    這個 MkDocs 站台就是 workshop 的正式文件
-    產生的 PDF 與站台輸出為次要產物
 
 ---
 
