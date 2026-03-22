@@ -2,7 +2,9 @@
 
 import argparse
 import json
+import random
 import re
+import string
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -39,6 +41,19 @@ def sanitize_agent_name(value):
     lowered = re.sub(r"[^a-z0-9-]", "-", lowered)
     lowered = re.sub(r"-+", "-", lowered).strip("-")
     return lowered[:60]
+
+
+def make_short_prefix(length=3):
+    chars = string.ascii_lowercase + string.digits
+    return "".join(random.choice(chars) for _ in range(length))
+
+
+def abbreviate(key):
+    """Turn 'policy_gap_analysis' -> 'pga', 'planner' -> 'pln'."""
+    parts = key.replace("-", "_").split("_")
+    if len(parts) > 1:
+        return "".join(p[0] for p in parts if p)
+    return key[:3]
 
 
 def build_instruction_context(runtime, scenario):
@@ -102,6 +117,8 @@ def main():
         "scenarios": {},
     }
 
+    prefix = make_short_prefix()
+
     with project_client:
         for scenario_key in selected_scenarios:
             scenario = scenarios[scenario_key]
@@ -118,7 +135,7 @@ def main():
 
             for agent_key, template in agent_templates.items():
                 agent_name = sanitize_agent_name(
-                    f"{runtime.solution_name}-{scenario_key}-{template['display_name_suffix']}"
+                    f"{prefix}-{abbreviate(scenario_key)}-{abbreviate(template['display_name_suffix'])}"
                 )
                 instructions = template["instructions_template"].format(
                     **context)

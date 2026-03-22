@@ -13,16 +13,22 @@ Prerequisites:
 The script stores metadata in config/foundry_iq_agent_ids.json.
 """
 
+from azure.ai.projects import AIProjectClient
+from load_env import load_all_env
+from azure.identity import DefaultAzureCredential
+from azure.ai.projects.models import MCPTool, PromptAgentDefinition
 from pathlib import Path
 import json
 import os
+import random
+import string
 import sys
 
-from azure.ai.projects import AIProjectClient
-from azure.ai.projects.models import MCPTool, PromptAgentDefinition
-from azure.identity import DefaultAzureCredential
 
-from load_env import load_all_env
+def _short_prefix(length=3):
+    chars = string.ascii_lowercase + string.digits
+    return "".join(random.choice(chars) for _ in range(length))
+
 
 load_all_env()
 
@@ -83,7 +89,7 @@ if not mcp_endpoint:
 
 scenario_name = ontology_config.get("name", "Business Data")
 scenario_desc = ontology_config.get("description", "")
-agent_name = f"{SOLUTION_NAME}-foundry-iq-agent"
+agent_name = f"{_short_prefix()}-iq-agent"
 
 instructions = f"""You are a helpful assistant for {scenario_name}.
 

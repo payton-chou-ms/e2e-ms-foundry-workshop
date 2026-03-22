@@ -30,9 +30,17 @@ from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from load_env import load_all_env
 import os
+import random
+import string
 import sys
 import json
 import argparse
+
+
+def _short_prefix(length=3):
+    chars = string.ascii_lowercase + string.digits
+    return "".join(random.choice(chars) for _ in range(length))
+
 
 # Parse arguments first
 parser = argparse.ArgumentParser()
@@ -141,8 +149,8 @@ WORKSPACE_ID = fabric_ids.get("workspace_id")
 LAKEHOUSE_NAME = fabric_ids.get("lakehouse_name")
 SOLUTION_NAME = fabric_ids.get(
     "solution_name") or scenario.lower().replace(" ", "-")
-# Agent name: simple and consistent
-AGENT_NAME = f"{SOLUTION_NAME}-agent"
+# Agent name: short prefix + role
+AGENT_NAME = f"{_short_prefix()}-agent"
 
 print(f"\n{'='*60}")
 if FOUNDRY_ONLY:
