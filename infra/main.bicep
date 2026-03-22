@@ -50,22 +50,19 @@ param embeddingDeploymentCapacity int = 80
 @description('Optional model deployments. Each entry can be enabled or disabled independently.')
 param optionalModelDeployments array = []
 
-@description('Whether to deploy a dedicated Azure OpenAI resource for image generation demos.')
-param deployDedicatedImageOpenAI bool = true
+@description('Whether to deploy an image generation model in the AI Foundry account.')
+param deployImageModel bool = true
 
-@description('Azure region for the dedicated image-capable OpenAI resource.')
-param imageOpenAILocation string = 'westus3'
-
-@description('Image model deployment name for the dedicated image resource.')
+@description('Image model deployment name for the AI Foundry account.')
 param imageOpenAIDeploymentName string = 'gpt-image-1-5'
 
-@description('Image model name for the dedicated image resource.')
+@description('Image model name for the AI Foundry account.')
 param imageOpenAIModelName string = 'gpt-image-1.5'
 
-@description('Image model version for the dedicated image resource.')
+@description('Image model version for the AI Foundry account.')
 param imageOpenAIModelVersion string = '2025-12-16'
 
-@description('Image model deployment SKU for the dedicated image resource.')
+@description('Image model deployment SKU for the AI Foundry account.')
 @allowed([
   'Standard'
   'GlobalStandard'
@@ -73,13 +70,13 @@ param imageOpenAIModelVersion string = '2025-12-16'
 param imageOpenAIDeploymentSkuName string = 'GlobalStandard'
 
 @minValue(1)
-@description('Image model deployment capacity for the dedicated image resource.')
+@description('Image model deployment capacity for the AI Foundry account.')
 param imageOpenAIDeploymentCapacity int = 1
 
 @description('Whether to deploy a Playwright Workspace for Browser Automation demos.')
 param deployBrowserAutomation bool = true
 
-@description('Azure region for the Playwright Workspace. Leave empty to use the resource group region when supported, otherwise eastus.')
+@description('Preferred Azure region for the Playwright Workspace. When this region is unsupported, the deployment falls back to eastus.')
 param browserAutomationLocation string = ''
 
 param AZURE_LOCATION string = ''
@@ -92,9 +89,15 @@ var browserAutomationSupportedLocations = [
   'westeurope'
   'eastasia'
 ]
-var resolvedBrowserAutomationLocation = !empty(browserAutomationLocation)
-  ? browserAutomationLocation
-  : contains(browserAutomationSupportedLocations, toLower(solutionLocation)) ? solutionLocation : 'eastus'
+var requestedBrowserAutomationLocation = toLower(empty(browserAutomationLocation)
+  ? solutionLocation
+  : browserAutomationLocation)
+var resolvedBrowserAutomationLocation = contains(
+    browserAutomationSupportedLocations,
+    requestedBrowserAutomationLocation
+  )
+  ? requestedBrowserAutomationLocation
+  : 'eastus'
 
 @allowed([
   'australiaeast'
@@ -158,20 +161,13 @@ module foundry './modules/foundry.bicep' = {
     embeddingModelSkuName: 'Standard'
     embeddingModelCapacity: embeddingDeploymentCapacity
     optionalModelDeployments: optionalModelDeployments
+    deployImageModel: deployImageModel
+    imageDeploymentName: imageOpenAIDeploymentName
+    imageModelName: imageOpenAIModelName
+    imageModelVersion: imageOpenAIModelVersion
+    imageDeploymentSkuName: imageOpenAIDeploymentSkuName
+    imageDeploymentCapacity: imageOpenAIDeploymentCapacity
     deployingUserPrincipalId: deployingUserPrincipalId
-  }
-}
-
-module imageOpenAI './modules/image_openai.bicep' = if (deployDedicatedImageOpenAI) {
-  params: {
-    location: imageOpenAILocation
-    tags: tags
-    accountName: '${abbrs.ai.imageOpenAI}${take(uniqueId, 10)}'
-    deploymentName: imageOpenAIDeploymentName
-    modelName: imageOpenAIModelName
-    modelVersion: imageOpenAIModelVersion
-    deploymentSkuName: imageOpenAIDeploymentSkuName
-    deploymentCapacity: imageOpenAIDeploymentCapacity
   }
 }
 
@@ -232,13 +228,13 @@ output AZURE_OPTIONAL_MODEL_DEPLOYMENTS array = foundry.outputs.optionalModelDep
 output AZURE_ENABLED_OPTIONAL_MODEL_DEPLOYMENT_NAMES array = foundry.outputs.enabledOptionalModelDeploymentNames
 output AZURE_SKIPPED_OPTIONAL_MODEL_DEPLOYMENT_NAMES array = foundry.outputs.skippedOptionalModelDeploymentNames
 output AZURE_DEPLOYED_MODEL_SUMMARIES array = foundry.outputs.deployedModelSummaries
-output AZURE_IMAGE_OPENAI_NAME string = deployDedicatedImageOpenAI ? imageOpenAI!.outputs.accountName : ''
-output AZURE_IMAGE_OPENAI_RESOURCE_ID string = deployDedicatedImageOpenAI ? imageOpenAI!.outputs.accountId : ''
-output AZURE_IMAGE_OPENAI_ENDPOINT string = deployDedicatedImageOpenAI ? imageOpenAI!.outputs.endpoint : ''
-output AZURE_IMAGE_OPENAI_LOCATION string = deployDedicatedImageOpenAI ? imageOpenAI!.outputs.location : ''
-output AZURE_IMAGE_MODEL_DEPLOYMENT string = deployDedicatedImageOpenAI ? imageOpenAI!.outputs.deploymentName : ''
-output AZURE_IMAGE_MODEL_NAME string = deployDedicatedImageOpenAI ? imageOpenAI!.outputs.modelName : ''
-output AZURE_IMAGE_MODEL_VERSION string = deployDedicatedImageOpenAI ? imageOpenAI!.outputs.modelVersion : ''
+output AZURE_IMAGE_OPENAI_NAME string = deployImageModel ? foundry.outputs.accountName : ''
+output AZURE_IMAGE_OPENAI_RESOURCE_ID string = deployImageModel ? foundry.outputs.accountId : ''
+output AZURE_IMAGE_OPENAI_ENDPOINT string = deployImageModel ? foundry.outputs.openAIEndpoint : ''
+output AZURE_IMAGE_OPENAI_LOCATION string = deployImageModel ? aiDeploymentsLocation : ''
+output AZURE_IMAGE_MODEL_DEPLOYMENT string = deployImageModel ? foundry.outputs.imageDeploymentName : ''
+output AZURE_IMAGE_MODEL_NAME string = deployImageModel ? foundry.outputs.imageModelName : ''
+output AZURE_IMAGE_MODEL_VERSION string = deployImageModel ? foundry.outputs.imageModelVersion : ''
 output AZURE_PLAYWRIGHT_WORKSPACE_NAME string = deployBrowserAutomation
   ? playwrightWorkspace!.outputs.workspaceName
   : ''

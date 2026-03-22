@@ -71,6 +71,28 @@ type optionalModelDeployment = {
 @description('Optional model deployments. Set enabled=false to skip a model without editing the template.')
 param optionalModelDeployments optionalModelDeployment[] = []
 
+@description('Whether to deploy an image generation model inside the AI Services account')
+param deployImageModel bool = true
+
+@description('Image model deployment name')
+param imageDeploymentName string = 'gpt-image-1-5'
+
+@description('Azure OpenAI image model name')
+param imageModelName string = 'gpt-image-1.5'
+
+@description('Azure OpenAI image model version')
+param imageModelVersion string = '2025-12-16'
+
+@description('Deployment SKU name for the image model')
+@allowed([
+  'Standard'
+  'GlobalStandard'
+])
+param imageDeploymentSkuName string = 'GlobalStandard'
+
+@description('Deployment capacity for the image model')
+param imageDeploymentCapacity int = 1
+
 @description('Principal ID of the user running deployment (for role assignments)')
 param deployingUserPrincipalId string
 
@@ -204,6 +226,23 @@ resource embeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2
     }
   }
   dependsOn: [chatDeployment]
+}
+
+resource imageDeployment 'Microsoft.CognitiveServices/accounts/deployments@2025-04-01-preview' = if (deployImageModel) {
+  parent: aiServices
+  name: imageDeploymentName
+  sku: {
+    name: imageDeploymentSkuName
+    capacity: imageDeploymentCapacity
+  }
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: imageModelName
+      version: imageModelVersion
+    }
+  }
+  dependsOn: [embeddingDeployment]
 }
 
 @batchSize(1)
@@ -510,6 +549,9 @@ output aiEndpoint string = aiServices.properties.endpoint
 output openAIEndpoint string = aiServices.properties.endpoints['OpenAI Language Model Instance API']
 output chatDeploymentName string = chatDeployment.name
 output embeddingDeploymentName string = embeddingDeployment.name
+output imageDeploymentName string = deployImageModel ? imageDeployment.name : ''
+output imageModelName string = deployImageModel ? imageModelName : ''
+output imageModelVersion string = deployImageModel ? imageModelVersion : ''
 output chatDeploymentSkuName string = chatModelSkuName
 output embeddingDeploymentSkuName string = embeddingModelSkuName
 output optionalModelDeployments array = optionalModelSummaries

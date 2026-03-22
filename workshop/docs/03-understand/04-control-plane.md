@@ -27,8 +27,7 @@
 |------|-------------------|
 | **Microsoft Foundry** | 放置 Foundry project 與模型部署的平台層 |
 | **Foundry project** | 工作坊最值得先記住的中心邊界，agent、工具與連線都圍繞它 |
-| **模型部署** | 提供聊天推理與向量嵌入能力 |
-| **專用影像 OpenAI 資源** | 只服務 image generation demo，不影響主聊天路徑 |
+| **模型部署** | 提供聊天推理、向量嵌入與 image generation 能力 |
 | **Azure AI Search** | 幫 `search_documents` 儲存與找回文件片段 |
 | **儲存體** | 放置解決方案設定使用的資料與文件 |
 | **Application Insights** | 選用的追蹤目的地，不是主流程必要條件 |
@@ -41,8 +40,7 @@ flowchart TB
     subgraph ControlPlane[Foundry Control Plane]
         A[Microsoft Foundry]
         B[Foundry project]
-        C[模型部署]
-        C2[專用影像 OpenAI]
+        C[模型部署 chat embedding image]
         D[專案連線]
         E[Application Insights]
         F[Azure AI Search]
@@ -61,7 +59,6 @@ flowchart TB
 
     A --> B
     B --> C
-    A --> C2
     B --> D
     B --> E
     D --> F

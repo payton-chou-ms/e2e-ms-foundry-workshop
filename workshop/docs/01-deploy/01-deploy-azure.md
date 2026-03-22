@@ -8,19 +8,37 @@
 
 ## 開啟專案目錄
 
-```bash
-cd e2e-ms-foundry-workshop
-```
+建議優先使用 GitHub 帳號直接開啟 Codespaces：
 
-如果你取得的是壓縮封裝、內部鏡像，或課程環境中已提供的專案副本，請先解壓或切換到專案根目錄，再從這裡開始執行部署步驟。
+- [Open in GitHub Codespaces](https://codespaces.new/payton-chou-ms/e2e-ms-foundry-workshop)
+
+如果你偏好本機開發，再使用 VS Code Dev Container：
+
+- [Open in VS Code Dev Containers](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/payton-chou-ms/e2e-ms-foundry-workshop)
+
+如果你已經是在課程提供的環境、壓縮封裝或內部鏡像中操作，只要切換到專案根目錄後再繼續下面步驟即可。
 
 ## 登入 Azure
 
 ```bash
-azd auth login --tenant-id <TENANT_ID>
+azd auth login --tenant-id <TENANT_ID>  --use-device-code
 ```
 
-這會開啟瀏覽器進行驗證，並直接把登入範圍鎖定到你要使用的 Tenant。
+如果你還沒拿到 `TENANT_ID`，可參考 Microsoft 官方說明：
+
+- [How to find your Microsoft Entra tenant ID](https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant)
+
+這會開啟瀏覽器進行驗證，並直接把登入範圍鎖定到你要使用的 Tenant
+
+如果你不熟 `--use-device-code` 的流程，可以直接照下面做：
+
+1. 在終端機執行上面的 `azd auth login` 指令
+2. 終端機會顯示一組一次性的登入代碼，以及要開啟的登入網址
+3. 用瀏覽器打開畫面提示的網址，通常是 `https://microsoft.com/devicelogin`
+4. 貼上剛剛那組代碼，登入你要部署使用的 Azure 帳號
+5. 看到成功訊息後回到終端機，等待 `azd` 完成登入
+
+如果你的開發環境無法自動跳出登入視窗，這種方式通常比互動式瀏覽器登入更穩定。
 
 !!! warning "部署權限"
     這份 workshop 模板會在部署過程中建立 Azure 角色指派，所以部署身分不能只有資源建立權限
@@ -49,7 +67,22 @@ azd auth login --tenant-id <TENANT_ID>
 azd up --subscription <SUBSCRIPTION_ID>
 ```
 
-依照提示選擇你的環境名稱與位置等。
+如果你還沒拿到 `SUBSCRIPTION_ID`，可參考 Microsoft 官方說明：
+
+- [Get subscription and tenant IDs in the Azure portal](https://learn.microsoft.com/azure/azure-portal/get-subscription-tenant-id)
+
+依照提示選擇你的環境名稱與位置。
+
+建議範例：
+
+- Environment name：`fdry-payton-1`
+- Azure location：`eastus2`
+- Resource Group: Create new
+- AI deployment location：`eastus2`
+- Resource Group Name: rg-fdry-payton-1
+
+`Environment name` 會對應到模板參數 `environmentName`，這個值必須在 3 到 20 個字元之間，所以不要直接填成完整的 resource group 名稱。
+
 
 對第一次部署來說，最簡單的做法就是：
 
@@ -61,14 +94,9 @@ azd up --subscription <SUBSCRIPTION_ID>
 !!! tip "gpt-5.4-mini 的區域建議"
     如果你要使用目前 repo 的預設模型 `gpt-5.4-mini`，建議把 **AI deployment location** 設為 `eastus2`
 
-    實務上可以維持資源群組主區域為 `eastus`，但把 `AZURE_ENV_AI_DEPLOYMENTS_LOCATION` 設成 `eastus2`。這是目前這份 workshop 模板驗證過、較穩定的組合
+    如果你想讓設定最單純，主區域與 AI deployment location 都直接使用 `eastus2` 即可。這樣和本頁前面的建議範例一致，也比較不容易在重跑時搞混
 
-如果你只想先把第一次部署做成功，照下面最短流程走就可以：
-
-```bash
-azd auth login --tenant-id <TENANT_ID>
-azd up --subscription <SUBSCRIPTION_ID>
-```
+### 其他常見情境
 
 如果你後面還需要直接執行 Azure CLI 指令，例如 `az account list` 或 `az account show`，再另外登入 Azure CLI 即可：
 
@@ -79,7 +107,7 @@ az login --tenant <TENANT_ID>
 如果你想把環境設定固定下來，避免之後重跑時忘記區域或 subscription，可以再做下面這一步：
 
 ```bash
-azd env set AZURE_LOCATION eastus
+azd env set AZURE_LOCATION eastus2
 azd env set AZURE_ENV_AI_DEPLOYMENTS_LOCATION eastus2
 azd up --subscription <SUBSCRIPTION_ID>
 ```
@@ -91,58 +119,31 @@ az account set --subscription <SUBSCRIPTION_ID>
 azd up
 ```
 
-### Subscription 與 Tenant 從哪裡拿？
-
-你可以用 Azure Portal 或 Azure CLI 取得。這一段是查資料用，不需要全部背起來。
-
-**從 Azure Portal：**
-
-- **Subscription ID**：到 **Subscriptions**，打開目標訂用帳戶，在 Overview / Essentials 查看 **Subscription ID**
-- **Tenant ID**：到 **Microsoft Entra ID**，在 Overview / Basic information 查看 **Tenant ID**
-
-官網入口：
-
-- **Subscriptions**：https://portal.azure.com/#view/Microsoft_Azure_Billing/SubscriptionsBlade
-- **Microsoft Entra ID**：https://portal.azure.com/#view/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/~/Overview
-
-**從 Azure CLI：**
+如果部署途中看到 `AADSTS50076` 或 `reauthentication required`，通常代表這次操作被要求補做 MFA。這時直接重新登入 `azd` 並完成驗證即可：
 
 ```bash
-# 列出你目前可用的訂用帳戶與對應 tenant
-az account list --output table
-
-# 查看目前預設中的 subscription / tenant
-az account show
+azd auth logout
+azd auth login --tenant-id <TENANT_ID> --use-device-code
 ```
 
-如果你有多個 tenant，先指定 tenant 再查看會更清楚：
-
-```bash
-az login --tenant <TENANT_ID>
-az account list --output table
-```
+如果看到 `environmentName` 驗證失敗或 `Length of the value should be less than or equal to '20'`，代表你輸入的 Environment name 太長。請改成 20 個字元以內的短名稱，例如 `fdry-payton-1`。
 
 ### 想避免每次重選？
 
-你也可以在建立 azd 環境時先把 subscription 固定下來：
+你也可以先建立 azd 環境，把 subscription 固定下來：
 
 ```bash
 azd env new <environment-name> --subscription <SUBSCRIPTION_ID> --location <AZURE_LOCATION>
 azd up --environment <environment-name>
 ```
 
-第一次成功部署後，`azd` 會把這次環境使用的 `AZURE_SUBSCRIPTION_ID` 與 `AZURE_TENANT_ID` 寫進 `.azure/<env>/.env`。
+第一次成功部署後，`azd` 會把這次環境使用的 `AZURE_SUBSCRIPTION_ID` 和 `AZURE_TENANT_ID` 寫進 `.azure/<env>/.env`。
 
-這個部署現在除了主要 chat + embedding 模型外，也會一併建立 Content Understanding 需要的延伸聊天模型：
+這次部署除了主要 chat 和 embedding 模型，也會額外建立：
 
 - `gpt-4.1-mini`
-
-主要的 `text-embedding-3-large` 會同時作為工作坊主路徑與 Content Understanding 預設所使用的 embedding 部署。
-
-此外，部署流程也會自動建立兩個選配能力所需的資源：
-
-- 一個專用的 image-capable Azure OpenAI resource，用於 `13_demo_image_generation.py`
-- 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`
+- 一個部署在 Foundry account 內的 `gpt-image-1.5` model deployment，用於 `13_demo_image_generation.py`
+- 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`。它會優先使用你選的 Azure location；如果該區域不支援 Playwright Workspace，才會自動改用 `eastus`
 
 !!! warning "請等待完成"
     部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作
@@ -157,10 +158,6 @@ azd up --environment <environment-name>
 - Storage Account
 - Application Insights
 - Log Analytics workspace
-
-如果你使用目前預設的完整部署設定，還會另外看到：
-
-- Dedicated image-capable Azure OpenAI resource
 - Playwright Workspace
 
 !!! note "補充說明"
@@ -177,13 +174,13 @@ azd up --environment <environment-name>
 !!! note "Browser Automation 的最後一段仍需手動"
     `azd up` 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection
 
-        - **從哪邊拿資料**：到 Azure Portal 的 Playwright Workspace，進入 **Settings** > **Access Management** 產生一次性的 **Access token**；再到 Workspace 的 **Overview** 複製 **Browser endpoint**（`wss://...`）
-        - **貼到哪邊**：到 Foundry project 的 **Build** > **Tools** > **Connect a tool** > **Browser Automation**，把 **Browser endpoint** 貼到 *Playwright workspace region endpoint*，把 **Access token** 貼到 *Access token*
-        - **最後要保存的值**：connection 建好後，將該工具頁面上的 **Project connection ID** 寫入專案根目錄 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
-    - **官網連結**：
+    - 到 Azure Portal 的 Playwright Workspace，進入 Settings > Access Management 產生 Access token，再到 Overview 複製 Browser endpoint（`wss://...`）
+    - 到 Foundry project 的 Build > Tools > Connect a tool > Browser Automation，貼上 Browser endpoint 和 Access token
+    - connection 建好後，把 Project connection ID 寫入專案根目錄 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
+    - 官方說明：
       [Browser Automation setup](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation#set-up-browser-automation)
-      [Manage Playwright workspaces](https://aka.ms/pww/docs/manage-workspaces)
-      [Generate Playwright access token](https://aka.ms/pww/docs/manage-access-tokens)
+      [Manage authentication for Playwright Workspaces](https://learn.microsoft.com/azure/app-testing/playwright-workspaces/how-to-manage-authentication)
+      [Manage workspace access tokens](https://learn.microsoft.com/azure/app-testing/playwright-workspaces/how-to-manage-access-tokens)
 
 ---
 
