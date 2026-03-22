@@ -23,18 +23,18 @@ python scripts/00_build_solution.py --foundry-only
 python scripts/08_test_foundry_agent.py --foundry-only
 ```
 
+如果你想把這條文件-only path 改成 Foundry-native agent 版本，請改跑：
+
+```bash
+python scripts/00_build_solution.py --foundry-iq
+python scripts/08b_test_foundry_iq_agent.py
+```
+
 ### Path 2: Foundry IQ + Fabric IQ
 
 ```bash
 python scripts/00_build_solution.py --from 02
 python scripts/08_test_foundry_agent.py
-```
-
-如果你想建立一個比較適合直接在 Foundry portal 裡操作的文件型 agent，請改跑：
-
-```bash
-python scripts/00_build_solution.py --foundry-iq
-python scripts/08b_test_foundry_iq_agent.py
 ```
 
 ## 你可以怎麼使用這一組頁面

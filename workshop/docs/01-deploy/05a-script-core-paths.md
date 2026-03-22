@@ -6,16 +6,20 @@
 
 適合先做文件問答，不接 Fabric。
 
-建置：
+這條 path 有兩種變體：
+
+- **本機 workshop runtime**：
 
 ```bash
 python scripts/00_build_solution.py --foundry-only
+python scripts/08_test_foundry_agent.py --foundry-only
 ```
 
-測試：
+- **Foundry-native IQ Agent**：
 
 ```bash
-python scripts/08_test_foundry_agent.py --foundry-only
+python scripts/00_build_solution.py --foundry-iq
+python scripts/08b_test_foundry_iq_agent.py
 ```
 
 ## Path 2: Foundry IQ + Fabric IQ

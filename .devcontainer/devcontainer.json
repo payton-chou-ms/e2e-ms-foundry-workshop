@@ -14,7 +14,8 @@
         "ms-azuretools.vscode-bicep",
         "ms-azuretools.vscode-azurefunctions",
         "redhat.vscode-yaml",
-        "github.copilot"
+        "github.copilot",
+        "ritwickdey.liveserver"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",

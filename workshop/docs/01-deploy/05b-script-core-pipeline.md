@@ -26,6 +26,7 @@
 ```bash
 python scripts/00_build_solution.py --from 02
 python scripts/00_build_solution.py --foundry-only
+python scripts/00_build_solution.py --foundry-iq
 python scripts/00_build_solution.py --clean
 python scripts/00_build_solution.py --from 04
 ```
@@ -97,6 +98,15 @@ python scripts/05_create_fabric_agent.py
 python scripts/06_upload_to_search.py
 ```
 
+### `06b_upload_to_foundry_knowledge.py`
+
+- 用途：建立或更新 Foundry IQ 路徑所需的 knowledge source、knowledge base 和 project connection
+- 什麼時候跑：你要走 Foundry-native IQ agent 路徑時
+
+```bash
+python scripts/06b_upload_to_foundry_knowledge.py
+```
+
 ### `07_create_foundry_agent.py`
 
 - 用途：在 Foundry project 建立主 workshop agent
@@ -107,6 +117,15 @@ python scripts/07_create_foundry_agent.py
 python scripts/07_create_foundry_agent.py --foundry-only
 ```
 
+### `07b_create_foundry_iq_agent.py`
+
+- 用途：在 Foundry project 建立使用 knowledge base MCP tool 的文件型 agent
+- 什麼時候跑：`06b` 跑完之後，且你想在 Foundry 內直接示範文件 agent 時
+
+```bash
+python scripts/07b_create_foundry_iq_agent.py
+```
+
 ### `08_test_foundry_agent.py`
 
 - 用途：測試已建立好的 agent
@@ -115,6 +134,15 @@ python scripts/07_create_foundry_agent.py --foundry-only
 ```bash
 python scripts/08_test_foundry_agent.py
 python scripts/08_test_foundry_agent.py --foundry-only
+```
+
+### `08b_test_foundry_iq_agent.py`
+
+- 用途：測試 `07b` 建立出的 Foundry-native IQ agent
+- 什麼時候跑：`07b` 跑完之後
+
+```bash
+python scripts/08b_test_foundry_iq_agent.py
 ```
 
 ---

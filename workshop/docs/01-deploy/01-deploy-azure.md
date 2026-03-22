@@ -176,5 +176,57 @@ azd up --environment <environment-name>
     等你真的要測 `10_demo_browser_automation.py` 時，再去完成 Browser Automation connection 設定即可。
 
 ---
+## 學員的 Data Plane 權限
+
+部署完需要再給學員權限；但要確認他們有足夠的 **data plane** 存取，否則腳本會在呼叫 Foundry、Search 或 Blob 時出現 `403`
+
+| 要做的事 | 建議最小權限 | 建議指派範圍 |
+|------|---------------|---------------|
+| 只跑既有 workshop、測試既有 agent、驗證文件/資料查詢 | `Azure AI User` | Foundry account 或對應 project 上層資源 |
+| 要查詢既有 Azure AI Search index | `Search Index Data Reader` | Search service，或更小範圍的單一 index |
+| 要重跑文件上傳、重建 Search 文件資料 | `Search Index Data Contributor` | Search service，或單一 index |
+| 要建立 / 更新 index、indexer、skillset | `Search Service Contributor` | Search service |
+| 只需要讀既有 Blob 內容 | `Storage Blob Data Reader` | Storage account，或單一 container |
+| 要上傳 / 覆寫 / 刪除 Blob | `Storage Blob Data Contributor` | Storage account，或單一 container |
+
+### 建議怎麼給
+
+如果學員只是要走「參與者執行與驗證」路徑，建議先從下面這組最小權限開始：
+
+- `Azure AI User`
+- `Search Index Data Reader`
+- 如果腳本或流程會直接讀 Blob，再補 `Storage Blob Data Reader`
+
+如果學員不只是測試，而是要重跑資料準備或知識建置流程，再加上：
+
+- `Search Index Data Contributor`
+- `Storage Blob Data Contributor`
+
+只有在學員真的要修改 Search 結構時，才再補：
+
+- `Search Service Contributor`
+
+### 這個 workshop 怎麼理解最合理
+
+- **Foundry IQ / agent 執行**：以 `Azure AI User` 為主，這是學員跑 prompt agent、呼叫既有模型與 project data actions 的最小角色
+- **Azure AI Search 查詢**：如果只是查既有內容，`Search Index Data Reader` 即可
+- **Azure AI Search 重建**：如果要重跑 `upload_to_search` 類流程，通常需要 `Search Index Data Contributor`；若還要碰 index/schema/indexer，才需要 `Search Service Contributor`
+- **Blob Storage**：只有在學員的流程真的會直接對 Blob 做讀寫時才需要；純 agent 問答不一定會直接需要 Blob data plane 權限
+- **Fabric IQ**：這部分主要不是 Azure RBAC，而是 **Fabric workspace role**。如果學員要走 Fabric 路徑，還要另外確認他們在 Fabric workspace 內至少看得到對應項目
+
+### 官方文件
+
+- Foundry authentication / authorization：<https://learn.microsoft.com/azure/foundry/concepts/authentication-authorization-foundry>
+- Foundry built-in roles：<https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry>
+- `Azure AI User` 內建角色定義：<https://learn.microsoft.com/azure/role-based-access-control/built-in-roles/ai-machine-learning#azure-ai-user>
+- Azure AI Search role-based access：<https://learn.microsoft.com/azure/search/search-security-rbac>
+- Azure AI Search 啟用 data plane RBAC：<https://learn.microsoft.com/azure/search/search-security-enable-roles>
+- `Search Index Data Reader` / `Search Index Data Contributor` / `Search Service Contributor` 角色定義：<https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#ai-+-machine-learning>
+- Blob 以 Microsoft Entra ID 授權：<https://learn.microsoft.com/azure/storage/blobs/authorize-access-azure-active-directory>
+- 指派 Blob data access 角色：<https://learn.microsoft.com/azure/storage/blobs/assign-azure-role-data-access>
+- `Storage Blob Data Reader` / `Storage Blob Data Contributor` 角色定義：<https://learn.microsoft.com/azure/role-based-access-control/built-in-roles#storage>
+- Fabric workspace roles：<https://learn.microsoft.com/fabric/fundamentals/roles-workspaces>
+- Give users access to Fabric workspaces：<https://learn.microsoft.com/fabric/fundamentals/give-access-workspaces>
+
 
 [← 管理員部署](00-admin-deploy-share.md) | [建立 Fabric 工作區 →](02-setup-fabric.md)
