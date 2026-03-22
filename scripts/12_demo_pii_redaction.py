@@ -1,9 +1,4 @@
-"""12 - Optional demo: PII detection and redaction.
-
-Uses Azure Language PII detection to show a small redact-and-explain workflow.
-When the resource or credentials are unavailable, it prints SKIP and exits 0
-unless --strict is used.
-"""
+"""PII 偵測與遮罩 optional demo。"""
 
 import argparse
 import os
@@ -43,8 +38,8 @@ def main():
     args = parse_args()
 
     print_demo_header(
-        title="PII Redaction Demo",
-        description="Send a short text sample to Azure Language and show the redacted result plus detected entities.",
+        title="PII 遮罩示範",
+        description="把一小段文字送到 Azure Language，展示遮罩後結果與偵測到的敏感資訊實體。",
         env_items=[
             {"name": "AZURE_LANGUAGE_ENDPOINT",
                 "value": os.getenv("AZURE_LANGUAGE_ENDPOINT")},
@@ -63,7 +58,7 @@ def main():
 
     if IMPORT_ERROR is not None:
         finish_skip(
-            "azure-ai-textanalytics is not installed. Run 'pip install -r requirements.txt'.",
+            "尚未安裝 azure-ai-textanalytics。請執行 'pip install -r requirements.txt'。",
             strict=args.strict,
         )
 
@@ -80,7 +75,7 @@ def main():
 
     if not endpoint:
         finish_skip(
-            "Language endpoint is not configured. Set AZURE_LANGUAGE_ENDPOINT or AZURE_AI_ENDPOINT to run the PII demo.",
+            "尚未設定 Language endpoint。請設定 AZURE_LANGUAGE_ENDPOINT 或 AZURE_AI_ENDPOINT 後再執行 PII demo。",
             strict=args.strict,
         )
 
@@ -91,9 +86,9 @@ def main():
         credential = DefaultAzureCredential()
         cred_source = "DefaultAzureCredential"
 
-    print(f"Endpoint source: {endpoint_name}")
-    print(f"Credential source: {cred_source}")
-    print(f"Input text: {args.text}")
+    print(f"Endpoint 來源：{endpoint_name}")
+    print(f"憑證來源：{cred_source}")
+    print(f"輸入文字：{args.text}")
 
     client = TextAnalyticsClient(
         endpoint=endpoint,
@@ -117,22 +112,22 @@ def main():
             raise last_error
     except (ClientAuthenticationError, HttpResponseError, ServiceRequestError) as exc:
         finish_skip(
-            f"PII detection is not available in this environment yet ({exc})",
+            f"目前這個環境還無法使用 PII 偵測（{exc}）",
             strict=args.strict,
         )
 
     if result.is_error:
         finish_skip(
-            f"PII detection returned an error: {result.error.message}",
+            f"PII 偵測回傳錯誤：{result.error.message}",
             strict=args.strict,
         )
 
-    print("\n[SUCCESS] PII entities detected")
-    print(f"Redacted text: {result.redacted_text}")
-    print("\nEntities:")
+    print("\n[SUCCESS] 已偵測到 PII 實體")
+    print(f"遮罩後文字：{result.redacted_text}")
+    print("\n實體清單：")
     for entity in result.entities:
         print(
-            f"- {entity.text} | category={entity.category} | confidence={entity.confidence_score:.2f}"
+            f"- {entity.text} | 類別={entity.category} | 信心分數={entity.confidence_score:.2f}"
         )
 
 

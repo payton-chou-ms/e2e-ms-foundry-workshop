@@ -1,23 +1,4 @@
-"""
-02 - Setup Fabric Lakehouse and Ontology
-Creates Lakehouse and Ontology with data bindings (no data upload).
-
-Usage:
-    python 02_create_fabric_items.py [--data-folder <PATH>]
-
-Prerequisites:
-    - Run 01_generate_sample_data.py first (sets DATA_FOLDER in .env)
-    - Azure CLI logged in (az login)
-    - Fabric workspace with capacity assigned
-
-What this script does:
-    1. Creates a Lakehouse (or reuses existing)
-    2. Creates Ontology with EntityTypes matching CSV schema
-    3. Adds DataBindings to connect Ontology to Lakehouse tables
-    4. Creates Relationships between entities
-
-Note: Data upload is handled by 03_load_fabric_data.py
-"""
+"""建立 Fabric Lakehouse 與 Ontology。"""
 
 import requests
 from azure.identity import AzureCliCredential
@@ -40,25 +21,25 @@ load_all_env()
 # Configuration
 # ============================================================================
 
-p = argparse.ArgumentParser(description="Setup Fabric Lakehouse and Ontology")
+p = argparse.ArgumentParser(description="建立 Fabric Lakehouse 與 Ontology")
 p.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
-               help="Path to data folder (default: from .env)")
+               help="資料資料夾路徑（預設讀取 .env）")
 p.add_argument("--solutionname", default=os.getenv("SOLUTION_NAME") or os.getenv("SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
-               help="Solution name prefix (default: from SOLUTION_NAME or SOLUTION_PREFIX)")
+               help="方案名稱前綴（預設讀取 SOLUTION_NAME 或 SOLUTION_PREFIX）")
 p.add_argument("--clean", action="store_true",
-               help="Delete and recreate Lakehouse and Ontology (use when switching scenarios)")
+               help="刪除並重新建立 Lakehouse 與 Ontology（切換情境時使用）")
 args = p.parse_args()
 
 WORKSPACE_ID = os.getenv("FABRIC_WORKSPACE_ID")
 if not WORKSPACE_ID:
-    print("ERROR: FABRIC_WORKSPACE_ID not set in .env")
+    print("錯誤：.env 中未設定 FABRIC_WORKSPACE_ID")
     sys.exit(1)
 
 # Validate data folder
 data_dir = args.data_folder
 if not data_dir:
-    print("ERROR: DATA_FOLDER not set.")
-    print("       Run 01_generate_sample_data.py first, or pass --data-folder")
+    print("錯誤：未設定 DATA_FOLDER。")
+    print("      請先執行 01_generate_sample_data.py，或自行傳入 --data-folder")
     sys.exit(1)
 
 data_dir = os.path.abspath(data_dir)
@@ -73,12 +54,12 @@ if not os.path.exists(config_dir):
 config_path = os.path.join(config_dir, "ontology_config.json")
 
 if not os.path.exists(data_dir):
-    print(f"ERROR: Data folder not found: {data_dir}")
+    print(f"錯誤：找不到資料資料夾：{data_dir}")
     sys.exit(1)
 
 if not os.path.exists(config_path):
-    print(f"ERROR: ontology_config.json not found")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：找不到 ontology_config.json")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 SOLUTION_NAME = args.solutionname
@@ -88,11 +69,11 @@ with open(config_path) as f:
     ontology_config = json.load(f)
 
 print(f"\n{'='*60}")
-print(f"Setting up Fabric for: {SOLUTION_NAME}")
+print(f"正在為 {SOLUTION_NAME} 設定 Fabric")
 print(f"{'='*60}")
-print(f"Workspace ID: {WORKSPACE_ID}")
-print(f"Scenario: {ontology_config['name']}")
-print(f"Tables: {', '.join(ontology_config['tables'].keys())}")
+print(f"Workspace ID：{WORKSPACE_ID}")
+print(f"情境：{ontology_config['name']}")
+print(f"資料表：{', '.join(ontology_config['tables'].keys())}")
 
 # ============================================================================
 # Authentication
@@ -120,7 +101,7 @@ def make_request(method, url, **kwargs):
             method, url, headers=get_headers(), **kwargs)
         if response.status_code == 429:
             retry_after = int(response.headers.get("Retry-After", 30))
-            print(f"  Rate limited. Waiting {retry_after}s...")
+            print(f"  已遇到速率限制，等待 {retry_after} 秒...")
             time.sleep(retry_after)
             continue
         return response
@@ -144,9 +125,9 @@ def wait_for_lro(operation_url, timeout=300):
                         return res_resp.json()
                 return result
             elif status in ["Failed", "failed"]:
-                raise Exception(f"Operation failed: {result}")
+                raise Exception(f"作業失敗：{result}")
         time.sleep(3)
-    raise TimeoutError("Operation timed out")
+    raise TimeoutError("作業等待逾時")
 
 
 def find_item(item_type, display_name):
@@ -176,11 +157,10 @@ def delete_item(item_type, item_id, item_name):
     url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/{item_type.lower()}s/{item_id}"
     resp = make_request("DELETE", url)
     if resp.status_code in [200, 202, 204]:
-        print(f"  [OK] Deleted {item_type}: {item_name}")
+        print(f"  [OK] 已刪除 {item_type}：{item_name}")
         return True
     else:
-        print(
-            f"  [WARN] Could not delete {item_type} {item_name}: {resp.status_code}")
+        print(f"  [WARN] 無法刪除 {item_type} {item_name}：{resp.status_code}")
         return False
 
 
@@ -189,11 +169,10 @@ def delete_ontology(ontology_id, ontology_name):
     url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/ontologies/{ontology_id}"
     resp = make_request("DELETE", url)
     if resp.status_code in [200, 202, 204]:
-        print(f"  [OK] Deleted Ontology: {ontology_name}")
+        print(f"  [OK] 已刪除 Ontology：{ontology_name}")
         return True
     else:
-        print(
-            f"  [WARN] Could not delete Ontology {ontology_name}: {resp.status_code}")
+        print(f"  [WARN] 無法刪除 Ontology {ontology_name}：{resp.status_code}")
         return False
 
 
@@ -224,7 +203,7 @@ if args.clean:
     # Just increment suffix - don't bother deleting (Fabric will clean up old ones eventually)
     new_suffix = current_suffix + 1
     print(
-        f"\n[0/4] Using new suffix: {new_suffix} (previous: {current_suffix})")
+        f"\n[0/4] 使用新的 suffix：{new_suffix}（前一個是 {current_suffix}）")
 else:
     new_suffix = current_suffix
 
@@ -239,13 +218,13 @@ ontology_name = f"{SOLUTION_NAME}_ontology_{new_suffix}"
 # Step 1: Create Lakehouse
 # ============================================================================
 
-print(f"\n[1/4] Creating Lakehouse...")
+print(f"\n[1/4] 建立 Lakehouse...")
 
 existing_lakehouse = find_item("Lakehouse", lakehouse_name)
 if existing_lakehouse:
     lakehouse_id = existing_lakehouse["id"]
     print(
-        f"  [OK] Using existing Lakehouse: {lakehouse_name} ({lakehouse_id})")
+        f"  [OK] 使用既有 Lakehouse：{lakehouse_name} ({lakehouse_id})")
 else:
     url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/items"
     payload = {"displayName": lakehouse_name, "type": "Lakehouse"}
@@ -253,16 +232,15 @@ else:
 
     if resp.status_code == 201:
         lakehouse_id = resp.json()["id"]
-        print(f"  [OK] Created Lakehouse: {lakehouse_name} ({lakehouse_id})")
+        print(f"  [OK] 已建立 Lakehouse：{lakehouse_name} ({lakehouse_id})")
     elif resp.status_code == 202:
         # Long-running operation
         operation_url = resp.headers.get("Location")
         result = wait_for_lro(operation_url)
         lakehouse_id = result.get("id")
-        print(f"  [OK] Created Lakehouse: {lakehouse_name} ({lakehouse_id})")
+        print(f"  [OK] 已建立 Lakehouse：{lakehouse_name} ({lakehouse_id})")
     else:
-        print(
-            f"  [FAIL] Failed to create Lakehouse: {resp.status_code} {resp.text}")
+        print(f"  [FAIL] 建立 Lakehouse 失敗：{resp.status_code} {resp.text}")
         sys.exit(1)
 
 # Wait for Lakehouse to be ready
@@ -272,12 +250,12 @@ time.sleep(5)
 # Step 2: Create Ontology (using dedicated ontologies API)
 # ============================================================================
 
-print(f"\n[2/4] Creating Ontology...")
+print(f"\n[2/4] 建立 Ontology...")
 
 existing_ontology = find_ontology(ontology_name)
 if existing_ontology:
     ontology_id = existing_ontology["id"]
-    print(f"  [OK] Using existing Ontology: {ontology_name} ({ontology_id})")
+    print(f"  [OK] 使用既有 Ontology：{ontology_name} ({ontology_id})")
 else:
     # Generate unique IDs for entities, properties, relationships
     base_ts = int(time.time() * 1000) % 10000000000
@@ -396,7 +374,7 @@ else:
             "payloadType": "InlineBase64"
         })
 
-        print(f"  + Entity: {entity_name} ({len(properties)} properties)")
+        print(f"  + Entity：{entity_name}（{len(properties)} 個屬性）")
 
     # Add Relationships
     for i, rel in enumerate(ontology_config.get("relationships", [])):
@@ -467,7 +445,7 @@ else:
             "payloadType": "InlineBase64"
         })
 
-        print(f"  + Relationship: {from_table} -> {to_table}")
+        print(f"  + 關聯：{from_table} -> {to_table}")
 
     # Create Ontology using dedicated ontologies endpoint
     ontology_payload = {
@@ -483,7 +461,7 @@ else:
 
     if resp.status_code == 201:
         ontology_id = resp.json()["id"]
-        print(f"  [OK] Created Ontology: {ontology_name} ({ontology_id})")
+        print(f"  [OK] 已建立 Ontology：{ontology_name} ({ontology_id})")
     elif resp.status_code == 202:
         operation_url = resp.headers.get("Location")
         result = wait_for_lro(operation_url)
@@ -492,16 +470,17 @@ else:
         if not ontology_id:
             created_ont = find_ontology(ontology_name)
             ontology_id = created_ont["id"] if created_ont else None
-        print(f"  [OK] Created Ontology: {ontology_name} ({ontology_id})")
+        print(f"  [OK] 已建立 Ontology：{ontology_name} ({ontology_id})")
     else:
         if resp.status_code == 403 and "FeatureNotAvailable" in resp.text:
-            print("  [FAIL] Failed to create Ontology: 403")
+            print("  [FAIL] 建立 Ontology 失敗：403")
             print(
-                "    Response: the current Fabric workspace does not have the Ontology feature enabled.")
-            print("    Action: use a Fabric workspace with Ontology enabled, or run the workshop with --foundry-only.")
+                "    回應：目前的 Fabric workspace 尚未啟用 Ontology 功能。")
+            print(
+                "    建議：請改用有啟用 Ontology 的 Fabric workspace，或以 --foundry-only 執行 workshop。")
             sys.exit(1)
-        print(f"  [FAIL] Failed to create Ontology: {resp.status_code}")
-        print(f"    Response: {resp.text}")
+        print(f"  [FAIL] 建立 Ontology 失敗：{resp.status_code}")
+        print(f"    回應：{resp.text}")
         sys.exit(1)
 
 # Wait for Ontology to be ready
@@ -511,7 +490,7 @@ time.sleep(3)
 # Step 3: Save IDs for later scripts
 # ============================================================================
 
-print(f"\n[3/4] Saving configuration...")
+print(f"\n[3/4] 儲存設定...")
 
 ids_path = os.path.join(config_dir, "fabric_ids.json")
 fabric_ids = {
@@ -524,34 +503,34 @@ fabric_ids = {
 }
 with open(ids_path, "w") as f:
     json.dump(fabric_ids, f, indent=2)
-print(f"  [OK] Saved fabric_ids.json")
+print(f"  [OK] 已儲存 fabric_ids.json")
 
 # ============================================================================
 # Summary
 # ============================================================================
 
 print(f"\n{'='*60}")
-print("Fabric Setup Complete!")
+print("Fabric 設定完成！")
 print(f"{'='*60}")
 print(f"""
-Lakehouse: {lakehouse_name}
+Lakehouse：{lakehouse_name}
   ID: {lakehouse_id}
 
-Ontology: {ontology_name}
+Ontology：{ontology_name}
   ID: {ontology_id}
-  Entities: {', '.join([t.title().replace('_', '') for t in ontology_config['tables'].keys()])}
+    Entities：{', '.join([t.title().replace('_', '') for t in ontology_config['tables'].keys()])}
 
-IDs saved to: {ids_path}
+已儲存 ID 到：{ids_path}
 
-Next step - Load data to Fabric:
+下一步：把資料載入 Fabric
   python scripts/03_load_fabric_data.py
 
-After loading data:
-  1. Open Fabric portal and verify Lakehouse has data
-  2. Load CSV to Tables (Lakehouse > Get data > Load to Tables)
+載入資料後：
+    1. 開啟 Fabric 入口網站，確認 Lakehouse 已有資料
+    2. 把 CSV 載入資料表（Lakehouse > Get data > Load to Tables）
   3. Run: python scripts/04_generate_agent_prompt.py
 
-Manual step required:
-  - Create Data Agent in Fabric portal and map to Ontology
-  - (Data Agent API doesn't support definition configuration yet)
+仍需手動處理：
+    - 在 Fabric 入口網站建立 Data Agent，並綁定到 Ontology
+    - （目前 Data Agent API 還不支援完整 definition 設定）
 """)

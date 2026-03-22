@@ -1,10 +1,4 @@
-"""
-08b - Test Foundry IQ agent
-Interactive chat for the Foundry-native MCP knowledge-base agent.
-
-Usage:
-    python 08b_test_foundry_iq_agent.py
-"""
+"""測試 Foundry IQ agent 的互動式聊天腳本。"""
 
 from pathlib import Path
 from azure.ai.projects import AIProjectClient
@@ -26,13 +20,13 @@ PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 DATA_FOLDER = os.getenv("DATA_FOLDER")
 
 if not PROJECT_ENDPOINT:
-    print("ERROR: AZURE_AI_PROJECT_ENDPOINT not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 if not DATA_FOLDER:
-    print("ERROR: DATA_FOLDER not set in .env")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：.env 中未設定 DATA_FOLDER")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 data_dir = Path(DATA_FOLDER)
@@ -52,8 +46,8 @@ if agent_ids_path.exists():
     agent_id = agent_id or agent_ids.get("agent_id", "")
 
 if not agent_name and not agent_id:
-    print("ERROR: No Foundry IQ agent reference found")
-    print("       Run 07b_create_foundry_iq_agent.py first")
+    print("錯誤：找不到 Foundry IQ agent 參考資料")
+    print("      請先執行 07b_create_foundry_iq_agent.py")
     sys.exit(1)
 
 sample_questions = []
@@ -72,13 +66,13 @@ if questions_path.exists():
 
 if not sample_questions:
     sample_questions = [
-        "What are the policies for notifying customers of outages?",
-        "How is customer impact classified in our documentation?",
+        "文件裡怎麼規定停機事件要通知客戶？",
+        "文件裡如何定義客戶影響等級？",
     ]
 
 
 def print_sample_questions():
-    print("Sample document questions:")
+    print("文件類範例問題：")
     for question in sample_questions:
         print(f"  - {question}")
 
@@ -95,11 +89,11 @@ with project_client:
 conversation = openai_client.conversations.create()
 
 print(f"\n{'='*60}")
-print("Foundry IQ Agent Chat")
+print("Foundry IQ Agent 對話")
 print(f"{'='*60}")
-print(f"Agent Name: {agent.name}")
+print(f"Agent 名稱：{agent.name}")
 print_sample_questions()
-print("Type 'quit' to exit, 'help' for sample questions")
+print("輸入 'quit' 離開，輸入 'help' 可再次查看範例問題")
 
 
 def print_citations(response):
@@ -121,9 +115,9 @@ def print_citations(response):
 
                     if details:
                         print(
-                            f"\n  [Citation:{annotation_type}] {' | '.join(details)}")
+                            f"\n  [引用:{annotation_type}] {' | '.join(details)}")
                     else:
-                        print(f"\n  [Citation:{annotation_type}]")
+                        print(f"\n  [引用:{annotation_type}]")
         return
     except Exception:
         return
@@ -131,7 +125,7 @@ def print_citations(response):
 
 while True:
     try:
-        user_input = input("\nYou: ").strip()
+        user_input = input("\n你：").strip()
     except (EOFError, KeyboardInterrupt):
         print()
         break
@@ -152,5 +146,5 @@ while True:
             "name": agent.name, "type": "agent_reference"}},
     )
 
-    print(f"\nAgent: {getattr(response, 'output_text', '')}")
+    print(f"\nAgent：{getattr(response, 'output_text', '')}")
     print_citations(response)

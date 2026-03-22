@@ -145,28 +145,28 @@ def get_required_env(var_name: str, description: str = None) -> str:
     if not value:
         desc = description or var_name
         raise ValueError(
-            f"{var_name} not set. {desc}\n"
-            f"Run 'azd up' to deploy Azure resources or configure in .env"
+            f"未設定 {var_name}。{desc}\n"
+            f"請先執行 'azd up' 部署 Azure 資源，或在 .env 中完成設定"
         )
     return value
 
 
 def print_env_status():
     """Print status of loaded environment variables (for debugging)."""
-    print("\n📋 Environment Configuration:")
+    print("\n📋 環境設定：")
     print("-" * 50)
 
     # Azure services (from azd)
     azure_vars = [
-        ("AZURE_AI_PROJECT_ENDPOINT", "AI Foundry Project"),
+        ("AZURE_AI_PROJECT_ENDPOINT", "AI Foundry 專案"),
         ("AZURE_AI_ENDPOINT", "AI Services"),
         ("AZURE_OPENAI_ENDPOINT", "OpenAI"),
         ("AZURE_AI_SEARCH_ENDPOINT", "AI Search"),
-        ("AZURE_CHAT_MODEL", "Chat Model"),
-        ("AZURE_EMBEDDING_MODEL", "Embedding Model"),
+        ("AZURE_CHAT_MODEL", "聊天模型"),
+        ("AZURE_EMBEDDING_MODEL", "Embedding 模型"),
     ]
 
-    print("\n🔵 Azure Services (from azd):")
+    print("\n🔵 Azure 服務（來自 azd）：")
     for var, name in azure_vars:
         value = os.environ.get(var, "")
         if value:
@@ -174,26 +174,26 @@ def print_env_status():
             display = value[:50] + "..." if len(value) > 50 else value
             print(f"  [OK] {name}: {display}")
         else:
-            print(f"  [FAIL] {name}: not set")
+            print(f"  [FAIL] {name}: 未設定")
 
     # Project settings (from .env)
     project_vars = [
         ("FABRIC_WORKSPACE_ID", "Fabric Workspace"),
-        ("SOLUTION_NAME", "Solution Name"),
-        ("AZURE_ENV_NAME", "azd Environment"),
-        ("INDUSTRY", "Industry"),
-        ("USECASE", "Use Case"),
-        ("DATA_FOLDER", "Data Folder"),
+        ("SOLUTION_NAME", "方案名稱"),
+        ("AZURE_ENV_NAME", "azd 環境"),
+        ("INDUSTRY", "產業"),
+        ("USECASE", "使用情境"),
+        ("DATA_FOLDER", "資料資料夾"),
         ("FOUNDRY_AGENT_ID", "Agent ID"),
     ]
 
-    print("\n🟢 Project Settings (from .env):")
+    print("\n🟢 專案設定（來自 .env）：")
     for var, name in project_vars:
         value = os.environ.get(var, "")
         if value:
             display = value[:50] + "..." if len(value) > 50 else value
             print(f"  [OK] {name}: {display}")
         else:
-            print(f"  ○ {name}: not set")
+            print(f"  ○ {name}: 未設定")
 
     print("-" * 50)

@@ -1,7 +1,4 @@
-"""Shared helpers for optional capability demos.
-
-These demos should never block the workshop's primary SQL + search path.
-"""
+"""Optional demo 共用輔助函式。"""
 
 import json
 import os
@@ -9,13 +6,13 @@ import sys
 
 
 def finish_skip(message, strict=False):
-    print(f"SKIP: {message}")
+    print(f"略過：{message}")
     sys.exit(1 if strict else 0)
 
 
 def mask_secret_value(value):
     if value is None or value == "":
-        return "(not set)"
+        return "（未設定）"
 
     text = str(value)
     if len(text) <= 6:
@@ -28,7 +25,7 @@ def mask_secret_value(value):
 
 def format_env_value(name, value, mask=False):
     if value is None or value == "":
-        return "(not set)"
+        return "（未設定）"
 
     if mask or any(token in name.upper() for token in ["KEY", "TOKEN", "SECRET", "PASSWORD"]):
         return mask_secret_value(value)
@@ -40,10 +37,10 @@ def print_demo_header(title, description, env_items=None):
     print("\n" + "=" * 60)
     print(title)
     print("=" * 60)
-    print(f"Demo: {description}")
+    print(f"示範內容：{description}")
 
     if env_items:
-        print("\nEnvironment variables:")
+        print("\n環境變數：")
         for item in env_items:
             name = item["name"]
             value = item.get("value")
@@ -107,6 +104,6 @@ def safe_delete_agent_version(project_client, agent):
             agent_name=agent.name,
             agent_version=agent.version,
         )
-        print("Cleaned up temporary agent version")
+        print("已清除暫時建立的 agent 版本")
     except Exception as exc:
-        print(f"WARNING: could not delete temporary agent version: {exc}")
+        print(f"警告：無法刪除暫時建立的 agent 版本：{exc}")

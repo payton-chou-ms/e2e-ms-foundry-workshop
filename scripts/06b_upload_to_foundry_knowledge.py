@@ -1,18 +1,4 @@
-"""
-06b - Provision Foundry IQ knowledge base
-Ensures the workshop documents are indexed in Azure AI Search, then creates or
-updates the Azure AI Search knowledge source, knowledge base, and Foundry MCP
-project connection used by the Foundry IQ agent path.
-
-Usage:
-    python 06b_upload_to_foundry_knowledge.py
-
-Prerequisites:
-    - Run 01_generate_sample_data.py
-    - Azure resources deployed via azd
-
-This script stores metadata in config/knowledge_ids.json.
-"""
+"""建立 Foundry IQ knowledge base。"""
 
 from pathlib import Path
 import json
@@ -49,28 +35,28 @@ KNOWLEDGE_BASE_MCP_API_VERSION = "2025-11-01-preview"
 SEMANTIC_CONFIGURATION_NAME = "default-semantic"
 
 if not PROJECT_ENDPOINT:
-    print("ERROR: AZURE_AI_PROJECT_ENDPOINT not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 if not PROJECT_RESOURCE_ID:
-    print("ERROR: AZURE_AI_PROJECT_RESOURCE_ID not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_PROJECT_RESOURCE_ID")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 if not SEARCH_ENDPOINT:
-    print("ERROR: AZURE_AI_SEARCH_ENDPOINT not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_SEARCH_ENDPOINT")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 if not DATA_FOLDER:
-    print("ERROR: DATA_FOLDER not set in .env")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：.env 中未設定 DATA_FOLDER")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 data_dir = Path(DATA_FOLDER)
 if not data_dir.exists():
-    print(f"ERROR: Data folder not found: {data_dir}")
+    print(f"錯誤：找不到資料資料夾：{data_dir}")
     sys.exit(1)
 
 config_dir = data_dir / "config"
@@ -89,14 +75,14 @@ project_connection_name = f"{SOLUTION_NAME}-foundry-iq-connection"
 
 def run_search_ingestion():
     script_path = Path(__file__).with_name("06_upload_to_search.py")
-    print("\nEnsuring the Azure AI Search index is populated...")
+    print("\n確認 Azure AI Search 索引已完成載入...")
     subprocess.run([sys.executable, str(script_path)], check=True)
 
 
 def load_search_metadata():
     if not search_ids_path.exists():
-        print("ERROR: search_ids.json not found after search ingestion")
-        print("       06_upload_to_search.py must complete successfully first")
+        print("錯誤：搜尋匯入後仍找不到 search_ids.json")
+        print("      請先成功完成 06_upload_to_search.py")
         sys.exit(1)
 
     with open(search_ids_path) as f:
@@ -104,7 +90,7 @@ def load_search_metadata():
 
     index_name = search_ids.get("index_name")
     if not index_name:
-        print("ERROR: index_name missing in search_ids.json")
+        print("錯誤：search_ids.json 裡缺少 index_name")
         sys.exit(1)
 
     return search_ids
@@ -188,22 +174,22 @@ def create_project_connection(mcp_endpoint: str):
 def main():
     pdf_files = sorted(docs_dir.glob("*.pdf"))
     if not pdf_files:
-        print("ERROR: No PDF files found for Foundry IQ ingestion")
-        print(f"       Looked in: {docs_dir}")
+        print("錯誤：找不到可供 Foundry IQ 匯入的 PDF 檔")
+        print(f"      查找位置：{docs_dir}")
         sys.exit(1)
 
     print(f"\n{'='*60}")
-    print("Provision Foundry IQ Knowledge Base")
+    print("建立 Foundry IQ Knowledge Base")
     print(f"{'='*60}")
-    print(f"Project Endpoint: {PROJECT_ENDPOINT}")
-    print(f"Project Resource ID: {PROJECT_RESOURCE_ID}")
-    print(f"Search Endpoint: {SEARCH_ENDPOINT}")
-    print(f"Knowledge Source: {knowledge_source_name}")
-    print(f"Knowledge Base: {knowledge_base_name}")
-    print(f"Project Connection: {project_connection_name}")
-    print(f"Data Folder: {data_dir}")
-    print(f"Documents Folder: {docs_dir}")
-    print(f"PDF Files: {len(pdf_files)}")
+    print(f"Project Endpoint：{PROJECT_ENDPOINT}")
+    print(f"Project Resource ID：{PROJECT_RESOURCE_ID}")
+    print(f"Search Endpoint：{SEARCH_ENDPOINT}")
+    print(f"Knowledge Source：{knowledge_source_name}")
+    print(f"Knowledge Base：{knowledge_base_name}")
+    print(f"Project Connection：{project_connection_name}")
+    print(f"資料資料夾：{data_dir}")
+    print(f"文件資料夾：{docs_dir}")
+    print(f"PDF 檔數：{len(pdf_files)}")
 
     run_search_ingestion()
     search_ids = load_search_metadata()
@@ -212,22 +198,22 @@ def main():
     credential = DefaultAzureCredential()
     index_client = SearchIndexClient(SEARCH_ENDPOINT, credential)
 
-    print("\nCreating or updating knowledge source...")
+    print("\n建立或更新 knowledge source...")
     create_knowledge_source(index_client, index_name)
-    print(f"[OK] Knowledge source '{knowledge_source_name}' ready")
+    print(f"[OK] Knowledge source '{knowledge_source_name}' 已就緒")
 
-    print("\nCreating or updating knowledge base...")
+    print("\n建立或更新 knowledge base...")
     create_knowledge_base(index_client)
-    print(f"[OK] Knowledge base '{knowledge_base_name}' ready")
+    print(f"[OK] Knowledge base '{knowledge_base_name}' 已就緒")
 
     mcp_endpoint = (
         f"{SEARCH_ENDPOINT}/knowledgebases/{knowledge_base_name}/mcp"
         f"?api-version={KNOWLEDGE_BASE_MCP_API_VERSION}"
     )
 
-    print("\nCreating or updating Foundry project connection...")
+    print("\n建立或更新 Foundry project connection...")
     project_connection_id = create_project_connection(mcp_endpoint)
-    print(f"[OK] Project connection '{project_connection_name}' ready")
+    print(f"[OK] Project connection '{project_connection_name}' 已就緒")
 
     metadata = {
         "knowledge_type": "azure_search_knowledge_base",
@@ -247,14 +233,14 @@ def main():
     with open(knowledge_ids_path, "w") as f:
         json.dump(metadata, f, indent=2)
 
-    print(f"[OK] Knowledge metadata saved to: {knowledge_ids_path}")
+    print(f"[OK] 已把 knowledge 中繼資料寫入：{knowledge_ids_path}")
     print(f"\n{'='*60}")
-    print("Foundry IQ Knowledge Base Ready")
+    print("Foundry IQ Knowledge Base 已就緒")
     print(f"{'='*60}")
-    print(f"Search Index: {index_name}")
-    print(f"Knowledge Base: {knowledge_base_name}")
-    print(f"Project Connection ID: {project_connection_id}")
-    print("Next: python scripts/07b_create_foundry_iq_agent.py")
+    print(f"Search Index：{index_name}")
+    print(f"Knowledge Base：{knowledge_base_name}")
+    print(f"Project Connection ID：{project_connection_id}")
+    print("下一步：python scripts/07b_create_foundry_iq_agent.py")
 
 
 if __name__ == "__main__":

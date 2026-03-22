@@ -1,22 +1,4 @@
-"""
-06 - Upload PDF Files to Azure AI Search
-Uploads PDF files from the data folder to Azure AI Search with page-aware chunking.
-
-Usage:
-    python 06_upload_to_search.py
-
-Prerequisites:
-    - Run 01_generate_sample_data.py (creates PDF files in data folder)
-    - Azure AI Search endpoint configured via azd or .env
-    - Embedding model deployed in Azure AI Foundry
-
-The script will:
-1. Create a search index with vector search and semantic configuration
-2. Extract text from PDF pages
-3. Chunk text by sentences (respecting boundaries)
-4. Generate embeddings using Azure OpenAI
-5. Upload documents to the search index
-"""
+"""把 PDF 文件上傳到 Azure AI Search。"""
 
 from pypdf import PdfReader
 from azure.search.documents.indexes.models import (
@@ -69,17 +51,17 @@ CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 
 if not AZURE_AI_SEARCH_ENDPOINT:
-    print("ERROR: AZURE_AI_SEARCH_ENDPOINT not set in .env")
+    print("錯誤：.env 中未設定 AZURE_AI_SEARCH_ENDPOINT")
     sys.exit(1)
 
 if not DATA_FOLDER:
-    print("ERROR: DATA_FOLDER not set in .env")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：.env 中未設定 DATA_FOLDER")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 data_dir = Path(DATA_FOLDER)
 if not data_dir.exists():
-    print(f"ERROR: Data folder not found: {data_dir}")
+    print(f"錯誤：找不到資料資料夾：{data_dir}")
     sys.exit(1)
 
 # Set up paths for new folder structure (config/, tables/, documents/)
@@ -93,13 +75,13 @@ if not docs_dir.exists():
     docs_dir = data_dir  # Fallback to root data folder
 
 print(f"\n{'='*60}")
-print("Upload PDF Files to Azure AI Search")
+print("把 PDF 檔上傳到 Azure AI Search")
 print(f"{'='*60}")
-print(f"Search Endpoint: {AZURE_AI_SEARCH_ENDPOINT}")
-print(f"AI Endpoint: {AZURE_AI_ENDPOINT}")
-print(f"Embedding Model: {EMBEDDING_MODEL}")
-print(f"Index Name: {INDEX_NAME}")
-print(f"Data Folder: {data_dir}")
+print(f"Search Endpoint：{AZURE_AI_SEARCH_ENDPOINT}")
+print(f"AI Endpoint：{AZURE_AI_ENDPOINT}")
+print(f"Embedding 模型：{EMBEDDING_MODEL}")
+print(f"索引名稱：{INDEX_NAME}")
+print(f"資料資料夾：{data_dir}")
 
 # ============================================================================
 # Azure OpenAI Client
@@ -109,7 +91,7 @@ print(f"Data Folder: {data_dir}")
 def get_openai_client():
     """Create Azure OpenAI client using AI endpoint."""
     if not AZURE_AI_ENDPOINT:
-        raise ValueError("AZURE_AI_PROJECT_ENDPOINT not set")
+        raise ValueError("未設定 AZURE_AI_PROJECT_ENDPOINT")
 
     credential = DefaultAzureCredential()
     token = credential.get_token(
@@ -210,7 +192,7 @@ def create_index(index_client: SearchIndexClient):
     )
 
     index_client.create_or_update_index(index)
-    print(f"[OK] Index '{INDEX_NAME}' ready with integrated vectorizer")
+    print(f"[OK] 索引 '{INDEX_NAME}' 已就緒，並已啟用整合式 vectorizer")
 
 # ============================================================================
 # PDF Processing
@@ -326,34 +308,34 @@ def main():
     # Find PDF files in documents subfolder
     pdf_files = list(docs_dir.glob("*.pdf"))
     if not pdf_files:
-        print("\nNo PDF files found in data folder.")
-        print(f"Looked in: {docs_dir}")
-        print("Run 01_generate_sample_data.py to generate sample PDFs.")
+        print("\n在資料資料夾中找不到 PDF 檔。")
+        print(f"查找位置：{docs_dir}")
+        print("請先執行 01_generate_sample_data.py 產生範例 PDF。")
         return
 
-    print(f"\nFound {len(pdf_files)} PDF file(s)")
+    print(f"\n找到 {len(pdf_files)} 個 PDF 檔")
     for pdf in pdf_files:
         print(f"  - {pdf.name}")
 
     # Initialize clients
-    print("\nInitializing clients...")
+    print("\n初始化用戶端...")
     openai_client = get_openai_client()
-    print("[OK] OpenAI client initialized")
+    print("[OK] OpenAI 用戶端已初始化")
 
     index_client, search_client = get_search_clients()
-    print("[OK] Search clients initialized")
+    print("[OK] Search 用戶端已初始化")
 
     # Create index
-    print("\nCreating search index...")
+    print("\n建立搜尋索引...")
     create_index(index_client)
 
     # Process each PDF
     documents = []
     for pdf_path in pdf_files:
-        print(f"\nProcessing: {pdf_path.name}")
+        print(f"\n處理中：{pdf_path.name}")
 
         pages = extract_pages_from_pdf(pdf_path)
-        print(f"  Extracted {len(pages)} pages")
+        print(f"  已擷取 {len(pages)} 頁")
 
         for page_num, page_text in pages:
             chunks = chunk_text_by_sentences(page_text)
@@ -363,7 +345,7 @@ def main():
                 doc_id = f"{pdf_path.stem}_p{page_num}_c{chunk_idx}"
 
                 print(
-                    f"  Generating embedding for {doc_id}...", end=" ", flush=True)
+                    f"  正在為 {doc_id} 產生 embedding...", end=" ", flush=True)
                 embedding = get_embedding(openai_client, chunk)
                 print("[OK]")
 
@@ -379,10 +361,10 @@ def main():
                 documents.append(doc)
 
     # Upload to search
-    print(f"\nUploading {len(documents)} chunks to search index...")
+    print(f"\n正在把 {len(documents)} 個 chunk 上傳到搜尋索引...")
     result = search_client.upload_documents(documents)
     succeeded = sum(1 for r in result if r.succeeded)
-    print(f"[OK] Uploaded {succeeded}/{len(documents)} documents")
+    print(f"[OK] 已上傳 {succeeded}/{len(documents)} 筆文件")
 
     # Save index info
     search_ids_path = config_dir / "search_ids.json"
@@ -393,14 +375,14 @@ def main():
     }
     with open(search_ids_path, "w") as f:
         json.dump(search_info, f, indent=2)
-    print(f"[OK] Search info saved to: {search_ids_path}")
+    print(f"[OK] 已把 Search 資訊寫入：{search_ids_path}")
 
     print(f"\n{'='*60}")
-    print("Upload Complete!")
+    print("上傳完成！")
     print(f"{'='*60}")
-    print(f"Index: {INDEX_NAME}")
-    print(f"Documents: {len(documents)}")
-    print(f"\nYou can now query the index using Azure AI Search.")
+    print(f"索引：{INDEX_NAME}")
+    print(f"文件數：{len(documents)}")
+    print(f"\n現在可以開始用 Azure AI Search 查詢這個索引。")
 
 
 if __name__ == "__main__":

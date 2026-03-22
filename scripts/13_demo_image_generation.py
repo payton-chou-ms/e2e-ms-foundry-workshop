@@ -1,9 +1,4 @@
-"""13 - Optional demo: image generation with gpt-image-1.
-
-This demo uses the Azure OpenAI image generation REST API. If an image-capable
-deployment is not configured, it prints SKIP and exits 0 unless --strict is
-used.
-"""
+"""Image generation optional demo。"""
 
 import argparse
 import base64
@@ -27,14 +22,14 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--prompt",
-        default="A clean network operations dashboard poster with outage maps and service health indicators.",
+        default="一張乾淨清楚的網路維運儀表板海報，包含 outage 地圖與服務健康指標。",
     )
     parser.add_argument("--size", default="1024x1024")
     parser.add_argument("--quality", default="low")
     parser.add_argument(
         "--output",
         default="data/default/generated_image_demo.png",
-        help="Relative or absolute output path for the generated PNG.",
+        help="產生 PNG 的輸出路徑，可用相對或絕對路徑。",
     )
     parser.add_argument("--strict", action="store_true")
     return parser.parse_args()
@@ -44,8 +39,8 @@ def main():
     args = parse_args()
 
     print_demo_header(
-        title="Image Generation Demo",
-        description="Call the Azure OpenAI image generation API and save one generated PNG locally.",
+        title="影像生成示範",
+        description="呼叫 Azure OpenAI 影像生成 API，並把一張 PNG 存到本機。",
         env_items=[
             {"name": "AZURE_IMAGE_OPENAI_ENDPOINT",
                 "value": os.getenv("AZURE_IMAGE_OPENAI_ENDPOINT")},
@@ -90,29 +85,29 @@ def main():
     if not key:
         if DefaultAzureCredential is None:
             finish_skip(
-                "Azure OpenAI API key is not configured and azure-identity is not installed.",
+                "未設定 Azure OpenAI API key，而且環境中也沒有安裝 azure-identity。",
                 strict=args.strict,
             )
         try:
             cred = DefaultAzureCredential()
             bearer_token = cred.get_token(
                 "https://cognitiveservices.azure.com/.default").token
-            key_name = "DefaultAzureCredential (bearer token)"
+            key_name = "DefaultAzureCredential（bearer token）"
         except Exception as exc:
             finish_skip(
-                f"Azure OpenAI API key is not configured and AAD auth failed ({exc}).",
+                f"未設定 Azure OpenAI API key，而且 AAD 驗證失敗（{exc}）。",
                 strict=args.strict,
             )
 
     if not endpoint:
         finish_skip(
-            "Azure OpenAI endpoint is not configured for image generation. Set AZURE_IMAGE_OPENAI_ENDPOINT or AZURE_OPENAI_ENDPOINT.",
+            "影像生成所需的 Azure OpenAI endpoint 尚未設定。請設定 AZURE_IMAGE_OPENAI_ENDPOINT 或 AZURE_OPENAI_ENDPOINT。",
             strict=args.strict,
         )
 
     if not deployment:
         finish_skip(
-            "no gpt-image deployment was found. Add an optional image model deployment or pass one through environment variables.",
+            "找不到 gpt-image deployment。請新增選用的影像模型 deployment，或透過環境變數指定。",
             strict=args.strict,
         )
 
@@ -133,11 +128,11 @@ def main():
         "output_format": "png",
     }
 
-    print(f"Endpoint source: {endpoint_name}")
-    print(f"Credential source: {key_name}")
-    print(f"Deployment source: {deployment_name}")
-    print(f"Deployment: {deployment}")
-    print(f"Output: {output_path}")
+    print(f"Endpoint 來源：{endpoint_name}")
+    print(f"憑證來源：{key_name}")
+    print(f"Deployment 來源：{deployment_name}")
+    print(f"Deployment：{deployment}")
+    print(f"輸出位置：{output_path}")
 
     headers = {"Content-Type": "application/json"}
     if bearer_token:
@@ -154,13 +149,13 @@ def main():
         )
     except requests.RequestException as exc:
         finish_skip(
-            f"image generation request could not be sent ({exc})",
+            f"無法送出影像生成請求（{exc}）",
             strict=args.strict,
         )
 
     if response.status_code >= 400:
         finish_skip(
-            f"image generation is not available in this environment yet ({response.status_code}: {response.text[:300]})",
+            f"目前這個環境還無法使用影像生成（{response.status_code}: {response.text[:300]}）",
             strict=args.strict,
         )
 
@@ -168,15 +163,15 @@ def main():
     images = payload.get("data") or []
     if not images or not images[0].get("b64_json"):
         finish_skip(
-            "image generation returned no base64 image data.",
+            "影像生成沒有回傳 base64 圖片資料。",
             strict=args.strict,
         )
 
     image_bytes = base64.b64decode(images[0]["b64_json"])
     output_path.write_bytes(image_bytes)
 
-    print("\n[SUCCESS] Image generated")
-    print(f"Saved file: {output_path}")
+    print("\n[SUCCESS] 已完成影像生成")
+    print(f"已儲存檔案：{output_path}")
 
 
 if __name__ == "__main__":

@@ -1,9 +1,4 @@
-"""10 - Optional demo: Browser Automation tool.
-
-This demo is intentionally constrained to a trusted Microsoft documentation page.
-If the required preview SDK surface or Playwright connection is unavailable, it
-prints SKIP and exits successfully unless --strict is used.
-"""
+"""Browser Automation optional demo。"""
 
 import argparse
 import json
@@ -34,9 +29,9 @@ except ImportError as exc:  # pragma: no cover - runtime dependent
 
 
 DEFAULT_PROMPT = (
-    "Open https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation, "
-    "report the main page heading, and list one limitation mentioned on the page. "
-    "Do not sign in, submit forms, or navigate to non-Microsoft domains."
+    "開啟 https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation，"
+    "回報頁面主標題，並列出頁面提到的一項限制。"
+    "不要登入、不要送出表單，也不要前往非 Microsoft 網域。"
 )
 
 
@@ -45,7 +40,7 @@ def parse_args():
     parser.add_argument("--prompt", default=DEFAULT_PROMPT)
     parser.add_argument(
         "--connection-id",
-        help="Override the Browser Automation project connection ID.",
+        help="覆蓋 Browser Automation 的 project connection ID。",
     )
     parser.add_argument("--strict", action="store_true")
     return parser.parse_args()
@@ -55,8 +50,8 @@ def main():
     args = parse_args()
 
     print_demo_header(
-        title="Browser Automation Demo",
-        description="Create a temporary agent that opens a trusted Microsoft Learn page and reports what it finds.",
+        title="Browser Automation 示範",
+        description="建立一個暫時的 agent，開啟受信任的 Microsoft Learn 頁面並回報看到的內容。",
         env_items=[
             {"name": "AZURE_AI_PROJECT_ENDPOINT",
                 "value": os.getenv("AZURE_AI_PROJECT_ENDPOINT")},
@@ -71,13 +66,13 @@ def main():
 
     if IMPORT_ERROR is not None:
         finish_skip(
-            "Browser Automation preview types are not available in the installed azure-ai-projects package.",
+            "目前安裝的 azure-ai-projects 套件不含 Browser Automation 預覽型別。",
             strict=args.strict,
         )
 
     endpoint, endpoint_name = resolve_env_value("AZURE_AI_PROJECT_ENDPOINT")
     if not endpoint:
-        finish_skip("AZURE_AI_PROJECT_ENDPOINT is not configured.",
+        finish_skip("未設定 AZURE_AI_PROJECT_ENDPOINT。",
                     strict=args.strict)
 
     connection_id = args.connection_id or resolve_env_value(
@@ -86,17 +81,17 @@ def main():
     )[0]
     if not connection_id:
         finish_skip(
-            "no Playwright workspace connection ID is configured. Create a Browser Automation connection first.",
+            "尚未設定 Playwright workspace connection ID。請先建立 Browser Automation connection。",
             strict=args.strict,
         )
 
     model = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
         "MODEL_DEPLOYMENT") or "gpt-5.4-mini"
 
-    print(f"Endpoint source: {endpoint_name}")
-    print(f"Model: {model}")
-    print(f"Connection ID: {connection_id}")
-    print("Prompt scope: trusted Microsoft Learn page only")
+    print(f"Endpoint 來源：{endpoint_name}")
+    print(f"模型：{model}")
+    print(f"Connection ID：{connection_id}")
+    print("Prompt 範圍：只允許受信任的 Microsoft Learn 頁面")
 
     project = AIProjectClient(
         endpoint=endpoint,
@@ -119,15 +114,15 @@ def main():
             definition=PromptAgentDefinition(
                 model=model,
                 instructions=(
-                    "You are a cautious browser automation assistant. "
-                    "Only interact with trusted documentation pages. "
-                    "Never log in, fill forms, or submit user data."
+                    "你是一個謹慎的瀏覽器自動化助理。"
+                    "只可與受信任的文件頁面互動。"
+                    "不得登入、填表或送出任何使用者資料。"
                 ),
                 tools=[tool],
             ),
-            description="Trusted-site browser automation demo.",
+            description="受信任網站的瀏覽器自動化示範。",
         )
-        print(f"Agent created (name: {agent.name}, version: {agent.version})")
+        print(f"已建立 Agent（name: {agent.name}, version: {agent.version}）")
 
         stream = openai.responses.create(
             stream=True,
@@ -145,14 +140,14 @@ def main():
                 if item.type == "browser_automation_preview_call":
                     arguments_str = getattr(item, "arguments", "{}")
                     arguments = json.loads(arguments_str)
-                    print("\n\n[Browser Automation tool call]")
-                    print(f"Query: {arguments.get('query')}")
+                    print("\n\n[Browser Automation 工具呼叫]")
+                    print(f"查詢：{arguments.get('query')}")
             elif event.type == "response.completed":
-                print("\n\n[Completed]")
+                print("\n\n[完成]")
                 print(event.response.output_text)
     except Exception as exc:
         finish_skip(
-            f"browser automation is not available in this environment yet ({exc})",
+            f"目前這個環境還無法使用 browser automation（{exc}）",
             strict=args.strict,
         )
     finally:

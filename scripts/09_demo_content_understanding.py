@@ -1,17 +1,4 @@
-"""
-09 - Optional demo: Azure Content Understanding
-
-Analyze a local workshop PDF with the prebuilt-documentSearch analyzer.
-
-Usage:
-    python scripts/09_demo_content_understanding.py
-    python scripts/09_demo_content_understanding.py --file data/default/documents/outage_management_policies.pdf
-    python scripts/09_demo_content_understanding.py --strict
-
-Default behavior is non-blocking for optional capability issues. The script prints
-"SKIP:" and exits with code 0 when the capability is not configured.
-Use --strict to convert skip conditions into exit code 1 for debugging.
-"""
+"""Azure Content Understanding optional demo。"""
 
 import argparse
 import os
@@ -38,23 +25,23 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--file",
-        help="Path to a local PDF or Office document. Defaults to a generated workshop PDF.",
+        help="本機 PDF 或 Office 文件路徑。預設使用 workshop 產生的 PDF。",
     )
     parser.add_argument(
         "--processing-location",
         choices=["geography", "dataZone", "global"],
-        help="Optional Content Understanding processing location override.",
+        help="選填：覆蓋 Content Understanding 的 processing location。",
     )
     parser.add_argument(
         "--max-markdown-chars",
         type=int,
         default=1200,
-        help="Maximum markdown characters to print from the analyzed document.",
+        help="要列印的分析結果 markdown 最大字數。",
     )
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="Exit with code 1 on skip conditions instead of returning success.",
+        help="遇到 skip 條件時回傳結束碼 1，而不是成功結束。",
     )
     return parser.parse_args()
 
@@ -97,39 +84,33 @@ def build_skip_message(error):
 
     if isinstance(error, ClientAuthenticationError) or status_code in {401, 403}:
         return (
-            "authentication or authorization is not ready. Sign in with Azure credentials "
-            "and ensure the caller has Cognitive Services User access on the Foundry resource."
+            "驗證或授權尚未就緒。請先用 Azure 身分登入，並確認呼叫者在 Foundry 資源上具有 Cognitive Services User 權限。"
         )
 
     if "model" in lowered and "deployment" in lowered:
         return (
-            "Content Understanding default model deployments are not configured. "
-            "Configure the resource defaults for gpt-4.1-mini and the primary text-embedding-3-large deployment "
-            "before running the demo."
+            "尚未設定 Content Understanding 預設模型 deployment。執行 demo 前，請先把 gpt-4.1-mini 與主要的 text-embedding-3-large deployment 設成資源預設值。"
         )
 
     if "default" in lowered and "deployment" in lowered:
         return (
-            "Content Understanding defaults are missing. Open the Content Understanding settings "
-            "page or configure resource-level defaults before running the demo."
+            "缺少 Content Understanding 預設值。請先到設定頁面，或先完成資源層級的預設設定後再執行 demo。"
         )
 
     if "defaultsnotset" in lowered:
         return (
-            "Content Understanding defaults have not been configured. "
-            "Run with --auto-defaults or call client.update_defaults() first."
+            "尚未設定 Content Understanding 預設值。請先設定預設值，再重新執行。"
         )
 
     if "region" in lowered or "location" in lowered or status_code == 400:
         return (
-            "the resource region or processing location is not supported for this capability. "
-            "Use a supported Content Understanding region or omit the processing location override."
+            "目前的資源區域或 processing location 不支援這項能力。請改用支援的區域，或移除 processing location override。"
         )
 
     if status_code in {429, 503}:
-        return "quota, capacity, or temporary service availability prevented the demo from running."
+        return "配額、容量或暫時性的服務可用性問題，導致這個 demo 無法執行。"
 
-    return f"optional capability is not available in this environment yet ({error_text})"
+    return f"目前這個環境還無法使用這項選用能力（{error_text}）"
 
 
 def summarize_document(content, max_markdown_chars):
@@ -138,27 +119,27 @@ def summarize_document(content, max_markdown_chars):
     if len(markdown) > max_markdown_chars:
         excerpt += "\n\n... [truncated]"
 
-    print("\n[SUCCESS] Content Understanding analysis completed")
+    print("\n[SUCCESS] Content Understanding 分析完成")
     print(
-        f"Document type: {getattr(content, 'mime_type', None) or '(unknown)'}")
+        f"文件類型：{getattr(content, 'mime_type', None) or '（未知）'}")
 
     if isinstance(content, DocumentContent):
         start_page = getattr(content, "start_page_number", None)
         end_page = getattr(content, "end_page_number", None)
         if start_page and end_page:
-            print(f"Pages: {start_page} to {end_page}")
+            print(f"頁碼範圍：{start_page} 到 {end_page}")
 
         pages = getattr(content, "pages", None) or []
         tables = getattr(content, "tables", None) or []
         figures = getattr(content, "figures", None) or []
 
-        print(f"Page count: {len(pages)}")
-        print(f"Table count: {len(tables)}")
-        print(f"Figure count: {len(figures)}")
+        print(f"頁數：{len(pages)}")
+        print(f"表格數：{len(tables)}")
+        print(f"圖片數：{len(figures)}")
 
-    print("\nMarkdown excerpt:")
+    print("\nMarkdown 摘要：")
     print("=" * 60)
-    print(excerpt or "(No markdown returned)")
+    print(excerpt or "（沒有回傳 markdown）")
     print("=" * 60)
 
 
@@ -173,8 +154,8 @@ def main():
         file_path = resolve_default_file()
 
     print_demo_header(
-        title="Content Understanding Demo",
-        description="Analyze a local workshop PDF with the prebuilt-documentSearch analyzer.",
+        title="Content Understanding 示範",
+        description="使用 prebuilt-documentSearch analyzer 分析 workshop 的本機 PDF。",
         env_items=[
             {"name": "CONTENTUNDERSTANDING_ENDPOINT",
                 "value": os.getenv("CONTENTUNDERSTANDING_ENDPOINT")},
@@ -191,14 +172,14 @@ def main():
             {"name": "DATA_FOLDER", "value": os.getenv("DATA_FOLDER")},
         ],
     )
-    print(f"Input file: {file_path or '(not found)'}")
-    print("Analyzer: prebuilt-documentSearch")
+    print(f"輸入檔案：{file_path or '（找不到）'}")
+    print("Analyzer：prebuilt-documentSearch")
     if args.processing_location:
-        print(f"Processing location override: {args.processing_location}")
+        print(f"Processing location override：{args.processing_location}")
 
     if IMPORT_ERROR is not None:
         finish_skip(
-            "azure-ai-contentunderstanding is not installed. Run 'pip install -r requirements.txt'.",
+            "尚未安裝 azure-ai-contentunderstanding。請執行 'pip install -r requirements.txt'。",
             strict=args.strict,
         )
 
@@ -209,7 +190,7 @@ def main():
     )
     if not endpoint:
         finish_skip(
-            "no Content Understanding endpoint was found. Set CONTENTUNDERSTANDING_ENDPOINT or reuse AZURE_AI_ENDPOINT.",
+            "找不到 Content Understanding endpoint。請設定 CONTENTUNDERSTANDING_ENDPOINT，或直接沿用 AZURE_AI_ENDPOINT。",
             strict=args.strict,
         )
 
@@ -221,7 +202,7 @@ def main():
 
     if not file_path or not file_path.exists():
         finish_skip(
-            "no local PDF was found for the demo. Generate sample data first or provide --file.",
+            "找不到這個 demo 需要的本機 PDF。請先產生範例資料，或自行提供 --file。",
             strict=args.strict,
         )
 
@@ -229,10 +210,10 @@ def main():
     client = ContentUnderstandingClient(
         endpoint=endpoint, credential=credential)
 
-    print(f"Endpoint source: {endpoint_name}")
-    print(f"Credential source: {key_name or 'DefaultAzureCredential'}")
+    print(f"Endpoint 來源：{endpoint_name}")
+    print(f"憑證來源：{key_name or 'DefaultAzureCredential'}")
     if args.processing_location:
-        print(f"Processing location: {args.processing_location}")
+        print(f"Processing location：{args.processing_location}")
 
     try:
         with open(file_path, "rb") as file_handle:
@@ -245,12 +226,12 @@ def main():
         )
         operation_id = getattr(poller, "operation_id", None)
         if operation_id:
-            print(f"Operation ID: {operation_id}")
+            print(f"Operation ID：{operation_id}")
 
         result = poller.result()
         if not getattr(result, "contents", None):
             finish_skip(
-                "analysis completed but returned no content. The capability may not be fully configured.",
+                "分析已完成，但沒有回傳內容。這項能力可能還沒完全設定好。",
                 strict=args.strict,
             )
 
@@ -261,13 +242,13 @@ def main():
         inner_code = getattr(inner, "code", "") or ""
         inner_msg = str(getattr(inner, "message", "")) if inner else ""
         if "DefaultsNotSet" in inner_code or "DefaultsNotSet" in inner_msg or "DefaultsNotSet" in str(exc):
-            print("Content Understanding defaults not configured. Auto-configuring...")
+            print("尚未設定 Content Understanding 預設值，正在自動補上設定...")
             try:
                 client.update_defaults(model_deployments={
                     "gpt-4.1-mini": "gpt-4.1-mini",
                     "text-embedding-3-large": "text-embedding-3-large",
                 })
-                print("Defaults configured. Retrying analysis...")
+                print("預設值設定完成，重新執行分析...")
                 poller = client.begin_analyze_binary(
                     analyzer_id="prebuilt-documentSearch",
                     binary_input=file_bytes,
@@ -276,7 +257,7 @@ def main():
                 result = poller.result()
                 if not getattr(result, "contents", None):
                     finish_skip(
-                        "analysis completed but returned no content after configuring defaults.",
+                        "補上預設值後分析已完成，但仍沒有回傳內容。",
                         strict=args.strict,
                     )
                 summarize_document(result.contents[0], args.max_markdown_chars)

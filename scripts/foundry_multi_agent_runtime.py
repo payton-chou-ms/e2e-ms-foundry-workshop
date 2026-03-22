@@ -1,4 +1,4 @@
-"""Shared runtime helpers for the workshop multi-agent extension."""
+"""Workshop 多代理程式延伸共用的執行階段輔助函式。"""
 
 import json
 import os
@@ -31,11 +31,11 @@ class WorkshopMultiAgentRuntime:
         )
 
         if not self.project_endpoint:
-            raise ValueError("AZURE_AI_PROJECT_ENDPOINT not set")
+            raise ValueError("未設定 AZURE_AI_PROJECT_ENDPOINT")
         if not self.search_endpoint:
-            raise ValueError("AZURE_AI_SEARCH_ENDPOINT not set")
+            raise ValueError("未設定 AZURE_AI_SEARCH_ENDPOINT")
         if not self.data_folder:
-            raise ValueError("DATA_FOLDER not set")
+            raise ValueError("未設定 DATA_FOLDER")
 
         self.project_root = Path(__file__).resolve().parent.parent
         data_path = Path(self.data_folder)
@@ -74,10 +74,10 @@ class WorkshopMultiAgentRuntime:
         if require_fabric and not self.fabric_enabled:
             if not self.workspace_id or self.workspace_id == "your-workspace-id-here":
                 raise ValueError(
-                    "FABRIC_WORKSPACE_ID not set. Update .env with a real Fabric workspace ID before creating the multi-agent workflow."
+                    "未設定 FABRIC_WORKSPACE_ID。建立多代理工作流前，請先在 .env 填入真正的 Fabric workspace ID。"
                 )
             raise ValueError(
-                "Fabric lakehouse metadata is not available. Run scripts/02_create_fabric_items.py and scripts/03_load_fabric_data.py for this scenario first."
+                "目前沒有 Fabric Lakehouse 中繼資料。請先為這個情境執行 scripts/02_create_fabric_items.py 和 scripts/03_load_fabric_data.py。"
             )
 
         self._sql_endpoint = None
@@ -88,9 +88,9 @@ class WorkshopMultiAgentRuntime:
             if required:
                 if file_name == "fabric_ids.json":
                     raise ValueError(
-                        f"{file_name} not found in {self.config_dir}. Run scripts/02_create_fabric_items.py and scripts/03_load_fabric_data.py for the current scenario first."
+                        f"在 {self.config_dir} 找不到 {file_name}。請先為目前情境執行 scripts/02_create_fabric_items.py 和 scripts/03_load_fabric_data.py。"
                     )
-                raise ValueError(f"{file_name} not found in {self.config_dir}")
+                raise ValueError(f"在 {self.config_dir} 找不到 {file_name}")
             return None
 
         with open(path, "r", encoding="utf-8") as handle:
@@ -100,7 +100,7 @@ class WorkshopMultiAgentRuntime:
         path = self.config_dir / file_name
         if not path.exists():
             if required:
-                raise ValueError(f"{file_name} not found in {self.config_dir}")
+                raise ValueError(f"在 {self.config_dir} 找不到 {file_name}")
             return None
 
         with open(path, "r", encoding="utf-8") as handle:
@@ -110,7 +110,7 @@ class WorkshopMultiAgentRuntime:
     def sql_endpoint(self):
         if not self.fabric_enabled:
             raise RuntimeError(
-                "Fabric SQL endpoint is not available in search-only mode")
+                "search-only 模式下沒有 Fabric SQL endpoint 可用")
         if self._sql_endpoint is None:
             self._sql_endpoint = self._get_sql_endpoint()
         return self._sql_endpoint
@@ -129,7 +129,7 @@ class WorkshopMultiAgentRuntime:
         response = requests.get(url, headers=headers, timeout=30)
         if response.status_code != 200:
             raise RuntimeError(
-                f"Could not resolve Fabric SQL endpoint ({response.status_code}): {response.text}"
+                f"無法取得 Fabric SQL endpoint（{response.status_code}）：{response.text}"
             )
 
         properties = response.json().get("properties", {})
@@ -137,7 +137,7 @@ class WorkshopMultiAgentRuntime:
         sql_endpoint = sql_properties.get("connectionString")
         if not sql_endpoint:
             raise RuntimeError(
-                "Fabric SQL endpoint is missing from lakehouse metadata")
+                "Lakehouse 中繼資料裡缺少 Fabric SQL endpoint")
         return sql_endpoint
 
     def build_tools_for_mode(self, tool_mode):
@@ -149,16 +149,16 @@ class WorkshopMultiAgentRuntime:
             return [build_execute_sql_tool(self.tables)]
         if tool_mode == "both":
             return [build_execute_sql_tool(self.tables), build_search_documents_tool()]
-        raise ValueError(f"Unsupported tool mode: {tool_mode}")
+        raise ValueError(f"不支援的工具模式：{tool_mode}")
 
     def execute_sql(self, sql_query):
         import pyodbc
 
         normalized = " ".join(sql_query.strip().lower().split())
         if not normalized:
-            return "SQL Error: SQL query is empty"
+            return "SQL 錯誤：查詢內容是空的"
         if not (normalized.startswith("select ") or normalized.startswith("with ")):
-            return "SQL Error: only read-only SELECT and CTE statements are allowed"
+            return "SQL 錯誤：只允許唯讀的 SELECT 或 CTE 查詢"
 
         disallowed_terms = (
             " insert ",
@@ -175,7 +175,7 @@ class WorkshopMultiAgentRuntime:
         padded = f" {normalized} "
         for term in disallowed_terms:
             if term in padded:
-                return "SQL Error: write operations and DDL statements are not allowed"
+                return "SQL 錯誤：不允許寫入操作或 DDL 語句"
 
         try:
             credential = DefaultAzureCredential()
@@ -203,7 +203,7 @@ class WorkshopMultiAgentRuntime:
             rows = cursor.fetchall()
             connection.close()
         except Exception as exc:
-            return f"SQL Error: {exc}"
+            return f"SQL 錯誤：{exc}"
 
         lines = ["| " + " | ".join(columns) + " |"]
         lines.append("|" + "|".join(["---"] * len(columns)) + "|")
@@ -212,9 +212,8 @@ class WorkshopMultiAgentRuntime:
                 str(value) if value is not None else "NULL" for value in row]
             lines.append("| " + " | ".join(values) + " |")
         if len(rows) > SQL_RESULT_ROW_LIMIT:
-            lines.append(
-                f"\n... and {len(rows) - SQL_RESULT_ROW_LIMIT} more rows")
-        lines.append(f"\n({len(rows)} rows returned)")
+            lines.append(f"\n... 另外還有 {len(rows) - SQL_RESULT_ROW_LIMIT} 列")
+        lines.append(f"\n(共回傳 {len(rows)} 列)")
         return "\n".join(lines)
 
     def search_documents(self, query, top=DEFAULT_SEARCH_TOP):
@@ -240,19 +239,19 @@ class WorkshopMultiAgentRuntime:
                 select=["content", "title", "source", "page_number"],
             )
         except Exception as exc:
-            return f"Search Error: {exc}"
+            return f"搜尋錯誤：{exc}"
 
         lines = []
         for index, result in enumerate(results, 1):
-            lines.append(f"\n--- Result {index} ---")
+            lines.append(f"\n--- 結果 {index} ---")
             lines.append(
-                f"Source: {result.get('source', 'Unknown')} (Page {result.get('page_number', '?')})"
+                f"來源：{result.get('source', '未知')}（第 {result.get('page_number', '?')} 頁）"
             )
-            lines.append(f"Title: {result.get('title', 'Unknown')}")
-            lines.append(f"Content: {result.get('content', '')[:500]}...")
+            lines.append(f"標題：{result.get('title', '未知')}")
+            lines.append(f"內容：{result.get('content', '')[:500]}...")
 
         if not lines:
-            return "No documents found matching the query."
+            return "找不到符合這個查詢的文件。"
         return "\n".join(lines)
 
     def ids_output_path(self, file_name="multi_agent_ids.json"):

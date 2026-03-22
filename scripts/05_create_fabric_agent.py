@@ -1,24 +1,4 @@
-"""
-05 - Create Fabric Data Agent  [DEPRECATED]
-
-⚠️  This script is deprecated. The workshop now uses Foundry Agent
-    (scripts/07_create_foundry_agent.py) as the primary agent path.
-    This script is kept for reference only and is not included in
-    any default or foundry-only pipeline.
-
-Creates a Data Agent in Fabric workspace and links it to the Ontology.
-
-Usage:
-    python 05_create_fabric_agent.py
-
-Prerequisites:
-    - Run 02_create_fabric_items.py (creates Lakehouse and Ontology)
-    - Run 03_load_fabric_data.py (loads data to tables)
-
-What this script does:
-    1. Creates a Data Agent in Fabric workspace
-    2. Updates its definition to use the Ontology as data source
-"""
+"""建立 Fabric Data Agent 的舊版參考腳本。"""
 
 import requests
 from azure.identity import AzureCliCredential
@@ -45,12 +25,12 @@ WORKSPACE_ID = os.getenv("FABRIC_WORKSPACE_ID")
 DATA_FOLDER = os.getenv("DATA_FOLDER")
 
 if not WORKSPACE_ID:
-    print("ERROR: FABRIC_WORKSPACE_ID not set in .env")
+    print("錯誤：.env 中未設定 FABRIC_WORKSPACE_ID")
     sys.exit(1)
 
 if not DATA_FOLDER:
-    print("ERROR: DATA_FOLDER not set in .env")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：.env 中未設定 DATA_FOLDER")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 data_dir = os.path.abspath(DATA_FOLDER)
@@ -63,8 +43,8 @@ if not os.path.exists(config_dir):
 # Load fabric_ids.json
 fabric_ids_path = os.path.join(config_dir, "fabric_ids.json")
 if not os.path.exists(fabric_ids_path):
-    print(f"ERROR: fabric_ids.json not found")
-    print("       Run 02_create_fabric_items.py first")
+    print("錯誤：找不到 fabric_ids.json")
+    print("      請先執行 02_create_fabric_items.py")
     sys.exit(1)
 
 with open(fabric_ids_path) as f:
@@ -77,11 +57,11 @@ DATA_AGENT_NAME = f"{SOLUTION_NAME}_dataagent"
 FABRIC_API = "https://api.fabric.microsoft.com/v1"
 
 print(f"\n{'='*60}")
-print("Creating Fabric Data Agent")
+print("建立 Fabric Data Agent")
 print(f"{'='*60}")
-print(f"Workspace ID: {WORKSPACE_ID}")
-print(f"Ontology ID: {ONTOLOGY_ID}")
-print(f"Data Agent Name: {DATA_AGENT_NAME}")
+print(f"Workspace ID：{WORKSPACE_ID}")
+print(f"Ontology ID：{ONTOLOGY_ID}")
+print(f"Data Agent 名稱：{DATA_AGENT_NAME}")
 
 # ============================================================================
 # Authentication
@@ -105,7 +85,7 @@ def make_request(method, url, **kwargs):
             method, url, headers=get_headers(), **kwargs)
         if response.status_code == 429:
             retry_after = int(response.headers.get("Retry-After", 30))
-            print(f"  Rate limited. Waiting {retry_after}s...")
+            print(f"  已遇到速率限制，等待 {retry_after} 秒...")
             time.sleep(retry_after)
             continue
         return response
@@ -121,13 +101,13 @@ def wait_for_lro(operation_url, operation_name="Operation", timeout=300):
             result = resp.json()
             status = result.get("status", "Unknown")
             if status in ["Succeeded", "succeeded"]:
-                print(f"  [OK] {operation_name} completed")
+                print(f"  [OK] {operation_name} 已完成")
                 return result
             elif status in ["Failed", "failed"]:
-                print(f"  [FAIL] {operation_name} failed: {result}")
+                print(f"  [FAIL] {operation_name} 失敗：{result}")
                 return None
         time.sleep(3)
-    print(f"  [FAIL] {operation_name} timed out")
+    print(f"  [FAIL] {operation_name} 等待逾時")
     return None
 
 
@@ -150,7 +130,7 @@ if os.path.exists(config_path):
     scenario_name = ontology_config.get("name", "Business Data")
     scenario_desc = ontology_config.get("description", "")
     tables = list(ontology_config.get("tables", {}).keys())
-    print(f"\nScenario: {scenario_name}")
+    print(f"\n情境：{scenario_name}")
 else:
     ontology_config = {}
     scenario_name = "Business Data"
@@ -161,7 +141,7 @@ prompt_path = os.path.join(config_dir, "schema_prompt.txt")
 if os.path.exists(prompt_path):
     with open(prompt_path) as f:
         schema_prompt = f.read()
-    print(f"Loaded schema prompt ({len(schema_prompt)} chars)")
+    print(f"已載入 schema prompt（{len(schema_prompt)} 字元）")
 else:
     schema_prompt = ""
 
@@ -188,25 +168,25 @@ def build_agent_instructions(config, schema):
         rel_list.append(
             f"- {rel['from'].title()} -> {rel['to'].title()} (via {rel['fromKey']})")
 
-    instructions = f"""You are a helpful assistant that answers questions about {name} data.
+    instructions = f"""你是一位協助回答 {name} 資料問題的助理。
 
 {desc}
 
-You have access to an Ontology containing:
+你可以使用一個 Ontology，其中包含：
 {chr(10).join(entity_list)}
 
-Relationships:
+關聯：
 {chr(10).join(rel_list) if rel_list else "- None defined"}
 
-When answering questions:
-1. Use the data to provide accurate answers
-2. Support aggregations and group by operations
-3. Provide clear, concise answers based on the data
-4. If you cannot find the answer, explain what data would be needed
+回答問題時：
+1. 請根據資料提供正確答案
+2. 支援聚合與 group by 類型的查詢
+3. 回答要清楚、精簡，並以資料為依據
+4. 如果找不到答案，請說明還缺哪些資料
 
 {schema}
 
-Support group by in GQL."""
+請支援在 GQL 中使用 group by。"""
 
     return instructions
 
@@ -215,7 +195,7 @@ Support group by in GQL."""
 # ============================================================================
 
 
-print(f"\n[1/2] Creating Data Agent...")
+print(f"\n[1/2] 建立 Data Agent...")
 
 # Check if Data Agent already exists
 url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/items?type=DataAgent"
@@ -233,7 +213,7 @@ final_agent_name = DATA_AGENT_NAME
 if existing_agent:
     data_agent_id = existing_agent["id"]
     print(
-        f"  [OK] Using existing Data Agent: {DATA_AGENT_NAME} ({data_agent_id})")
+        f"  [OK] 使用既有 Data Agent：{DATA_AGENT_NAME} ({data_agent_id})")
 else:
     # Try to create Data Agent, with suffix retry if name not available
     max_suffix = 10
@@ -246,7 +226,7 @@ else:
         payload = {
             "displayName": agent_name,
             "type": "DataAgent",
-            "description": f"Data Agent for {SOLUTION_NAME} Ontology"
+            "description": f"提供 {SOLUTION_NAME} Ontology 使用的 Data Agent"
         }
 
         url = f"{FABRIC_API}/workspaces/{WORKSPACE_ID}/items/"
@@ -255,11 +235,11 @@ else:
         if resp.status_code == 201:
             data_agent_id = resp.json()["id"]
             final_agent_name = agent_name
-            print(f"  [OK] Created Data Agent: {agent_name} ({data_agent_id})")
+            print(f"  [OK] 已建立 Data Agent：{agent_name} ({data_agent_id})")
             break
         elif resp.status_code == 202:
             result = wait_for_lro(resp.headers.get(
-                "Location"), "Data Agent creation")
+                "Location"), "建立 Data Agent")
             if result:
                 resource_location = result.get("resourceLocation")
                 if resource_location:
@@ -267,34 +247,31 @@ else:
                     data_agent_id = res_resp.json()["id"]
                     final_agent_name = agent_name
                     print(
-                        f"  [OK] Created Data Agent: {agent_name} ({data_agent_id})")
+                        f"  [OK] 已建立 Data Agent：{agent_name} ({data_agent_id})")
                     break
         elif resp.status_code == 400:
             error_data = resp.json()
             if error_data.get("errorCode") == "ItemDisplayNameNotAvailableYet":
-                print(
-                    f"  Name '{agent_name}' not available, trying with suffix...")
+                print(f"  名稱 '{agent_name}' 目前不可用，改用帶 suffix 的名稱重試...")
                 continue
             else:
-                print(
-                    f"  [FAIL] Failed to create Data Agent: {resp.status_code}")
-                print(f"    Response: {resp.text}")
+                print(f"  [FAIL] 建立 Data Agent 失敗：{resp.status_code}")
+                print(f"    回應：{resp.text}")
                 sys.exit(1)
         else:
-            print(f"  [FAIL] Failed to create Data Agent: {resp.status_code}")
-            print(f"    Response: {resp.text}")
+            print(f"  [FAIL] 建立 Data Agent 失敗：{resp.status_code}")
+            print(f"    回應：{resp.text}")
             sys.exit(1)
 
     if not data_agent_id:
-        print(
-            f"  [FAIL] Failed to create Data Agent after {max_suffix} retries")
+        print(f"  [FAIL] 重試 {max_suffix} 次後仍無法建立 Data Agent")
         sys.exit(1)
 
 # ============================================================================
 # Step 2: Update Data Agent Definition with Ontology Source
 # ============================================================================
 
-print(f"\n[2/2] Configuring Data Agent with Ontology source...")
+print(f"\n[2/2] 設定 Data Agent 的 Ontology 資料來源...")
 
 # Build scenario-specific instructions
 agent_instructions = build_agent_instructions(ontology_config, schema_prompt)
@@ -329,15 +306,14 @@ resp = make_request("POST", url, json=update_payload)
 
 if resp.status_code in [200, 202]:
     if resp.status_code == 202:
-        wait_for_lro(resp.headers.get("Location"), "Definition update")
-    print(f"  [OK] Data Agent configured with Ontology source")
+        wait_for_lro(resp.headers.get("Location"), "更新 Definition")
+    print(f"  [OK] 已把 Data Agent 設定為使用 Ontology 資料來源")
 else:
-    print(
-        f"  ⚠ Could not update Data Agent definition via API: {resp.status_code}")
-    print(f"    Response: {resp.text}")
-    print("    You may need to configure the Ontology source manually in Fabric portal:")
-    print(f"    1. Go to workspace and open '{final_agent_name}'")
-    print(f"    2. Add Ontology as data source")
+    print(f"  ⚠ 無法透過 API 更新 Data Agent definition：{resp.status_code}")
+    print(f"    回應：{resp.text}")
+    print("    你可能需要到 Fabric 入口網站手動設定 Ontology 資料來源：")
+    print(f"    1. 到 workspace 開啟 '{final_agent_name}'")
+    print(f"    2. 把 Ontology 加成 data source")
 
 # ============================================================================
 # Save Data Agent ID
@@ -365,7 +341,7 @@ if os.path.exists(env_path):
     if updated:
         with open(env_path, "w") as f:
             f.write("\n".join(lines))
-        print(f"[OK] Updated .env with FABRIC_AGENT_ID={data_agent_id}")
+        print(f"[OK] 已更新 .env：FABRIC_AGENT_ID={data_agent_id}")
 
 # ============================================================================
 # Summary
@@ -376,19 +352,21 @@ print(f"""
 Fabric Data Agent Created!
 {'='*60}
 
-Data Agent Name: {final_agent_name}
-Data Agent ID: {data_agent_id}
-Ontology Source: {ONTOLOGY_ID}
+Fabric Data Agent 已建立！
 
-IDs saved to: {fabric_ids_path}
+Data Agent 名稱：{final_agent_name}
+Data Agent ID：{data_agent_id}
+Ontology 來源：{ONTOLOGY_ID}
 
-Next steps:
-  Option A - Create AI Foundry agent with Fabric connection:
-    1. In AI Foundry, add a Fabric connection to this Data Agent
-    2. Create an agent that uses the fabric_dataagent tool
+已儲存 ID 到：{fabric_ids_path}
+
+下一步：
+    選項 A - 在 AI Foundry 中建立使用 Fabric 連線的 agent：
+        1. 在 AI Foundry 把這個 Data Agent 加成 Fabric connection
+        2. 建立會使用 fabric_dataagent 工具的 agent
     3. Run 06_test_fabric_agent.py
 
-  Option B - Use Foundry Agent directly (simpler):
+    選項 B - 直接使用 Foundry Agent（較簡單）：
     python scripts/07_create_foundry_agent.py
     python scripts/08_test_foundry_agent.py
 """)

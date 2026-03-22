@@ -1,4 +1,4 @@
-"""Create scenario-specific search-only multi-agent workflow definitions in Foundry."""
+"""在 Foundry 中建立各情境的 search-only 多代理工作流定義。"""
 
 import argparse
 import json
@@ -24,12 +24,12 @@ def parse_args():
     parser.add_argument(
         "--config",
         default="multi_agent/workflow.yaml",
-        help="Path to the declarative multi-agent workflow YAML.",
+        help="宣告式多代理工作流 YAML 的路徑。",
     )
     parser.add_argument(
         "--scenario",
         default="all",
-        help="Scenario key to create. Use 'all' to create every scenario in the YAML.",
+        help="要建立的 scenario key。輸入 'all' 代表建立 YAML 中所有 scenario。",
     )
     return parser.parse_args()
 
@@ -68,17 +68,17 @@ def get_effective_tool_mode(tool_mode):
 def build_instruction_context(runtime, scenario):
     return {
         "solution_name": runtime.solution_name,
-        "domain_name": runtime.ontology_config.get("name", "Business Data"),
+        "domain_name": runtime.ontology_config.get("name", "業務資料"),
         "domain_description": runtime.ontology_config.get("description", ""),
-        "table_list": ", ".join(runtime.tables) or "No tables discovered",
-        "schema_prompt": "Structured-data schema unavailable in search-only mode.",
+        "table_list": ", ".join(runtime.tables) or "目前沒有可用資料表",
+        "schema_prompt": "search-only 模式下沒有結構化資料 schema 可用。",
         "scenario_title": scenario["title"],
         "scenario_description": scenario["description"],
         "structured_data_status": (
-            "Fabric is not configured for this scenario. Use document search only and state clearly when structured-data validation is unavailable."
+            "這個 scenario 沒有設定 Fabric。請只使用文件搜尋，並在無法做結構化資料驗證時清楚說明。"
         ),
         "data_specialist_operating_mode": (
-            "Use document search only. Extract operational facts, thresholds, examples, and caveats from the indexed documents instead of querying SQL."
+            "只使用文件搜尋，不要查 SQL。請從已索引文件中整理營運事實、門檻、範例與注意事項。"
         ),
         "runtime_mode": "search-only",
     }
@@ -116,7 +116,7 @@ def main():
         args.scenario]
     missing = [key for key in selected_scenarios if key not in scenarios]
     if missing:
-        raise ValueError(f"Unknown scenarios: {', '.join(missing)}")
+        raise ValueError(f"未知的 scenario：{', '.join(missing)}")
 
     credential = DefaultAzureCredential()
     project_client = AIProjectClient(
@@ -143,9 +143,9 @@ def main():
 
             print("\n" + "=" * 60)
             print(
-                f"Creating search-only multi-agent set for scenario: {scenario_key}")
+                f"正在為 scenario 建立 search-only 多代理組合：{scenario_key}")
             print("=" * 60)
-            print("Runtime mode: search-only")
+            print("執行模式：search-only")
 
             for agent_key, template in agent_templates.items():
                 requested_tool_mode = template["tool_mode"]
@@ -166,7 +166,7 @@ def main():
                     project_client=project_client,
                     agent_name=agent_name,
                     definition=definition,
-                    description=f"{scenario['title']} - {agent_key} (search-only)",
+                    description=f"{scenario['title']} - {agent_key}（search-only）",
                 )
 
                 output["scenarios"][scenario_key]["agents"][agent_key] = {
@@ -178,7 +178,7 @@ def main():
                 }
                 if tool_mode != requested_tool_mode:
                     print(
-                        f"[OK] {agent_key}: {agent.name} ({agent.id}) [search-only fallback from {requested_tool_mode}]"
+                        f"[OK] {agent_key}: {agent.name} ({agent.id}) [由 {requested_tool_mode} 改為 search-only fallback]"
                     )
                 else:
                     print(f"[OK] {agent_key}: {agent.name} ({agent.id})")
@@ -187,7 +187,7 @@ def main():
     with open(output_path, "w", encoding="utf-8") as handle:
         json.dump(output, handle, indent=2)
 
-    print("\nSaved search-only multi-agent metadata to:")
+    print("\n已把 search-only 多代理中繼資料寫入：")
     print(f"  {output_path}")
 
 

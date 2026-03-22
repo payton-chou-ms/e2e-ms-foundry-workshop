@@ -1,17 +1,4 @@
-"""
-08 - Test AI Foundry Agent
-Interactive chat with the Foundry Agent.
-
-Usage:
-    python 08_test_foundry_agent.py               # Full mode (SQL + Search)
-    python 08_test_foundry_agent.py --foundry-only  # Search only (no Fabric)
-
-Type 'quit' or 'exit' to end the conversation.
-
-This script handles function tools:
-    Full mode: execute_sql + search_documents
-    Foundry-only: search_documents only
-"""
+"""測試 AI Foundry Agent 的互動式聊天腳本。"""
 
 from foundry_tool_contract import (
     DEFAULT_SEARCH_TOP,
@@ -34,7 +21,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--agent-id", default=os.getenv("FOUNDRY_AGENT_ID"))
 parser.add_argument("--foundry-only", action="store_true",
-                    help="Search-only mode (no Fabric/SQL)")
+                    help="只使用 Search 的模式（不使用 Fabric / SQL）")
 args = parser.parse_args()
 
 FOUNDRY_ONLY = args.foundry_only
@@ -66,22 +53,22 @@ WORKSPACE_ID = os.getenv("FABRIC_WORKSPACE_ID")
 DATA_FOLDER = os.getenv("DATA_FOLDER")
 
 if not ENDPOINT:
-    print("ERROR: AZURE_AI_PROJECT_ENDPOINT not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 if not FOUNDRY_ONLY and not WORKSPACE_ID:
-    print("ERROR: FABRIC_WORKSPACE_ID not set in .env")
-    print("       Use --foundry-only to skip Fabric, or set FABRIC_WORKSPACE_ID")
+    print("錯誤：.env 中未設定 FABRIC_WORKSPACE_ID")
+    print("      若要略過 Fabric，請使用 --foundry-only；否則請補上 FABRIC_WORKSPACE_ID")
     sys.exit(1)
 
 if not DATA_FOLDER:
-    print("ERROR: DATA_FOLDER not set in .env")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：.env 中未設定 DATA_FOLDER")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 if not SEARCH_ENDPOINT:
-    print("ERROR: AZURE_AI_SEARCH_ENDPOINT not set in .env")
+    print("錯誤：.env 中未設定 AZURE_AI_SEARCH_ENDPOINT")
     sys.exit(1)
 
 data_dir = os.path.abspath(DATA_FOLDER)
@@ -103,8 +90,8 @@ if not AGENT_ID:
         AGENT_ID = agent_ids.get("agent_id")
 
 if not AGENT_ID:
-    print("ERROR: No agent ID found.")
-    print("       Run 07_create_foundry_agent.py first or provide --agent-id")
+    print("錯誤：找不到 agent ID。")
+    print("      請先執行 07_create_foundry_agent.py，或自行提供 --agent-id")
     sys.exit(1)
 
 # Load Fabric IDs (optional in foundry-only mode)
@@ -117,7 +104,7 @@ if os.path.exists(fabric_ids_path):
     LAKEHOUSE_NAME = fabric_ids.get("lakehouse_name")
     LAKEHOUSE_ID = fabric_ids.get("lakehouse_id")
 elif not FOUNDRY_ONLY:
-    print("ERROR: fabric_ids.json not found. Run 02_create_fabric_items.py first or use --foundry-only")
+    print("錯誤：找不到 fabric_ids.json。請先執行 02_create_fabric_items.py，或使用 --foundry-only")
     sys.exit(1)
 
 # Load Search IDs
@@ -161,21 +148,21 @@ def load_sample_questions():
 
     if FOUNDRY_ONLY:
         return [
-            "What are the policies for notifying customers of outages?",
-            "How is customer impact classified in our documentation?",
+            "文件裡怎麼規定停機事件要通知客戶？",
+            "文件裡如何定義客戶影響等級？",
         ]
 
     return [
-        "What insights can you provide from the data?",
-        "How does the data compare to our documented policies?",
+        "你可以從資料中整理出哪些重點？",
+        "資料結果和文件中的政策規定相比，有哪些差異？",
     ]
 
 
 def print_sample_questions():
     if FOUNDRY_ONLY:
-        print("Sample document questions:")
+        print("文件類範例問題：")
     else:
-        print("Sample questions (that may use BOTH tools):")
+        print("範例問題（可能會同時用到兩種工具）：")
 
     for question in sample_questions:
         print(f"  - {question}")
@@ -185,15 +172,15 @@ sample_questions = load_sample_questions()
 
 print(f"\n{'='*60}")
 if FOUNDRY_ONLY:
-    print("AI Agent Chat (Search Only)")
+    print("AI Agent 對話（只用 Search）")
 else:
-    print("Orchestrator Agent Chat")
+    print("Orchestrator Agent 對話")
 print(f"{'='*60}")
-print("Available tools:")
+print("可用工具：")
 for line in get_tool_summary_lines(FOUNDRY_ONLY):
     print(f"  {line}")
 print_sample_questions()
-print("Type 'quit' to exit, 'help' for sample questions\n")
+print("輸入 'quit' 離開，輸入 'help' 可再次查看範例問題\n")
 
 # ============================================================================
 # Get SQL Endpoint (skip in foundry-only mode)
@@ -222,7 +209,7 @@ if not FOUNDRY_ONLY:
 
     SQL_ENDPOINT = get_sql_endpoint()
     if not SQL_ENDPOINT:
-        print("WARNING: Could not get SQL endpoint. SQL queries may fail.")
+        print("警告：無法取得 SQL endpoint，SQL 查詢可能失敗。")
 
 # ============================================================================
 # SQL Execution Function
@@ -246,14 +233,14 @@ def validate_sql_query(sql_query):
     """Ensure the tool remains read-only and limited to queries."""
     normalized = " ".join(sql_query.strip().lower().split())
     if not normalized:
-        return False, "SQL query is empty"
+        return False, "SQL 查詢不可為空"
     if not (normalized.startswith("select ") or normalized.startswith("with ")):
-        return False, "Only read-only SELECT statements and CTE queries are allowed"
+        return False, "只允許唯讀的 SELECT 或 CTE 查詢"
 
     padded = f" {normalized} "
     for term in DISALLOWED_SQL_TERMS:
         if term in padded:
-            return False, "Write operations and DDL statements are not allowed"
+            return False, "不允許寫入操作或 DDL 語句"
 
     return True, ""
 
@@ -270,24 +257,24 @@ def format_sql_results(columns, rows):
 
     if len(rows) > SQL_RESULT_ROW_LIMIT:
         result_lines.append(
-            f"\n... and {len(rows) - SQL_RESULT_ROW_LIMIT} more rows")
+            f"\n... 另外還有 {len(rows) - SQL_RESULT_ROW_LIMIT} 列")
 
-    result_lines.append(f"\n({len(rows)} rows returned)")
+        result_lines.append(f"\n(共回傳 {len(rows)} 列)")
     return "\n".join(result_lines)
 
 
 def execute_sql(sql_query):
     """Execute SQL query against Fabric Lakehouse and return results"""
     if not SQL_ENDPOINT:
-        return "Error: SQL endpoint not available"
+        return "錯誤：目前沒有 SQL endpoint 可用"
 
     if pyodbc is None:
         detail = f": {PYODBC_IMPORT_ERROR}" if PYODBC_IMPORT_ERROR else ""
-        return f"SQL Error: pyodbc is unavailable{detail}"
+        return f"SQL 錯誤：pyodbc 無法使用{detail}"
 
     is_valid, validation_message = validate_sql_query(sql_query)
     if not is_valid:
-        return f"SQL Error: {validation_message}"
+        return f"SQL 錯誤：{validation_message}"
 
     try:
         # Get AAD token for SQL
@@ -317,7 +304,7 @@ def execute_sql(sql_query):
         return format_sql_results(columns, rows)
 
     except Exception as e:
-        return f"SQL Error: {str(e)}"
+        return f"SQL 錯誤：{str(e)}"
 
 # ============================================================================
 # AI Search Function
@@ -353,20 +340,20 @@ def search_documents(query, top=3):
         # Format results
         result_lines = []
         for i, result in enumerate(results, 1):
-            result_lines.append(f"\n--- Result {i} ---")
+            result_lines.append(f"\n--- 結果 {i} ---")
             result_lines.append(
-                f"Source: {result.get('source', 'Unknown')} (Page {result.get('page_number', '?')})")
-            result_lines.append(f"Title: {result.get('title', 'Unknown')}")
+                f"來源：{result.get('source', '未知')}（第 {result.get('page_number', '?')} 頁）")
+            result_lines.append(f"標題：{result.get('title', '未知')}")
             result_lines.append(
-                f"Content: {result.get('content', '')[:500]}...")
+                f"內容：{result.get('content', '')[:500]}...")
 
         if not result_lines:
-            return "No documents found matching the query."
+            return "找不到符合這個查詢的文件。"
 
         return "\n".join(result_lines)
 
     except Exception as e:
-        return f"Search Error: {str(e)}"
+        return f"搜尋錯誤：{str(e)}"
 
 # ============================================================================
 # Initialize Client
@@ -386,9 +373,9 @@ trace_session = configure_foundry_tracing(
 )
 
 if trace_session.enabled:
-    print("Tracing: enabled")
+    print("追蹤：已啟用")
 elif trace_session.warning:
-    print(f"Tracing: {trace_session.warning}")
+    print(f"追蹤：{trace_session.warning}")
 
 # Get agent details
 with trace_session.span("get-agent"):
@@ -451,7 +438,7 @@ def chat(user_message):
             if fc.name == "execute_sql":
                 sql_query = args.get("sql_query", "")
 
-                print(f"\n  [SQL Tool] Executing query:")
+                print(f"\n  [SQL 工具] 執行查詢：")
                 # Print full query with indentation
                 for line in sql_query.strip().split('\n'):
                     print(f"    {line}")
@@ -470,19 +457,19 @@ def chat(user_message):
                 top = args.get("top", DEFAULT_SEARCH_TOP)
 
                 print(
-                    f"\n  [Search Tool] Searching for: {query} (top={top})...")
+                    f"\n  [搜尋工具] 查詢中：{query}（top={top}）...")
 
                 with trace_session.span("tool-search-documents"):
                     result = search_documents(query, top)
 
                 # Show the result that goes to the agent
-                print(f"  [Search Result]:")
+                print(f"  [搜尋結果]：")
                 # Truncate if too long, but show meaningful content
                 display = result[:500] if len(result) > 500 else result
                 for line in display.strip().split('\n'):
                     print(f"    {line}")
                 if len(result) > 500:
-                    print(f"    ... ({len(result)} chars total)")
+                    print(f"    ...（總長度 {len(result)} 字元）")
 
                 tool_outputs.append({
                     "type": "function_call_output",
@@ -493,7 +480,7 @@ def chat(user_message):
                 tool_outputs.append({
                     "type": "function_call_output",
                     "call_id": fc.call_id,
-                    "output": f"Unknown function: {fc.name}"
+                    "output": f"未知函式：{fc.name}"
                 })
 
         # Submit function results and continue conversation
@@ -517,7 +504,7 @@ print("-" * 60)
 
 while True:
     try:
-        user_input = input("\nYou: ").strip()
+        user_input = input("\n你：").strip()
     except (EOFError, KeyboardInterrupt):
         print()  # New line after ^C
         break
@@ -533,16 +520,16 @@ while True:
         print_sample_questions()
         continue
 
-    print("\nAgent: ", end="", flush=True)
+    print("\nAgent：", end="", flush=True)
 
     try:
         response = chat(user_input)
         if response:
             print(response)
         else:
-            print("(No response)")
+            print("（沒有回應）")
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"錯誤：{e}")
 
 # Cleanup
-print("\nGoodbye!")
+print("\n已結束。")

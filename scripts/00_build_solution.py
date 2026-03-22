@@ -1,29 +1,4 @@
-"""
-Build Solution
-Master script that runs all steps to build the complete solution.
-
-Usage:
-    # Run full solution
-    python scripts/00_build_solution.py
-
-    # Foundry-only mode (no Fabric required)
-    python scripts/00_build_solution.py --foundry-only
-
-    # Start from a specific step
-    python scripts/00_build_solution.py --from 04
-
-Steps:
-    01  - Generate sample data (AI-powered)
-    02  - Create Fabric items (lakehouse, warehouse)
-    03  - Load data into Fabric
-    04  - Generate agent prompt
-    05  - Create Fabric Data Agent
-    06  - Upload documents to AI Search
-    07  - Create Foundry agent
-    08  - Test agent
-
-Foundry-only mode skips Fabric (02-05) and creates a search-only agent.
-"""
+"""完整方案建置腳本。"""
 
 from load_env import load_all_env
 import argparse
@@ -38,19 +13,19 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 # ============================================================================
 
 STEPS = {
-    "01": {"script": "01_generate_sample_data.py", "name": "Generate Sample Data", "time": "~2min"},
-    "02": {"script": "02_create_fabric_items.py", "name": "Create Fabric Items", "time": "~30s"},
-    "03": {"script": "03_load_fabric_data.py", "name": "Load Data into Fabric", "time": "~1min"},
-    "04": {"script": "04_generate_agent_prompt.py", "name": "Generate Agent Prompt", "time": "~5s"},
-    "05": {"script": "05_create_fabric_agent.py", "name": "Create Fabric Data Agent", "time": "~30s"},
-    "06": {"script": "06_upload_to_search.py", "name": "Upload to AI Search", "time": "~1min"},
-    "06b": {"script": "06b_upload_to_foundry_knowledge.py", "name": "Provision Foundry IQ Knowledge Base", "time": "~1min"},
-    "07": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent", "time": "~10s"},
-    "07b": {"script": "07b_create_foundry_iq_agent.py", "name": "Create Foundry IQ Agent", "time": "~10s"},
-    "07-search": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent (Search Only)", "time": "~10s", "args": ["--foundry-only"]},
-    "08": {"script": "08_test_foundry_agent.py", "name": "Test Foundry Agent", "time": "interactive"},
-    "08b": {"script": "08b_test_foundry_iq_agent.py", "name": "Test Foundry IQ Agent", "time": "interactive"},
-    "cu-defaults": {"script": None, "name": "Configure Content Understanding Defaults", "time": "~5s"},
+    "01": {"script": "01_generate_sample_data.py", "name": "產生範例資料", "time": "約 2 分鐘"},
+    "02": {"script": "02_create_fabric_items.py", "name": "建立 Fabric 項目", "time": "約 30 秒"},
+    "03": {"script": "03_load_fabric_data.py", "name": "把資料載入 Fabric", "time": "約 1 分鐘"},
+    "04": {"script": "04_generate_agent_prompt.py", "name": "產生 Agent Prompt", "time": "約 5 秒"},
+    "05": {"script": "05_create_fabric_agent.py", "name": "建立 Fabric Data Agent", "time": "約 30 秒"},
+    "06": {"script": "06_upload_to_search.py", "name": "上傳到 AI Search", "time": "約 1 分鐘"},
+    "06b": {"script": "06b_upload_to_foundry_knowledge.py", "name": "建立 Foundry IQ Knowledge Base", "time": "約 1 分鐘"},
+    "07": {"script": "07_create_foundry_agent.py", "name": "建立 Foundry Agent", "time": "約 10 秒"},
+    "07b": {"script": "07b_create_foundry_iq_agent.py", "name": "建立 Foundry IQ Agent", "time": "約 10 秒"},
+    "07-search": {"script": "07_create_foundry_agent.py", "name": "建立 Foundry Agent（只用 Search）", "time": "約 10 秒", "args": ["--foundry-only"]},
+    "08": {"script": "08_test_foundry_agent.py", "name": "測試 Foundry Agent", "time": "互動式"},
+    "08b": {"script": "08b_test_foundry_iq_agent.py", "name": "測試 Foundry IQ Agent", "time": "互動式"},
+    "cu-defaults": {"script": None, "name": "設定 Content Understanding 預設值", "time": "約 5 秒"},
 }
 
 # Default pipeline order
@@ -63,47 +38,47 @@ FOUNDRY_IQ_PIPELINE = ["01", "06b", "07b"]
 # ============================================================================
 
 parser = argparse.ArgumentParser(
-    description="End-to-end setup: data → knowledge bases → agents → API → app",
+    description="端到端建置流程：資料 → 知識庫 → Agent → API → App",
     formatter_class=argparse.RawDescriptionHelpFormatter,
     epilog="""
-Examples:
-  python scripts/00_build_solution.py                # Build full solution
-  python scripts/00_build_solution.py --from 04      # Start from step 04
-  python scripts/00_build_solution.py --only 07      # Run only specific steps
-  python scripts/00_build_solution.py --skip-fabric  # Skip Fabric steps
-  python scripts/00_build_solution.py --foundry-only # No Fabric required (Search only)
+範例：
+    python scripts/00_build_solution.py                # 建立完整方案
+    python scripts/00_build_solution.py --from 04      # 從第 04 步開始
+    python scripts/00_build_solution.py --only 07      # 只執行指定步驟
+    python scripts/00_build_solution.py --skip-fabric  # 略過 Fabric 步驟
+    python scripts/00_build_solution.py --foundry-only # 不需要 Fabric，只走 Search 路徑
 """
 )
 
 parser.add_argument("--foundry-only", action="store_true",
-                    help="Foundry-only mode: skip Fabric entirely, use AI Search only")
+                    help="Foundry-only 模式：完全略過 Fabric，只使用 AI Search")
 parser.add_argument("--foundry-iq", action="store_true",
-                    help="Foundry-native IQ mode: build a knowledge-base agent for use directly in Foundry")
+                    help="Foundry 原生 IQ 模式：建立可直接在 Foundry 使用的 knowledge-base agent")
 parser.add_argument("--industry", type=str,
-                    help="Industry for data generation (overrides .env)")
+                    help="產生資料用的產業（覆蓋 .env 設定）")
 parser.add_argument("--usecase", type=str,
-                    help="Use case for data generation (overrides .env)")
+                    help="產生資料用的使用情境（覆蓋 .env 設定）")
 parser.add_argument("--size", choices=["small", "medium", "large"],
-                    help="Data size for generation (overrides .env)")
+                    help="資料量大小（覆蓋 .env 設定）")
 parser.add_argument("--clean", action="store_true",
-                    help="Clean and recreate Fabric artifacts (use when switching scenarios)")
+                    help="清除並重新建立 Fabric 項目（切換情境時使用）")
 
 parser.add_argument("--from", dest="from_step", type=str,
-                    help="Start from this step (e.g., --from 04)")
+                    help="從這一步開始（例如：--from 04）")
 parser.add_argument("--only", nargs="+", type=str,
-                    help="Run only these steps (e.g., --only 07 08)")
+                    help="只執行這些步驟（例如：--only 07 08）")
 
 parser.add_argument("--skip-fabric", action="store_true",
-                    help="Skip Fabric setup steps (02, 03)")
+                    help="略過 Fabric 設定步驟（02、03）")
 parser.add_argument("--skip-search", action="store_true",
-                    help="Skip AI Search upload (06)")
+                    help="略過 AI Search 上傳（06）")
 parser.add_argument("--skip-agents", action="store_true",
-                    help="Skip agent creation and testing (05, 07, 08)")
+                    help="略過 agent 建立與測試（05、07、08）")
 
 parser.add_argument("--dry-run", action="store_true",
-                    help="Show what would be run without executing")
+                    help="只顯示將要執行的內容，不實際執行")
 parser.add_argument("--continue-on-error", action="store_true",
-                    help="Continue running steps even if one fails")
+                    help="即使某一步失敗也繼續往下執行")
 
 args = parser.parse_args()
 
@@ -112,7 +87,7 @@ args = parser.parse_args()
 # ============================================================================
 
 if args.foundry_only and args.foundry_iq:
-    print("ERROR: --foundry-only and --foundry-iq cannot be used together")
+    print("錯誤：--foundry-only 和 --foundry-iq 不能同時使用")
     sys.exit(1)
 
 if args.only:
@@ -130,8 +105,8 @@ if args.from_step:
         start_idx = pipeline.index(args.from_step)
         pipeline = pipeline[start_idx:]
     except ValueError:
-        print(f"ERROR: Step '{args.from_step}' not in pipeline")
-        print(f"Available steps: {pipeline}")
+        print(f"錯誤：流程中沒有步驟 '{args.from_step}'")
+        print(f"可用步驟：{pipeline}")
         sys.exit(1)
 
 # Apply skip filters
@@ -153,7 +128,7 @@ for step in pipeline:
         continue
     script_path = os.path.join(script_dir, script_file)
     if not os.path.exists(script_path):
-        print(f"WARNING: Script not found: {script_file}")
+        print(f"警告：找不到腳本：{script_file}")
 
 # Load environment from azd + project .env
 load_all_env()
@@ -166,12 +141,12 @@ if "01" in pipeline:
 
     if not args.industry or not args.usecase:
         print("\n" + "="*60)
-        print("Data Generation")
+        print("資料產生")
         print("="*60)
-        print("\nNo INDUSTRY/USECASE found in .env or CLI args.")
-        print("\nSample scenarios you can use:")
+        print("\n在 .env 或 CLI 參數中都找不到 INDUSTRY / USECASE。")
+        print("\n可用的範例情境：")
         print("-" * 60)
-        print(f"  {'Industry':<18} {'Use Case':<40}")
+        print(f"  {'產業':<18} {'使用情境':<40}")
         print("-" * 60)
         samples = [
             ("Telecommunications", "Network operations and service management"),
@@ -190,16 +165,14 @@ if "01" in pipeline:
         print("-" * 60)
         print()
         if not args.industry:
-            args.industry = input("Industry: ").strip()
+            args.industry = input("產業：").strip()
             if not args.industry:
-                print(
-                    "ERROR: Industry is required. Set INDUSTRY in .env or pass --industry")
+                print("錯誤：必須提供產業。請在 .env 設定 INDUSTRY，或使用 --industry。")
                 sys.exit(1)
         if not args.usecase:
-            args.usecase = input("Use Case: ").strip()
+            args.usecase = input("使用情境：").strip()
             if not args.usecase:
-                print(
-                    "ERROR: Use case is required. Set USECASE in .env or pass --usecase")
+                print("錯誤：必須提供使用情境。請在 .env 設定 USECASE，或使用 --usecase。")
                 sys.exit(1)
 
 # ============================================================================
@@ -208,26 +181,26 @@ if "01" in pipeline:
 
 print("\n" + "="*60)
 if args.foundry_iq:
-    print("Foundry-native IQ Pipeline")
+    print("Foundry 原生 IQ 流程")
 else:
-    print("Foundry IQ + Fabric IQ Pipeline")
+    print("Foundry IQ + Fabric IQ 流程")
 print("="*60)
 
-print(f"\nSteps ({len(pipeline)}):")
+print(f"\n步驟（共 {len(pipeline)} 步）：")
 for i, step in enumerate(pipeline, 1):
     info = STEPS[step]
     print(f"  {i}. {info['name']} ({info['time']})")
 
 if args.industry:
-    print(f"\n  Industry: {args.industry}")
-    print(f"  Use Case: {args.usecase}")
+    print(f"\n  產業：{args.industry}")
+    print(f"  使用情境：{args.usecase}")
 
 if args.dry_run:
-    print("\n[DRY RUN] No scripts will be executed.")
+    print("\n[DRY RUN] 不會真的執行任何腳本。")
     sys.exit(0)
 
 print()
-input("Press Enter to start...")
+input("按 Enter 開始執行...")
 print()
 
 # ============================================================================
@@ -250,14 +223,14 @@ def run_step(step_id):
             from azure.identity import DefaultAzureCredential
             endpoint = os.getenv("AZURE_AI_ENDPOINT")
             if not endpoint:
-                print("SKIP (no AZURE_AI_ENDPOINT)")
+                print("略過（未設定 AZURE_AI_ENDPOINT）")
                 return True
             client = ContentUnderstandingClient(
                 endpoint=endpoint, credential=DefaultAzureCredential())
             try:
                 defaults = client.get_defaults()
                 if defaults.get("modelDeployments"):
-                    print("[OK] (already configured)")
+                    print("[OK]（已設定）")
                     return True
             except Exception:
                 pass
@@ -268,11 +241,11 @@ def run_step(step_id):
             print("[OK]")
             return True
         except Exception as exc:
-            print(f"SKIP ({exc})")
+            print(f"略過（{exc}）")
             return True
 
     if not script_path or not os.path.exists(script_path):
-        print("SKIP (not found)")
+        print("略過（找不到腳本）")
         return True
 
     # Build command
@@ -303,9 +276,9 @@ def run_step(step_id):
                             capture_output=True, text=True, env=clean_env)
 
     if result.returncode != 0:
-        print("[FAIL] FAILED")
+        print("[FAIL] 失敗")
         print(
-            f"\n  Error output:\n{result.stderr[-500:] if result.stderr else result.stdout[-500:]}")
+            f"\n  錯誤輸出：\n{result.stderr[-500:] if result.stderr else result.stdout[-500:]}")
         return False
 
     print("[OK]")
@@ -324,7 +297,7 @@ for step in pipeline:
         failed = True
         if not args.continue_on_error:
             print(
-                f"\nPipeline stopped. Use --continue-on-error to continue despite failures.")
+                f"\n流程已停止。若要忽略失敗並繼續，請加上 --continue-on-error。")
             break
 
 # ============================================================================
@@ -334,13 +307,13 @@ for step in pipeline:
 print("\n" + "-"*60)
 
 if failed:
-    print("⚠ Pipeline completed with errors")
+    print("⚠ 流程執行完成，但有錯誤")
     sys.exit(1)
 else:
-    print("[OK] Pipeline completed successfully!")
+    print("[OK] 流程已成功完成！")
     if args.foundry_only:
-        print("\nNext: python scripts/08_test_foundry_agent.py --foundry-only")
+        print("\n下一步：python scripts/08_test_foundry_agent.py --foundry-only")
     elif args.foundry_iq:
-        print("\nNext: python scripts/08b_test_foundry_iq_agent.py")
+        print("\n下一步：python scripts/08b_test_foundry_iq_agent.py")
     else:
-        print("\nNext: python scripts/08_test_foundry_agent.py")
+        print("\n下一步：python scripts/08_test_foundry_agent.py")

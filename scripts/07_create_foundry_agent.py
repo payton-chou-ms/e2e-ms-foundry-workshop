@@ -1,22 +1,4 @@
-"""
-07a - Create AI Foundry Agent with SQL + AI Search Tools
-Creates an AI Foundry agent that can query both structured data (SQL) and unstructured data (AI Search).
-
-Usage:
-    python 07_create_foundry_agent.py              # Full mode (SQL + Search)
-    python 07_create_foundry_agent.py --foundry-only  # Search only (no Fabric)
-
-Prerequisites:
-    - Run 01_generate_sample_data.py (creates data and ontology_config.json)
-    - Run 02_create_fabric_items.py (creates Lakehouse and Ontology) [skip with --foundry-only]
-    - Run 03_load_fabric_data.py (loads data to tables) [skip with --foundry-only]
-    - Run 04_generate_agent_prompt.py (creates schema_prompt.txt) [skip with --foundry-only]
-    - Run 06_upload_to_search.py (uploads PDFs to AI Search)
-
-The agent has function tools:
-    Full mode: execute_sql + search_documents
-    Foundry-only: search_documents only
-"""
+"""建立可使用 SQL 與 AI Search 的 AI Foundry agent。"""
 
 from foundry_tool_contract import (
     build_execute_sql_tool,
@@ -45,7 +27,7 @@ def _short_prefix(length=3):
 # Parse arguments first
 parser = argparse.ArgumentParser()
 parser.add_argument("--foundry-only", action="store_true",
-                    help="Create agent with AI Search only (no Fabric/SQL)")
+                    help="建立只使用 AI Search 的 agent（不使用 Fabric / SQL）")
 args = parser.parse_args()
 
 FOUNDRY_ONLY = args.foundry_only
@@ -71,18 +53,18 @@ SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
 DATA_FOLDER = os.getenv("DATA_FOLDER")
 
 if not ENDPOINT:
-    print("ERROR: AZURE_AI_PROJECT_ENDPOINT not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 if not DATA_FOLDER:
-    print("ERROR: DATA_FOLDER not set in .env")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：.env 中未設定 DATA_FOLDER")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 if not SEARCH_ENDPOINT:
-    print("ERROR: AZURE_AI_SEARCH_ENDPOINT not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_SEARCH_ENDPOINT")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 data_dir = os.path.abspath(DATA_FOLDER)
@@ -99,8 +81,8 @@ if not os.path.exists(config_dir):
 # Load ontology config for scenario info
 config_path = os.path.join(config_dir, "ontology_config.json")
 if not os.path.exists(config_path):
-    print(f"ERROR: ontology_config.json not found")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：找不到 ontology_config.json")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 with open(config_path) as f:
@@ -120,7 +102,7 @@ else:
     schema_prompt = ""
     if not FOUNDRY_ONLY:
         print(
-            "WARNING: schema_prompt.txt not found - run 04_generate_agent_prompt.py first")
+            "警告：找不到 schema_prompt.txt，請先執行 04_generate_agent_prompt.py")
 
 # Load Fabric IDs (optional in foundry-only mode)
 fabric_ids_path = os.path.join(config_dir, "fabric_ids.json")
@@ -129,8 +111,8 @@ if os.path.exists(fabric_ids_path):
     with open(fabric_ids_path) as f:
         fabric_ids = json.load(f)
 elif not FOUNDRY_ONLY:
-    print(f"ERROR: fabric_ids.json not found")
-    print("       Run 02_create_fabric_items.py first, or use --foundry-only")
+    print("錯誤：找不到 fabric_ids.json")
+    print("      請先執行 02_create_fabric_items.py，或使用 --foundry-only")
     sys.exit(1)
 
 # Load Search IDs
@@ -143,7 +125,7 @@ if os.path.exists(search_ids_path):
 else:
     INDEX_NAME = f"{fabric_ids.get('solution_name', 'demo')}-documents"
     print(
-        f"WARNING: search_ids.json not found - using default index: {INDEX_NAME}")
+        f"警告：找不到 search_ids.json，改用預設索引：{INDEX_NAME}")
 
 WORKSPACE_ID = fabric_ids.get("workspace_id")
 LAKEHOUSE_NAME = fabric_ids.get("lakehouse_name")
@@ -154,17 +136,17 @@ AGENT_NAME = f"{_short_prefix()}-agent"
 
 print(f"\n{'='*60}")
 if FOUNDRY_ONLY:
-    print("Creating AI Foundry Agent (Search Only)")
+    print("建立 AI Foundry Agent（只用 Search）")
 else:
-    print("Creating AI Foundry Agent (SQL + Search)")
+    print("建立 AI Foundry Agent（SQL + Search）")
 print(f"{'='*60}")
-print(f"Endpoint: {ENDPOINT}")
-print(f"Model: {MODEL}")
-print(f"Scenario: {scenario_name}")
+print(f"Endpoint：{ENDPOINT}")
+print(f"模型：{MODEL}")
+print(f"情境：{scenario_name}")
 if not FOUNDRY_ONLY:
-    print(f"Tables: {', '.join(tables)}")
-    print(f"Lakehouse: {LAKEHOUSE_NAME}")
-print(f"Search Index: {INDEX_NAME}")
+    print(f"資料表：{', '.join(tables)}")
+    print(f"Lakehouse：{LAKEHOUSE_NAME}")
+print(f"Search 索引：{INDEX_NAME}")
 
 # ============================================================================
 # Build Agent Instructions
@@ -189,22 +171,22 @@ def build_agent_instructions(config, schema_text, foundry_only=False):
         to_key = rel.get("toKey")
         join_hints.append(f"{from_table}.{from_key} = {to_table}.{to_key}")
 
-    persona = "helpful assistant" if foundry_only else "helpful data analyst assistant"
+    persona = "樂於協助的助理" if foundry_only else "樂於協助的資料分析助理"
     tool_block = build_tool_instruction_block(
         foundry_only, table_names, schema_text, join_hints)
 
-    return f"""You are a {persona} that answers questions about {scenario_name}.
+    return f"""你是一位{persona}，負責回答與 {scenario_name} 相關的問題。
 
 {scenario_desc}
 
 {tool_block}
 
-Be concise and accurate. If a query fails, explain the issue and try a different approach."""
+請保持回答精簡且正確。若查詢失敗，請說明原因並改用其他可行做法。"""
 
 
 instructions = build_agent_instructions(
     ontology_config, schema_prompt, FOUNDRY_ONLY)
-print(f"\nBuilt instructions ({len(instructions)} chars)")
+print(f"\n已建立指示內容（{len(instructions)} 字元）")
 
 # ============================================================================
 # Tool Definitions
@@ -226,7 +208,7 @@ if not FOUNDRY_ONLY:
 # Create the Agent
 # ============================================================================
 
-print("\nInitializing AI Project Client...")
+print("\n初始化 AI Project Client...")
 credential = DefaultAzureCredential()
 
 try:
@@ -234,9 +216,9 @@ try:
         endpoint=ENDPOINT,
         credential=credential
     )
-    print("[OK] AI Project Client initialized")
+    print("[OK] AI Project Client 已初始化")
 except Exception as e:
-    print(f"[FAIL] Failed to initialize client: {e}")
+    print(f"[FAIL] 初始化 client 失敗：{e}")
     sys.exit(1)
 
 trace_session = configure_foundry_tracing(
@@ -246,28 +228,28 @@ trace_session = configure_foundry_tracing(
 )
 
 if trace_session.enabled:
-    print("[OK] Foundry tracing enabled")
+    print("[OK] 已啟用 Foundry tracing")
 elif trace_session.warning:
-    print(f"WARNING: {trace_session.warning}")
+    print(f"警告：{trace_session.warning}")
 
 try:
     with project_client:
         # Delete existing agent if it exists
-        print(f"\nChecking if agent '{AGENT_NAME}' already exists...")
+        print(f"\n檢查 agent '{AGENT_NAME}' 是否已存在...")
         try:
             with trace_session.span("get-existing-agent"):
                 existing_agent = project_client.agents.get(AGENT_NAME)
             if existing_agent:
-                print(f"  Found existing agent, deleting...")
+                print(f"  已找到既有 agent，準備刪除...")
                 with trace_session.span("delete-existing-agent"):
                     project_client.agents.delete(AGENT_NAME)
-                print(f"[OK] Deleted existing agent")
+                print(f"[OK] 已刪除既有 agent")
         except Exception:
-            print(f"  No existing agent found")
+            print(f"  沒有找到既有 agent")
 
         # Create agent definition
-        tool_desc = "Search only" if FOUNDRY_ONLY else "SQL + AI Search"
-        print(f"\nCreating agent with {tool_desc} tools...")
+        tool_desc = "只用 Search" if FOUNDRY_ONLY else "SQL + AI Search"
+        print(f"\n正在建立使用 {tool_desc} 工具的 agent...")
         agent_definition = PromptAgentDefinition(
             model=MODEL,
             instructions=instructions,
@@ -280,12 +262,12 @@ try:
                 definition=agent_definition
             )
 
-        print(f"\n[OK] Agent created successfully!")
-        print(f"  Agent ID: {agent.id}")
-        print(f"  Agent Name: {agent.name}")
+        print(f"\n[OK] Agent 建立成功！")
+        print(f"  Agent ID：{agent.id}")
+        print(f"  Agent 名稱：{agent.name}")
 
 except Exception as e:
-    print(f"\n[FAIL] Failed to create agent: {e}")
+    print(f"\n[FAIL] 建立 agent 失敗：{e}")
     sys.exit(1)
 
 # ============================================================================
@@ -306,7 +288,7 @@ agent_ids["search_index"] = INDEX_NAME
 with open(agent_ids_path, "w") as f:
     json.dump(agent_ids, f, indent=2)
 
-print(f"\n[OK] Agent config saved to: {agent_ids_path}")
+print(f"\n[OK] 已把 Agent 設定寫入：{agent_ids_path}")
 
 # ============================================================================
 # Summary
@@ -320,22 +302,24 @@ if FOUNDRY_ONLY:
 Search-Only Agent Created Successfully!
 {'='*60}
 
-Agent ID: {agent.id}
-Agent Name: {agent.name}
-Model: {MODEL}
-Scenario: {scenario_name}
+Agent 已建立成功（只用 Search）
 
-Tools:
+Agent ID：{agent.id}
+Agent 名稱：{agent.name}
+模型：{MODEL}
+情境：{scenario_name}
+
+工具：
 {tool_summary}
 
-This agent can answer questions about:
-  - Policies, guidelines, procedures
-  - Document content and FAQs
+這個 agent 可以回答：
+    - 政策、指引、流程
+    - 文件內容與常見問答
 
-Note: This agent CANNOT query structured/tabular data.
-      For full functionality, run without --foundry-only flag.
+注意：這個 agent 無法查詢結構化 / 表格資料。
+            若要完整功能，請不要加上 --foundry-only。
 
-Next step:
+下一步：
   python scripts/08_test_foundry_agent.py --foundry-only
 """)
 else:
@@ -346,16 +330,18 @@ else:
 Multi-Tool AI Foundry Agent Created Successfully!
 {'='*60}
 
-Agent ID: {agent.id}
-Agent Name: {agent.name}
-Model: {MODEL}
-Scenario: {scenario_name}
+多工具 AI Foundry Agent 已建立成功！
 
-Tools:
+Agent ID：{agent.id}
+Agent 名稱：{agent.name}
+模型：{MODEL}
+情境：{scenario_name}
+
+工具：
 {tool_summary}
 
-Sample questions that use BOTH tools:
-  - "What's the total value of orders that qualify for free shipping based on our policy?"
+同時會用到兩種工具的範例問題：
+    - 「依照我們的免運政策，符合資格的訂單總金額是多少？」
   - "How many orders meet the minimum for loyalty rewards eligibility?"
 
 Next step:

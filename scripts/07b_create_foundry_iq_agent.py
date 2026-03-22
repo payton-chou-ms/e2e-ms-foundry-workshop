@@ -1,17 +1,4 @@
-"""
-07b - Create Foundry IQ agent with MCP knowledge base tool
-Creates a prompt agent that uses Azure AI Search knowledge-base retrieval
-through the Foundry MCP tool surface.
-
-Usage:
-    python 07b_create_foundry_iq_agent.py
-
-Prerequisites:
-    - Run 01_generate_sample_data.py
-    - Run 06b_upload_to_foundry_knowledge.py
-
-The script stores metadata in config/foundry_iq_agent_ids.json.
-"""
+"""建立使用 MCP knowledge base 工具的 Foundry IQ agent。"""
 
 from azure.ai.projects import AIProjectClient
 from load_env import load_all_env
@@ -40,13 +27,13 @@ SOLUTION_NAME = os.getenv("SOLUTION_NAME") or os.getenv(
     "SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo")
 
 if not PROJECT_ENDPOINT:
-    print("ERROR: AZURE_AI_PROJECT_ENDPOINT not set")
-    print("       Run 'azd up' to deploy Azure resources")
+    print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
+    print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
 if not DATA_FOLDER:
-    print("ERROR: DATA_FOLDER not set in .env")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：.env 中未設定 DATA_FOLDER")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 data_dir = Path(DATA_FOLDER)
@@ -59,13 +46,13 @@ knowledge_ids_path = config_dir / "knowledge_ids.json"
 foundry_iq_agent_ids_path = config_dir / "foundry_iq_agent_ids.json"
 
 if not config_path.exists():
-    print("ERROR: ontology_config.json not found")
-    print("       Run 01_generate_sample_data.py first")
+    print("錯誤：找不到 ontology_config.json")
+    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 if not knowledge_ids_path.exists():
-    print("ERROR: knowledge_ids.json not found")
-    print("       Run 06b_upload_to_foundry_knowledge.py first")
+    print("錯誤：找不到 knowledge_ids.json")
+    print("      請先執行 06b_upload_to_foundry_knowledge.py")
     sys.exit(1)
 
 with open(config_path) as f:
@@ -78,38 +65,38 @@ knowledge_base_name = knowledge_ids.get("knowledge_base_name")
 project_connection_id = knowledge_ids.get("project_connection_id")
 mcp_endpoint = knowledge_ids.get("mcp_endpoint")
 if not knowledge_base_name:
-    print("ERROR: knowledge_base_name missing in knowledge_ids.json")
+    print("錯誤：knowledge_ids.json 裡缺少 knowledge_base_name")
     sys.exit(1)
 if not project_connection_id:
-    print("ERROR: project_connection_id missing in knowledge_ids.json")
+    print("錯誤：knowledge_ids.json 裡缺少 project_connection_id")
     sys.exit(1)
 if not mcp_endpoint:
-    print("ERROR: mcp_endpoint missing in knowledge_ids.json")
+    print("錯誤：knowledge_ids.json 裡缺少 mcp_endpoint")
     sys.exit(1)
 
 scenario_name = ontology_config.get("name", "Business Data")
 scenario_desc = ontology_config.get("description", "")
 agent_name = f"{_short_prefix()}-iq-agent"
 
-instructions = f"""You are a helpful assistant for {scenario_name}.
+instructions = f"""你是一位協助處理 {scenario_name} 問題的助理。
 
 {scenario_desc}
 
-You must use the attached knowledge base MCP tool to answer every document question.
-You must never answer from general knowledge when the question is asking about this scenario.
-If the knowledge base does not contain enough evidence, say you do not know.
-Prefer concise grounded answers and preserve citations from the knowledge base output.
+凡是文件相關問題，都必須使用附加的 knowledge base MCP 工具回答。
+當問題與這個情境有關時，不可以只靠一般常識作答。
+如果 knowledge base 沒有足夠證據，請直接說不知道。
+請優先給出精簡且有依據的回答，並保留 knowledge base 回傳的引用資訊。
 """
 
 print(f"\n{'='*60}")
-print("Create Foundry IQ Agent")
+print("建立 Foundry IQ Agent")
 print(f"{'='*60}")
-print(f"Project Endpoint: {PROJECT_ENDPOINT}")
-print(f"Agent Name: {agent_name}")
-print(f"Model: {MODEL}")
-print(f"Scenario: {scenario_name}")
-print(f"Knowledge Base: {knowledge_base_name}")
-print(f"Project Connection ID: {project_connection_id}")
+print(f"Project Endpoint：{PROJECT_ENDPOINT}")
+print(f"Agent 名稱：{agent_name}")
+print(f"模型：{MODEL}")
+print(f"情境：{scenario_name}")
+print(f"Knowledge Base：{knowledge_base_name}")
+print(f"Project Connection ID：{project_connection_id}")
 
 project_client = AIProjectClient(
     endpoint=PROJECT_ENDPOINT,
@@ -125,17 +112,17 @@ mcp_kb_tool = MCPTool(
 )
 
 with project_client:
-    print(f"\nChecking if agent '{agent_name}' already exists...")
+    print(f"\n檢查 agent '{agent_name}' 是否已存在...")
     try:
         existing_agent = project_client.agents.get(agent_name)
         if existing_agent:
-            print("  Found existing agent, deleting...")
+            print("  已找到既有 agent，準備刪除...")
             project_client.agents.delete(agent_name)
-            print("[OK] Deleted existing agent")
+            print("[OK] 已刪除既有 agent")
     except Exception:
-        print("  No existing agent found")
+        print("  沒有找到既有 agent")
 
-    print("\nCreating Foundry IQ agent...")
+    print("\n建立 Foundry IQ agent...")
     agent = project_client.agents.create_version(
         agent_name=agent_name,
         definition=PromptAgentDefinition(
@@ -156,8 +143,8 @@ agent_metadata = {
 with open(foundry_iq_agent_ids_path, "w") as f:
     json.dump(agent_metadata, f, indent=2)
 
-print("\n[OK] Agent created successfully!")
-print(f"  Agent ID: {agent.id}")
-print(f"  Agent Name: {agent.name}")
-print(f"[OK] Agent metadata saved to: {foundry_iq_agent_ids_path}")
-print("\nNext: python scripts/08b_test_foundry_iq_agent.py")
+print("\n[OK] Agent 建立成功！")
+print(f"  Agent ID：{agent.id}")
+print(f"  Agent 名稱：{agent.name}")
+print(f"[OK] 已把 Agent 中繼資料寫入：{foundry_iq_agent_ids_path}")
+print("\n下一步：python scripts/08b_test_foundry_iq_agent.py")
