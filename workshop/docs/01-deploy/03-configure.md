@@ -80,10 +80,8 @@ DATA_FOLDER=data/default
 第一次跑 workshop 時，這一段可以先不要改。
 
 - 先保留 `.env.example` 的預設值即可
-- `INDUSTRY` 和 `USECASE` 不填也可以，之後腳本會再問你
+- 如果你之後要自訂產業與 use case，統一到 [產生自訂資料](../02-customize/02-generate.md) 操作
 - `DATA_SIZE` 沒填時，預設會用 `small`
-
-最省事的做法是：先不要改，等你真的要做 Step 2 客製化時再調整。
 
 !!! note "Azure 服務變數不需要手動抄寫"
     透過 `azd up` 建立的 Azure 服務變數，會自動從 `.azure/<env>/.env` 載入

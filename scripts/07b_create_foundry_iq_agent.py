@@ -1,6 +1,7 @@
 """
-07b - Create Foundry-native IQ Agent with File Search
-Creates a prompt agent that uses Foundry/OpenAI File Search against a vector store.
+07b - Create Foundry IQ agent with MCP knowledge base tool
+Creates a prompt agent that uses Azure AI Search knowledge-base retrieval
+through the Foundry MCP tool surface.
 
 Usage:
     python 07b_create_foundry_iq_agent.py
@@ -13,13 +14,15 @@ The script stores metadata in config/foundry_iq_agent_ids.json.
 """
 
 from pathlib import Path
-from azure.ai.projects import AIProjectClient
-from azure.ai.projects.models import FileSearchTool, PromptAgentDefinition
-from azure.identity import DefaultAzureCredential
-from load_env import load_all_env
 import json
 import os
 import sys
+
+from azure.ai.projects import AIProjectClient
+from azure.ai.projects.models import MCPTool, PromptAgentDefinition
+from azure.identity import DefaultAzureCredential
+
+from load_env import load_all_env
 
 load_all_env()
 
@@ -65,9 +68,17 @@ with open(config_path) as f:
 with open(knowledge_ids_path) as f:
     knowledge_ids = json.load(f)
 
-vector_store_id = knowledge_ids.get("vector_store_id")
-if not vector_store_id:
-    print("ERROR: vector_store_id missing in knowledge_ids.json")
+knowledge_base_name = knowledge_ids.get("knowledge_base_name")
+project_connection_id = knowledge_ids.get("project_connection_id")
+mcp_endpoint = knowledge_ids.get("mcp_endpoint")
+if not knowledge_base_name:
+    print("ERROR: knowledge_base_name missing in knowledge_ids.json")
+    sys.exit(1)
+if not project_connection_id:
+    print("ERROR: project_connection_id missing in knowledge_ids.json")
+    sys.exit(1)
+if not mcp_endpoint:
+    print("ERROR: mcp_endpoint missing in knowledge_ids.json")
     sys.exit(1)
 
 scenario_name = ontology_config.get("name", "Business Data")
@@ -78,27 +89,34 @@ instructions = f"""You are a helpful assistant for {scenario_name}.
 
 {scenario_desc}
 
-You must answer using the uploaded scenario documents available through file search.
-Always ground your answer in the retrieved files.
-If the uploaded files do not contain enough information, say you do not know.
-Prefer concise answers and mention the document source when available.
+You must use the attached knowledge base MCP tool to answer every document question.
+You must never answer from general knowledge when the question is asking about this scenario.
+If the knowledge base does not contain enough evidence, say you do not know.
+Prefer concise grounded answers and preserve citations from the knowledge base output.
 """
 
 print(f"\n{'='*60}")
-print("Create Foundry-native IQ Agent")
+print("Create Foundry IQ Agent")
 print(f"{'='*60}")
 print(f"Project Endpoint: {PROJECT_ENDPOINT}")
 print(f"Agent Name: {agent_name}")
 print(f"Model: {MODEL}")
 print(f"Scenario: {scenario_name}")
-print(f"Vector Store ID: {vector_store_id}")
+print(f"Knowledge Base: {knowledge_base_name}")
+print(f"Project Connection ID: {project_connection_id}")
 
 project_client = AIProjectClient(
     endpoint=PROJECT_ENDPOINT,
     credential=DefaultAzureCredential(),
 )
 
-file_search_tool = FileSearchTool(vector_store_ids=[vector_store_id])
+mcp_kb_tool = MCPTool(
+    server_label="knowledge-base",
+    server_url=mcp_endpoint,
+    require_approval="never",
+    allowed_tools=["knowledge_base_retrieve"],
+    project_connection_id=project_connection_id,
+)
 
 with project_client:
     print(f"\nChecking if agent '{agent_name}' already exists...")
@@ -111,27 +129,29 @@ with project_client:
     except Exception:
         print("  No existing agent found")
 
-    print("\nCreating Foundry-native IQ agent...")
+    print("\nCreating Foundry IQ agent...")
     agent = project_client.agents.create_version(
         agent_name=agent_name,
         definition=PromptAgentDefinition(
             model=MODEL,
             instructions=instructions,
-            tools=[file_search_tool],
+            tools=[mcp_kb_tool],
         ),
     )
 
 agent_metadata = {
     "agent_id": agent.id,
     "agent_name": agent.name,
-    "vector_store_id": vector_store_id,
-    "knowledge_type": knowledge_ids.get("knowledge_type", "foundry_file_search"),
+    "knowledge_type": knowledge_ids.get("knowledge_type", "azure_search_knowledge_base"),
+    "knowledge_base_name": knowledge_base_name,
+    "project_connection_id": project_connection_id,
+    "mcp_endpoint": mcp_endpoint,
 }
 with open(foundry_iq_agent_ids_path, "w") as f:
     json.dump(agent_metadata, f, indent=2)
 
-print(f"\n[OK] Agent created successfully!")
+print("\n[OK] Agent created successfully!")
 print(f"  Agent ID: {agent.id}")
 print(f"  Agent Name: {agent.name}")
 print(f"[OK] Agent metadata saved to: {foundry_iq_agent_ids_path}")
-print(f"\nNext: python scripts/08b_test_foundry_iq_agent.py")
+print("\nNext: python scripts/08b_test_foundry_iq_agent.py")

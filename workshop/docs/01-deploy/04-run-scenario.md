@@ -11,11 +11,8 @@
 這一頁先只保留兩條主流程。
 
 !!! tip "如果要換情境"
-       先修改 `.env` 裡的 `INDUSTRY` 和 `USECASE`，或直接在指令加上 `--industry` / `--usecase`。
-       然後重新執行 `python scripts/00_build_solution.py --clean`。
-       這會產生新的 `data/<timestamp>_<industry>/`，並自動更新 `.env` 的 `DATA_FOLDER`。
-       新情境的 source 和 sample question 會在新資料夾底下的 `documents/`、`tables/`、`config/sample_questions.txt`。
-       如果要看完整說明，再到 [產生自訂資料](../02-customize/02-generate.md)。
+       請直接到 [產生自訂資料](../02-customize/02-generate.md) 看完整做法。
+       本頁只保留預設情境的建置與驗證。
 
 ### Path 1: Foundry IQ only
 
@@ -23,8 +20,6 @@
 
 預設 use case 使用 `data/default` 這套資料。
 
-- 預設產業：`Telecommunications`
-- 預設情境方向：`Network operations and service management`
 - 文件 source：`data/default/documents`
 - sample question：`data/default/config/sample_questions.txt` 裡的 `DOCUMENT QUESTIONS`
 
@@ -46,8 +41,6 @@ python scripts/08_test_foundry_agent.py --foundry-only
 
 同樣使用 `data/default` 這套預設資料。
 
-- 預設產業：`Telecommunications`
-- 預設情境方向：`Network operations and service management`
 - 文件 source：`data/default/documents`
 - 資料表 source：`data/default/tables`
 - sample question：`data/default/config/sample_questions.txt`

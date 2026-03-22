@@ -1,6 +1,6 @@
 """
-08b - Test Foundry-native IQ Agent
-Interactive chat for a Foundry-native File Search agent.
+08b - Test Foundry IQ agent
+Interactive chat for the Foundry-native MCP knowledge-base agent.
 
 Usage:
     python 08b_test_foundry_iq_agent.py
@@ -88,7 +88,7 @@ with project_client:
 conversation = openai_client.conversations.create()
 
 print(f"\n{'='*60}")
-print("Foundry-native IQ Agent Chat")
+print("Foundry IQ Agent Chat")
 print(f"{'='*60}")
 print(f"Agent Name: {agent.name}")
 print("Type 'quit' to exit, 'help' for sample questions")
@@ -104,13 +104,18 @@ def print_citations(response):
                     continue
                 annotations = getattr(content, "annotations", []) or []
                 for annotation in annotations:
-                    annotation_type = getattr(annotation, "type", "")
-                    if annotation_type == "file_citation":
-                        filename = getattr(annotation, "filename", "unknown")
-                        print(f"\n  [Citation] {filename}")
-                    elif annotation_type == "container_file_citation":
-                        filename = getattr(annotation, "filename", "unknown")
-                        print(f"\n  [Citation] {filename}")
+                    annotation_type = getattr(annotation, "type", "citation")
+                    details = []
+                    for field_name in ["filename", "title", "source", "url"]:
+                        field_value = getattr(annotation, field_name, None)
+                        if field_value:
+                            details.append(str(field_value))
+
+                    if details:
+                        print(
+                            f"\n  [Citation:{annotation_type}] {' | '.join(details)}")
+                    else:
+                        print(f"\n  [Citation:{annotation_type}]")
         return
     except Exception:
         return

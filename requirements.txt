@@ -28,7 +28,7 @@ fpdf2==2.8.5
 pypdf==5.6.0
 
 # Azure AI Search
-azure-search-documents==11.6.0
+azure-search-documents==11.7.0b2
 
 # Azure Content Understanding (optional extension demos)
 azure-ai-contentunderstanding==1.0.1

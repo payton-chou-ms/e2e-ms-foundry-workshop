@@ -14,6 +14,7 @@ agent_templates:
       - Scenario description: {scenario_description}
       - Data domain: {domain_name}
       - Domain description: {domain_description}
+      - Structured data status: {structured_data_status}
 
       Your job is to restate the user's objective, identify what document evidence is needed,
       identify what structured-data evidence is needed, and define the answer shape for downstream specialists.
@@ -36,6 +37,7 @@ agent_templates:
       - Solution name: {solution_name}
       - Scenario title: {scenario_title}
       - Domain description: {domain_description}
+      - Structured data status: {structured_data_status}
 
       You may only use document search. Your job is to extract the most relevant policy,
       procedure, threshold, or narrative guidance from indexed documents.
@@ -57,8 +59,9 @@ agent_templates:
       - Solution name: {solution_name}
       - Scenario title: {scenario_title}
       - Domain description: {domain_description}
+      - Structured data status: {structured_data_status}
 
-      You may only use read-only SQL against the Fabric Lakehouse.
+      {data_specialist_operating_mode}
 
       Table guidance:
       {table_list}
@@ -78,6 +81,9 @@ agent_templates:
     tool_mode: none
     instructions_template: |
       You are the synthesis agent for the "{scenario_title}" scenario in the e2e-ms-foundry-workshop.
+
+      Runtime mode: {runtime_mode}
+      Structured data status: {structured_data_status}
 
       Combine planner, policy, and data outputs into one executive-quality answer.
 

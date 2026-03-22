@@ -20,6 +20,75 @@
     - ✓ "含理賠處理、保單管理與保障範圍查核的產物保險"
     - ✗ "保險相關事務"
 
+## script 方面實際要改什麼
+
+先講最重要的一句：**大多數情況下，你不需要改 Python script 內容，只需要改輸入值與執行命令。**
+
+這個 workshop 的自訂，主要是透過下面三種方式完成：
+
+1. 改 `.env` 裡的 `INDUSTRY`、`USECASE`、`DATA_SIZE`
+2. 在命令列直接傳 `--industry`、`--usecase`、`--size`
+3. 重新執行資料生成或完整 build script
+
+如果你只是要把 workshop 換成另一個產業情境，通常**不用修改**這些 script 原始碼：
+
+- `scripts/00_build_solution.py`
+- `scripts/01_generate_sample_data.py`
+- `scripts/02_create_fabric_items.py`
+- `scripts/03_load_fabric_data.py`
+- `scripts/07_create_foundry_agent.py`
+
+你真正要改的，通常只有：
+
+1. 情境輸入值
+2. 要不要重跑完整流程
+3. 要不要只重跑資料生成相關步驟
+
+## 先記住兩種最常用的改法
+
+### 改法 A：重跑整套流程
+
+如果你要把整個 PoC 換成新的產業與使用案例，最簡單的方式是直接重跑完整 build：
+
+```bash
+python scripts/00_build_solution.py --clean \
+    --industry "Insurance" \
+    --usecase "Property insurance with claims processing and policy management" \
+    --size small
+```
+
+這是最建議第一次使用者採用的方式，因為它會一路重跑：
+
+1. 資料生成
+2. Fabric 產物建立與載入
+3. prompt 生成
+4. Search 上傳
+5. agent 建立
+
+### 改法 B：只重跑資料生成
+
+如果你只是想先看新的資料、文件和 sample questions 長什麼樣子，可以只跑：
+
+```bash
+python scripts/01_generate_sample_data.py \
+    --industry "Insurance" \
+    --usecase "Property insurance with claims processing and policy management" \
+    --size small
+```
+
+這樣只會先產生新的 `data/<timestamp>_<scenario>/`，不會自動重建後面的 Fabric / Search / agent。
+
+## 什麼情況下才需要真的改 script
+
+只有在你要改「生成邏輯」本身時，才需要碰 script 原始碼。例如：
+
+1. 想改資料表 schema 的生成方式
+2. 想改 sample questions 的格式或分類
+3. 想改 PDF 文件的內容結構
+4. 想改 orchestrator agent 的 instructions 或 tool contract
+
+如果你只是換產業或 use case，先不要改 script，先改輸入值就好。
+
 ## 會產生什麼內容
 
 如果你是第一次做自訂，先把下面四種輸出看成四個用途就好：

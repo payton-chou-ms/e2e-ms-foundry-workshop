@@ -32,13 +32,14 @@ python scripts/00_build_solution.py --from 04
 
 ### `01_generate_sample_data.py`
 
-- 用途：根據產業與 use case 產生新的 sample data
+- 用途：根據輸入情境產生新的 sample data
 - 什麼時候跑：你要換新的情境資料時
 
 ```bash
 python scripts/01_generate_sample_data.py
-python scripts/01_generate_sample_data.py --industry "Telecommunications" --usecase "Network outage tracking"
 ```
+
+如果你要看 `--industry` / `--usecase` / `--size` 的完整自訂方式，請回 [產生自訂資料](../02-customize/02-generate.md)。
 
 ### `01_generate_sample_data_templates.py`
 

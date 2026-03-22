@@ -28,8 +28,8 @@ Files kept as-is in this path:
 
 This is the new path to add.
 
-- Uses Foundry-native file search ingestion in the first increment
-- Uses a Foundry-visible vector store / file search tool in the first increment
+- Uses Azure AI Search knowledge source and knowledge base
+- Uses a Foundry MCP tool connection to `knowledge_base_retrieve`
 - Creates a Foundry-native agent for document-based IQ
 - Supports direct use from the Foundry portal
 - Best for learner-facing Foundry IQ walkthroughs and manual portal experiments
@@ -40,13 +40,13 @@ Files to add for this path:
 - `scripts/07b_create_foundry_iq_agent.py`
 - `scripts/08b_test_foundry_iq_agent.py`
 
-## Current Implementation Constraint
+## Current Implementation Direction
 
-The current repo dependency set does not expose Azure AI Search Knowledge Base SDK APIs.
+The repo now uses preview Azure AI Search knowledge-base APIs for the Foundry IQ path.
 
-- `azure-search-documents==11.6.0` does not provide `KnowledgeBase` or `create_or_update_knowledge_base`
-- Because of that, the first increment should use Foundry/OpenAI `FileSearchTool` with a vector store
-- The metadata contract still uses `knowledge_ids.json` so the repo can later evolve to a true Search Knowledge Base or MCP-based design without changing the surrounding flow too much
+- `azure-search-documents==11.7.0b2` provides `KnowledgeBase` and `create_or_update_knowledge_base`
+- `06b` now provisions a Search knowledge source, a knowledge base, and a Foundry project connection
+- `07b` now creates the agent with `MCPTool(..., allowed_tools=["knowledge_base_retrieve"])`
 
 ## Why Two Paths Instead of One
 
@@ -83,9 +83,12 @@ Each scenario should continue to store generated metadata under `data/<scenario>
 
 ```json
 {
-  "knowledge_type": "foundry_file_search",
-  "vector_store_name": "telecom-foundry-iq-store",
-  "vector_store_id": "<vector-store-id>",
+  "knowledge_type": "azure_search_knowledge_base",
+  "search_index_name": "telecom-documents",
+  "knowledge_source_name": "telecom-foundry-iq-source",
+  "knowledge_base_name": "telecom-foundry-iq-kb",
+  "project_connection_id": "<project-connection-id>",
+  "mcp_endpoint": "https://<search>.search.windows.net/knowledgebases/<kb>/mcp?api-version=2025-11-01-preview",
   "source_folder": "data/.../documents",
   "status": "ready"
 }
@@ -97,7 +100,8 @@ Each scenario should continue to store generated metadata under `data/<scenario>
 {
   "agent_name": "telecom-foundry-iq-agent",
   "agent_id": "<agent-id>",
-  "vector_store_id": "<vector-store-id>"
+  "knowledge_base_name": "telecom-foundry-iq-kb",
+  "project_connection_id": "<project-connection-id>"
 }
 ```
 
@@ -115,10 +119,10 @@ Keep current responsibility:
 
 New responsibility:
 
-- read `DATA_FOLDER/documents`
-- create or replace a Foundry/OpenAI vector store
-- upload documents for file search
-- wait for file processing to complete
+- ensure the Search index exists and contains the current workshop documents
+- create or update a Search knowledge source
+- create or update a Search knowledge base
+- create or update a Foundry project connection for the knowledge-base MCP endpoint
 - save `knowledge_ids.json`
 
 This script should not create agents.
@@ -139,7 +143,7 @@ New responsibility:
 - read `ontology_config.json`
 - read `knowledge_ids.json`
 - create a Foundry-native document IQ agent
-- attach Foundry `FileSearchTool`
+- attach Foundry `MCPTool`
 - save `foundry_iq_agent_ids.json`
 
 Its instructions should focus on document-based answering and citations, not local function tools.

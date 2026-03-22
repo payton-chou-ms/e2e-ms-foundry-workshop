@@ -21,18 +21,19 @@ load_all_env()
 
 
 class WorkshopMultiAgentRuntime:
-    def __init__(self):
+    def __init__(self, require_fabric=True):
         self.project_endpoint = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
         self.search_endpoint = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
         self.workspace_id = os.getenv("FABRIC_WORKSPACE_ID")
         self.data_folder = os.getenv("DATA_FOLDER")
+        self.fabric_enabled = bool(
+            self.workspace_id and self.workspace_id != "your-workspace-id-here"
+        )
 
         if not self.project_endpoint:
             raise ValueError("AZURE_AI_PROJECT_ENDPOINT not set")
         if not self.search_endpoint:
             raise ValueError("AZURE_AI_SEARCH_ENDPOINT not set")
-        if not self.workspace_id:
-            raise ValueError("FABRIC_WORKSPACE_ID not set")
         if not self.data_folder:
             raise ValueError("DATA_FOLDER not set")
 
@@ -46,24 +47,38 @@ class WorkshopMultiAgentRuntime:
             self.config_dir = self.data_dir
 
         self.ontology_config = self._load_json("ontology_config.json")
-        self.fabric_ids = self._load_json("fabric_ids.json")
+        self.fabric_ids = self._load_json(
+            "fabric_ids.json", required=False) or {}
         self.search_ids = self._load_json(
             "search_ids.json", required=False) or {}
         self.schema_prompt = self._load_text(
             "schema_prompt.txt", required=False) or ""
 
         self.tables = list(self.ontology_config.get("tables", {}).keys())
-        self.solution_name = self.fabric_ids.get("solution_name") or self.ontology_config.get(
-            "scenario", "demo"
-        ).lower().replace(" ", "-")
+        self.solution_name = (
+            self.fabric_ids.get("solution_name")
+            or os.getenv("SOLUTION_NAME")
+            or os.getenv("SOLUTION_PREFIX")
+            or self.ontology_config.get("scenario", "demo").lower().replace(" ", "-")
+        )
         self.index_name = self.search_ids.get(
             "index_name", f"{self.solution_name}-documents"
         )
         self.lakehouse_name = self.fabric_ids.get("lakehouse_name")
         self.lakehouse_id = self.fabric_ids.get("lakehouse_id")
+        self.fabric_enabled = self.fabric_enabled and bool(
+            self.lakehouse_id and self.lakehouse_name
+        )
+        self.runtime_mode = "fabric+search" if self.fabric_enabled else "search-only"
 
-        if not self.lakehouse_id or not self.lakehouse_name:
-            raise ValueError("Fabric lakehouse metadata is not available")
+        if require_fabric and not self.fabric_enabled:
+            if not self.workspace_id or self.workspace_id == "your-workspace-id-here":
+                raise ValueError(
+                    "FABRIC_WORKSPACE_ID not set. Update .env with a real Fabric workspace ID before creating the multi-agent workflow."
+                )
+            raise ValueError(
+                "Fabric lakehouse metadata is not available. Run scripts/02_create_fabric_items.py and scripts/03_load_fabric_data.py for this scenario first."
+            )
 
         self._sql_endpoint = None
 
@@ -71,6 +86,10 @@ class WorkshopMultiAgentRuntime:
         path = self.config_dir / file_name
         if not path.exists():
             if required:
+                if file_name == "fabric_ids.json":
+                    raise ValueError(
+                        f"{file_name} not found in {self.config_dir}. Run scripts/02_create_fabric_items.py and scripts/03_load_fabric_data.py for the current scenario first."
+                    )
                 raise ValueError(f"{file_name} not found in {self.config_dir}")
             return None
 
@@ -89,6 +108,9 @@ class WorkshopMultiAgentRuntime:
 
     @property
     def sql_endpoint(self):
+        if not self.fabric_enabled:
+            raise RuntimeError(
+                "Fabric SQL endpoint is not available in search-only mode")
         if self._sql_endpoint is None:
             self._sql_endpoint = self._get_sql_endpoint()
         return self._sql_endpoint
@@ -233,5 +255,5 @@ class WorkshopMultiAgentRuntime:
             return "No documents found matching the query."
         return "\n".join(lines)
 
-    def ids_output_path(self):
-        return self.config_dir / "multi_agent_ids.json"
+    def ids_output_path(self, file_name="multi_agent_ids.json"):
+        return self.config_dir / file_name

@@ -2,20 +2,68 @@
 
 這一頁給「已經跑過腳本，但想回到 portal 直接觀察」的人使用。
 
+如果你是第一次接觸 Microsoft Foundry 和 Microsoft Fabric，請把這一頁當成**看畫面、確認資源、做最小實驗**的入門頁，不要一開始就想把所有功能都點完。
+
+## 這頁怎麼讀
+
+第一次使用時，建議用最簡單的順序：
+
+1. 先看 **最短檢查路徑**，只確認環境真的有起來
+2. 再看 **Foundry 路徑**，認識 project、agent、tools 在哪裡
+3. 最後看 **Fabric 路徑**，確認 lakehouse、tables 和 SQL endpoint
+
+如果你只是第一次上手，先做到下面三件事就夠了：
+
+1. 在 Foundry 找到正確的 project
+2. 在 Fabric 找到正確的 lakehouse
+3. 確認 tables 裡真的有資料
+
+你不需要先把所有名詞都搞懂。對第一次使用者來說，只要先分清楚兩件事就夠了：
+
+1. **Foundry** 是看 agent、model、tools 的地方
+2. **Fabric** 是看 lakehouse、tables、SQL endpoint 的地方
+
 你可以把它理解成兩條平行路徑：
 
 - **Foundry 路徑**：看 agent、model、tool、playground、trace
 - **Fabric 路徑**：看 workspace、lakehouse、tables、SQL endpoint、ontology
 
-如果你想先在 Foundry portal 中看到一個比較原生的文件問答 agent，可以先跑：
+## 先分清楚 Foundry 的兩條路
+
+這個 workshop 在 Foundry 相關操作上，實際上有兩條不同路徑。
+
+### 路徑 A：Foundry-native 文件問答
+
+如果你想在 Foundry portal 中直接看到比較原生的文件問答體驗，可以先跑：
 
 ```bash
 python scripts/06b_upload_to_foundry_knowledge.py
 python scripts/07b_create_foundry_iq_agent.py
+```
+
+這條路會使用 Foundry IQ knowledge base + MCP tool，比較適合在 portal 內直接看文件型問答。
+
+如果你想另外在本機 terminal 做一次互動測試，再額外跑：
+
+```bash
 python scripts/08b_test_foundry_iq_agent.py
 ```
 
-這條路會使用 Foundry-native File Search，不會走目前 `07_create_foundry_agent.py` 那條本機 function tool runtime。
+### 路徑 B：主流程 workshop agent
+
+如果你走的是主流程：
+
+```bash
+python scripts/07_create_foundry_agent.py
+python scripts/08_test_foundry_agent.py
+```
+
+那麼 agent 定義雖然會存進 Foundry project，但實際互動測試主要還是在**本機終端機**完成。
+
+第一次使用時，請先記住這句話：
+
+- **路徑 A 比較適合在 portal 內直接聊天測試**
+- **路徑 B 比較適合在 terminal 測試，再回 portal 看設定和 traces**
 
 如果你只是想確認 script 有沒有成功，不需要每個畫面都點完。先照下面的「最短檢查路徑」做即可。
 
@@ -29,10 +77,15 @@ python scripts/08b_test_foundry_iq_agent.py
 
 1. 到 Microsoft Foundry 開啟這次部署用的 **project**
 2. 到 **Build** > **Agents** 找到 workshop agent，確認 instructions 與 tools 存在
-3. 在 **Agents playground** 手動問一題文件問題，確認 agent 可回應
-4. 到 Microsoft Fabric 開啟你的 workspace
-5. 找到 `*_lakehouse_*`，確認 **Tables** 底下真的有資料表
-6. 切到 **SQL analytics endpoint**，用預覽或查詢確認表格有資料
+3. 如果你有跑 `06b / 07b / 08b`，再到 **Agents playground** 手動問一題文件問題
+4. 如果你走的是 `07 / 08` 主流程，就先把 Foundry 當成檢查 agent 設定的地方，不要期待所有互動都直接在 portal 完成
+5. 到 Microsoft Fabric 開啟你的 workspace
+6. 找到 `*_lakehouse_*`，確認 **Tables** 底下真的有資料表
+7. 切到 **SQL analytics endpoint**，用預覽或查詢確認表格有資料
+
+!!! note "第一次使用者先記這一點就好"
+	 如果你走的是主流程 `07_create_foundry_agent.py` + `08_test_foundry_agent.py`，真正的互動測試主要還是在本機終端機完成。
+	 Foundry portal 這裡先把它當成「看 agent 定義、資源和 traces 有沒有建立成功」即可。
 
 ## Path 1: 在 Microsoft Foundry 手動做實驗
 
@@ -44,7 +97,7 @@ Portal URL:
 ### 這條路徑適合做什麼
 
 - 確認 project、models、agents 和 tools 都已建立
-- 手動測 prompt，不用重跑 script
+- 在適合的路徑下手動測 prompt
 - 檢查 Search / Browser Automation 等 connection 是否存在
 - 從 playground 直接看 thread logs、tool calls、evaluations
 
@@ -92,9 +145,17 @@ Portal URL:
 	- **Model** 是否綁到正確 deployment
 	- **Tools** 區塊是否看得到工具設定
 
-如果你是走主流程，這裡最重要的不是外觀，而是 agent 已存在且能打開設定頁。
+如果你是第一次使用者，這裡最重要的不是看懂所有設定，而是先確認：
 
-### Step 4. 用 Agents playground 手動測一題
+1. agent 已經存在
+2. agent 頁面打得開
+3. tools 和 instructions 不是空的
+
+### Step 4. 如果你走 Foundry-native 路徑，再用 Agents playground 手動測一題
+
+這一步比較適合已經跑過 `06b / 07b` 的人。
+
+如果你走的是主流程 `07 / 08`，可以先跳過這一步，之後改用 terminal 測試，再回來看 traces。
 
 1. 在 agent 詳細頁面選 **Try in playground**，或直接開 **Agents playground**
 2. 在輸入框先測一題文件型問題，例如：
@@ -114,7 +175,23 @@ Portal URL:
 	- 回答是否像是 grounded 在 workshop 文件內容
 	- 若有 tool call 顯示，是否能看出 agent 有使用搜尋或其他工具
 
-### Step 5. 回看 instructions 和 tools
+### Step 5. 如果你走主流程 `07 / 08`，請改在 terminal 測試
+
+如果你走的是主流程 workshop agent，先用：
+
+```bash
+python scripts/08_test_foundry_agent.py
+```
+
+或 Foundry-only 模式：
+
+```bash
+python scripts/08_test_foundry_agent.py --foundry-only
+```
+
+測完之後，再回 Foundry portal 檢查 agent、tools、trace 和相關資源。
+
+### Step 6. 回看 instructions 和 tools
 
 如果你想知道 agent 為什麼這樣回答，回到 agent 設定頁，重點檢查這幾塊：
 
@@ -127,7 +204,7 @@ Portal URL:
 
 這一步最適合拿來對照 [05-script-sequence.md](05-script-sequence.md) 裡的腳本用途，而不是單純「看畫面」。
 
-### Step 6. 檢查專案連線與 Browser Automation 狀態
+### Step 7. 檢查專案連線與 Browser Automation 狀態
 
 這一步只是在 portal 裡確認「能不能用」，不是要求你現在就把所有 demo 都手動跑完。
 
@@ -142,9 +219,11 @@ Portal URL:
 
 如果你真的要補 Browser Automation，請回頭看 [05d-browser-automation-setup.md](05d-browser-automation-setup.md)。
 
-### Step 7. 從 playground 看 thread logs、runs、tool calls
+### Step 8. 如果你剛剛是在 playground 內測試，再看 thread logs、runs、tool calls
 
 這一步最適合拿來做「為什麼這題回答成這樣」的觀察。
+
+如果你剛剛沒有在 Foundry playground 裡送出問題，而是只在 terminal 測試，這一步可以先跳過。
 
 1. 回到 **Agents playground**
 2. 找到剛剛測過的對話 thread
@@ -166,7 +245,7 @@ Portal URL:
 	 這個 workshop 的主線不是靠 playground evaluation 才能成立。
 	 如果你只是要驗證 agent 能不能工作，先看 thread logs 和 tool calls 就夠了。
 
-### Step 8. 用 Azure Portal 交叉確認底層資源
+### Step 9. 用 Azure Portal 交叉確認底層資源
 
 當 Foundry portal 顯示正常，但你仍想確認底層 Azure 資源時，再做這一步。
 
@@ -217,8 +296,14 @@ Portal URL:
 1. 開啟 <https://app.fabric.microsoft.com/>
 2. 使用和 workshop 相同的帳號登入
 3. 左側進入 **Workspaces**
-4. 開啟 `.env` 中 `FABRIC_WORKSPACE_ID` 對應的 workspace
-5. 進入 workspace 後，先確認你看得到 item 清單，而不是權限不足的畫面
+4. 如果你知道 workspace 名稱，就直接從清單中打開
+5. 如果你只有 `FABRIC_WORKSPACE_ID`，可以用下面這種 URL 形式開啟：
+
+```text
+https://app.fabric.microsoft.com/groups/<workspace-id>/...
+```
+
+6. 進入 workspace 後，先確認你看得到 item 清單，而不是權限不足的畫面
 
 ### Step 2. 找到這次腳本建立的 Lakehouse
 
@@ -328,7 +413,9 @@ FROM <table_name>
 |---------------|--------------------------|----------------|
 | `azd up` | Azure Portal resource group | Foundry、Search、Storage、App Insights、Playwright Workspace 都存在 |
 | `07_create_foundry_agent.py` | Foundry `Build > Agents` | workshop agent 已建立，可打開設定頁 |
-| `08_test_foundry_agent.py` | Foundry `Agents playground` | 能手動問答，必要時看 thread logs |
+| `08_test_foundry_agent.py` | 本機 terminal + Foundry traces | 問答能正常進行，之後可回 Foundry 看 traces 或 agent 設定 |
+| `07b_create_foundry_iq_agent.py` | Foundry `Build > Agents` | Foundry IQ knowledge base agent 已建立 |
+| `08b_test_foundry_iq_agent.py` | 本機 terminal | 可用本機方式對 Foundry-native 文件問答 agent 再做一次互動測試 |
 | `10_demo_browser_automation.py` | Foundry `Build > Tools` | Browser Automation connection 是否已建立 |
 | `13_demo_image_generation.py` | Azure Portal 或 env 輸出 | image OpenAI resource 與 deployment 是否存在 |
 | `02_create_fabric_items.py` | Fabric workspace | `*_lakehouse_*` 與 `*_ontology_*` 是否出現 |

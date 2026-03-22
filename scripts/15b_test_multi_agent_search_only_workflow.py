@@ -1,4 +1,4 @@
-"""Run the declarative multi-agent workshop workflow for one scenario."""
+"""Run the declarative search-only multi-agent workflow for one scenario."""
 
 import argparse
 import json
@@ -9,6 +9,10 @@ from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 
 from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
+from scripts_15_shared import get_agent, run_prompt_agent_step
+
+
+OUTPUT_FILE_NAME = "multi_agent_search_ids.json"
 
 
 def parse_args():
@@ -40,85 +44,9 @@ def load_ids(path):
         return json.load(handle)
 
 
-def get_agent(project_client, agent_record):
-    agent_name = agent_record.get("name", "")
-    agent_id = agent_record.get("id", "")
-
-    if agent_name:
-        try:
-            return project_client.agents.get(agent_name)
-        except Exception:
-            pass
-
-    if agent_id:
-        return project_client.agents.get(agent_id)
-
-    raise ValueError("Agent metadata does not contain a usable name or id")
-
-
-def run_prompt_agent_step(openai_client, definition, conversation_id, message, runtime):
-    model = definition["model"]
-    instructions = definition["instructions"]
-    tools = definition.get("tools", [])
-
-    response = openai_client.responses.create(
-        model=model,
-        input=message,
-        instructions=instructions,
-        tools=tools,
-        conversation={"id": conversation_id},
-    )
-
-    final_text = ""
-
-    while True:
-        function_calls = []
-        for item in response.output:
-            if getattr(item, "type", None) == "function_call":
-                function_calls.append(item)
-            elif getattr(item, "type", None) == "message":
-                for content in getattr(item, "content", []):
-                    if hasattr(content, "text"):
-                        final_text += content.text + "\n"
-
-        if not function_calls:
-            break
-
-        tool_outputs = []
-        for function_call in function_calls:
-            arguments = json.loads(function_call.arguments)
-            if function_call.name == "search_documents":
-                result = runtime.search_documents(
-                    query=arguments.get("query", ""),
-                    top=arguments.get("top"),
-                )
-            elif function_call.name == "execute_sql":
-                result = runtime.execute_sql(arguments.get("sql_query", ""))
-            else:
-                result = f"Unknown function: {function_call.name}"
-
-            tool_outputs.append(
-                {
-                    "type": "function_call_output",
-                    "call_id": function_call.call_id,
-                    "output": result,
-                }
-            )
-
-        response = openai_client.responses.create(
-            model=model,
-            input=tool_outputs,
-            instructions=instructions,
-            tools=tools,
-            conversation={"id": conversation_id},
-        )
-
-    return final_text.strip()
-
-
 def main():
     args = parse_args()
-    runtime = WorkshopMultiAgentRuntime(require_fabric=True)
+    runtime = WorkshopMultiAgentRuntime(require_fabric=False)
 
     config_path = Path(args.config)
     if not config_path.is_absolute():
@@ -128,16 +56,16 @@ def main():
     if args.scenario not in workflow_config["scenarios"]:
         raise ValueError(f"Unknown scenario: {args.scenario}")
 
-    ids_path = runtime.ids_output_path()
+    ids_path = runtime.ids_output_path(OUTPUT_FILE_NAME)
     if not ids_path.exists():
         raise ValueError(
-            f"{ids_path} not found. Run scripts/14_create_multi_agent_workflow.py first."
+            f"{ids_path} not found. Run scripts/14b_create_multi_agent_search_only_workflow.py first."
         )
 
     ids_config = load_ids(ids_path)
     if args.scenario not in ids_config.get("scenarios", {}):
         raise ValueError(
-            f"Scenario '{args.scenario}' has no created agent metadata. Run the create script for this scenario first."
+            f"Scenario '{args.scenario}' has no created agent metadata. Run the search-only create script for this scenario first."
         )
 
     scenario = workflow_config["scenarios"][args.scenario]
@@ -155,10 +83,10 @@ def main():
         "document_focus": scenario["document_focus"],
         "data_focus": scenario["data_focus"],
         "question": question,
-        "runtime_mode": runtime.runtime_mode,
+        "runtime_mode": "search-only",
     }
 
-    print(f"Runtime mode: {runtime.runtime_mode}")
+    print("Runtime mode: search-only")
 
     outputs = {}
 

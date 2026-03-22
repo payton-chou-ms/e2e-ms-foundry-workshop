@@ -44,7 +44,7 @@ STEPS = {
     "04": {"script": "04_generate_agent_prompt.py", "name": "Generate Agent Prompt", "time": "~5s"},
     "05": {"script": "05_create_fabric_agent.py", "name": "Create Fabric Data Agent", "time": "~30s"},
     "06": {"script": "06_upload_to_search.py", "name": "Upload to AI Search", "time": "~1min"},
-    "06b": {"script": "06b_upload_to_foundry_knowledge.py", "name": "Upload to Foundry File Search", "time": "~1min"},
+    "06b": {"script": "06b_upload_to_foundry_knowledge.py", "name": "Provision Foundry IQ Knowledge Base", "time": "~1min"},
     "07": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent", "time": "~10s"},
     "07b": {"script": "07b_create_foundry_iq_agent.py", "name": "Create Foundry IQ Agent", "time": "~10s"},
     "07-search": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent (Search Only)", "time": "~10s", "args": ["--foundry-only"]},
@@ -78,7 +78,7 @@ Examples:
 parser.add_argument("--foundry-only", action="store_true",
                     help="Foundry-only mode: skip Fabric entirely, use AI Search only")
 parser.add_argument("--foundry-iq", action="store_true",
-                    help="Foundry-native IQ mode: build a File Search agent for use directly in Foundry")
+                    help="Foundry-native IQ mode: build a knowledge-base agent for use directly in Foundry")
 parser.add_argument("--industry", type=str,
                     help="Industry for data generation (overrides .env)")
 parser.add_argument("--usecase", type=str,

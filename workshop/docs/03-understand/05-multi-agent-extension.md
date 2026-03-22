@@ -75,7 +75,8 @@
 
 | 路徑 | 你會看到什麼 | 適合先學什麼 |
 |------|---------------|----------------|
-| 宣告式 workflow 路徑 | `multi_agent/workflow.yaml`、`scripts/14_create_multi_agent_workflow.py`、`scripts/15_test_multi_agent_workflow.py` | 角色、步驟、scenario 怎麼拆開 |
+| 宣告式 workflow 路徑 | `multi_agent/workflow.yaml`、`scripts/14_create_multi_agent_workflow.py`、`scripts/15_test_multi_agent_workflow.py` | 完整版的 Fabric + Search 角色、步驟、scenario 怎麼拆開 |
+| 宣告式 workflow（search-only） | `multi_agent/workflow.yaml`、`scripts/14b_create_multi_agent_search_only_workflow.py`、`scripts/15b_test_multi_agent_search_only_workflow.py` | 沒有 Fabric 時，先用文件路徑理解角色拆分 |
 | Code-first workflow 路徑 | `scripts/16_agent_framework_workflow_example.py` | 用程式碼直接建立 agent 與 workflow 的最小做法 |
 
 這兩條路徑都在教同一件事：把原本單一 agent 的能力，延伸成更清楚的角色協作。

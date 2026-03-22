@@ -1,4 +1,4 @@
-"""Create scenario-specific multi-agent workflow definitions in Foundry."""
+"""Create scenario-specific search-only multi-agent workflow definitions in Foundry."""
 
 import argparse
 import json
@@ -12,6 +12,9 @@ from azure.ai.projects.models import PromptAgentDefinition
 from azure.identity import DefaultAzureCredential
 
 from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
+
+
+OUTPUT_FILE_NAME = "multi_agent_search_ids.json"
 
 
 def parse_args():
@@ -41,18 +44,28 @@ def sanitize_agent_name(value):
     return lowered[:60]
 
 
+def get_effective_tool_mode(tool_mode):
+    if tool_mode in {"sql", "both"}:
+        return "search"
+    return tool_mode
+
+
 def build_instruction_context(runtime, scenario):
     return {
         "solution_name": runtime.solution_name,
         "domain_name": runtime.ontology_config.get("name", "Business Data"),
         "domain_description": runtime.ontology_config.get("description", ""),
         "table_list": ", ".join(runtime.tables) or "No tables discovered",
-        "schema_prompt": runtime.schema_prompt.strip() or "Schema prompt unavailable.",
+        "schema_prompt": "Structured-data schema unavailable in search-only mode.",
         "scenario_title": scenario["title"],
         "scenario_description": scenario["description"],
-        "structured_data_status": "Fabric SQL access is available for this scenario.",
-        "data_specialist_operating_mode": "Use read-only SQL against the Fabric Lakehouse to produce quantitative evidence.",
-        "runtime_mode": runtime.runtime_mode,
+        "structured_data_status": (
+            "Fabric is not configured for this scenario. Use document search only and state clearly when structured-data validation is unavailable."
+        ),
+        "data_specialist_operating_mode": (
+            "Use document search only. Extract operational facts, thresholds, examples, and caveats from the indexed documents instead of querying SQL."
+        ),
+        "runtime_mode": "search-only",
     }
 
 
@@ -74,7 +87,7 @@ def create_or_replace_agent(project_client, agent_name, definition, description)
 
 def main():
     args = parse_args()
-    runtime = WorkshopMultiAgentRuntime(require_fabric=True)
+    runtime = WorkshopMultiAgentRuntime(require_fabric=False)
     config_path = Path(args.config)
     if not config_path.is_absolute():
         config_path = runtime.project_root / config_path
@@ -98,7 +111,7 @@ def main():
         "workflow_name": workflow_config["workflow_name"],
         "config_path": str(config_path.relative_to(runtime.project_root)),
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "runtime_mode": runtime.runtime_mode,
+        "runtime_mode": "search-only",
         "scenarios": {},
     }
 
@@ -112,17 +125,20 @@ def main():
             }
 
             print("\n" + "=" * 60)
-            print(f"Creating multi-agent set for scenario: {scenario_key}")
+            print(
+                f"Creating search-only multi-agent set for scenario: {scenario_key}")
             print("=" * 60)
-            print(f"Runtime mode: {runtime.runtime_mode}")
+            print("Runtime mode: search-only")
 
             for agent_key, template in agent_templates.items():
+                requested_tool_mode = template["tool_mode"]
+                tool_mode = get_effective_tool_mode(requested_tool_mode)
                 agent_name = sanitize_agent_name(
-                    f"{runtime.solution_name}-{scenario_key}-{template['display_name_suffix']}"
+                    f"{runtime.solution_name}-{scenario_key}-{template['display_name_suffix']}-search"
                 )
                 instructions = template["instructions_template"].format(
                     **context)
-                tools = runtime.build_tools_for_mode(template["tool_mode"])
+                tools = runtime.build_tools_for_mode(tool_mode)
                 definition = PromptAgentDefinition(
                     model=model or "gpt-5.4-mini",
                     instructions=instructions,
@@ -133,22 +149,28 @@ def main():
                     project_client=project_client,
                     agent_name=agent_name,
                     definition=definition,
-                    description=f"{scenario['title']} - {agent_key}",
+                    description=f"{scenario['title']} - {agent_key} (search-only)",
                 )
 
                 output["scenarios"][scenario_key]["agents"][agent_key] = {
                     "id": agent.id,
                     "name": agent.name,
                     "version": agent.version,
-                    "tool_mode": template["tool_mode"],
+                    "tool_mode": tool_mode,
+                    "requested_tool_mode": requested_tool_mode,
                 }
-                print(f"[OK] {agent_key}: {agent.name} ({agent.id})")
+                if tool_mode != requested_tool_mode:
+                    print(
+                        f"[OK] {agent_key}: {agent.name} ({agent.id}) [search-only fallback from {requested_tool_mode}]"
+                    )
+                else:
+                    print(f"[OK] {agent_key}: {agent.name} ({agent.id})")
 
-    output_path = runtime.ids_output_path()
+    output_path = runtime.ids_output_path(OUTPUT_FILE_NAME)
     with open(output_path, "w", encoding="utf-8") as handle:
         json.dump(output, handle, indent=2)
 
-    print("\nSaved multi-agent metadata to:")
+    print("\nSaved search-only multi-agent metadata to:")
     print(f"  {output_path}")
 
 

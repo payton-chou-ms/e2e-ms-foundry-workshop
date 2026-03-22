@@ -4,20 +4,38 @@
 
 ### `14_create_multi_agent_workflow.py`
 
-用途：依照 `multi_agent/workflow.yaml` 建立多角色 agents。
+用途：依照 `multi_agent/workflow.yaml` 建立多角色 agents。這條是 **Fabric + Search** 完整版。
 
 ```bash
 python scripts/14_create_multi_agent_workflow.py
 python scripts/14_create_multi_agent_workflow.py --scenario policy_gap_analysis
 ```
 
+### `14b_create_multi_agent_search_only_workflow.py`
+
+用途：建立 **search-only** multi-agent 版本，不需要 Fabric。
+
+```bash
+python scripts/14b_create_multi_agent_search_only_workflow.py
+python scripts/14b_create_multi_agent_search_only_workflow.py --scenario policy_gap_analysis
+```
+
 ### `15_test_multi_agent_workflow.py`
 
-用途：執行 multi-agent workflow。
+用途：執行 **Fabric + Search** multi-agent workflow。
 
 ```bash
 python scripts/15_test_multi_agent_workflow.py --scenario policy_gap_analysis
 python scripts/15_test_multi_agent_workflow.py --scenario exception_triage --question "We saw an unusual spike in escalations. What policy applies and what does the data suggest?"
+```
+
+### `15b_test_multi_agent_search_only_workflow.py`
+
+用途：執行 **search-only** multi-agent workflow。
+
+```bash
+python scripts/15b_test_multi_agent_search_only_workflow.py --scenario policy_gap_analysis
+python scripts/15b_test_multi_agent_search_only_workflow.py --scenario exception_triage --question "We saw an unusual spike in escalations. What policy guidance applies?"
 ```
 
 ### `16_agent_framework_workflow_example.py`

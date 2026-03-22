@@ -2,6 +2,30 @@
 
 這一頁的目標不是檢查每一行 console log，而是幫你判斷「資料有沒有成功生成」以及「生成後我該看哪幾個地方」。
 
+## 先決定你要改哪一層
+
+如果你現在要自訂情境，先用下面這個簡單判斷：
+
+1. **只想換產業 / use case**：不用改 script 原始碼，改輸入值就好
+2. **想重新建整套 PoC**：跑 `00_build_solution.py --clean`
+3. **只想先看新資料長什麼樣子**：跑 `01_generate_sample_data.py`
+
+## 你實際會動到哪些 script
+
+大多數情況下，你只需要操作這兩支：
+
+1. `scripts/00_build_solution.py`
+2. `scripts/01_generate_sample_data.py`
+
+它們的分工很簡單：
+
+| script | 什麼時候用 | 會做什麼 |
+|--------|------------|-----------|
+| `00_build_solution.py` | 你要重建完整 PoC | 連資料、Fabric、Search、agent 一起重跑 |
+| `01_generate_sample_data.py` | 你只想先生成新的資料與文件 | 只產生新的 data folder，不重建後面資源 |
+
+`00_build_solution.py` 其實會把你提供的 `--industry`、`--usecase`、`--size` 往下傳給 `01_generate_sample_data.py`，所以第一次使用時，直接改 `00_build_solution.py` 的執行參數通常最省事。
+
 ## 執行 AI 產生器
 
 在 `.env` 設定完成後，產生客戶專屬資料：
@@ -23,6 +47,33 @@ python scripts/00_build_solution.py --clean \
   --industry "Insurance" \
   --usecase "Property insurance with claims processing and policy management"
 ```
+
+### 如果你只想重跑資料生成
+
+```bash
+python scripts/01_generate_sample_data.py \
+  --industry "Insurance" \
+  --usecase "Property insurance with claims processing and policy management" \
+  --size small
+```
+
+這種做法適合下面兩種情況：
+
+1. 你想先看 AI 生成的資料品質
+2. 你還沒決定要不要把這組資料正式建進 Fabric / Search / agent
+
+### 如果你是第一次自訂，建議直接用哪個？
+
+第一次使用時，建議直接用這個：
+
+```bash
+python scripts/00_build_solution.py --clean \
+  --industry "Your Industry" \
+  --usecase "Your use case description" \
+  --size small
+```
+
+因為這樣最不容易漏掉後面的步驟。
 
 ## 產生流程
 

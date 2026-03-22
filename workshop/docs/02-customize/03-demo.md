@@ -133,17 +133,9 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
 
     **下一步：** 閱讀 [深入解析](../03-understand/index.md) 以準備回答技術問題
 
-## 快速參考：替另一個產業使用案例重新產生
+## 如果你還要換另一個情境
 
-```bash
-# 修改 `.env` 中新的產業與使用案例，然後：
-python scripts/00_build_solution.py --clean
-
-# 或內嵌：
-python scripts/00_build_solution.py --clean \
-  --industry "New Industry" \
-  --usecase "New use case description"
-```
+請回到 [產生自訂資料](02-generate.md) 重新設定 `INDUSTRY` / `USECASE` 與執行命令。
 
 ---
 
