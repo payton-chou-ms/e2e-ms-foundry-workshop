@@ -23,11 +23,16 @@ def mask_secret_value(value):
     return f"{text[:visible]}{'*' * masked}{text[-visible:]}"
 
 
+def is_sensitive_env_name(name):
+    upper_name = name.upper()
+    return any(token in upper_name for token in ["KEY", "TOKEN", "SECRET", "PASSWORD"])
+
+
 def format_env_value(name, value, mask=False):
     if value is None or value == "":
         return "（未設定）"
 
-    if mask or any(token in name.upper() for token in ["KEY", "TOKEN", "SECRET", "PASSWORD"]):
+    if mask or is_sensitive_env_name(name):
         return mask_secret_value(value)
 
     return str(value)
@@ -45,6 +50,11 @@ def print_demo_header(title, description, env_items=None):
             name = item["name"]
             value = item.get("value")
             mask = item.get("mask", False)
+            if mask or is_sensitive_env_name(name):
+                status = "（已設定，已遮罩）" if value not in (None, "") else "（未設定）"
+                print(f"  - {name} = {status}")
+                continue
+
             print(f"  - {name} = {format_env_value(name, value, mask)}")
 
 
