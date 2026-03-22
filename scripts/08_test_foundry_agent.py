@@ -362,7 +362,7 @@ project_client = AIProjectClient(
 trace_session = configure_foundry_tracing(
     project_client=project_client,
     scenario_name="08_test_foundry_agent",
-    service_name="nc-iq-workshop.agent-chat",
+    service_name="e2e-ms-foundry-workshop.agent-chat",
 )
 
 if trace_session.enabled:

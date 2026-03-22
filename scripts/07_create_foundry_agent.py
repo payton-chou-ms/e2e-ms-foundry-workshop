@@ -234,7 +234,7 @@ except Exception as e:
 trace_session = configure_foundry_tracing(
     project_client=project_client,
     scenario_name="07_create_foundry_agent",
-    service_name="nc-iq-workshop.agent-create",
+    service_name="e2e-ms-foundry-workshop.agent-create",
 )
 
 if trace_session.enabled:

@@ -16,5 +16,5 @@
 
 如果你需要公開網站，請使用：
 
-- Workshop：https://nchandhi.github.io/nc-iq-workshop/
-- Repository：https://github.com/nchandhi/nc-iq-workshop
+- Workshop：https://payton-chou-ms.github.io/e2e-ms-foundry-workshop/
+- Repository：https://github.com/payton-chou-ms/e2e-ms-foundry-workshop

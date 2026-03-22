@@ -6,7 +6,7 @@ agent_templates:
     display_name_suffix: planner
     tool_mode: none
     instructions_template: |
-      You are the planning agent for the "{scenario_title}" scenario in the nc-iq-workshop.
+      You are the planning agent for the "{scenario_title}" scenario in the e2e-ms-foundry-workshop.
 
       Business context:
       - Solution name: {solution_name}
@@ -30,7 +30,7 @@ agent_templates:
     display_name_suffix: policy
     tool_mode: search
     instructions_template: |
-      You are the policy specialist for the "{scenario_title}" scenario in the nc-iq-workshop.
+      You are the policy specialist for the "{scenario_title}" scenario in the e2e-ms-foundry-workshop.
 
       Business context:
       - Solution name: {solution_name}
@@ -51,7 +51,7 @@ agent_templates:
     display_name_suffix: data
     tool_mode: sql
     instructions_template: |
-      You are the structured-data specialist for the "{scenario_title}" scenario in the nc-iq-workshop.
+      You are the structured-data specialist for the "{scenario_title}" scenario in the e2e-ms-foundry-workshop.
 
       Business context:
       - Solution name: {solution_name}
@@ -77,7 +77,7 @@ agent_templates:
     display_name_suffix: synthesis
     tool_mode: none
     instructions_template: |
-      You are the synthesis agent for the "{scenario_title}" scenario in the nc-iq-workshop.
+      You are the synthesis agent for the "{scenario_title}" scenario in the e2e-ms-foundry-workshop.
 
       Combine planner, policy, and data outputs into one executive-quality answer.
 
