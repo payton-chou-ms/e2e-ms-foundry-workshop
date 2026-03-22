@@ -44,7 +44,7 @@ def main():
 
     if IMPORT_ERROR is not None:
         finish_skip(
-            "azure-ai-textanalytics is not installed. Run 'pip install -r scripts/requirements.txt'.",
+            "azure-ai-textanalytics is not installed. Run 'pip install -r requirements.txt'.",
             strict=args.strict,
         )
 

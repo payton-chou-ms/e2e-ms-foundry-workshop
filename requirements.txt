@@ -1,6 +1,5 @@
-# Fabric Ontology Lab - Requirements
-# Install with: pip install -r scripts/requirements.txt
-# Versions locked for workshop consistency (February 2026)
+# Fabric Ontology Lab - Unified Requirements
+# Install with: pip install -r requirements.txt
 
 # Azure Authentication
 azure-identity==1.23.0
@@ -46,3 +45,8 @@ python-dotenv==1.1.0
 
 # Declarative workflow config
 PyYAML==6.0.2
+
+# Documentation site
+mkdocs>=1.5.0
+mkdocs-material>=9.5.0
+pymdown-extensions>=10.0

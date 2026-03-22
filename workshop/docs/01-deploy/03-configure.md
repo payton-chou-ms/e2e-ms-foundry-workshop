@@ -1,13 +1,13 @@
 # 設定開發環境
 
 !!! info "兩條路徑都會使用"
-    如果你是自己部署環境，本頁會幫你把環境接好
-    如果你拿到的是現成環境，本頁會幫你把本機 checkout 連接上去
+    不論你是自己部署 Azure 環境，還是使用別人已經部署好的環境
+    這一頁都會幫你完成本機端的開發環境和 `.env` 設定
 
 ## Python 環境
 
 !!! note "如果你使用 Dev Container 或 Codespaces"
-    這份 workshop 的 Dev Container 會在建立環境時自動安裝 `scripts/requirements.txt` 與 `workshop/requirements.txt`
+    這份 workshop 的 Dev Container 會在建立環境時自動安裝根目錄 `requirements.txt`
     如果你是用 Dev Container 或 Codespaces 開啟專案，通常可以直接跳過下面的安裝步驟
     只有在你是本機 Python 環境、或想重新安裝相依套件時，才需要手動執行
 
@@ -31,30 +31,12 @@ python -m venv .venv
 
 ### 安裝相依套件
 
-=== "本機快速安裝（選用）"
+```bash
+pip install -r requirements.txt
+```
 
-    ```bash
-    pip install uv && uv pip install -r scripts/requirements.txt
-    ```
-
-=== "本機標準安裝"
-
-    ```bash
-    pip install -r scripts/requirements.txt
-    ```
-
-=== "如果你也要本機建置文件站台"
-
-    ```bash
-    pip install -r scripts/requirements.txt -r workshop/requirements.txt
-    ```
-
-!!! note "目前沒有根目錄 requirements.txt"
-    Workshop 腳本相依套件在 `scripts/requirements.txt`，MkDocs 站台相依套件在 `workshop/requirements.txt`
-
-!!! note "`uv` 不是 Dev Container 的預設必要前提"
-    如果你想用 `uv`，可以像上面那樣先安裝再使用
-    但對第一次操作的同仁來說，直接執行標準安裝就夠了
+!!! note "這一份已包含全部相依套件"
+    根目錄 `requirements.txt` 已包含 workshop 腳本與文件站台所需套件
 
 ### 驗證設定
 
