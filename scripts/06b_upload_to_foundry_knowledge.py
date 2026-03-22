@@ -95,7 +95,6 @@ def main():
     print("\nCreating vector store...")
     vector_store = openai_client.vector_stores.create(
         name=vector_store_name,
-        description=f"Foundry IQ file-search store for {SOLUTION_NAME}",
     )
     print(f"[OK] Vector store created: {vector_store.id}")
 
