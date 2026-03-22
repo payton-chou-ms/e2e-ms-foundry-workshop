@@ -66,7 +66,14 @@ nav:
       - 建立 Fabric 工作區: 01-deploy/02-setup-fabric.md
       - 設定開發環境: 01-deploy/03-configure.md
       - 建置方案: 01-deploy/04-run-scenario.md
-      - 腳本用途與執行順序: 01-deploy/05-script-sequence.md
+      - Microsoft Foundry / Fabric 手動實驗流程: 01-deploy/04a-manual-experiments.md
+      - 腳本用途與執行順序:
+          - 總覽: 01-deploy/05-script-sequence.md
+          - 快速建置與測試: 01-deploy/05a-script-core-paths.md
+          - 主流程腳本 01-08: 01-deploy/05b-script-core-pipeline.md
+          - 選配 demo 09-13: 01-deploy/05c-script-optional-demos.md
+          - Browser Automation 補充設定: 01-deploy/05d-browser-automation-setup.md
+          - Multi-agent 與進階範例: 01-deploy/05e-script-advanced.md
   - 依使用案例自訂:
       - 總覽: 02-customize/index.md
       - 產生與建置: 02-customize/02-generate.md

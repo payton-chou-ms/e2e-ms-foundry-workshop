@@ -171,16 +171,9 @@ azd up --environment <environment-name>
 !!! note "無需手動設定"
     你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取
 
-!!! note "Browser Automation 的最後一段仍需手動"
-    `azd up` 會自動建立 Playwright Workspace，但 Browser Automation 仍需要你手動補完 Foundry project 中的 Browser Automation connection
-
-    - 到 Azure Portal 的 Playwright Workspace，進入 Settings > Access Management 產生 Access token，再到 Overview 複製 Browser endpoint（`wss://...`）
-    - 到 Foundry project 的 Build > Tools > Connect a tool > Browser Automation，貼上 Browser endpoint 和 Access token
-    - connection 建好後，把 Project connection ID 寫入專案根目錄 `.env` 的 `AZURE_PLAYWRIGHT_CONNECTION_ID`
-    - 官方說明：
-      [Browser Automation setup](https://learn.microsoft.com/azure/foundry/agents/how-to/tools/browser-automation#set-up-browser-automation)
-      [Manage authentication for Playwright Workspaces](https://learn.microsoft.com/azure/app-testing/playwright-workspaces/how-to-manage-authentication)
-      [Manage workspace access tokens](https://learn.microsoft.com/azure/app-testing/playwright-workspaces/how-to-manage-access-tokens)
+!!! note "Browser Automation 先不用現在處理"
+    `azd up` 只會先建立 Playwright Workspace。
+    等你真的要測 `10_demo_browser_automation.py` 時，再去完成 Browser Automation connection 設定即可。
 
 ---
 

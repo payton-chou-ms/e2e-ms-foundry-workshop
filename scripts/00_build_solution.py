@@ -44,15 +44,19 @@ STEPS = {
     "04": {"script": "04_generate_agent_prompt.py", "name": "Generate Agent Prompt", "time": "~5s"},
     "05": {"script": "05_create_fabric_agent.py", "name": "Create Fabric Data Agent", "time": "~30s"},
     "06": {"script": "06_upload_to_search.py", "name": "Upload to AI Search", "time": "~1min"},
+    "06b": {"script": "06b_upload_to_foundry_knowledge.py", "name": "Upload to Foundry File Search", "time": "~1min"},
     "07": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent", "time": "~10s"},
+    "07b": {"script": "07b_create_foundry_iq_agent.py", "name": "Create Foundry IQ Agent", "time": "~10s"},
     "07-search": {"script": "07_create_foundry_agent.py", "name": "Create Foundry Agent (Search Only)", "time": "~10s", "args": ["--foundry-only"]},
     "08": {"script": "08_test_foundry_agent.py", "name": "Test Foundry Agent", "time": "interactive"},
+    "08b": {"script": "08b_test_foundry_iq_agent.py", "name": "Test Foundry IQ Agent", "time": "interactive"},
     "cu-defaults": {"script": None, "name": "Configure Content Understanding Defaults", "time": "~5s"},
 }
 
 # Default pipeline order
 DEFAULT_PIPELINE = ["01", "02", "03", "04", "05", "06", "07"]
 FOUNDRY_ONLY_PIPELINE = ["cu-defaults", "01", "06", "07-search"]
+FOUNDRY_IQ_PIPELINE = ["01", "06b", "07b"]
 
 # ============================================================================
 # Parse Arguments
@@ -73,6 +77,8 @@ Examples:
 
 parser.add_argument("--foundry-only", action="store_true",
                     help="Foundry-only mode: skip Fabric entirely, use AI Search only")
+parser.add_argument("--foundry-iq", action="store_true",
+                    help="Foundry-native IQ mode: build a File Search agent for use directly in Foundry")
 parser.add_argument("--industry", type=str,
                     help="Industry for data generation (overrides .env)")
 parser.add_argument("--usecase", type=str,
@@ -105,10 +111,16 @@ args = parser.parse_args()
 # Determine Pipeline
 # ============================================================================
 
+if args.foundry_only and args.foundry_iq:
+    print("ERROR: --foundry-only and --foundry-iq cannot be used together")
+    sys.exit(1)
+
 if args.only:
     pipeline = args.only
 elif args.foundry_only:
     pipeline = FOUNDRY_ONLY_PIPELINE.copy()
+elif args.foundry_iq:
+    pipeline = FOUNDRY_IQ_PIPELINE.copy()
 else:
     pipeline = DEFAULT_PIPELINE.copy()
 
@@ -195,7 +207,10 @@ if "01" in pipeline:
 # ============================================================================
 
 print("\n" + "="*60)
-print("Foundry IQ + Fabric IQ Pipeline")
+if args.foundry_iq:
+    print("Foundry-native IQ Pipeline")
+else:
+    print("Foundry IQ + Fabric IQ Pipeline")
 print("="*60)
 
 print(f"\nSteps ({len(pipeline)}):")
@@ -325,5 +340,7 @@ else:
     print("[OK] Pipeline completed successfully!")
     if args.foundry_only:
         print("\nNext: python scripts/08_test_foundry_agent.py --foundry-only")
+    elif args.foundry_iq:
+        print("\nNext: python scripts/08b_test_foundry_iq_agent.py")
     else:
         print("\nNext: python scripts/08_test_foundry_agent.py")
