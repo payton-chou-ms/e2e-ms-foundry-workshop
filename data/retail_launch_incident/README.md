@@ -20,23 +20,35 @@
 
 ## 素材清單
 
-### 要上傳到 Knowledge 的文件
+### 要準備成 Knowledge 與檢索資料的文件
 
 資料夾：[data/retail_launch_incident/documents](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents)
 
-上傳到 `retail-store-ops-kb`：
+這些 PDF 不需要再手動上傳。請直接執行：
+
+```bash
+python data/retail_launch_incident/prepare_search_and_blob_assets.py
+python scripts/06b_upload_to_foundry_knowledge.py
+```
+
+這個流程會自動完成三件事：
+
+1. 把 PDF 原檔上傳到 Blob Storage
+2. 把 PDF 內容切 chunk 後寫進 Azure AI Search
+3. 用 Search index 建立 Foundry IQ knowledge base
+
+會被處理的 PDF：
 
 1. `store_incident_playbook.pdf`
 2. `shift_lead_response_guide.pdf`
-
-上傳到 `retail-launch-comms-kb`：
-
-1. `launch_campaign_brief.pdf`
-2. `customer_message_guidelines.pdf`
+3. `launch_campaign_brief.pdf`
+4. `customer_message_guidelines.pdf`
 
 ### 可拿來做資料查詢或結構化分析的表格
 
 資料夾：[data/retail_launch_incident/tables](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/tables)
+
+這些 CSV 也不需要手動上傳。上面的 script 會自動把它們轉成可檢索的 Search 文件。
 
 1. `launch_incidents.csv`
 2. `store_response_actions.csv`
@@ -52,7 +64,7 @@
 整場 demo 建議照這個順序：
 
 1. 在 `Discover / Models` 先測試模型理解情境的能力
-2. 在 `Build / Knowledge` 上傳兩組知識文件
+2. 先執行 script，讓 PDF 與 CSV 自動進入 Blob Storage / Azure AI Search / Foundry Knowledge
 3. 在 `Build / Agents` 建兩個 specialist agents
 4. 再補一個 router agent 和一個 coordinator agent
 5. 在 workflow 裡把前面幾個 agent 串起來
@@ -61,7 +73,7 @@
 如果只做最短版 demo：
 
 1. 先在 `Discover / Models` 貼入事件描述
-2. 再建立兩個 knowledge 並上傳四份 PDF
+2. 先執行資料準備 script，再確認 knowledge 已建立完成
 3. 建立兩個 specialist agents
 4. 用一個 workflow 把結果整合起來
 
@@ -104,35 +116,35 @@
 ### 對學員解說
 
 ```text
-第二步，我們把這個情境需要的知識文件放進 Foundry。這裡會分成兩組，一組是門市營運應變文件，一組是對客溝通文件。這樣後面的 agent 不會全部混在一起。
+第二步，我們不在 Foundry 介面裡手動上傳檔案，而是直接跑一支 scenario script。這支 script 會把 PDF 原檔放到 Blob Storage，接著把 PDF 內容與 CSV 資料都寫進 Azure AI Search，最後再由 workshop script 建立 Foundry IQ knowledge base。這樣學員之後重做時只要跑指令，不用逐頁點選上傳。
 ```
 
-### 這時候要建立
+### 這時候請執行
 
-```text
-retail-store-ops-kb
-retail-launch-comms-kb
+```bash
+python data/retail_launch_incident/prepare_search_and_blob_assets.py
+python scripts/06b_upload_to_foundry_knowledge.py
 ```
 
-### 這時候要上傳
-
-貼到 `retail-store-ops-kb`：
+### 這一步完成後會得到
 
 ```text
-store_incident_playbook.pdf
-shift_lead_response_guide.pdf
+1. Blob Storage 裡的 PDF 原檔
+2. Azure AI Search 裡的文件索引與表格索引
+3. 可供 Foundry IQ agent 使用的 knowledge base 與 project connection
 ```
 
-貼到 `retail-launch-comms-kb`：
-
 ```text
-launch_campaign_brief.pdf
-customer_message_guidelines.pdf
+這一段是 script-first 的 Foundry IQ 路徑，目的是讓學員快速重做資料準備與 knowledge 建立。
+
+如果你後面要繼續做 portal 裡的 specialist agents / workflow 示範，README 後面的段落仍然是在說明 portal 示範時的人工作業方式。
 ```
 
 ---
 
 ## Step 3：Build / Agents
+
+這一步開始，是切回 portal 裡的手動 specialist agent / workflow 示範路徑。
 
 ### 對學員解說
 

@@ -18,7 +18,7 @@ from azure.search.documents.indexes.models import (
 from azure.search.documents.indexes import SearchIndexClient
 from azure.search.documents import SearchClient
 from openai import AzureOpenAI
-from azure.identity import DefaultAzureCredential
+from azure.identity import get_bearer_token_provider
 import os
 import sys
 import json
@@ -26,6 +26,7 @@ import re
 from pathlib import Path
 
 # Load environment from azd + project .env
+from credential_utils import get_credential
 from load_env import load_all_env, get_required_env, print_env_status
 load_all_env()
 
@@ -93,13 +94,13 @@ def get_openai_client():
     if not AZURE_AI_ENDPOINT:
         raise ValueError("未設定 AZURE_AI_PROJECT_ENDPOINT")
 
-    credential = DefaultAzureCredential()
-    token = credential.get_token(
-        "https://cognitiveservices.azure.com/.default")
+    credential = get_credential()
 
     return AzureOpenAI(
         azure_endpoint=AZURE_AI_ENDPOINT,
-        api_key=token.token,
+        azure_ad_token_provider=get_bearer_token_provider(
+            credential, "https://cognitiveservices.azure.com/.default"
+        ),
         api_version="2024-10-21",
     )
 
@@ -110,7 +111,7 @@ def get_openai_client():
 
 def get_search_clients():
     """Create Azure Search clients."""
-    credential = DefaultAzureCredential()
+    credential = get_credential()
     index_client = SearchIndexClient(AZURE_AI_SEARCH_ENDPOINT, credential)
     search_client = SearchClient(
         AZURE_AI_SEARCH_ENDPOINT, INDEX_NAME, credential)

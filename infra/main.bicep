@@ -165,8 +165,6 @@ module foundry './modules/foundry.bicep' = {
     imageDeploymentName: imageOpenAIDeploymentName
     imageModelName: imageOpenAIModelName
     imageModelVersion: imageOpenAIModelVersion
-    imageDeploymentSkuName: imageOpenAIDeploymentSkuName
-    imageDeploymentCapacity: imageOpenAIDeploymentCapacity
     deployingUserPrincipalId: deployingUserPrincipalId
   }
 }
@@ -235,6 +233,9 @@ output AZURE_IMAGE_OPENAI_LOCATION string = deployImageModel ? aiDeploymentsLoca
 output AZURE_IMAGE_MODEL_DEPLOYMENT string = deployImageModel ? foundry.outputs.imageDeploymentName : ''
 output AZURE_IMAGE_MODEL_NAME string = deployImageModel ? foundry.outputs.imageModelName : ''
 output AZURE_IMAGE_MODEL_VERSION string = deployImageModel ? foundry.outputs.imageModelVersion : ''
+output AZURE_IMAGE_MODEL_SKU string = deployImageModel ? imageOpenAIDeploymentSkuName : ''
+output AZURE_IMAGE_MODEL_CAPACITY string = deployImageModel ? string(imageOpenAIDeploymentCapacity) : ''
+output AZURE_IMAGE_MODEL_STATUS string = deployImageModel ? 'pending' : 'disabled'
 output AZURE_PLAYWRIGHT_WORKSPACE_NAME string = deployBrowserAutomation
   ? playwrightWorkspace!.outputs.workspaceName
   : ''

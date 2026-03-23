@@ -1,8 +1,8 @@
 """建立使用 MCP knowledge base 工具的 Foundry IQ agent。"""
 
 from azure.ai.projects import AIProjectClient
+from credential_utils import get_credential
 from load_env import load_all_env
-from azure.identity import DefaultAzureCredential
 from azure.ai.projects.models import MCPTool, PromptAgentDefinition
 from foundry_trace import configure_foundry_tracing
 from pathlib import Path
@@ -101,7 +101,7 @@ print(f"Project Connection ID：{project_connection_id}")
 
 project_client = AIProjectClient(
     endpoint=PROJECT_ENDPOINT,
-    credential=DefaultAzureCredential(),
+    credential=get_credential(),
 )
 
 trace_session = configure_foundry_tracing(

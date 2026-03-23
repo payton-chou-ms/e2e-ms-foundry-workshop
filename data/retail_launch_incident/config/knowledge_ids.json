@@ -1,0 +1,101 @@
+{
+  "knowledge_type": "azure_search_knowledge_base",
+  "search_endpoint": "https://srch-danedkbf5d5cst.search.windows.net",
+  "search_index_name": "danedkbf5d5cst-retail_launch_incident-documents",
+  "search_index_names": [
+    "danedkbf5d5cst-retail_launch_incident-documents",
+    "danedkbf5d5cst-retail_launch_incident-tables"
+  ],
+  "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-documents-source",
+  "knowledge_source_names": [
+    "danedkbf5d5cst-retail-launch-incident-documents-source",
+    "danedkbf5d5cst-retail-launch-incident-tables-source"
+  ],
+  "search_sources": [
+    {
+      "index_name": "danedkbf5d5cst-retail_launch_incident-documents",
+      "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-documents-source",
+      "source_data_fields": [
+        "content",
+        "title",
+        "source",
+        "page_number",
+        "chunk_id"
+      ],
+      "search_fields": [
+        "content",
+        "title"
+      ],
+      "semantic_configuration_name": "default-semantic",
+      "kind": "document_chunks",
+      "document_count": 5,
+      "source_files": [
+        "customer_message_guidelines.pdf",
+        "launch_campaign_brief.pdf",
+        "shift_lead_response_guide.pdf",
+        "store_incident_playbook.pdf"
+      ]
+    },
+    {
+      "index_name": "danedkbf5d5cst-retail_launch_incident-tables",
+      "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-tables-source",
+      "source_data_fields": [
+        "content",
+        "title",
+        "source",
+        "page_number",
+        "chunk_id"
+      ],
+      "search_fields": [
+        "content",
+        "title"
+      ],
+      "semantic_configuration_name": "default-semantic",
+      "kind": "table_rows",
+      "document_count": 8,
+      "source_files": [
+        "launch_incidents.csv",
+        "store_response_actions.csv"
+      ]
+    }
+  ],
+  "knowledge_base_name": "danedkbf5d5cst-foundry-iq-kb",
+  "project_connection_name": "danedkbf5d5cst-foundry-iq-connection",
+  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-fdry-payton-1/providers/Microsoft.CognitiveServices/accounts/aisa-danedkbf5d5cst/projects/aifp-danedkbf5d5cst/connections/danedkbf5d5cst-foundry-iq-connection",
+  "mcp_endpoint": "https://srch-danedkbf5d5cst.search.windows.net/knowledgebases/danedkbf5d5cst-foundry-iq-kb/mcp?api-version=2025-11-01-preview",
+  "document_count": 13,
+  "pdf_files": [
+    "customer_message_guidelines.pdf",
+    "launch_campaign_brief.pdf",
+    "shift_lead_response_guide.pdf",
+    "store_incident_playbook.pdf"
+  ],
+  "table_files": [
+    "launch_incidents.csv",
+    "store_response_actions.csv"
+  ],
+  "blob_files": [
+    {
+      "name": "customer_message_guidelines.pdf",
+      "blob_name": "retail_launch_incident/documents/customer_message_guidelines.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/customer_message_guidelines.pdf"
+    },
+    {
+      "name": "launch_campaign_brief.pdf",
+      "blob_name": "retail_launch_incident/documents/launch_campaign_brief.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/launch_campaign_brief.pdf"
+    },
+    {
+      "name": "shift_lead_response_guide.pdf",
+      "blob_name": "retail_launch_incident/documents/shift_lead_response_guide.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/shift_lead_response_guide.pdf"
+    },
+    {
+      "name": "store_incident_playbook.pdf",
+      "blob_name": "retail_launch_incident/documents/store_incident_playbook.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/store_incident_playbook.pdf"
+    }
+  ],
+  "source_folder": "data/retail_launch_incident/documents",
+  "status": "ready"
+}
