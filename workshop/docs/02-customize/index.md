@@ -5,6 +5,10 @@
 !!! info "何時使用本節"
     請在完成 [管理員部署](../01-deploy/00-admin-deploy-share.md) 或 [參與者執行與驗證](../01-deploy/00-participant-run-validate.md) 之後再開始
 
+!!! example "想直接用現成情境示範"
+    如果你不想先從零設計產業資料，可以直接使用 [零售手動 demo](04-retail-manual-demo.md)。
+    那一頁整理了一個可直接在 Foundry portal 展示的零售新品上市 incident 情境，包含素材、agent 分工、workflow 串接方式，以及最後如何驗證 image prompt。
+
 ## 你需要提供的輸入
 
 只需提供兩個輸入：

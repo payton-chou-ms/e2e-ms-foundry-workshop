@@ -1,5 +1,9 @@
 # 建置與測試（自訂 PoC）
 
+!!! example "想先看一個完整手動示範"
+    如果你想展示一個已經整理好的 Foundry portal 多 agent 情境，可直接接著閱讀 [零售手動 demo](04-retail-manual-demo.md)。
+    那一頁會帶你從素材、specialist agents、router / coordinator 到 image prompt 驗證走一遍。
+
 ## 測試你的方案
 
 產生完成後，測試代理程式：
@@ -131,7 +135,10 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
     - [x] 結合來源回答複雜問題
     - [x] 使用產業適當的用語
 
-    **下一步：** 閱讀 [深入解析](../03-understand/index.md) 以準備回答技術問題
+    **下一步：**
+
+    - 如果你要展示一個現成的 portal workflow 情境，閱讀 [零售手動 demo](04-retail-manual-demo.md)
+    - 如果你要準備技術問答，閱讀 [深入解析](../03-understand/index.md)
 
 ## 如果你還要換另一個情境
 
@@ -139,4 +146,4 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
 
 ---
 
-[← 產生與建置](02-generate.md) | [深入解析 →](../03-understand/index.md)
+[← 產生與建置](02-generate.md) | [零售手動 demo →](04-retail-manual-demo.md)
