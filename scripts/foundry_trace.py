@@ -58,6 +58,9 @@ def configure_foundry_tracing(project_client, scenario_name, service_name):
         os.environ.setdefault(
             "AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED", "true"
         )
+        os.environ.setdefault(
+            "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT", "true"
+        )
 
     connection_string = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
 

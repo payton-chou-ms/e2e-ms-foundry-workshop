@@ -14,6 +14,7 @@ from azure.ai.projects.models import PromptAgentDefinition
 from azure.identity import DefaultAzureCredential
 
 from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
+from foundry_trace import configure_foundry_tracing
 
 
 def parse_args():
@@ -71,7 +72,8 @@ def build_instruction_context(runtime, scenario):
     }
 
 
-def create_or_replace_agent(project_client, agent_name, definition, description):
+def create_or_replace_agent(project_client, agent_name, definition, description,
+                           trace_session=None):
     try:
         existing = project_client.agents.get(agent_name)
     except Exception:
@@ -79,6 +81,14 @@ def create_or_replace_agent(project_client, agent_name, definition, description)
 
     if existing:
         project_client.agents.delete(agent_name)
+
+    if trace_session:
+        with trace_session.span("create-agent"):
+            return project_client.agents.create_version(
+                agent_name=agent_name,
+                definition=definition,
+                description=description,
+            )
 
     return project_client.agents.create_version(
         agent_name=agent_name,
@@ -108,6 +118,17 @@ def main():
     credential = DefaultAzureCredential()
     project_client = AIProjectClient(
         endpoint=runtime.project_endpoint, credential=credential)
+
+    trace_session = configure_foundry_tracing(
+        project_client=project_client,
+        scenario_name="14_create_multi_agent_workflow",
+        service_name="e2e-ms-foundry-workshop.multi-agent-create",
+    )
+
+    if trace_session.enabled:
+        print("[OK] 已啟用 Foundry tracing")
+    elif trace_session.warning:
+        print(f"警告：{trace_session.warning}")
 
     output = {
         "workflow_name": workflow_config["workflow_name"],
@@ -151,6 +172,7 @@ def main():
                     agent_name=agent_name,
                     definition=definition,
                     description=f"{scenario['title']} - {agent_key}",
+                    trace_session=trace_session,
                 )
 
                 output["scenarios"][scenario_key]["agents"][agent_key] = {

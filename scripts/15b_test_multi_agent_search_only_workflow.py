@@ -10,6 +10,7 @@ from azure.identity import DefaultAzureCredential
 
 from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
 from scripts_15_shared import get_agent, run_prompt_agent_step
+from foundry_trace import configure_foundry_tracing
 
 
 OUTPUT_FILE_NAME = "multi_agent_search_ids.json"
@@ -77,6 +78,17 @@ def main():
         endpoint=runtime.project_endpoint, credential=credential)
     openai_client = project_client.get_openai_client()
 
+    trace_session = configure_foundry_tracing(
+        project_client=project_client,
+        scenario_name="15b_test_multi_agent_search_only_workflow",
+        service_name="e2e-ms-foundry-workshop.multi-agent-search-test",
+    )
+
+    if trace_session.enabled:
+        print("追蹤：已啟用")
+    elif trace_session.warning:
+        print(f"追蹤：{trace_session.warning}")
+
     context = {
         "scenario_title": scenario["title"],
         "scenario_description": scenario["description"],
@@ -97,20 +109,24 @@ def main():
             prompt = step["prompt_template"].format(**context, **outputs)
 
             agent_record = scenario_ids[agent_key]
-            agent = get_agent(project_client, agent_record)
+            with trace_session.span("get-agent"):
+                agent = get_agent(project_client, agent_record, trace_session=trace_session)
             definition = agent.versions["latest"]["definition"]
-            conversation = openai_client.conversations.create()
+            with trace_session.span("create-conversation"):
+                conversation = openai_client.conversations.create()
 
             print("\n" + "=" * 60)
             print(f"Step: {step_id} ({agent_key})")
             print("=" * 60)
-            result = run_prompt_agent_step(
-                openai_client=openai_client,
-                definition=definition,
-                conversation_id=conversation.id,
-                message=prompt,
-                runtime=runtime,
-            )
+            with trace_session.span(f"workflow-step-{step_id}"):
+                result = run_prompt_agent_step(
+                    openai_client=openai_client,
+                    definition=definition,
+                    conversation_id=conversation.id,
+                    message=prompt,
+                    runtime=runtime,
+                    trace_session=trace_session,
+                )
             outputs[step_id] = result
             print(result or "(no content returned)")
 

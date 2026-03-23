@@ -9,6 +9,7 @@ from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 
 from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
+from foundry_trace import configure_foundry_tracing
 
 
 def parse_args():
@@ -56,18 +57,22 @@ def get_agent(project_client, agent_record):
     raise ValueError("Agent metadata does not contain a usable name or id")
 
 
-def run_prompt_agent_step(openai_client, definition, conversation_id, message, runtime):
+def run_prompt_agent_step(openai_client, definition, conversation_id, message,
+                          runtime, trace_session=None):
+    from foundry_trace import TraceSession
+    ts = trace_session or TraceSession(enabled=False)
     model = definition["model"]
     instructions = definition["instructions"]
     tools = definition.get("tools", [])
 
-    response = openai_client.responses.create(
-        model=model,
-        input=message,
-        instructions=instructions,
-        tools=tools,
-        conversation={"id": conversation_id},
-    )
+    with ts.span("create-response"):
+        response = openai_client.responses.create(
+            model=model,
+            input=message,
+            instructions=instructions,
+            tools=tools,
+            conversation={"id": conversation_id},
+        )
 
     final_text = ""
 
@@ -88,12 +93,14 @@ def run_prompt_agent_step(openai_client, definition, conversation_id, message, r
         for function_call in function_calls:
             arguments = json.loads(function_call.arguments)
             if function_call.name == "search_documents":
-                result = runtime.search_documents(
-                    query=arguments.get("query", ""),
-                    top=arguments.get("top"),
-                )
+                with ts.span("tool-search-documents"):
+                    result = runtime.search_documents(
+                        query=arguments.get("query", ""),
+                        top=arguments.get("top"),
+                    )
             elif function_call.name == "execute_sql":
-                result = runtime.execute_sql(arguments.get("sql_query", ""))
+                with ts.span("tool-execute-sql"):
+                    result = runtime.execute_sql(arguments.get("sql_query", ""))
             else:
                 result = f"Unknown function: {function_call.name}"
 
@@ -105,13 +112,14 @@ def run_prompt_agent_step(openai_client, definition, conversation_id, message, r
                 }
             )
 
-        response = openai_client.responses.create(
-            model=model,
-            input=tool_outputs,
-            instructions=instructions,
-            tools=tools,
-            conversation={"id": conversation_id},
-        )
+        with ts.span("create-followup-response"):
+            response = openai_client.responses.create(
+                model=model,
+                input=tool_outputs,
+                instructions=instructions,
+                tools=tools,
+                conversation={"id": conversation_id},
+            )
 
     return final_text.strip()
 
@@ -149,6 +157,17 @@ def main():
         endpoint=runtime.project_endpoint, credential=credential)
     openai_client = project_client.get_openai_client()
 
+    trace_session = configure_foundry_tracing(
+        project_client=project_client,
+        scenario_name="15_test_multi_agent_workflow",
+        service_name="e2e-ms-foundry-workshop.multi-agent-test",
+    )
+
+    if trace_session.enabled:
+        print("追蹤：已啟用")
+    elif trace_session.warning:
+        print(f"追蹤：{trace_session.warning}")
+
     context = {
         "scenario_title": scenario["title"],
         "scenario_description": scenario["description"],
@@ -169,20 +188,24 @@ def main():
             prompt = step["prompt_template"].format(**context, **outputs)
 
             agent_record = scenario_ids[agent_key]
-            agent = get_agent(project_client, agent_record)
+            with trace_session.span("get-agent"):
+                agent = get_agent(project_client, agent_record)
             definition = agent.versions["latest"]["definition"]
-            conversation = openai_client.conversations.create()
+            with trace_session.span("create-conversation"):
+                conversation = openai_client.conversations.create()
 
             print("\n" + "=" * 60)
             print(f"Step: {step_id} ({agent_key})")
             print("=" * 60)
-            result = run_prompt_agent_step(
-                openai_client=openai_client,
-                definition=definition,
-                conversation_id=conversation.id,
-                message=prompt,
-                runtime=runtime,
-            )
+            with trace_session.span(f"workflow-step-{step_id}"):
+                result = run_prompt_agent_step(
+                    openai_client=openai_client,
+                    definition=definition,
+                    conversation_id=conversation.id,
+                    message=prompt,
+                    runtime=runtime,
+                    trace_session=trace_session,
+                )
             outputs[step_id] = result
             print(result or "(no content returned)")
 
