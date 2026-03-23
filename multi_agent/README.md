@@ -11,8 +11,8 @@ It is intentionally separate from the main pipeline:
 ## What gets added
 
 - `workflow.yaml`: declarative scenario and agent design
-- `scripts/14_create_multi_agent_workflow.py`: creates scenario-specific prompt agents in Foundry
-- `scripts/15_test_multi_agent_workflow.py`: runs the planner → policy → data → synthesis workflow
+- `scripts/15_test_multi_agent_workflow.py`: refreshes the scenario-specific prompt agents in Foundry, then runs the planner → policy → data → synthesis workflow
+- `scripts/15b_test_multi_agent_search_only_workflow.py`: refreshes the search-only prompt agents, then runs the same workflow without Fabric
 - `scripts/16_agent_framework_workflow_example.py`: minimal code-first workflow using Microsoft Agent Framework
 
 ## Architecture
@@ -29,8 +29,8 @@ Both paths reuse the same workshop foundations.
 File mapping for the diagram:
 
 - Workflow YAML = `multi_agent/workflow.yaml`
-- Create workflow script = `scripts/14_create_multi_agent_workflow.py`
-- Test workflow script = `scripts/15_test_multi_agent_workflow.py`
+- Fabric + Search workflow script = `scripts/15_test_multi_agent_workflow.py`
+- Search-only workflow script = `scripts/15b_test_multi_agent_search_only_workflow.py`
 - Agent Framework example script = `scripts/16_agent_framework_workflow_example.py`
 
 Read the diagram left to right as two ways to extend the same workshop:
@@ -55,16 +55,10 @@ This is a true multi-agent pattern, but it still uses the current workshop's loc
 
 ## Usage
 
-Create all scenario agents:
-
-```bash
-python scripts/14_create_multi_agent_workflow.py
-```
-
 Run one scenario with its default sample question:
 
 ```bash
-python scripts/15_test_multi_agent_workflow.py --scenario policy_gap_analysis
+python scripts/15_test_multi_agent_workflow.py
 ```
 
 Run one scenario with a custom question:
@@ -73,6 +67,12 @@ Run one scenario with a custom question:
 python scripts/15_test_multi_agent_workflow.py \
   --scenario exception_triage \
   --question "We saw an unusual spike in escalations. What policy applies and what does the data suggest?"
+```
+
+Run the search-only path with its default sample question:
+
+```bash
+python scripts/15b_test_multi_agent_search_only_workflow.py
 ```
 
 ## Output model

@@ -2,38 +2,22 @@
 
 這些不是基本 workshop 必跑步驟。它們是給你在主流程跑通之後，往 multi-agent workflow 或新版 Agent Framework 延伸用的。
 
-### `14_create_multi_agent_workflow.py`
-
-用途：依照 `multi_agent/workflow.yaml` 建立多角色 agents。這條是 **Fabric + Search** 完整版。
-
-```bash
-python scripts/14_create_multi_agent_workflow.py
-python scripts/14_create_multi_agent_workflow.py --scenario policy_gap_analysis
-```
-
-### `14b_create_multi_agent_search_only_workflow.py`
-
-用途：建立 **search-only** multi-agent 版本，不需要 Fabric。
-
-```bash
-python scripts/14b_create_multi_agent_search_only_workflow.py
-python scripts/14b_create_multi_agent_search_only_workflow.py --scenario policy_gap_analysis
-```
-
 ### `15_test_multi_agent_workflow.py`
 
-用途：執行 **Fabric + Search** multi-agent workflow。
+用途：**單一入口** 的 Fabric + Search multi-agent demo。預設會先依照 `multi_agent/workflow.yaml` 建立或更新指定 scenario 的 agents，然後立刻執行整條 workflow。
 
 ```bash
+python scripts/15_test_multi_agent_workflow.py
 python scripts/15_test_multi_agent_workflow.py --scenario policy_gap_analysis
 python scripts/15_test_multi_agent_workflow.py --scenario exception_triage --question "We saw an unusual spike in escalations. What policy applies and what does the data suggest?"
 ```
 
 ### `15b_test_multi_agent_search_only_workflow.py`
 
-用途：執行 **search-only** multi-agent workflow。
+用途：**單一入口** 的 search-only multi-agent demo。不需要 Fabric，預設會先建立或更新指定 scenario 的 search-only agents，然後立刻執行整條 workflow。
 
 ```bash
+python scripts/15b_test_multi_agent_search_only_workflow.py
 python scripts/15b_test_multi_agent_search_only_workflow.py --scenario policy_gap_analysis
 python scripts/15b_test_multi_agent_search_only_workflow.py --scenario exception_triage --question "We saw an unusual spike in escalations. What policy guidance applies?"
 ```

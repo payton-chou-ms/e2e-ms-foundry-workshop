@@ -153,8 +153,8 @@ Foundry runtime 官方文件一直在講三個核心元件：
 
 | 路徑 | 你會看到什麼 | 適合先學什麼 |
 |------|---------------|----------------|
-| 宣告式 workflow 路徑 | `multi_agent/workflow.yaml`、`scripts/14_create_multi_agent_workflow.py`、`scripts/15_test_multi_agent_workflow.py` | 看角色、步驟、scenario 如何拆開，最接近 Foundry workflow 的思考方式 |
-| 宣告式 workflow（search-only） | `multi_agent/workflow.yaml`、`scripts/14b_create_multi_agent_search_only_workflow.py`、`scripts/15b_test_multi_agent_search_only_workflow.py` | 沒有 Fabric 時，先用文件路徑理解角色拆分 |
+| 宣告式 workflow 路徑 | `multi_agent/workflow.yaml`、`scripts/15_test_multi_agent_workflow.py`（單一入口） | 看角色、步驟、scenario 如何拆開，最接近 Foundry workflow 的思考方式 |
+| 宣告式 workflow（search-only） | `multi_agent/workflow.yaml`、`scripts/15b_test_multi_agent_search_only_workflow.py`（單一入口） | 沒有 Fabric 時，先用文件路徑理解角色拆分 |
 | Code-first workflow 路徑 | `scripts/16_agent_framework_workflow_example.py` | 看最小可跑的程式化 workflow 長什麼樣子 |
 
 雖然表面上看起來是三組腳本，但概念上其實是兩條路：
@@ -215,25 +215,26 @@ Foundry workflow 官網目前特別提到幾種常見模式：
 
 ## 建立流程
 
-建立 multi-agent set 的流程如下：
+現在這條路徑的預設體驗是：直接跑 `scripts/15_test_multi_agent_workflow.py`，它會先 refresh 對應 scenario 的 agents，再立刻執行 workflow。
+
+建立與執行串起來後的流程如下：
 
 ```mermaid
 flowchart LR
-        A[multi_agent/workflow.yaml] --> B[14_create_multi_agent_workflow.py]
+        A[multi_agent/workflow.yaml] --> B[15_test_multi_agent_workflow.py]
         B --> C[讀取 scenario 與 agent template]
         C --> D[依 tool_mode 建立對應工具清單]
-        D --> E[建立 PromptAgentDefinition]
-        E --> F[在 Foundry project 中建立或覆蓋角色 agent]
-        F --> G[輸出 multi_agent_ids.json]
+        D --> E[建立或更新角色 agent]
+        E --> F[輸出 multi_agent_ids.json]
+        F --> G[依 workflow steps 逐步執行]
+        G --> H[輸出 final answer]
 ```
 
-學員可以把這支建立腳本理解成「把 YAML 裡定義的角色，變成 Foundry project 裡真的可以執行的 agent」。
-
-建立腳本會針對每個 scenario 建立一組角色 agent，並把 agent metadata 存回設定檔，供測試腳本後續讀取。
+學員可以把這個單一入口理解成「先把 YAML 裡定義的角色，同步成 Foundry project 裡真的可執行的 agent，再立刻把整條鏈跑完」。
 
 ## 執行流程
 
-`scripts/15_test_multi_agent_workflow.py` 會依照 YAML 中定義的 workflow steps，逐步執行整條鏈。
+在 agent refresh 完成後，`scripts/15_test_multi_agent_workflow.py` 會依照 YAML 中定義的 workflow steps，逐步執行整條鏈。
 
 ```mermaid
 flowchart LR
