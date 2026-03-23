@@ -1,0 +1,5 @@
+incident_id,store_id,district,reported_at,product_name,issue_type,batch_code,complaint_count,allergy_mentions,units_held,product_status
+RI-1001,DWT-01,市中心,2026-03-21T09:12:00,BlueLeaf Sparkling Oat Latte,topping sachet 疑似把杏仁糖漿標錯,BL-2026-0319-A,3,1,24,暫停販售
+RI-1002,DWT-02,市中心,2026-03-21T09:18:00,BlueLeaf Sparkling Oat Latte,topping sachet 疑似把杏仁糖漿標錯,BL-2026-0319-A,2,0,18,暫停販售
+RI-1003,DWT-03,市中心,2026-03-21T09:25:00,BlueLeaf Sparkling Oat Latte,topping sachet 疑似把杏仁糖漿標錯,BL-2026-0319-A,4,1,15,暫停販售
+RI-1004,SUB-04,北區,2026-03-21T09:41:00,BlueLeaf Sparkling Oat Latte,同批次預防性暫停販售,BL-2026-0319-A,0,0,20,暫停販售

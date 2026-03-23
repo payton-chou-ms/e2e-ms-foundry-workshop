@@ -1,0 +1,20 @@
+=== SQL QUESTIONS (Fabric Data) ===
+- 哪些門市回報了最多 BlueLeaf 上市相關顧客投訴？
+- 目前總共有多少產品單位已被轉為 hold status？
+- 哪些事件仍缺少宣傳物撤下或店員 briefing？
+- 哪一種替代優惠被使用得最多？
+- 哪些事件目前仍未獲准恢復販售？
+
+=== DOCUMENT QUESTIONS (AI Search) ===
+- 什麼條件會讓新品上市問題被列為第一級事件？
+- 若確認為上市事件，前 15 分鐘門市應該做什麼？
+- 店員在對客說明時有哪些用語不能說？
+- 臨時門市告示應該採用什麼語氣與措辭？
+- 在哪些條件被滿足之前，產品不能恢復販售？
+
+=== COMBINED INSIGHT QUESTIONS ===
+- 依據事件分級規則與目前 incident data，哪些門市應被視為第一級事件？
+- 哪些門市在 BlueLeaf 恢復販售前仍需要額外 follow-up？
+- 根據目前 incident data，區經理應該使用什麼安全的對客說法？
+- 依照目前門市應對情況與核准溝通原則，哪種替代優惠最適合主推？
+- 請用政策文件與最新 incident data 幫區經理整理一份 executive summary。

@@ -16,7 +16,7 @@
 
 | 官網重點 | 用白話講是什麼 | 這份 workshop 怎麼對應 |
 |----------|----------------|--------------------------|
-| 不要為了多 agent 而多 agent | 只有當任務真的有明確步驟、分工、條件分支或人工介入需求時，workflow 才有價值 | 這份 extension 把規劃、政策判讀、資料分析、最終整合拆成不同角色 |
+| 不要為了多 agent 而多 agent | 只有當任務真的有明確步驟、分工、條件分支或人工介入需求時，workflow 才有價值 | 這份 extension 把 incident 分流、門市營運判讀、對客溝通與最終整合拆成不同角色 |
 | Agent 不只是一段 prompt | Foundry agent 本質上是「模型 + instructions + tools」的可持續資產 | 這裡每個角色 agent 都有不同 instructions，也只拿自己需要的工具 |
 | 多代理程式的關鍵不是人數，而是 handoff | 真正困難的不是多建幾個 agent，而是怎麼把上一個步驟的輸出，穩定交給下一個步驟 | `workflow.yaml` 裡的 step 與 prompt template 就是在做這件事 |
 | Workflow 適合做可重複的協調 | Foundry workflow 特別適合順序流程、if/else、human-in-the-loop、群聊型交接 | 這份 workshop 先用最容易理解的 sequential pattern 當起點 |
@@ -134,10 +134,10 @@ Foundry runtime 官方文件一直在講三個核心元件：
 
 | 角色 | 主要責任 | 工具模式 |
 |------|----------|----------|
-| `planner` | 重述問題、定義需要哪些政策證據與資料證據 | `none` |
-| `policy_specialist` | 從文件中找政策、流程、門檻與例外 | `search` |
-| `data_specialist` | 對 Fabric SQL 做唯讀查詢並萃取關鍵數據 | `sql` |
-| `synthesizer` | 組合前面三者輸出，產生最終回答 | `none` |
+| `router` | 重述 incident、定義後續 specialists 需要回答的問題與最終 deliverables | `none` |
+| `store_ops_specialist` | 結合文件搜尋與唯讀 SQL，整理門市應變、批次狀態與 reopen blocker | `both` |
+| `launch_comms_specialist` | 從文件中整理對客說法、海報文案與 image / video 創意方向 | `search` |
+| `coordinator` | 組合前三者輸出，產生區經理 recovery package 與 image / video prompts | `none` |
 
 這個設計很符合官網在 workflow 與工具最佳實務裡反覆強調的原則：
 
@@ -200,10 +200,10 @@ Foundry workflow 官網目前特別提到幾種常見模式：
 
 也就是說，這裡先教你最容易看懂的一種形式：
 
-- 先規劃
-- 再找政策
-- 再找資料
-- 最後整合答案
+- 先做 incident routing
+- 再整理門市營運與現場處置
+- 再整理對客溝通與門市素材方向
+- 最後整合成區經理 recovery package
 
 這個切入點很合理，因為一旦 sequential 看懂了，你之後再往下延伸到：
 
@@ -238,20 +238,20 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-        U[User question] --> P[planner]
-        P --> PS[policy_specialist]
-        P --> DS[data_specialist]
-        PS --> S[synthesizer]
-        DS --> S
-        S --> A[Final answer]
+        U[User question] --> R[router]
+        R --> SO[store_ops_specialist]
+        R --> LC[launch_comms_specialist]
+        SO --> C[coordinator]
+        LC --> C
+        C --> A[Final answer]
 ```
 
 對應的可見輸出分成四段：
 
-1. planner brief
-2. policy findings
-3. data findings
-4. final synthesized answer
+1. router brief
+2. store operations output
+3. customer communications output
+4. final coordinated answer
 
 這對學員特別有幫助，因為你不只看到最終答案，還能直接看到不同責任是怎麼拆開的。
 
@@ -270,9 +270,9 @@ flowchart LR
 
 在這份 workshop 裡，對應做法是：
 
-- planner 先定義 downstream 需要什麼證據
-- policy 與 data specialist 各自專注在單一任務
-- synthesizer 不再自己查資料，只做整合
+- router 先把 incident 與 deliverables 拆乾淨
+- store_ops 與 launch_comms specialists 各自專注在單一責任邊界
+- coordinator 不再自己查資料，只做整合與對齊
 
 這種拆法能降低每個角色的 prompt 負擔，也讓你更容易檢查哪一步出錯。
 
@@ -325,8 +325,8 @@ flowchart LR
 
 | 延伸元件 | 重用的既有能力 |
 |----------|----------------|
-| `policy_specialist` | `search_documents` 與 Azure AI Search 接地能力 |
-| `data_specialist` | `execute_sql` 與 Fabric Lakehouse SQL endpoint |
+| `store_ops_specialist` | `search_documents` + `execute_sql` 與門市 incident data |
+| `launch_comms_specialist` | `search_documents` 與對客溝通文件 |
 | `foundry_multi_agent_runtime.py` | 與主路徑相同的本機工具執行模型 |
 | scenario context | `ontology_config.json`、`schema_prompt.txt`、`fabric_ids.json` |
 | `16_agent_framework_workflow_example.py` | 用另一種 framework 示範相同的多角色延伸概念 |
@@ -355,13 +355,11 @@ flowchart LR
 
 ## Scenario 設計方式
 
-目前 YAML 已示範三種 scenario：
+目前 YAML 先示範一條零售情境：
 
 | Scenario | 目的 |
 |----------|------|
-| `policy_gap_analysis` | 比對政策門檻與實際營運結果 |
-| `exception_triage` | 針對異常事件做政策 + 數據聯合判讀 |
-| `executive_brief` | 用政策與資料整理管理層摘要 |
+| `launch_incident_response` | 把新品上市事件拆成 incident routing、門市應變、對客溝通與最終整合 |
 
 對學員來說，這裡真正要學的不是 scenario 名稱，而是擴充方法：
 

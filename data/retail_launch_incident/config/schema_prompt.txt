@@ -1,0 +1,12 @@
+=== DATABASE SCHEMA ===
+
+launch_incidents(incident_id*:str, store_id:str, district:str, reported_at:date, product_name:str, issue_type:str, batch_code:str, complaint_count:int, allergy_mentions:int, units_held:int, product_status:str)
+store_response_actions(action_id*:str, incident_id:str, promo_removed:str, staff_briefed:str, refund_count:int, replacement_count:int, replacement_offer:str, reopen_approved:str)
+
+JOINS:
+  store_response_actions.incident_id -> launch_incidents.incident_id
+
+RULES:
+- Use T-SQL syntax
+- Key columns marked with *
+- Types: str=string, int=integer, num=decimal

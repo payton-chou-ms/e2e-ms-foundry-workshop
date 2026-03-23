@@ -16,7 +16,7 @@ from scripts_15_shared import (
 )
 
 
-DEFAULT_SCENARIO = "policy_gap_analysis"
+DEFAULT_SCENARIO = "launch_incident_response"
 
 
 def single_scenario(value):
@@ -44,7 +44,7 @@ def parse_args(argv=None):
         type=single_scenario,
         default=DEFAULT_SCENARIO,
         help=(
-            "Scenario key to run. Defaults to policy_gap_analysis for a "
+            "Scenario key to run. Defaults to launch_incident_response for a "
             "one-command demo."
         ),
     )
