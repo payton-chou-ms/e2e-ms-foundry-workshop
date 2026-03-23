@@ -18,7 +18,16 @@
 
 ---
 
-## 素材清單
+## 展示順序
+
+1. 先執行 script，讓 PDF 與 CSV 自動進入 Blob Storage / Azure AI Search / Foundry Knowledge
+2. 在 `Build / Agents` 建兩個 specialist agents
+3. 再補一個 router agent 和一個 coordinator agent
+4. 在 workflow 裡把前面幾個 agent 串起來
+5. 最後把 workflow 產出的 image prompt 和 video prompt 拿去測 image model 與 `sora-2`
+
+---
+## 1 素材清單
 
 ### 要準備成 Knowledge 與檢索資料的文件
 
@@ -44,6 +53,22 @@ python scripts/06b_upload_to_foundry_knowledge.py
 3. `launch_campaign_brief.pdf`
 4. `customer_message_guidelines.pdf`
 
+### 手動上傳對照表
+
+如果你要改走 portal 裡的手動 knowledge / agent 示範路徑，可先照下面分配：
+
+| 檔案 | 手動上傳到哪個 agent / knowledge |
+|------|------------------------------|
+| `store_incident_playbook.pdf` | `retail-store-ops-agent` / `retail-store-ops-kb` |
+| `shift_lead_response_guide.pdf` | `retail-store-ops-agent` / `retail-store-ops-kb` |
+| `launch_campaign_brief.pdf` | `retail-launch-comms-agent` / `retail-launch-comms-kb` |
+| `customer_message_guidelines.pdf` | `retail-launch-comms-agent` / `retail-launch-comms-kb` |
+
+對應原則很簡單：
+
+1. 營運應變類文件給 `retail-store-ops-agent`
+2. 對客溝通類文件給 `retail-launch-comms-agent`
+
 ### 可拿來做資料查詢或結構化分析的表格
 
 資料夾：[data/retail_launch_incident/tables](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/tables)
@@ -53,106 +78,22 @@ python scripts/06b_upload_to_foundry_knowledge.py
 1. `launch_incidents.csv`
 2. `store_response_actions.csv`
 
+手動路徑下，這兩份 CSV 不建議只掛給單一 specialist agent。
+
+比較正確的理解是：
+
+1. 它們屬於共用的 Search / Foundry knowledge 資料層
+2. 不屬於 `retail-store-ops-agent` 或 `retail-launch-comms-agent` 其中一個人的專屬 knowledge
+3. 如果走目前 repo 的建議流程，仍然應該用 script 先寫進 Azure AI Search，再供後續 Foundry IQ 或 workflow 使用
+
 ### 可直接拿來問的示範問題
 
 檔案：[data/retail_launch_incident/config/sample_questions.txt](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/config/sample_questions.txt)
 
 ---
 
-## 建議展示順序
 
-整場 demo 建議照這個順序：
-
-1. 在 `Discover / Models` 先測試模型理解情境的能力
-2. 先執行 script，讓 PDF 與 CSV 自動進入 Blob Storage / Azure AI Search / Foundry Knowledge
-3. 在 `Build / Agents` 建兩個 specialist agents
-4. 再補一個 router agent 和一個 coordinator agent
-5. 在 workflow 裡把前面幾個 agent 串起來
-6. 最後把 workflow 產出的 image prompt 和 video prompt 拿去測 image model 與 `sora-2`
-
-如果只做最短版 demo：
-
-1. 先在 `Discover / Models` 貼入事件描述
-2. 先執行資料準備 script，再確認 knowledge 已建立完成
-3. 建立兩個 specialist agents
-4. 用一個 workflow 把結果整合起來
-
----
-
-## 開場講法
-
-```text
-今天這場 demo，我們先不談太多系統設計，而是直接帶大家走一遍操作流程。
-
-我們會從一個零售新品事件出發，先讓模型理解情境，再放入知識文件，接著建立兩個專責 agent，最後用 workflow 把結果整合成可以直接操作與重做的處置方案。
-```
-
----
-
-## Step 1：Discover / Models
-
-### 對學員解說
-
-```text
-第一步，我們先在 Discover / Models 測試模型能不能抓住事件重點。這一步很單純，就是先貼入 incident 描述，看看模型會不會整理出區經理該做的優先動作。
-```
-
-### 請貼上的文字
-
-```text
-今天上午 BlueLeaf Sparkling Oat Latte 上市後，市中心三家門市回報顧客投訴，指出部分 topping sachet 疑似把杏仁糖漿標錯成一般 oat topping。請列出區經理在接下來兩小時內應該優先完成的五個動作。
-```
-
-### 這一步要讓學員理解什麼
-
-1. 模型能先整理事件重點
-2. 模型能把任務轉成具體行動
-3. 接下來就可以把問題交給更專門的 knowledge agents
-
----
-
-## Step 2：Build / Knowledge
-
-### 對學員解說
-
-```text
-第二步，我們不在 Foundry 介面裡手動上傳檔案，而是直接跑一支 scenario script。這支 script 會把 PDF 原檔放到 Blob Storage，接著把 PDF 內容與 CSV 資料都寫進 Azure AI Search，最後再由 workshop script 建立 Foundry IQ knowledge base。這樣學員之後重做時只要跑指令，不用逐頁點選上傳。
-```
-
-### 這時候請執行
-
-```bash
-python data/retail_launch_incident/prepare_search_and_blob_assets.py
-python scripts/06b_upload_to_foundry_knowledge.py
-```
-
-### 這一步完成後會得到
-
-```text
-1. Blob Storage 裡的 PDF 原檔
-2. Azure AI Search 裡的文件索引與表格索引
-3. 可供 Foundry IQ agent 使用的 knowledge base 與 project connection
-```
-
-```text
-這一段是 script-first 的 Foundry IQ 路徑，目的是讓學員快速重做資料準備與 knowledge 建立。
-
-如果你後面要繼續做 portal 裡的 specialist agents / workflow 示範，README 後面的段落仍然是在說明 portal 示範時的人工作業方式。
-```
-
----
-
-## Step 3：Build / Agents
-
-這一步開始，是切回 portal 裡的手動 specialist agent / workflow 示範路徑。
-
-### 對學員解說
-
-```text
-第三步，我們開始建立兩個 specialist。第一個只回答營運處置，第二個只回答對客溝通。這樣示範的重點會很清楚，也比較容易讓學員理解 agent 分工。
-```
-
-### Step 3A：建立 `retail-store-ops-agent`
+## 2A：建立 `retail-store-ops-agent`
 
 請貼上的 instruction：
 
@@ -188,7 +129,7 @@ retail-store-ops-kb
 今天上午 BlueLeaf Sparkling Oat Latte 上市後，三家門市回報與 topping sachet 標示有關的顧客投訴。請說明區經理與門市經理在前 15 分鐘與前 60 分鐘各自應做什麼。
 ```
 
-### Step 3B：建立 `retail-launch-comms-agent`
+### 2B：建立 `retail-launch-comms-agent`
 
 請貼上的 instruction：
 
@@ -226,15 +167,13 @@ BlueLeaf Sparkling Oat Latte 因品質檢查，暫時在三家門市停售。請
 
 ---
 
-## Step 4：補上 router 和 coordinator
+## Step 3：補上 router 和 coordinator
 
-### 對學員解說
-
-```text
-前面兩個 agent 各自回答自己的領域。接下來，我們補上兩個角色，讓整個流程可以串起來。一個負責把問題整理成 handoff brief，另一個負責把結果整合成最後交付內容。
-```
+- 前面兩個 agent 各自回答自己的領域。接下來，我們補上兩個角色，讓整個流程可以串起來。一個負責把問題整理成 handoff brief，另一個負責把結果整合成最後交付內容。
 
 ### Router agent 要貼入的 instruction
+
+Create agent: retail-incident-router-agent
 
 ```text
 You are the Incident Router for a retail launch-day issue.
@@ -256,7 +195,15 @@ Always use this structure:
 4. Required final deliverables
 ```
 
-### Coordinator agent 要貼入的 instruction
+測試時請貼上的文字：
+
+```text
+TOADD
+```
+
+### 3 Coordinator agent 要貼入的 instruction
+
+Create agent: retail-incident-coordinator-agent
 
 ```text
 You are the Incident Coordinator for Contoso Retail.
@@ -280,15 +227,19 @@ Always use this structure:
 6. Video-generation prompt
 ```
 
----
-
-## Step 5：建立 workflow
-
-### 對學員解說
+測試時請貼上的文字：
 
 ```text
-現在我們把前面的 agent 串成一條 workflow。這一步的重點是，讓學員看到每個角色都很清楚，而且最後能組成一份完整答案。
+TOADD
 ```
+
+
+
+---
+
+## Step 4：建立 workflow
+
+現在我們把前面的 agent 串成一條 workflow。這一步的重點是，讓學員看到每個角色都很清楚，而且最後能組成一份完整答案。
 
 ### 這時候建立的流程順序
 
@@ -466,3 +417,4 @@ Avoid:
 
 1. 情境素材夾：[data/retail_launch_incident](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident)
 2. workflow 設定：[multi_agent/workflow.yaml](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/multi_agent/workflow.yaml)
+3. 

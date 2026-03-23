@@ -1,7 +1,7 @@
 {
   "search_type": "scenario_multi_index",
   "scenario": "retail_launch_incident",
-  "generated_at": "2026-03-23T11:41:28.464805+00:00",
+  "generated_at": "2026-03-23T11:49:24.779592+00:00",
   "blob_endpoint": "https://stdanedkbf5d5cst.blob.core.windows.net/",
   "blob_container": "default",
   "blob_prefix": "retail_launch_incident/documents",
