@@ -1,8 +1,10 @@
 # 建置與測試（自訂 PoC）
 
 !!! example "想先看一個完整手動示範"
-    如果你想展示一個已經整理好的 Foundry portal 多 agent 情境，可直接接著閱讀 [零售手動 demo](04-retail-manual-demo.md)。
-    那一頁會帶你從素材、specialist agents、router / coordinator 到 image prompt 驗證走一遍。
+    如果你想展示一個已經整理好的手動示範，可直接接著閱讀：
+
+    - [零售手動 demo](04-retail-manual-demo.md)：適合展示 Foundry portal 多 agent workflow
+    - [合約關鍵字審閱手動 demo](05-contract-keyword-review-manual-demo.md)：適合展示文件結構化、規則清單與 reviewer 審閱
 
 ## 測試你的方案
 
@@ -138,6 +140,7 @@ Content: Customers must be notified within 15 minutes of a confirmed outage...
     **下一步：**
 
     - 如果你要展示一個現成的 portal workflow 情境，閱讀 [零售手動 demo](04-retail-manual-demo.md)
+    - 如果你要展示合約審閱與中間產物流程，閱讀 [合約關鍵字審閱手動 demo](05-contract-keyword-review-manual-demo.md)
     - 如果你要準備技術問答，閱讀 [深入解析](../03-understand/index.md)
 
 ## 如果你還要換另一個情境

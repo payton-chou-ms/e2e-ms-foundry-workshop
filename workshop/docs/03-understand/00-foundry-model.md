@@ -78,11 +78,37 @@
 - embedding model：`text-embedding-3-large`
 - optional image model：`gpt-image-1.5`
 
+另外，`azd up` 還會用 best-effort 方式額外嘗試建立一組 default OpenAI deployments，主要用途是：
+
+- 讓 workshop 在手動實驗時不只綁定單一聊天模型
+- 讓額外 demo 或模型比較時，有一批已存在的 deployment 可直接使用
+- 即使其中部分因區域或 quota 無法建立，也不影響主線流程
+
+這組 default OpenAI bundle 目前包含：
+
+- `gpt-5-nano`
+- `gpt-4.1-nano`
+- `gpt-4o-mini`
+- `gpt-oss-120B`
+- `o3-mini`
+- `gpt-5.3-chat`
+- `gpt-5-pro`
+- `gpt-5.2-codex`
+- `gpt-5.1-codex-mini`
+- `gpt-5.3-codex`
+- `gpt-5.2`
+- `gpt-5.4`
+- `gpt-5.4-nano`
+- `gpt-5.4-mini`
+- `gpt-5.4-pro`
+
+其中 `gpt-4.1-mini` 仍然保留為直接部署，因為目前 Content Understanding 的預設值設定和示範流程會依賴它。
+
 也就是說，這份 workshop 並不是在展示「模型越多越好」，而是在展示：
 
 - 用 chat model 做推理與工具協調
 - 用 embedding model 做文件檢索基礎
-- 用選配模型承接額外 demo，而不干擾主線
+- 用選配模型與 best-effort model bundle 承接額外 demo，而不干擾主線
 
 ## 為什麼要分成兩種必要模型
 

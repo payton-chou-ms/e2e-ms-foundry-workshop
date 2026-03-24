@@ -141,10 +141,27 @@ azd up --environment <environment-name>
 
 第一次成功部署後，`azd` 會把這次環境使用的 `AZURE_SUBSCRIPTION_ID` 和 `AZURE_TENANT_ID` 寫進 `.azure/<env>/.env`。
 
-這次部署除了主要 chat 和 embedding 模型，也會額外建立：
+這次部署除了主要 chat 和 embedding 模型，也會額外建立或盡力而為地嘗試建立：
 
-- `gpt-4.1-mini`
+- `gpt-4.1-mini`。這個 deployment 仍維持直接部署，因為目前 Content Understanding 的預設值流程會依賴它
 - 盡力而為地嘗試建立一個部署在 Foundry account 內的 `gpt-image-1.5` model deployment，用於 `13_demo_image_generation.py`。如果該區域或 quota 不允許，`azd up` 仍會完成，只有影像示範會被略過
+- 盡力而為地嘗試建立一組 default OpenAI model deployments，用於手動實驗或額外展示。這組 bundle 目前包含：
+    - `gpt-5-nano`
+    - `gpt-4.1-nano`
+    - `gpt-4o-mini`
+    - `gpt-oss-120B`
+    - `o3-mini`
+    - `gpt-5.3-chat`
+    - `gpt-5-pro`
+    - `gpt-5.2-codex`
+    - `gpt-5.1-codex-mini`
+    - `gpt-5.3-codex`
+    - `gpt-5.2`
+    - `gpt-5.4`
+    - `gpt-5.4-nano`
+    - `gpt-5.4-mini`
+    - `gpt-5.4-pro`
+    如果該區域或 quota 不允許，`azd up` 仍會完成，失敗的 deployment 只會被記錄在 `.azure/<env>/.env` 的 best-effort status 變數中
 - 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`。它會優先使用你選的 Azure location；如果該區域不支援 Playwright Workspace，才會自動改用 `eastus`
 
 !!! note "Retail scenario 的 Blob 上傳需求"

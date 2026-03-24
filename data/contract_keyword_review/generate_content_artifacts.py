@@ -1,21 +1,21 @@
-"""Generate comparable contract content and rule lists for the contract review demo.
+"""Generate contract review artifacts using Azure Content Understanding.
 
-This script prefers Azure Content Understanding for Office documents and falls back
-to local Office XML extraction when the Azure endpoint is unavailable. The output
-files are intentionally checked into the demo folder so the live tour can consume
-pre-generated artifacts without calling Azure at runtime.
+This script is intentionally strict: contract comparable content must come from
+live Azure Content Understanding, not a local fallback path. The generated
+artifacts are checked into the demo folder so the workshop can consume a stable
+set of outputs after regeneration.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+from dotenv import load_dotenv
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 from zipfile import ZipFile
 from xml.etree import ElementTree as ET
-from dotenv import load_dotenv
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -92,7 +92,6 @@ except ImportError as exc:  # pragma: no cover - depends on local runtime
     IMPORT_ERROR = exc
 
 
-WORD_NS = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
 SHEET_NS = {
     "a": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
     "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
@@ -112,16 +111,6 @@ def parse_args() -> argparse.Namespace:
         "--cu-analyzer-id",
         default="prebuilt-layout",
         help="inline data upload 時使用的 Content Understanding analyzer id。預設為 prebuilt-layout。",
-    )
-    parser.add_argument(
-        "--use-local-fallback",
-        action="store_true",
-        help="Azure Content Understanding 無法使用時，自動退回本機 Office XML 萃取。",
-    )
-    parser.add_argument(
-        "--require-live-cu",
-        action="store_true",
-        help="強制要求使用真實 Azure Content Understanding；若服務回空內容或環境未就緒，直接失敗，不退回本機萃取。",
     )
     parser.add_argument(
         "--processing-location",
@@ -216,53 +205,6 @@ def paragraph_from_markdown(markdown: str) -> list[dict[str, str | int]]:
                 "text": text,
             }
         )
-    return blocks
-
-
-def _word_text(node: ET.Element) -> str:
-    texts: list[str] = []
-    for text_node in node.findall(".//w:t", WORD_NS):
-        texts.append(text_node.text or "")
-    return "".join(texts).strip()
-
-
-def extract_docx_locally(file_path: Path) -> list[dict[str, str | int]]:
-    blocks: list[dict[str, str | int]] = []
-    with ZipFile(file_path) as archive:
-        root = ET.fromstring(archive.read("word/document.xml"))
-    body = root.find("w:body", WORD_NS)
-    if body is None:
-        return blocks
-
-    counter = 1
-    for child in list(body):
-        tag = child.tag.rsplit("}", 1)[-1]
-        if tag == "p":
-            text = _word_text(child)
-            if text:
-                blocks.append({"id": counter, "kind": "paragraph", "text": text})
-                counter += 1
-            continue
-
-        if tag == "tbl":
-            rows: list[str] = []
-            for row in child.findall(".//w:tr", WORD_NS):
-                cells: list[str] = []
-                for cell in row.findall("w:tc", WORD_NS):
-                    cell_text = _word_text(cell)
-                    if cell_text:
-                        cells.append(cell_text)
-                if cells:
-                    rows.append(" | ".join(cells))
-            if rows:
-                blocks.append(
-                    {
-                        "id": counter,
-                        "kind": "table",
-                        "text": " / ".join(rows),
-                    }
-                )
-                counter += 1
     return blocks
 
 
@@ -388,36 +330,24 @@ def generate_doc_artifacts(
     input_file: InputFile,
     cu_analyzer_id: str,
     processing_location: str | None,
-    use_local_fallback: bool,
-    require_live_cu: bool,
 ) -> None:
-    source_mode = "local-office-xml"
-    paragraphs: list[dict[str, str | int]]
     print(f"[INFO] 處理文件：{input_file.source_path.name}", flush=True)
 
-    if client is not None:
-        try:
-            print("[INFO] 使用 Data 模式呼叫 CU", flush=True)
-            markdown = analyze_with_content_understanding(
-                client=client,
-                file_path=input_file.source_path,
-                analyzer_id=cu_analyzer_id,
-                processing_location=processing_location,
-            )
-            source_mode = f"content-understanding-data:{cu_analyzer_id}"
-            paragraphs = paragraph_from_markdown(markdown)
-        except LiveCuError:
-            if require_live_cu or not use_local_fallback:
-                raise
-            print("[WARN] Live CU 失敗，改用本機 Office XML fallback", flush=True)
-            paragraphs = extract_docx_locally(input_file.source_path)
-    else:
-        if require_live_cu:
-            raise RuntimeError(
-                "找不到可用的 Azure Content Understanding client。"
-                "請先確認已安裝 SDK、已登入 Azure，且 `AZURE_ENV_NAME` 或 `.azure/<env>/.env` 指向正確環境。"
-            )
-        paragraphs = extract_docx_locally(input_file.source_path)
+    if client is None:
+        raise RuntimeError(
+            "找不到可用的 Azure Content Understanding client。"
+            "請先確認已安裝 SDK、已登入 Azure，且 `AZURE_ENV_NAME` 或 `.azure/<env>/.env` 指向正確環境。"
+        )
+
+    print("[INFO] 使用 data upload 模式呼叫 CU", flush=True)
+    markdown = analyze_with_content_understanding(
+        client=client,
+        file_path=input_file.source_path,
+        analyzer_id=cu_analyzer_id,
+        processing_location=processing_location,
+    )
+    source_mode = f"content-understanding-data:{cu_analyzer_id}"
+    paragraphs = paragraph_from_markdown(markdown)
 
     title = input_file.source_path.stem
     input_file.markdown_path.write_text(
@@ -446,8 +376,6 @@ def main() -> None:
             input_file=input_file,
             cu_analyzer_id=args.cu_analyzer_id,
             processing_location=args.processing_location,
-            use_local_fallback=args.use_local_fallback,
-            require_live_cu=args.require_live_cu,
         )
 
     rules = parse_rules_workbook(base_dir / "input" / "04-規則檔.xlsx")
