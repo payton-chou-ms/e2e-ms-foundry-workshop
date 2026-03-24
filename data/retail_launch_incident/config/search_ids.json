@@ -7,33 +7,33 @@
   "blob_prefix": "retail_launch_incident/documents",
   "blob_files": [
     {
-      "name": "customer_message_guidelines.pdf",
-      "blob_name": "retail_launch_incident/documents/customer_message_guidelines.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/customer_message_guidelines.pdf"
+      "name": "comms-customer-message-guidelines.pdf",
+      "blob_name": "retail_launch_incident/documents/comms-customer-message-guidelines.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/comms-customer-message-guidelines.pdf"
     },
     {
-      "name": "launch_campaign_brief.pdf",
-      "blob_name": "retail_launch_incident/documents/launch_campaign_brief.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/launch_campaign_brief.pdf"
+      "name": "comms-launch-campaign-brief.pdf",
+      "blob_name": "retail_launch_incident/documents/comms-launch-campaign-brief.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/comms-launch-campaign-brief.pdf"
     },
     {
-      "name": "shift_lead_response_guide.pdf",
-      "blob_name": "retail_launch_incident/documents/shift_lead_response_guide.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/shift_lead_response_guide.pdf"
+      "name": "ops-shift-lead-response-guide.pdf",
+      "blob_name": "retail_launch_incident/documents/ops-shift-lead-response-guide.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/ops-shift-lead-response-guide.pdf"
     },
     {
-      "name": "store_incident_playbook.pdf",
-      "blob_name": "retail_launch_incident/documents/store_incident_playbook.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/store_incident_playbook.pdf"
+      "name": "ops-store-incident-playbook.pdf",
+      "blob_name": "retail_launch_incident/documents/ops-store-incident-playbook.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/ops-store-incident-playbook.pdf"
     }
   ],
   "index_name": "danedkbf5d5cst-retail_launch_incident-documents",
   "document_count": 5,
   "pdf_files": [
-    "customer_message_guidelines.pdf",
-    "launch_campaign_brief.pdf",
-    "shift_lead_response_guide.pdf",
-    "store_incident_playbook.pdf"
+    "comms-customer-message-guidelines.pdf",
+    "comms-launch-campaign-brief.pdf",
+    "ops-shift-lead-response-guide.pdf",
+    "ops-store-incident-playbook.pdf"
   ],
   "table_files": [
     "launch_incidents.csv",
@@ -46,10 +46,10 @@
       "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-documents-source",
       "document_count": 5,
       "source_files": [
-        "customer_message_guidelines.pdf",
-        "launch_campaign_brief.pdf",
-        "shift_lead_response_guide.pdf",
-        "store_incident_playbook.pdf"
+        "comms-customer-message-guidelines.pdf",
+        "comms-launch-campaign-brief.pdf",
+        "ops-shift-lead-response-guide.pdf",
+        "ops-store-incident-playbook.pdf"
       ],
       "source_data_fields": [
         "content",

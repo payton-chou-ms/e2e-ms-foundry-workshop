@@ -137,10 +137,10 @@ python scripts/06b_upload_to_foundry_knowledge.py
 
 會被處理的 PDF：
 
-1. `store_incident_playbook.pdf`
-2. `shift_lead_response_guide.pdf`
-3. `launch_campaign_brief.pdf`
-4. `customer_message_guidelines.pdf`
+1. `ops-store-incident-playbook.pdf`
+2. `ops-shift-lead-response-guide.pdf`
+3. `comms-launch-campaign-brief.pdf`
+4. `comms-customer-message-guidelines.pdf`
 
 如果你走手動方式，文件可依下面方式分配。
 
@@ -150,10 +150,10 @@ python scripts/06b_upload_to_foundry_knowledge.py
 
 | 檔案 | 手動上傳到哪個 agent / knowledge |
 |------|------------------------------|
-| `store_incident_playbook.pdf` | `retail-store-ops-agent` / `retail-store-ops-kb` |
-| `shift_lead_response_guide.pdf` | `retail-store-ops-agent` / `retail-store-ops-kb` |
-| `launch_campaign_brief.pdf` | `retail-launch-comms-agent` / `retail-launch-comms-kb` |
-| `customer_message_guidelines.pdf` | `retail-launch-comms-agent` / `retail-launch-comms-kb` |
+| `ops-store-incident-playbook.pdf` | `retail-store-ops-agent` / `retail-store-ops-kb` |
+| `ops-shift-lead-response-guide.pdf` | `retail-store-ops-agent` / `retail-store-ops-kb` |
+| `comms-launch-campaign-brief.pdf` | `retail-launch-comms-agent` / `retail-launch-comms-kb` |
+| `comms-customer-message-guidelines.pdf` | `retail-launch-comms-agent` / `retail-launch-comms-kb` |
 
 對應原則很簡單：
 

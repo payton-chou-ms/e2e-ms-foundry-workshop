@@ -26,10 +26,10 @@
 
 ### 文件
 
-- [documents/store_incident_playbook.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/store_incident_playbook.pdf)
-- [documents/shift_lead_response_guide.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/shift_lead_response_guide.pdf)
-- [documents/launch_campaign_brief.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/launch_campaign_brief.pdf)
-- [documents/customer_message_guidelines.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/customer_message_guidelines.pdf)
+- [documents/ops-store-incident-playbook.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/ops-store-incident-playbook.pdf)
+- [documents/ops-shift-lead-response-guide.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/ops-shift-lead-response-guide.pdf)
+- [documents/comms-launch-campaign-brief.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/comms-launch-campaign-brief.pdf)
+- [documents/comms-customer-message-guidelines.pdf](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents/comms-customer-message-guidelines.pdf)
 
 ### 表格
 
