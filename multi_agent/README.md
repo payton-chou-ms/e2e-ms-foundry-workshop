@@ -1,87 +1,66 @@
-# Workshop Multi-Agent Extension
+# Multi-agent 與零售新品事件工作流
 
-This folder adds a declarative multi-agent path next to the existing single-agent workshop flow.
+這個資料夾提供一條宣告式 multi-agent 路徑，讓 workshop 可以從原本的單一 agent 問答，延伸成更貼近實際營運事件處理的工作流。
 
-It is intentionally separate from the main pipeline:
+這條延伸路徑目前採用 **零售新品異常應變** 情境，重點不是多建幾個 agent，而是把同一個 incident 拆成更清楚的角色與 handoff。
 
-- the main workshop keeps one orchestrator agent plus local SQL and document tools
-- this extension turns the same data and search assets into a four-step workflow
-- each scenario reuses the current workshop environment, generated data, and search index
+## 這裡新增了什麼
 
-## What gets added
+- `workflow.yaml`：零售專用的宣告式 workflow 設計
+- `scripts/15_test_multi_agent_workflow.py`：刷新 scenario agents，然後執行 Fabric + Search workflow
+- `scripts/15b_test_multi_agent_search_only_workflow.py`：刷新 search-only agents，然後執行同一條 workflow
+- `scripts/16_agent_framework_workflow_example.py`：最小化的 code-first workflow 範例
 
-- `workflow.yaml`: declarative scenario and agent design
-- `scripts/14_create_multi_agent_workflow.py`: creates scenario-specific prompt agents in Foundry
-- `scripts/15_test_multi_agent_workflow.py`: runs the planner → policy → data → synthesis workflow
-- `scripts/16_agent_framework_workflow_example.py`: minimal code-first workflow using Microsoft Agent Framework
+## 目前的角色設計
 
-## Architecture
+1. `router`
+2. `store_ops_specialist`
+3. `launch_comms_specialist`
+4. `coordinator`
 
-The extension now has two parallel learning paths:
+### 各角色負責什麼
 
-- a declarative YAML path for scenario-driven multi-agent orchestration
-- a code-first Agent Framework path for a minimal programmable workflow
+- `router`：先整理 incident，明確指出後續 specialists 需要回答什麼
+- `store_ops_specialist`：結合文件搜尋與唯讀 SQL，整理門市應變與 reopen blocker
+- `launch_comms_specialist`：只用文件搜尋，整理對客說法、告示與創意方向
+- `coordinator`：整合前三者結果，產出區經理等級 recovery package
 
-Both paths reuse the same workshop foundations.
+## 為什麼這和主 workshop 一致
 
-![Workshop multi-agent architecture](assets/multi-agent-architecture.svg)
+- Foundry prompt agent 的建立方式仍然與主流程一致
+- 本機 tool execution model 仍然沿用現有 `search_documents` 與 `execute_sql`
+- 變的只有 orchestration 形狀，不是底層資料或搜尋基礎
 
-File mapping for the diagram:
+## 使用方式
 
-- Workflow YAML = `multi_agent/workflow.yaml`
-- Create workflow script = `scripts/14_create_multi_agent_workflow.py`
-- Test workflow script = `scripts/15_test_multi_agent_workflow.py`
-- Agent Framework example script = `scripts/16_agent_framework_workflow_example.py`
+### Fabric + Search 版本
 
-Read the diagram left to right as two ways to extend the same workshop:
-
-- the YAML path emphasizes reusable scenarios, role templates, and governed tool surfaces
-- the Agent Framework path emphasizes the smallest possible code sample for a sequential multi-agent workflow
-
-## Agent roles
-
-1. `planner`
-2. `policy_specialist`
-3. `data_specialist`
-4. `synthesizer`
-
-This is a true multi-agent pattern, but it still uses the current workshop's local tool execution model.
-
-## Why this matches the existing workshop
-
-- Foundry prompt agents are already used in `scripts/07_create_foundry_agent.py`
-- local tool execution is already implemented in `scripts/08_test_foundry_agent.py`
-- the extension only changes the orchestration shape, not the underlying data/search foundations
-
-## Usage
-
-Create all scenario agents:
+用預設 sample question 直接跑：
 
 ```bash
-python scripts/14_create_multi_agent_workflow.py
+python scripts/15_test_multi_agent_workflow.py
 ```
 
-Run one scenario with its default sample question:
+指定 scenario 與問題：
 
 ```bash
-python scripts/15_test_multi_agent_workflow.py --scenario policy_gap_analysis
+python scripts/15_test_multi_agent_workflow.py   --scenario launch_incident_response   --question "請整合門市立即動作、店員話術、對客安全說法，以及暫時店內海報與數位看板方向。"
 ```
 
-Run one scenario with a custom question:
+### Search-only 版本
 
 ```bash
-python scripts/15_test_multi_agent_workflow.py \
-  --scenario exception_triage \
-  --question "We saw an unusual spike in escalations. What policy applies and what does the data suggest?"
+python scripts/15b_test_multi_agent_search_only_workflow.py
+python scripts/15b_test_multi_agent_search_only_workflow.py   --scenario launch_incident_response   --question "如果沒有 Fabric 資料，只靠文件知識，門市應該如何對 BlueLeaf 上市事件做第一時間應對？"
 ```
 
-## Output model
+## 可見輸出階段
 
-The workflow produces four visible stages:
+workflow 會輸出四段可觀察結果：
 
-1. planner brief
-2. policy findings
-3. data findings
-4. final synthesized answer
+1. router brief
+2. store operations output
+3. customer communications output
+4. final coordinated answer
 
-That makes it easy to demo how a customer could move from a single-agent PoC to a more governed multi-agent design.
+這很適合 demo，因為你不只看到最終答案，也能清楚看到 handoff 是如何被拆開的。

@@ -1,0 +1,71 @@
+{
+  "scenario": "retail_launch_incident",
+  "name": "零售新品異常應變",
+  "description": "處理新品上市當天在多家門市出現的標示疑慮，同時整合門市營運應變與對客溝通。",
+  "chat_model": "gpt-5.4-mini",
+  "tables": {
+    "launch_incidents": {
+      "columns": [
+        "incident_id",
+        "store_id",
+        "district",
+        "reported_at",
+        "product_name",
+        "issue_type",
+        "batch_code",
+        "complaint_count",
+        "allergy_mentions",
+        "units_held",
+        "product_status"
+      ],
+      "types": {
+        "incident_id": "String",
+        "store_id": "String",
+        "district": "String",
+        "reported_at": "DateTime",
+        "product_name": "String",
+        "issue_type": "String",
+        "batch_code": "String",
+        "complaint_count": "BigInt",
+        "allergy_mentions": "BigInt",
+        "units_held": "BigInt",
+        "product_status": "String"
+      },
+      "key": "incident_id",
+      "source_table": "launch_incidents"
+    },
+    "store_response_actions": {
+      "columns": [
+        "action_id",
+        "incident_id",
+        "promo_removed",
+        "staff_briefed",
+        "refund_count",
+        "replacement_count",
+        "replacement_offer",
+        "reopen_approved"
+      ],
+      "types": {
+        "action_id": "String",
+        "incident_id": "String",
+        "promo_removed": "String",
+        "staff_briefed": "String",
+        "refund_count": "BigInt",
+        "replacement_count": "BigInt",
+        "replacement_offer": "String",
+        "reopen_approved": "String"
+      },
+      "key": "action_id",
+      "source_table": "store_response_actions"
+    }
+  },
+  "relationships": [
+    {
+      "name": "incident_actions",
+      "from": "store_response_actions",
+      "to": "launch_incidents",
+      "fromKey": "incident_id",
+      "toKey": "incident_id"
+    }
+  ]
+}

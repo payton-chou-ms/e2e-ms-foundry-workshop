@@ -11,6 +11,7 @@ from azure.ai.projects import AIProjectClient
 
 from load_env import load_all_env
 from optional_demo_utils import print_demo_header
+from foundry_trace import configure_foundry_tracing
 
 
 def warn(message: str) -> None:
@@ -129,12 +130,25 @@ try:
 except Exception as exc:
     exit_skip(f"無法初始化 AIProjectClient：{exc}", args.strict)
 
+trace_session = configure_foundry_tracing(
+    project_client=project_client,
+    scenario_name="09_publish_foundry_agent",
+    service_name="e2e-ms-foundry-workshop.agent-publish",
+)
+
+if trace_session.enabled:
+    print("[OK] 已啟用 Foundry tracing")
+elif trace_session.warning:
+    print(f"警告：{trace_session.warning}")
+
 try:
     with project_client:
         if agent_id:
-            agent = project_client.agents.get(agent_id)
+            with trace_session.span("get-agent"):
+                agent = project_client.agents.get(agent_id)
         else:
-            agent = project_client.agents.get(agent_name)
+            with trace_session.span("get-agent"):
+                agent = project_client.agents.get(agent_name)
 except Exception as exc:
     identifier = agent_id or agent_name
     exit_skip(f"無法解析 agent '{identifier}'：{exc}", args.strict)

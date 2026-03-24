@@ -1,0 +1,90 @@
+{
+  "search_type": "scenario_multi_index",
+  "scenario": "retail_launch_incident",
+  "generated_at": "2026-03-23T11:49:24.779592+00:00",
+  "blob_endpoint": "https://stdanedkbf5d5cst.blob.core.windows.net/",
+  "blob_container": "default",
+  "blob_prefix": "retail_launch_incident/documents",
+  "blob_files": [
+    {
+      "name": "customer_message_guidelines.pdf",
+      "blob_name": "retail_launch_incident/documents/customer_message_guidelines.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/customer_message_guidelines.pdf"
+    },
+    {
+      "name": "launch_campaign_brief.pdf",
+      "blob_name": "retail_launch_incident/documents/launch_campaign_brief.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/launch_campaign_brief.pdf"
+    },
+    {
+      "name": "shift_lead_response_guide.pdf",
+      "blob_name": "retail_launch_incident/documents/shift_lead_response_guide.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/shift_lead_response_guide.pdf"
+    },
+    {
+      "name": "store_incident_playbook.pdf",
+      "blob_name": "retail_launch_incident/documents/store_incident_playbook.pdf",
+      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/store_incident_playbook.pdf"
+    }
+  ],
+  "index_name": "danedkbf5d5cst-retail_launch_incident-documents",
+  "document_count": 5,
+  "pdf_files": [
+    "customer_message_guidelines.pdf",
+    "launch_campaign_brief.pdf",
+    "shift_lead_response_guide.pdf",
+    "store_incident_playbook.pdf"
+  ],
+  "table_files": [
+    "launch_incidents.csv",
+    "store_response_actions.csv"
+  ],
+  "indexes": [
+    {
+      "name": "danedkbf5d5cst-retail_launch_incident-documents",
+      "kind": "document_chunks",
+      "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-documents-source",
+      "document_count": 5,
+      "source_files": [
+        "customer_message_guidelines.pdf",
+        "launch_campaign_brief.pdf",
+        "shift_lead_response_guide.pdf",
+        "store_incident_playbook.pdf"
+      ],
+      "source_data_fields": [
+        "content",
+        "title",
+        "source",
+        "page_number",
+        "chunk_id"
+      ],
+      "search_fields": [
+        "content",
+        "title"
+      ],
+      "semantic_configuration_name": "default-semantic"
+    },
+    {
+      "name": "danedkbf5d5cst-retail_launch_incident-tables",
+      "kind": "table_rows",
+      "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-tables-source",
+      "document_count": 8,
+      "source_files": [
+        "launch_incidents.csv",
+        "store_response_actions.csv"
+      ],
+      "source_data_fields": [
+        "content",
+        "title",
+        "source",
+        "page_number",
+        "chunk_id"
+      ],
+      "search_fields": [
+        "content",
+        "title"
+      ],
+      "semantic_configuration_name": "default-semantic"
+    }
+  ]
+}

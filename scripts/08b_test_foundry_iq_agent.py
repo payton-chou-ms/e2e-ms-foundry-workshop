@@ -4,6 +4,7 @@ from pathlib import Path
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from load_env import load_all_env
+from foundry_trace import configure_foundry_tracing
 import argparse
 import json
 import os
@@ -81,12 +82,26 @@ project_client = AIProjectClient(
     endpoint=PROJECT_ENDPOINT,
     credential=DefaultAzureCredential(),
 )
+
+trace_session = configure_foundry_tracing(
+    project_client=project_client,
+    scenario_name="08b_test_foundry_iq_agent",
+    service_name="e2e-ms-foundry-workshop.iq-agent-chat",
+)
+
+if trace_session.enabled:
+    print("追蹤：已啟用")
+elif trace_session.warning:
+    print(f"追蹤：{trace_session.warning}")
+
 openai_client = project_client.get_openai_client()
 
 with project_client:
-    agent = project_client.agents.get(agent_name or agent_id)
+    with trace_session.span("get-agent"):
+        agent = project_client.agents.get(agent_name or agent_id)
 
-conversation = openai_client.conversations.create()
+with trace_session.span("create-conversation"):
+    conversation = openai_client.conversations.create()
 
 print(f"\n{'='*60}")
 print("Foundry IQ Agent 對話")
@@ -139,12 +154,13 @@ while True:
         print_sample_questions()
         continue
 
-    response = openai_client.responses.create(
-        conversation=conversation.id,
-        input=user_input,
-        extra_body={"agent_reference": {
-            "name": agent.name, "type": "agent_reference"}},
-    )
+    with trace_session.span("create-response"):
+        response = openai_client.responses.create(
+            conversation=conversation.id,
+            input=user_input,
+            extra_body={"agent_reference": {
+                "name": agent.name, "type": "agent_reference"}},
+        )
 
     print(f"\nAgent：{getattr(response, 'output_text', '')}")
     print_citations(response)

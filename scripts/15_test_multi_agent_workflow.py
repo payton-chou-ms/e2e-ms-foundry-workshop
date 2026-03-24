@@ -1,18 +1,39 @@
-"""Run the declarative multi-agent workshop workflow for one scenario."""
+"""Create/update and run the declarative multi-agent workshop workflow."""
 
 import argparse
-import json
-from pathlib import Path
 
-import yaml
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 
 from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
+from foundry_trace import configure_foundry_tracing
+from scripts_15_shared import (
+    ensure_workflow_agents,
+    get_agent,
+    load_yaml,
+    resolve_config_path,
+    run_prompt_agent_step,
+)
 
 
-def parse_args():
-    parser = argparse.ArgumentParser()
+DEFAULT_SCENARIO = "launch_incident_response"
+
+
+def single_scenario(value):
+    if value == "all":
+        raise argparse.ArgumentTypeError(
+            "Use one scenario at a time for the Fabric + Search workflow."
+        )
+    return value
+
+
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description=(
+            "Single-entry multi-agent demo: refresh the scenario agents and "
+            "run the workflow."
+        )
+    )
     parser.add_argument(
         "--config",
         default="multi_agent/workflow.yaml",
@@ -20,176 +41,107 @@ def parse_args():
     )
     parser.add_argument(
         "--scenario",
-        required=True,
-        help="Scenario key to run.",
+        type=single_scenario,
+        default=DEFAULT_SCENARIO,
+        help=(
+            "Scenario key to run. Defaults to launch_incident_response for a "
+            "one-command demo."
+        ),
     )
     parser.add_argument(
         "--question",
         help="Override the scenario's default sample question.",
     )
-    return parser.parse_args()
-
-
-def load_yaml(path):
-    with open(path, "r", encoding="utf-8") as handle:
-        return yaml.safe_load(handle)
-
-
-def load_ids(path):
-    with open(path, "r", encoding="utf-8") as handle:
-        return json.load(handle)
-
-
-def get_agent(project_client, agent_record):
-    agent_name = agent_record.get("name", "")
-    agent_id = agent_record.get("id", "")
-
-    if agent_name:
-        try:
-            return project_client.agents.get(agent_name)
-        except Exception:
-            pass
-
-    if agent_id:
-        return project_client.agents.get(agent_id)
-
-    raise ValueError("Agent metadata does not contain a usable name or id")
-
-
-def run_prompt_agent_step(openai_client, definition, conversation_id, message, runtime):
-    model = definition["model"]
-    instructions = definition["instructions"]
-    tools = definition.get("tools", [])
-
-    response = openai_client.responses.create(
-        model=model,
-        input=message,
-        instructions=instructions,
-        tools=tools,
-        conversation={"id": conversation_id},
-    )
-
-    final_text = ""
-
-    while True:
-        function_calls = []
-        for item in response.output:
-            if getattr(item, "type", None) == "function_call":
-                function_calls.append(item)
-            elif getattr(item, "type", None) == "message":
-                for content in getattr(item, "content", []):
-                    if hasattr(content, "text"):
-                        final_text += content.text + "\n"
-
-        if not function_calls:
-            break
-
-        tool_outputs = []
-        for function_call in function_calls:
-            arguments = json.loads(function_call.arguments)
-            if function_call.name == "search_documents":
-                result = runtime.search_documents(
-                    query=arguments.get("query", ""),
-                    top=arguments.get("top"),
-                )
-            elif function_call.name == "execute_sql":
-                result = runtime.execute_sql(arguments.get("sql_query", ""))
-            else:
-                result = f"Unknown function: {function_call.name}"
-
-            tool_outputs.append(
-                {
-                    "type": "function_call_output",
-                    "call_id": function_call.call_id,
-                    "output": result,
-                }
-            )
-
-        response = openai_client.responses.create(
-            model=model,
-            input=tool_outputs,
-            instructions=instructions,
-            tools=tools,
-            conversation={"id": conversation_id},
-        )
-
-    return final_text.strip()
+    return parser.parse_args(argv)
 
 
 def main():
     args = parse_args()
     runtime = WorkshopMultiAgentRuntime(require_fabric=True)
-
-    config_path = Path(args.config)
-    if not config_path.is_absolute():
-        config_path = runtime.project_root / config_path
-
+    config_path = resolve_config_path(runtime, args.config)
     workflow_config = load_yaml(config_path)
     if args.scenario not in workflow_config["scenarios"]:
         raise ValueError(f"Unknown scenario: {args.scenario}")
-
-    ids_path = runtime.ids_output_path()
-    if not ids_path.exists():
-        raise ValueError(
-            f"{ids_path} not found. Run scripts/14_create_multi_agent_workflow.py first."
-        )
-
-    ids_config = load_ids(ids_path)
-    if args.scenario not in ids_config.get("scenarios", {}):
-        raise ValueError(
-            f"Scenario '{args.scenario}' has no created agent metadata. Run the create script for this scenario first."
-        )
-
-    scenario = workflow_config["scenarios"][args.scenario]
-    scenario_ids = ids_config["scenarios"][args.scenario]["agents"]
-    question = args.question or scenario["sample_question"]
 
     credential = DefaultAzureCredential()
     project_client = AIProjectClient(
         endpoint=runtime.project_endpoint, credential=credential)
     openai_client = project_client.get_openai_client()
 
-    context = {
-        "scenario_title": scenario["title"],
-        "scenario_description": scenario["description"],
-        "document_focus": scenario["document_focus"],
-        "data_focus": scenario["data_focus"],
-        "question": question,
-        "runtime_mode": runtime.runtime_mode,
-    }
+    trace_session = configure_foundry_tracing(
+        project_client=project_client,
+        scenario_name="15_test_multi_agent_workflow",
+        service_name="e2e-ms-foundry-workshop.multi-agent-test",
+    )
 
-    print(f"Runtime mode: {runtime.runtime_mode}")
-
-    outputs = {}
+    if trace_session.enabled:
+        print("追蹤：已啟用")
+    elif trace_session.warning:
+        print(f"追蹤：{trace_session.warning}")
 
     with project_client:
+        _, ids_config = ensure_workflow_agents(
+            project_client=project_client,
+            runtime=runtime,
+            workflow_config=workflow_config,
+            config_path=config_path,
+            scenario_keys=[args.scenario],
+            trace_session=trace_session,
+        )
+
+        if args.scenario not in ids_config.get("scenarios", {}):
+            raise ValueError(
+                f"Scenario '{args.scenario}' has no agent metadata after refresh."
+            )
+
+        scenario = workflow_config["scenarios"][args.scenario]
+        scenario_ids = ids_config["scenarios"][args.scenario]["agents"]
+        question = args.question or scenario["sample_question"]
+
+        context = {
+            "scenario_title": scenario["title"],
+            "scenario_description": scenario["description"],
+            "document_focus": scenario["document_focus"],
+            "data_focus": scenario["data_focus"],
+            "question": question,
+            "runtime_mode": runtime.runtime_mode,
+        }
+
+        print(f"Runtime mode: {runtime.runtime_mode}")
+
+        outputs = {}
+
         for step in workflow_config["workflow_steps"]:
             step_id = step["id"]
             agent_key = step["agent"]
             prompt = step["prompt_template"].format(**context, **outputs)
 
             agent_record = scenario_ids[agent_key]
-            agent = get_agent(project_client, agent_record)
+            with trace_session.span("get-agent"):
+                agent = get_agent(project_client, agent_record, trace_session=trace_session)
             definition = agent.versions["latest"]["definition"]
-            conversation = openai_client.conversations.create()
+            with trace_session.span("create-conversation"):
+                conversation = openai_client.conversations.create()
 
             print("\n" + "=" * 60)
             print(f"Step: {step_id} ({agent_key})")
             print("=" * 60)
-            result = run_prompt_agent_step(
-                openai_client=openai_client,
-                definition=definition,
-                conversation_id=conversation.id,
-                message=prompt,
-                runtime=runtime,
-            )
+            with trace_session.span(f"workflow-step-{step_id}"):
+                result = run_prompt_agent_step(
+                    openai_client=openai_client,
+                    definition=definition,
+                    conversation_id=conversation.id,
+                    message=prompt,
+                    runtime=runtime,
+                    trace_session=trace_session,
+                )
             outputs[step_id] = result
             print(result or "(no content returned)")
 
-    print("\n" + "=" * 60)
-    print("Final multi-agent answer")
-    print("=" * 60)
-    print(outputs.get("final_answer", "(final answer missing)"))
+        print("\n" + "=" * 60)
+        print("Final multi-agent answer")
+        print("=" * 60)
+        print(outputs.get("final_answer", "(final answer missing)"))
 
 
 if __name__ == "__main__":

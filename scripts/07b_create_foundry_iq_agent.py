@@ -1,9 +1,10 @@
 """建立使用 MCP knowledge base 工具的 Foundry IQ agent。"""
 
 from azure.ai.projects import AIProjectClient
+from credential_utils import get_credential
 from load_env import load_all_env
-from azure.identity import DefaultAzureCredential
 from azure.ai.projects.models import MCPTool, PromptAgentDefinition
+from foundry_trace import configure_foundry_tracing
 from pathlib import Path
 import json
 import os
@@ -100,8 +101,19 @@ print(f"Project Connection ID：{project_connection_id}")
 
 project_client = AIProjectClient(
     endpoint=PROJECT_ENDPOINT,
-    credential=DefaultAzureCredential(),
+    credential=get_credential(),
 )
+
+trace_session = configure_foundry_tracing(
+    project_client=project_client,
+    scenario_name="07b_create_foundry_iq_agent",
+    service_name="e2e-ms-foundry-workshop.iq-agent-create",
+)
+
+if trace_session.enabled:
+    print("[OK] 已啟用 Foundry tracing")
+elif trace_session.warning:
+    print(f"警告：{trace_session.warning}")
 
 mcp_kb_tool = MCPTool(
     server_label="knowledge-base",
@@ -114,23 +126,26 @@ mcp_kb_tool = MCPTool(
 with project_client:
     print(f"\n檢查 agent '{agent_name}' 是否已存在...")
     try:
-        existing_agent = project_client.agents.get(agent_name)
+        with trace_session.span("get-existing-agent"):
+            existing_agent = project_client.agents.get(agent_name)
         if existing_agent:
             print("  已找到既有 agent，準備刪除...")
-            project_client.agents.delete(agent_name)
+            with trace_session.span("delete-existing-agent"):
+                project_client.agents.delete(agent_name)
             print("[OK] 已刪除既有 agent")
     except Exception:
         print("  沒有找到既有 agent")
 
     print("\n建立 Foundry IQ agent...")
-    agent = project_client.agents.create_version(
-        agent_name=agent_name,
-        definition=PromptAgentDefinition(
-            model=MODEL,
-            instructions=instructions,
-            tools=[mcp_kb_tool],
-        ),
-    )
+    with trace_session.span("create-agent"):
+        agent = project_client.agents.create_version(
+            agent_name=agent_name,
+            definition=PromptAgentDefinition(
+                model=MODEL,
+                instructions=instructions,
+                tools=[mcp_kb_tool],
+            ),
+        )
 
 agent_metadata = {
     "agent_id": agent.id,

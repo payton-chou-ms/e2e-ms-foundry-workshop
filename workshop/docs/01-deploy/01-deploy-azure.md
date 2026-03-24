@@ -119,7 +119,9 @@ az account set --subscription <SUBSCRIPTION_ID>
 azd up
 ```
 
-如果部署途中看到 `AADSTS50076` 或 `reauthentication required`，通常代表這次操作被要求補做 MFA。這時直接重新登入 `azd` 並完成驗證即可：
+如果部署途中看到 `AADSTS50076` 或 `reauthentication required`，通常代表這次操作被要求補做 MFA。這時直接重新登入 `az` / `azd` 並完成驗證即可：
+
+如果在部署、更新資源設定或手動補角色時看到 `RequestDisallowedByAzure`，通常更接近 Azure Policy、deny assignment 或組織治理限制，而不是單純登入過期。這時應先檢查 policy / deny assignment，再決定是否需要調整模板或請管理員放行。
 
 ```bash
 azd auth logout
@@ -142,8 +144,13 @@ azd up --environment <environment-name>
 這次部署除了主要 chat 和 embedding 模型，也會額外建立：
 
 - `gpt-4.1-mini`
-- 一個部署在 Foundry account 內的 `gpt-image-1.5` model deployment，用於 `13_demo_image_generation.py`
+- 盡力而為地嘗試建立一個部署在 Foundry account 內的 `gpt-image-1.5` model deployment，用於 `13_demo_image_generation.py`。如果該區域或 quota 不允許，`azd up` 仍會完成，只有影像示範會被略過
 - 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`。它會優先使用你選的 Azure location；如果該區域不支援 Playwright Workspace，才會自動改用 `eastus`
+
+!!! note "Retail scenario 的 Blob 上傳需求"
+    `data/retail_launch_incident/prepare_search_and_blob_assets.py` 會從本機或 Codespaces 直接呼叫 Blob data plane。
+    因此 storage account 需要保留 `Public network access = Enabled`，並以 Microsoft Entra ID 授權。
+    如果你的組織會在部署後自動把 storage account 改成 `Disabled`，這支 script 會在 Blob 上傳階段失敗，即使 RBAC 已經完整。
 
 !!! warning "請等待完成"
     部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作
@@ -184,7 +191,7 @@ azd up --environment <environment-name>
 |------|---------------|---------------|
 | 只跑既有 workshop、測試既有 agent、驗證文件/資料查詢 | `Azure AI User` | Foundry account 或對應 project 上層資源 |
 | 要查詢既有 Azure AI Search index | `Search Index Data Reader` | Search service，或更小範圍的單一 index |
-| 要重跑文件上傳、重建 Search 文件資料 | `Search Index Data Contributor` | Search service，或單一 index |
+| 要重跑既有文件上傳，但不改 index 結構 | `Search Index Data Contributor` | Search service，或單一 index |
 | 要建立 / 更新 index、indexer、skillset | `Search Service Contributor` | Search service |
 | 只需要讀既有 Blob 內容 | `Storage Blob Data Reader` | Storage account，或單一 container |
 | 要上傳 / 覆寫 / 刪除 Blob | `Storage Blob Data Contributor` | Storage account，或單一 container |
@@ -199,18 +206,15 @@ azd up --environment <environment-name>
 
 如果學員不只是測試，而是要重跑資料準備或知識建置流程，再加上：
 
+- `Search Service Contributor`
 - `Search Index Data Contributor`
 - `Storage Blob Data Contributor`
-
-只有在學員真的要修改 Search 結構時，才再補：
-
-- `Search Service Contributor`
 
 ### 這個 workshop 怎麼理解最合理
 
 - **Foundry IQ / agent 執行**：以 `Azure AI User` 為主，這是學員跑 prompt agent、呼叫既有模型與 project data actions 的最小角色
 - **Azure AI Search 查詢**：如果只是查既有內容，`Search Index Data Reader` 即可
-- **Azure AI Search 重建**：如果要重跑 `upload_to_search` 類流程，通常需要 `Search Index Data Contributor`；若還要碰 index/schema/indexer，才需要 `Search Service Contributor`
+- **Azure AI Search 重建**：如果要重跑 `prepare_search_and_blob_assets.py` 或 `upload_to_search` 類流程，因為腳本會建立或更新 index，所以需要 `Search Service Contributor`；文件寫入本身仍需要 `Search Index Data Contributor`
 - **Blob Storage**：只有在學員的流程真的會直接對 Blob 做讀寫時才需要；純 agent 問答不一定會直接需要 Blob data plane 權限
 - **Fabric IQ**：這部分主要不是 Azure RBAC，而是 **Fabric workspace role**。如果學員要走 Fabric 路徑，還要另外確認他們在 Fabric workspace 內至少看得到對應項目
 
