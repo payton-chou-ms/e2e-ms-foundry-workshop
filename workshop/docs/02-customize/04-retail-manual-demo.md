@@ -179,19 +179,7 @@ python scripts/06b_upload_to_foundry_knowledge.py
 2. 不屬於 `retail-store-ops-agent` 或 `retail-launch-comms-agent` 其中一個人的專屬 knowledge
 3. 如果走目前 repo 的建議流程，仍然應該用 script 先寫進 Azure AI Search，再供後續 Foundry IQ 或 workflow 使用
 
-### 示範問題
 
-下面這組問題可以直接拿來做 portal demo，不需要再另外找檔案：
-
-```text
-1. 今天上午 BlueLeaf Sparkling Oat Latte 上市後，三家門市回報與 topping sachet 標示有關的顧客投訴。請說明區經理與門市經理在前 15 分鐘與前 60 分鐘各自應做什麼。
-
-2. BlueLeaf Sparkling Oat Latte 因品質檢查，暫時在三家門市停售。請提供一段安全的對客櫃台說法、一版短告示文案、一則社群回覆，以及門市海報的創意方向。
-
-3. 今天 BlueLeaf Sparkling Oat Latte 上市後，市中心三家門市回報顧客投訴，指出部分 topping sachet 疑似把杏仁糖漿標錯成一般 oat topping。請不要直接給最終處置方案，而是先整理成一份 handoff brief，提供給 operations specialist 與 communications specialist 使用。
-
-4. 今天 BlueLeaf Sparkling Oat Latte 上市後，市中心三家門市回報顧客投訴，指出部分 topping sachet 疑似把杏仁糖漿標錯成一般 oat topping。請產出一份可供區經理直接採用的 recovery package，內容需包含：立即門市動作、店員話術、對客安全說法、臨時店內告示方向，以及一版門市海報的視覺方向。
-```
 
 ## Step 2：建立兩個 specialist agents
 
@@ -507,18 +495,6 @@ trigger:
 - 是否與 quality check 的措辭一致
 - 是否避免過度戲劇化或醫療、法律語言
 - 是否和門市現場暫停銷售的說法一致
-
-## 建議展示話術
-
-如果你要在現場口頭帶 demo，可以用下面節奏：
-
-1. 先說明這不是 recall，而是 launch-day quality check incident
-2. 再展示 specialist agents 各自只處理自己負責的範圍
-3. 最後強調 workflow 的價值在於把跨角色輸出整理成單一管理包
-
-## 參考來源
-
-- Foundry low-code workflow 草稿：`tmp/retail-launch-incident-foundry-low-code-workflow.yaml`
 
 ## 檢查點
 
