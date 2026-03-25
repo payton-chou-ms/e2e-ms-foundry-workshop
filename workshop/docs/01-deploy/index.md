@@ -95,4 +95,4 @@
 
 ---
 
-[← 快速開始](../00-get-started/workshop-flow.md) | [管理員部署 →](00-admin-deploy-share.md)
+[← 快速開始](../00-get-started/index.md) | [管理員部署 →](00-admin-deploy-share.md)

@@ -25,6 +25,21 @@ azd up
 azd down
 ```
 
+## 如果你不是走 `azd` 路徑
+
+有些 VS Code Web 範本會直接提供 connection string 或既有 endpoint，而不是要求你先用 `azd up` 佈建環境。
+
+這種情況下，請改依範本內提供的 `.env` 模板填入必要設定，例如：
+
+- project connection string
+- Foundry project endpoint
+- 其他範本要求的認證或環境變數
+
+換句話說：
+
+- 如果範本提供的是完整基礎架構與部署流程，照 `azd up` / `azd down` 走
+- 如果範本提供的是既有資源連線方式，優先依 `.env` 與 sample code 的說明設定，不必額外建立 `azd` 流程
+
 ## 繼續在本機桌面工作
 
 你可以點選畫面左下角的「Continue On Desktop...」來繼續在 VS Code Desktop 上工作。請確保帶上 .env 檔案，步驟如下：

@@ -4,17 +4,28 @@
 
 ## 目前角色
 
-`guides/` 目前只保留簡短導向頁，用來把讀者帶回正式文件來源。
-
-目前實際保留的檔案只有：
-
-- `deployment_guide.md`：部署文件導向頁，提醒讀者改看 `workshop/docs/01-deploy/`
+`guides/` 只保留簡短導向頁，把讀者帶回唯一正式內容來源。
 
 ## 唯一正式內容來源
 
 請在以下位置撰寫與更新 workshop 正式內容：
 
 - `workshop/docs/`
+
+部署相關內容請直接使用以下頁面：
+
+- `workshop/docs/01-deploy/index.md`
+- `workshop/docs/01-deploy/00-admin-deploy-share.md`
+- `workshop/docs/01-deploy/00-participant-run-validate.md`
+- `workshop/docs/01-deploy/01-deploy-azure.md`
+- `workshop/docs/01-deploy/02-setup-fabric.md`
+- `workshop/docs/01-deploy/03-configure.md`
+- `workshop/docs/01-deploy/04-run-scenario.md`
+
+如果你需要公開網站，請使用：
+
+- Workshop：https://payton-chou-ms.github.io/e2e-ms-foundry-workshop/
+- Repository：https://github.com/payton-chou-ms/e2e-ms-foundry-workshop
 
 ## 維護原則
 

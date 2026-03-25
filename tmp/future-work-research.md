@@ -1,6 +1,23 @@
 # Future Work 研究筆記
 
-此文件根據 `tmp/future-work.md` 的條目，對照目前 repo 結構，整理如果要把這些功能真正補進 workshop，可能需要動到哪些部分。
+此文件整併原本分散在下列檔案的研究內容，作為目前唯一保留的 future work 研究總檔：
+
+- `tmp/future-work.md`
+- `tmp/future-work-research.md`
+- `tmp/agent365-workshop-plan.md`
+
+目的是把未來功能研究、Agent365 延伸定位，以及後續實作順序收斂在同一份文件，避免研究稿再分散成多份獨立筆記。
+
+## 原始研究條目
+
+這一輪原始想追蹤的 future work 項目如下：
+
+1. add ai gateway integration
+2. add red team test
+3. add evaluation
+4. add content safety
+5. agent365
+6. hosted agent integration
 
 ## 目前 repo 的可用基礎
 
@@ -137,15 +154,73 @@
 
 ## 5. agent365
 
+### 結論
+
+建議把 Agent365 展示放進 workshop，但不要放進主線部署流程，而是定位成 **選修延伸章節** 或 **deep dive**。
+
+原因很直接：
+
+- 目前 workshop 主軸是 Azure AI Foundry、Search、Fabric、multi-agent workflow 與既有 demo 場景。
+- Agent365 帶來的是另一層能力：**把既有 agent 接到 Microsoft 365 / Teams 使用情境**。
+- 這個能力很有展示價值，但會增加身份、安裝生命週期、通道互動模型等額外複雜度。
+- 如果把它放進主線，會稀釋目前 workshop 的核心學習路徑。
+
+因此較合理的做法是：
+
+- 主線 workshop 仍聚焦在 Foundry agent 與 demo scenario。
+- Agent365 作為「如何把 agent 帶到 Microsoft 365 / Teams」的延伸展示。
+
 ### 目前最大問題：名稱有歧義
 
-單看 `future-work.md`，`agent365` 可能有幾種意思：
+單看原始條目，`agent365` 可能有幾種意思：
 
 1. 把 Foundry Agent 接到 Microsoft 365 / Teams / Copilot 生態
 2. 讓 agent 能讀取 Microsoft 365 資料來源
 3. 做成能在 365 工作場景使用的 agent 封裝
 
 從 repo 主題與 workshop 敘事來看，**最合理的解讀**應該是：把目前的 Foundry Agent 能力往 Microsoft 365 或 Teams 場景延伸。
+
+### 建議定位
+
+最適合的定位是：
+
+1. 放在 `03-understand` 或同層級的 deep dive 區段。
+2. 內容上視為「channel integration / enterprise surface」延伸，而不是新的基礎教學章節。
+3. 與既有 Retail demo 連結，而不是額外再開一條全新 scenario。
+
+### 為什麼不建議放進主線
+
+Agent365 展示牽涉的重點，和目前主線 workshop 不完全相同：
+
+- Microsoft 365 / Teams 的互動入口
+- user identity 與 `aad_object_id` 類型的使用者識別
+- 安裝 / 移除事件處理
+- 多訊息回覆模式
+- typing indicator 與對話體驗細節
+
+這些都很有價值，但屬於「產品化通路整合」議題，不是目前 workshop 主線裡最先要掌握的 Foundry agent 建置流程。
+
+如果直接塞入主線，常見結果會是：
+
+- 學員更難分辨哪一部分是 Foundry 核心概念
+- 身份與通道設定成本拉高
+- workshop 時間被分散到 Teams / M365 整合細節
+
+### 最佳展示方式
+
+建議以 **Retail demo** 當作 Agent365 的承載場景。
+
+原因：
+
+- Retail demo 已經有明確的商務敘事與多 knowledge base / multi-agent 背景。
+- 如果把同一個 Retail assistant 搬到 Teams 或 Microsoft 365 入口，價值會很直觀。
+- 學員可以清楚看到：agent 本身沒換場景邏輯，只是換了互動入口與使用者體驗層。
+
+建議展示主軸：
+
+1. 同一個 Retail agent 如何從 Playground / CLI 走向 Teams。
+2. 使用者身份如何影響 agent 回覆與後續整合能力。
+3. 在 Teams 中如何呈現多段式回覆、狀態提示與互動節奏。
 
 ### 如果是「整合到 Microsoft 365 / Teams」
 
@@ -164,11 +239,59 @@
 - 郵件 / 文件 / Teams / Calendar 等資料存取權限
 - 新的 tool contract 與資料治理規則
 
+### 建議章節內容
+
+如果要新增一篇 workshop 文件，建議內容可分成以下幾段：
+
+1. Agent365 是什麼
+2. 這個展示解決什麼問題
+3. 與現有 workshop 的關係
+4. Demo flow
+5. 不納入主線的理由
+
+### 建議文件放置方式
+
+如果後續要正式放進 workshop 文件，建議新增一頁，例如：
+
+- `workshop/docs/03-understand/06-agent365-extension.md`
+
+並在 `workshop/mkdocs.yml` 的 deep dive / understand 區段加入導覽。
+
+命名方向建議偏向 `extension` 或 `integration`，不要讓它看起來像主線必做步驟。
+
+### 建議實作順序
+
+#### Phase 1: 文件化
+
+先補一篇純說明型章節：
+
+- 為什麼要有 Agent365 展示
+- 它和現有 Foundry demo 的關係
+- 適合展示哪些能力
+- 需要哪些額外前置條件
+
+#### Phase 2: 最小可展示版本
+
+選一個既有 demo，優先建議 Retail：
+
+- 接一個最小 Agent365 入口
+- 展示登入身份、基本問答、多訊息回覆
+- 不急著擴大到所有 scenario
+
+#### Phase 3: 產品化延伸
+
+如果展示反應好，再往下補：
+
+- 安裝 / 移除事件處理
+- 更完整的 Teams 互動模式
+- 與企業資料、通知或工作流的延伸整合
+
 ### 風險與問題
 
 - 這一項目前最缺明確定義
 - 一旦牽涉到 Microsoft 365 資料，就會立刻增加權限治理、租戶設定與合規難度
 - 不適合在主 workshop 主線中太早加入，較像後續企業整合延伸題
+- 若和 hosted agent integration 並行推進，需明確切開「Azure agent runtime」與「M365/Teams channel」的邊界
 
 ## 6. hosted agent 整合研究
 

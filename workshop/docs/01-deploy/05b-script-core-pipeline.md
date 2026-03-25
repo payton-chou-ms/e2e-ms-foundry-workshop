@@ -147,4 +147,4 @@ python scripts/08b_test_foundry_iq_agent.py
 
 ---
 
-[← 快速建置與測試](05a-script-core-paths.md) | [選配 demo 09-13 →](05c-script-optional-demos.md)
+[← 腳本用途、快速路徑與執行順序](05-script-sequence.md) | [選配 demo 09-13 →](05c-script-optional-demos.md)

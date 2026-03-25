@@ -55,9 +55,7 @@ extra_javascript:
 
 nav:
   - 總覽: index.md
-  - 快速開始:
-      - 先決條件: 00-get-started/index.md
-      - Workshop 流程: 00-get-started/workshop-flow.md
+  - 快速開始: 00-get-started/index.md
   - 部署方案:
       - 總覽: 01-deploy/index.md
       - 管理員部署並分享: 01-deploy/00-admin-deploy-share.md
@@ -70,7 +68,6 @@ nav:
       - Microsoft Fabric 手動驗證: 01-deploy/04b-fabric-manual-validation.md
       - 腳本用途與執行順序:
           - 總覽: 01-deploy/05-script-sequence.md
-          - 快速建置與測試: 01-deploy/05a-script-core-paths.md
           - 主流程腳本 01-08: 01-deploy/05b-script-core-pipeline.md
           - 選配 demo 09-13: 01-deploy/05c-script-optional-demos.md
           - Browser Automation 補充設定: 01-deploy/05d-browser-automation-setup.md
