@@ -61,6 +61,7 @@ nav:
       - 管理員部署並分享: 01-deploy/00-admin-deploy-share.md
       - 部署 Azure 資源: 01-deploy/01-deploy-azure.md
       - 建立 Fabric 工作區: 01-deploy/02-setup-fabric.md
+      - Fabric 詳細設定: 01-deploy/fabric/workspace-settings.md
       - 參與者執行並驗證: 01-deploy/00-participant-run-validate.md
       - 設定開發環境: 01-deploy/03-configure.md
       - 建置方案: 01-deploy/04-run-scenario.md

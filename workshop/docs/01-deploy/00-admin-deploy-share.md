@@ -37,6 +37,8 @@
 
 請依照 [建立 Fabric 工作區](02-setup-fabric.md) 操作。
 
+如果你要把這套環境交給其他學員或下次的自己重複使用，請再補看 [Fabric 詳細設定](fabric/workspace-settings.md)，把 workspace access、`FABRIC_WORKSPACE_ID`、執行身分與 ontology 可用性一次整理清楚。
+
 ### 3. 設定共用環境
 
 請依照 [設定開發環境](03-configure.md) 操作。
@@ -44,6 +46,7 @@
 在這個階段，記下後續操作還會用到的值，特別是：
 
 - `FABRIC_WORKSPACE_ID`
+- Fabric workspace URL
 - 你希望後續重複使用的環境命名慣例
 - 需要 Azure 和 Fabric 存取權的身分或群組
 

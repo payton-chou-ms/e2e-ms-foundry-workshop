@@ -44,10 +44,12 @@
 完整部署路徑包含：
 
 - 準備支撐 workshop 的 Azure 資源，包括 Foundry project、模型部署、AI Search、Storage、Application Insights，以及選配的 image OpenAI 與 Playwright Workspace
-- 設定 **Microsoft Fabric** 連線
+- 建立 workspace 並完成 **Microsoft Fabric** 詳細設定檢查
 - 設定開發環境
 - 讓代理程式對範例資料實際運作
 - 約需 15 分鐘
+
+如果你負責管理員部署，Fabric 這一段不要只停在建立 workspace。請把 [建立 Fabric 工作區](../01-deploy/02-setup-fabric.md) 和 [Fabric 詳細設定](../01-deploy/fabric/workspace-settings.md) 一起看完，再往下走。
 
 ### Step 2：依使用案例自訂
 

@@ -12,9 +12,13 @@
 
 ## 本機開發
 
+所有 Python 相依套件與 MkDocs 指令都統一使用專案根目錄 `.venv`。
+
 ### 安裝相依套件
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 

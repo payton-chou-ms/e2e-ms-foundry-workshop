@@ -116,7 +116,7 @@ flowchart LR
 建議重建指令：
 
 ```bash
-.venv-cu/bin/python data/contract_keyword_review/generate_content_artifacts.py \
+.venv/bin/python data/contract_keyword_review/generate_content_artifacts.py \
     --cu-analyzer-id prebuilt-layout
 ```
 
