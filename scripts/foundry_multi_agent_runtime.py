@@ -16,6 +16,7 @@ from foundry_tool_contract import (
     build_search_documents_tool,
 )
 from load_env import load_all_env
+from scenario_utils import build_scenario_resource_name, resolve_data_paths, resolve_scenario
 
 load_all_env()
 
@@ -34,17 +35,14 @@ class WorkshopMultiAgentRuntime:
             raise ValueError("未設定 AZURE_AI_PROJECT_ENDPOINT")
         if not self.search_endpoint:
             raise ValueError("未設定 AZURE_AI_SEARCH_ENDPOINT")
-        if not self.data_folder:
-            raise ValueError("未設定 DATA_FOLDER")
 
         self.project_root = Path(__file__).resolve().parent.parent
-        data_path = Path(self.data_folder)
-        if not data_path.is_absolute():
-            data_path = self.project_root / data_path
-        self.data_dir = data_path.resolve()
-        self.config_dir = self.data_dir / "config"
-        if not self.config_dir.exists():
-            self.config_dir = self.data_dir
+        self.scenario = resolve_scenario(os.getenv("SCENARIO_KEY") or None, self.data_folder)
+        self.scenario_key = self.scenario["key"]
+        self.data_folder = self.scenario["dataFolder"]
+        paths = resolve_data_paths(self.scenario)
+        self.data_dir = paths["data_dir"]
+        self.config_dir = paths["config_dir"]
 
         self.ontology_config = self._load_json("ontology_config.json")
         self.fabric_ids = self._load_json(
@@ -59,7 +57,10 @@ class WorkshopMultiAgentRuntime:
             self.fabric_ids.get("solution_name")
             or os.getenv("SOLUTION_NAME")
             or os.getenv("SOLUTION_PREFIX")
-            or self.ontology_config.get("scenario", "demo").lower().replace(" ", "-")
+            or build_scenario_resource_name(
+                self.ontology_config.get("scenario", "demo").lower().replace(" ", "-"),
+                self.scenario_key,
+            )
         )
         self.index_name = self.search_ids.get(
             "index_name", f"{self.solution_name}-documents"

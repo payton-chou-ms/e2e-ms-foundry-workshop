@@ -5,6 +5,7 @@ from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from load_env import load_all_env
 from foundry_trace import configure_foundry_tracing
+from scenario_utils import resolve_data_paths, resolve_scenario
 import argparse
 import json
 import os
@@ -13,27 +14,23 @@ import sys
 parser = argparse.ArgumentParser()
 parser.add_argument("--agent-name", default="")
 parser.add_argument("--agent-id", default="")
+parser.add_argument("--scenario", default="")
+parser.add_argument("--data-folder", default="")
 args = parser.parse_args()
 
 load_all_env()
 
 PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
-DATA_FOLDER = os.getenv("DATA_FOLDER")
 
 if not PROJECT_ENDPOINT:
     print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
     print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
-if not DATA_FOLDER:
-    print("錯誤：.env 中未設定 DATA_FOLDER")
-    print("      請先執行 01_generate_sample_data.py")
-    sys.exit(1)
-
-data_dir = Path(DATA_FOLDER)
-config_dir = data_dir / "config"
-if not config_dir.exists():
-    config_dir = data_dir
+scenario = resolve_scenario(args.scenario or os.getenv("SCENARIO_KEY") or None, args.data_folder or os.getenv("DATA_FOLDER"), require_capability="foundryIq")
+paths = resolve_data_paths(scenario)
+data_dir = Path(scenario["absoluteDataFolder"])
+config_dir = paths["config_dir"]
 
 agent_ids_path = config_dir / "foundry_iq_agent_ids.json"
 questions_path = config_dir / "sample_questions.txt"
@@ -106,6 +103,7 @@ with trace_session.span("create-conversation"):
 print(f"\n{'='*60}")
 print("Foundry IQ Agent 對話")
 print(f"{'='*60}")
+print(f"Scenario：{scenario['key']}")
 print(f"Agent 名稱：{agent.name}")
 print_sample_questions()
 print("輸入 'quit' 離開，輸入 'help' 可再次查看範例問題")

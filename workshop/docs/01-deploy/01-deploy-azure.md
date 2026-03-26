@@ -164,10 +164,31 @@ azd up --environment <environment-name>
     如果該區域或 quota 不允許，`azd up` 仍會完成，失敗的 deployment 只會被記錄在 `.azure/<env>/.env` 的 best-effort status 變數中
 - 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`。它會優先使用你選的 Azure location；如果該區域不支援 Playwright Workspace，才會自動改用 `eastus`
 
+!!! note "如果這次要跳過 Browser Automation 資源"
+    Playwright Workspace 是選配資源。若你現在不需要 `10_demo_browser_automation.py`，可在部署前先設定：
+
+    ```bash
+    azd env set AZURE_DEPLOY_BROWSER_AUTOMATION false
+    ```
+
+    之後再執行：
+
+    ```bash
+    azd up --environment <environment-name>
+    ```
+
+    若之後要重新打開，再把值改回 `true` 後重新 provision / deploy 即可。
+
 !!! note "Retail scenario 的 Blob 上傳需求"
     `data/retail_launch_incident/prepare_search_and_blob_assets.py` 會從本機或 Codespaces 直接呼叫 Blob data plane。
     因此 storage account 需要保留 `Public network access = Enabled`，並以 Microsoft Entra ID 授權。
     如果你的組織會在部署後自動把 storage account 改成 `Disabled`，這支 script 會在 Blob 上傳階段失敗，即使 RBAC 已經完整。
+
+!!! note "Scenario containers 與 admin preload"
+    新版部署會預先建立每個 scenario 對應的 Blob container。
+    Azure 資源部署完成後，管理員可再執行：
+    `python scripts/00_admin_preload_scenarios.py`
+    把不同 scenario 的 Blob、Search、Foundry IQ 與 Fabric IQ 資料先載入共享環境。
 
 !!! warning "請等待完成"
     部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作
@@ -182,7 +203,8 @@ azd up --environment <environment-name>
 - Storage Account
 - Application Insights
 - Log Analytics workspace
-- Playwright Workspace
+- Playwright Workspace（若 `AZURE_DEPLOY_BROWSER_AUTOMATION=true`）
+- 多個 scenario 對應的 Blob containers
 
 !!! note "補充說明"
     chat、embedding 與其他選配模型部署會掛在 Microsoft Foundry 底下，
@@ -196,7 +218,7 @@ azd up --environment <environment-name>
     你不需要手動設定 Azure 連線字串。腳本會自動從 azd 環境讀取
 
 !!! note "Browser Automation 先不用現在處理"
-    `azd up` 只會先建立 Playwright Workspace。
+    若你保留 Browser Automation，`azd up` 只會先建立 Playwright Workspace。
     等你真的要測 `10_demo_browser_automation.py` 時，再去完成 Browser Automation connection 設定即可。
 
 ---

@@ -11,6 +11,12 @@ from azure.ai.projects.models import PromptAgentDefinition
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from load_env import load_all_env
+from scenario_utils import (
+    build_scenario_resource_name,
+    resolve_data_paths,
+    resolve_scenario,
+    scenario_resource_suffix,
+)
 import os
 import random
 import string
@@ -28,6 +34,10 @@ def _short_prefix(length=3):
 parser = argparse.ArgumentParser()
 parser.add_argument("--foundry-only", action="store_true",
                     help="建立只使用 AI Search 的 agent（不使用 Fabric / SQL）")
+parser.add_argument("--scenario", default="",
+                    help="要使用的情境 key（優先於 DATA_FOLDER）")
+parser.add_argument("--data-folder", default="",
+                    help="資料資料夾路徑（預設讀取 .env）")
 args = parser.parse_args()
 
 FOUNDRY_ONLY = args.foundry_only
@@ -50,16 +60,9 @@ MODEL = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
 SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
 
 # Project settings - from .env
-DATA_FOLDER = os.getenv("DATA_FOLDER")
-
 if not ENDPOINT:
     print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
     print("      請先執行 'azd up' 部署 Azure 資源")
-    sys.exit(1)
-
-if not DATA_FOLDER:
-    print("錯誤：.env 中未設定 DATA_FOLDER")
-    print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
 if not SEARCH_ENDPOINT:
@@ -67,12 +70,11 @@ if not SEARCH_ENDPOINT:
     print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
-data_dir = os.path.abspath(DATA_FOLDER)
-
-# Set up paths for new folder structure
-config_dir = os.path.join(data_dir, "config")
-if not os.path.exists(config_dir):
-    config_dir = data_dir  # Fallback to old structure
+scenario = resolve_scenario(args.scenario or os.getenv("SCENARIO_KEY") or None, args.data_folder or os.getenv("DATA_FOLDER"), require_capability="search")
+paths = resolve_data_paths(scenario)
+data_dir = scenario["absoluteDataFolder"]
+config_dir = os.fspath(paths["config_dir"])
+scenario_suffix = scenario_resource_suffix(scenario["key"])
 
 # ============================================================================
 # Load Ontology Config and Schema Prompt
@@ -88,7 +90,7 @@ if not os.path.exists(config_path):
 with open(config_path) as f:
     ontology_config = json.load(f)
 
-scenario = ontology_config.get("scenario", "retail")
+scenario_from_config = ontology_config.get("scenario", "retail")
 scenario_name = ontology_config.get("name", "Business Data")
 scenario_desc = ontology_config.get("description", "")
 tables = list(ontology_config.get("tables", {}).keys())
@@ -123,16 +125,24 @@ if os.path.exists(search_ids_path):
     INDEX_NAME = search_ids.get(
         "index_name", f"{fabric_ids.get('solution_name', 'demo')}-documents")
 else:
-    INDEX_NAME = f"{fabric_ids.get('solution_name', 'demo')}-documents"
+    fallback_solution_name = fabric_ids.get("solution_name") or build_scenario_resource_name(
+        os.getenv("SOLUTION_NAME") or os.getenv("SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
+        scenario["key"],
+    )
+    INDEX_NAME = f"{fallback_solution_name}-documents"
     print(
         f"警告：找不到 search_ids.json，改用預設索引：{INDEX_NAME}")
 
 WORKSPACE_ID = fabric_ids.get("workspace_id")
 LAKEHOUSE_NAME = fabric_ids.get("lakehouse_name")
 SOLUTION_NAME = fabric_ids.get(
-    "solution_name") or scenario.lower().replace(" ", "-")
+    "solution_name") or build_scenario_resource_name(
+        os.getenv("SOLUTION_NAME") or os.getenv("SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
+        scenario["key"],
+    )
 # Agent name: short prefix + role
-AGENT_NAME = f"{_short_prefix()}-agent"
+agent_role = "search-agent" if FOUNDRY_ONLY else "agent"
+AGENT_NAME = f"{_short_prefix()}-{scenario_suffix}-{agent_role}"
 
 print(f"\n{'='*60}")
 if FOUNDRY_ONLY:
@@ -142,6 +152,7 @@ else:
 print(f"{'='*60}")
 print(f"Endpoint：{ENDPOINT}")
 print(f"模型：{MODEL}")
+print(f"Scenario：{scenario['key']}")
 print(f"情境：{scenario_name}")
 if not FOUNDRY_ONLY:
     print(f"資料表：{', '.join(tables)}")
@@ -283,6 +294,7 @@ if os.path.exists(agent_ids_path):
 # Only save agent-specific info, not environment details
 agent_ids["agent_id"] = agent.id
 agent_ids["agent_name"] = agent.name
+agent_ids["scenario_key"] = scenario["key"]
 agent_ids["search_index"] = INDEX_NAME
 
 with open(agent_ids_path, "w") as f:

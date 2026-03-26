@@ -1,0 +1,30 @@
+{
+  "scenario_key": "static_hospitality",
+  "data_folder": "data/static_examples/hospitality",
+  "blob_endpoint": "https://stda4zzppizpdfh2.blob.core.windows.net/",
+  "blob_container": "static-hospitality",
+  "uploaded_at": "2026-03-25T17:11:41.472625+00:00",
+  "file_count": 4,
+  "files": [
+    {
+      "path": "documents/guest_policies.pdf",
+      "source": "documents/guest_policies.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-hospitality/documents/guest_policies.pdf"
+    },
+    {
+      "path": "documents/service_standards.pdf",
+      "source": "documents/service_standards.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-hospitality/documents/service_standards.pdf"
+    },
+    {
+      "path": "tables/reservations.csv",
+      "source": "tables/reservations.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-hospitality/tables/reservations.csv"
+    },
+    {
+      "path": "tables/rooms.csv",
+      "source": "tables/rooms.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-hospitality/tables/rooms.csv"
+    }
+  ]
+}

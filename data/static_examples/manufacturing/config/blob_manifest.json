@@ -1,0 +1,30 @@
+{
+  "scenario_key": "static_manufacturing",
+  "data_folder": "data/static_examples/manufacturing",
+  "blob_endpoint": "https://stda4zzppizpdfh2.blob.core.windows.net/",
+  "blob_container": "static-manufacturing",
+  "uploaded_at": "2026-03-25T17:11:53.631763+00:00",
+  "file_count": 4,
+  "files": [
+    {
+      "path": "documents/maintenance_guide.pdf",
+      "source": "documents/maintenance_guide.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-manufacturing/documents/maintenance_guide.pdf"
+    },
+    {
+      "path": "documents/quality_standards.pdf",
+      "source": "documents/quality_standards.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-manufacturing/documents/quality_standards.pdf"
+    },
+    {
+      "path": "tables/equipment.csv",
+      "source": "tables/equipment.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-manufacturing/tables/equipment.csv"
+    },
+    {
+      "path": "tables/suppliers.csv",
+      "source": "tables/suppliers.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-manufacturing/tables/suppliers.csv"
+    }
+  ]
+}

@@ -83,6 +83,21 @@ param imageModelName string = 'gpt-image-1.5'
 @description('Azure OpenAI image model version')
 param imageModelVersion string = '2025-12-16'
 
+type scenarioDefinition = {
+  @description('Scenario key used by scripts and metadata')
+  key: string
+  @description('Blob container name for this scenario')
+  containerName: string
+}
+
+@description('Scenario-specific blob containers and project connections to provision.')
+param scenarioDefinitions scenarioDefinition[] = [
+  {
+    key: 'default'
+    containerName: 'default'
+  }
+]
+
 @description('Principal ID of the user running deployment (for role assignments)')
 param deployingUserPrincipalId string
 
@@ -120,6 +135,8 @@ var optionalModelSummaries = map(enabledOptionalModelDeployments, model => {
   skuName: model.skuName
   capacity: model.capacity
 })
+var defaultScenarioMatches = filter(scenarioDefinitions, scenario => scenario.key == 'default')
+var defaultScenarioDefinition = empty(defaultScenarioMatches) ? scenarioDefinitions[0] : defaultScenarioMatches[0]
 
 // Log Analytics Workspace
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
@@ -420,19 +437,19 @@ resource searchStorageBlobDataReader 'Microsoft.Authorization/roleAssignments@20
   }
 }
 
-// Default container for AI Foundry
-resource defaultContainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-05-01' = {
+// Scenario-specific containers for AI Foundry
+resource scenarioContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-05-01' = [for scenario in scenarioDefinitions: {
   parent: blobService
-  name: 'default'
+  name: scenario.containerName
   properties: {
     publicAccess: 'None'
   }
-}
+}]
 
-// Connect Storage to Project
-resource storageConnection 'Microsoft.CognitiveServices/accounts/projects/connections@2025-04-01-preview' = {
+// Connect scenario containers to the project
+resource scenarioStorageConnections 'Microsoft.CognitiveServices/accounts/projects/connections@2025-04-01-preview' = [for (scenario, index) in scenarioDefinitions: {
   parent: aiProject
-  name: 'storage-connection'
+  name: 'storage-${replace(scenario.key, '_', '-')}'
   properties: {
     category: 'AzureBlob'
     target: storageAccount.properties.primaryEndpoints.blob
@@ -441,10 +458,16 @@ resource storageConnection 'Microsoft.CognitiveServices/accounts/projects/connec
     metadata: {
       ResourceId: storageAccount.id
       AccountName: storageAccount.name
-      ContainerName: 'default'
+      ContainerName: scenario.containerName
+      ScenarioKey: scenario.key
     }
   }
-  dependsOn: [defaultContainer]
+  dependsOn: [scenarioContainers[index]]
+}]
+
+resource defaultScenarioStorageConnection 'Microsoft.CognitiveServices/accounts/projects/connections@2025-04-01-preview' existing = {
+  parent: aiProject
+  name: 'storage-${replace(defaultScenarioDefinition.key, '_', '-')}'
 }
 
 // Role Definitions for deploying user
@@ -541,8 +564,14 @@ output searchConnectionId string = searchConnection.id
 output storageName string = storageAccount.name
 output storageId string = storageAccount.id
 output storageBlobEndpoint string = storageAccount.properties.primaryEndpoints.blob
-output storageConnectionName string = storageConnection.name
-output storageConnectionId string = storageConnection.id
+output storageConnectionName string = defaultScenarioStorageConnection.name
+output storageConnectionId string = defaultScenarioStorageConnection.id
+output scenarioStorageConnections array = [for (scenario, index) in scenarioDefinitions: {
+  key: scenario.key
+  containerName: scenario.containerName
+  connectionName: scenarioStorageConnections[index].name
+  connectionId: scenarioStorageConnections[index].id
+}]
 output appInsightsName string = appInsights.name
 output appInsightsId string = appInsights.id
 output appInsightsConnectionString string = appInsights.properties.ConnectionString

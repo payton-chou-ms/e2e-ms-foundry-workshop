@@ -73,11 +73,24 @@ cp .env.example .env
 # --- Microsoft Fabric (required) ---
 FABRIC_WORKSPACE_ID=your-workspace-id-here
 
-# --- Data Folder (pre-populated with default scenario) ---
+# --- Active Scenario (preferred) ---
+SCENARIO_KEY=default
+
+# --- Data Folder (backward-compatible fallback) ---
 DATA_FOLDER=data/default
 ```
 
-如果你是第一次跑 workshop，建議先只填 `FABRIC_WORKSPACE_ID`，其他資料產生設定先保留 `.env.example` 的預設值即可。
+如果你是第一次跑 workshop，建議先填 `FABRIC_WORKSPACE_ID` 和 `SCENARIO_KEY`，其他資料產生設定先保留 `.env.example` 的預設值即可。
+
+!!! note "跳過 Browser Automation 部署"
+    `.env` 不控制 `azd up` 是否建立 Playwright Workspace。
+    如果你想在這次部署先跳過 Browser Automation，請在執行 `azd up` 前先跑：
+
+    ```bash
+    azd env set AZURE_DEPLOY_BROWSER_AUTOMATION false
+    ```
+
+    之後若要重新啟用，再改成 `true` 並重新部署即可。
 
 ### AI 資料產生設定要不要先改？
 

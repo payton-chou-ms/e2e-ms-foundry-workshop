@@ -18,7 +18,8 @@
 - [ ] 已準備好的 Azure 資源存取權
 - [ ] 已準備好的 Fabric 工作區存取權
 - [ ] 正確的 `FABRIC_WORKSPACE_ID`
-- [ ] 要使用的 `DATA_FOLDER`，若沒有特別指定就用 `data/default`
+- [ ] 要使用的 `SCENARIO_KEY`，若沒有特別指定就用 `default`
+- [ ] 如果是自訂或臨時資料集，再另外確認 `DATA_FOLDER`
 - [ ] 這套環境目前是「已完成範例建置」還是「只完成部署，尚未建置資料與 agent」
 - [ ] 你這次要驗證的是哪一條 path：`Foundry IQ only` 或 `Foundry IQ + Fabric IQ`
 
@@ -66,19 +67,20 @@ az login
 - [ ] 已安裝相依套件
 - [ ] 已從 `.env.example` 建立 `.env`
 - [ ] `.env` 內已填入正確的 `FABRIC_WORKSPACE_ID`
-- [ ] `.env` 內已填入正確的 `DATA_FOLDER`
+- [ ] `.env` 內已填入正確的 `SCENARIO_KEY`
 
 最小 `.env` 範例：
 
 ```env
 FABRIC_WORKSPACE_ID=<admin-shared-workspace-id>
+SCENARIO_KEY=default
 DATA_FOLDER=data/default
 ```
 
 你也可以先快速確認 `.env` 是否存在，且至少包含這兩個值：
 
 ```bash
-grep -E '^(FABRIC_WORKSPACE_ID|DATA_FOLDER)=' .env
+grep -E '^(FABRIC_WORKSPACE_ID|SCENARIO_KEY|DATA_FOLDER)=' .env
 ```
 
 ### 4. 確認本機 Python 與 SDK 可用
@@ -106,7 +108,7 @@ python -c "import azure.ai.projects; print('Ready!')"
 如果你不確定目前 shell 內是不是有值，可先執行：
 
 ```bash
-python -c "from scripts.load_env import load_all_env; load_all_env(); import os; print('AZURE_AI_PROJECT_ENDPOINT=', 'set' if os.getenv('AZURE_AI_PROJECT_ENDPOINT') else 'missing'); print('AZURE_AI_SEARCH_ENDPOINT=', 'set' if os.getenv('AZURE_AI_SEARCH_ENDPOINT') else 'missing'); print('FABRIC_WORKSPACE_ID=', 'set' if os.getenv('FABRIC_WORKSPACE_ID') else 'missing'); print('DATA_FOLDER=', os.getenv('DATA_FOLDER', 'missing'))"
+python -c "from scripts.load_env import load_all_env; load_all_env(); import os; print('AZURE_AI_PROJECT_ENDPOINT=', 'set' if os.getenv('AZURE_AI_PROJECT_ENDPOINT') else 'missing'); print('AZURE_AI_SEARCH_ENDPOINT=', 'set' if os.getenv('AZURE_AI_SEARCH_ENDPOINT') else 'missing'); print('FABRIC_WORKSPACE_ID=', 'set' if os.getenv('FABRIC_WORKSPACE_ID') else 'missing'); print('SCENARIO_KEY=', os.getenv('SCENARIO_KEY', 'missing')); print('DATA_FOLDER=', os.getenv('DATA_FOLDER', 'missing'))"
 ```
 
 ## 選擇你的 path
@@ -122,7 +124,7 @@ python -c "from scripts.load_env import load_all_env; load_all_env(); import os;
 - [ ] 正確的 Azure 登入身分
 - [ ] `AZURE_AI_PROJECT_ENDPOINT` 已可用
 - [ ] `AZURE_AI_SEARCH_ENDPOINT` 已可用
-- [ ] `DATA_FOLDER` 已設定
+- [ ] `SCENARIO_KEY` 已設定
 
 這條路徑不要求你先驗證 Fabric 資料查詢。
 

@@ -13,7 +13,7 @@
 
 | 設定項 | 為什麼需要 | 你要在哪裡確認 |
 |--------|------------|----------------|
-| Workspace 已綁定 Fabric 容量 | 沒有 Fabric 容量就無法走完整 Fabric IQ 路徑 | Workspace `Settings` → `License info` |
+| Workspace 已綁定 Fabric 容量 | 沒有 Fabric 容量就無法走完整 Fabric IQ 路徑 | Workspace settings → `Workspace type` |
 | 你的登入身分可存取該 workspace | 腳本會用目前 Azure CLI 身分呼叫 Fabric API 與 OneLake | Workspace access + `az account show` |
 | Workspace 可使用 Ontology | `02_create_fabric_items.py` 會建立 ontology；若功能不可用會直接失敗 | 建立流程是否出現 `FeatureNotAvailable` |
 | 已記錄正確的 Workspace ID | `.env`、後續建置與分享都靠這個值定位 workspace | Workspace URL `/groups/<workspace-id>/...` |
@@ -22,14 +22,20 @@
 
 ## Portal 內要先確認的三件事
 
-### 1. License info 顯示的是 Fabric 容量
+### 1. 在 Workspace type 確認目前是 Fabric workspace
 
-1. 開啟目標 workspace
-2. 進入 `Settings`
-3. 查看 `License info`
-4. 確認這個 workspace 不是一般 Power BI 共用狀態，而是真的綁在 Fabric 容量上
+1. 開啟目標 workspace (如果沒有就新建一個)
+2. 開啟 workspace settings
+3. 找到 `Workspace type`
+4. 確認目前顯示的是 Fabric workspace type，而不是 Shared / Power BI 類型
+5. 如有 `Edit`，展開後確認這個 workspace 目前綁定到正確的 Fabric capacity
 
 如果這一步不成立，完整的 `Foundry IQ + Fabric IQ` 路徑就不應該繼續往下做。
+
+如果你在 workspace 裡看不到這個選項，通常代表你目前不是 workspace admin，或 UI 權限不足。這時請改用下列其中一條管理員路徑確認：
+
+- Fabric Admin portal → `Workspaces` → 找到目標 workspace → `Reassign workspace`
+- Fabric Admin portal → `Capacity settings` → 目標 capacity → `Workspaces assigned to this capacity`
 
 ### 2. 你的管理身分和執行身分都在 workspace access 裡
 
@@ -120,6 +126,22 @@ grep -E '^(FABRIC_WORKSPACE_ID|DATA_FOLDER)=' .env
 - 確認你用的是正確 tenant 下的 workspace
 - 確認不是拿到只有一般容量設定、但未開通對應功能的 workspace
 - 如果當下只需要跑 workshop，先改走 `--foundry-only`
+
+### `InvalidInput` / `DisplayName is Invalid for ArtifactType`
+
+如果你用 `02_create_fabric_items.py` 建立 Lakehouse 時，連像 `Item 1` 這種官方 REST 範例名稱都失敗，通常就不該再繼續懷疑命名字串本身。
+
+這更常代表：
+
+- 目前 workspace 雖然存在，但不是可建立 Data Engineering item 的 Fabric workspace type
+- capacity 綁定尚未完全生效，或該 workspace 尚未具備這個 API 所需能力
+- 你目前看到的是 Fabric service 的誤導性錯誤訊息，而不是實際根因
+
+先做這些事：
+
+- 到 workspace settings 確認 `Workspace type` 真的是 Fabric workspace
+- 確認 workspace 綁定的 capacity 是可建立 Lakehouse 的 Fabric capacity
+- 若你能開 portal，但 API 仍拒絕建立 Lakehouse，請先請管理員從 Fabric Admin portal 重新確認 workspace / capacity 指派狀態
 
 ### `FABRIC_WORKSPACE_ID` 未設定或設錯
 

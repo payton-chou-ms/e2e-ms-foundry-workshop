@@ -6,6 +6,7 @@ import os
 import re
 import subprocess
 import sys
+import argparse
 
 import requests
 from azure.core.exceptions import ResourceNotFoundError
@@ -23,15 +24,24 @@ from azure.search.documents.indexes.models import (
 
 from credential_utils import get_credential
 from load_env import load_all_env
+from scenario_utils import build_scenario_env, build_scenario_resource_name, resolve_data_paths, resolve_scenario
 
 load_all_env()
+
+parser = argparse.ArgumentParser(description="建立 Foundry IQ knowledge base")
+parser.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
+                    help="要使用的情境 key（優先於 DATA_FOLDER）")
+parser.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
+                    help="資料資料夾路徑（預設讀取 .env）")
+args = parser.parse_args()
 
 PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 PROJECT_RESOURCE_ID = os.getenv("AZURE_AI_PROJECT_RESOURCE_ID")
 SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
-DATA_FOLDER = os.getenv("DATA_FOLDER")
 SOLUTION_NAME = os.getenv("SOLUTION_NAME") or os.getenv(
     "SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo")
+scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="foundryIq")
+scenario_solution_name = build_scenario_resource_name(SOLUTION_NAME, scenario["key"])
 
 CONNECTION_API_VERSION = "2025-10-01-preview"
 KNOWLEDGE_BASE_MCP_API_VERSION = "2025-11-01-preview"
@@ -52,28 +62,20 @@ if not SEARCH_ENDPOINT:
     print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
-if not DATA_FOLDER:
-    print("錯誤：.env 中未設定 DATA_FOLDER")
-    print("      請先執行 01_generate_sample_data.py")
-    sys.exit(1)
-
-data_dir = Path(DATA_FOLDER)
+data_dir = Path(scenario["absoluteDataFolder"])
 if not data_dir.exists():
     print(f"錯誤：找不到資料資料夾：{data_dir}")
     sys.exit(1)
 
-config_dir = data_dir / "config"
-docs_dir = data_dir / "documents"
-if not config_dir.exists():
-    config_dir = data_dir
-if not docs_dir.exists():
-    docs_dir = data_dir
+paths = resolve_data_paths(scenario)
+config_dir = paths["config_dir"]
+docs_dir = paths["docs_dir"]
 
 knowledge_ids_path = config_dir / "knowledge_ids.json"
 search_ids_path = config_dir / "search_ids.json"
-knowledge_source_name = f"{SOLUTION_NAME}-foundry-iq-source"
-knowledge_base_name = f"{SOLUTION_NAME}-foundry-iq-kb"
-project_connection_name = f"{SOLUTION_NAME}-foundry-iq-connection"
+knowledge_source_name = f"{scenario_solution_name}-foundry-iq-source"
+knowledge_base_name = f"{scenario_solution_name}-foundry-iq-kb"
+project_connection_name = f"{scenario_solution_name}-foundry-iq-connection"
 
 
 def normalize_knowledge_source_name(value: str) -> str:
@@ -84,15 +86,19 @@ def normalize_knowledge_source_name(value: str) -> str:
     return normalized[:100].rstrip("-")
 
 
-def run_search_ingestion():
+def run_search_ingestion(force: bool = False):
     scenario_script_path = data_dir / "prepare_search_and_blob_assets.py"
-    if scenario_script_path.exists() and search_ids_path.exists():
+    if scenario_script_path.exists() and search_ids_path.exists() and not force:
         print("\n已找到既有 search_ids.json，沿用現有 scenario ingestion metadata...")
         return
 
     script_path = scenario_script_path if scenario_script_path.exists() else Path(__file__).with_name("06_upload_to_search.py")
+    child_env = build_scenario_env(scenario)
     print("\n確認 Azure AI Search 索引已完成載入...")
-    subprocess.run([sys.executable, str(script_path)], check=True)
+    cmd = [sys.executable, str(script_path)]
+    if not scenario_script_path.exists():
+        cmd.extend(["--scenario", scenario["key"], "--data-folder", scenario["dataFolder"]])
+    subprocess.run(cmd, check=True, env=child_env)
 
 
 def ensure_search_indexes_ready(index_client: SearchIndexClient, search_ids: dict):
@@ -110,7 +116,7 @@ def ensure_search_indexes_ready(index_client: SearchIndexClient, search_ids: dic
     for index_name in missing_indexes:
         print(f"  - 缺少索引：{index_name}")
 
-    run_search_ingestion()
+    run_search_ingestion(force=True)
     return load_search_metadata()
 
 
@@ -264,6 +270,7 @@ def main():
     print(f"\n{'='*60}")
     print("建立 Foundry IQ Knowledge Base")
     print(f"{'='*60}")
+    print(f"Scenario：{scenario['key']}")
     print(f"Project Endpoint：{PROJECT_ENDPOINT}")
     print(f"Project Resource ID：{PROJECT_RESOURCE_ID}")
     print(f"Search Endpoint：{SEARCH_ENDPOINT}")
@@ -306,6 +313,8 @@ def main():
     print(f"[OK] Project connection '{project_connection_name}' 已就緒")
 
     metadata = {
+        "scenario_key": scenario["key"],
+        "data_folder": scenario["dataFolder"],
         "knowledge_type": "azure_search_knowledge_base",
         "search_endpoint": SEARCH_ENDPOINT,
         "search_index_name": source_configs[0]["index_name"],

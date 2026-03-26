@@ -23,17 +23,26 @@ import os
 import sys
 import json
 import re
+import argparse
 from pathlib import Path
 
 # Load environment from azd + project .env
 from credential_utils import get_credential
 from load_env import load_all_env, get_required_env, print_env_status
+from scenario_utils import build_scenario_resource_name, resolve_data_paths, resolve_scenario
 load_all_env()
 
 
 # ============================================================================
 # Configuration
 # ============================================================================
+
+parser = argparse.ArgumentParser(description="把 PDF 文件上傳到 Azure AI Search")
+parser.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
+                    help="要使用的情境 key（優先於 DATA_FOLDER）")
+parser.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
+                    help="資料資料夾路徑（預設讀取 .env）")
+args = parser.parse_args()
 
 # Azure services - from azd environment
 AZURE_AI_ENDPOINT = os.getenv("AZURE_AI_ENDPOINT") or os.getenv(
@@ -43,11 +52,11 @@ EMBEDDING_MODEL = os.getenv("AZURE_EMBEDDING_MODEL") or os.getenv(
     "EMBEDDING_MODEL", "text-embedding-3-large")
 
 # Project settings - from .env
-DATA_FOLDER = os.getenv("DATA_FOLDER")
 SOLUTION_NAME = os.getenv("SOLUTION_NAME") or os.getenv(
     "SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo")
-
-INDEX_NAME = f"{SOLUTION_NAME}-documents"
+scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="search")
+scenario_solution_name = build_scenario_resource_name(SOLUTION_NAME, scenario["key"])
+INDEX_NAME = f"{scenario_solution_name}-documents"
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 
@@ -55,29 +64,19 @@ if not AZURE_AI_SEARCH_ENDPOINT:
     print("錯誤：.env 中未設定 AZURE_AI_SEARCH_ENDPOINT")
     sys.exit(1)
 
-if not DATA_FOLDER:
-    print("錯誤：.env 中未設定 DATA_FOLDER")
-    print("      請先執行 01_generate_sample_data.py")
-    sys.exit(1)
-
-data_dir = Path(DATA_FOLDER)
+data_dir = Path(scenario["absoluteDataFolder"])
 if not data_dir.exists():
     print(f"錯誤：找不到資料資料夾：{data_dir}")
     sys.exit(1)
 
-# Set up paths for new folder structure (config/, tables/, documents/)
-config_dir = data_dir / "config"
-docs_dir = data_dir / "documents"
-
-# Fallback to old structure if config dir doesn't exist
-if not config_dir.exists():
-    config_dir = data_dir
-if not docs_dir.exists():
-    docs_dir = data_dir  # Fallback to root data folder
+paths = resolve_data_paths(scenario)
+config_dir = paths["config_dir"]
+docs_dir = paths["docs_dir"]
 
 print(f"\n{'='*60}")
 print("把 PDF 檔上傳到 Azure AI Search")
 print(f"{'='*60}")
+print(f"Scenario：{scenario['key']}")
 print(f"Search Endpoint：{AZURE_AI_SEARCH_ENDPOINT}")
 print(f"AI Endpoint：{AZURE_AI_ENDPOINT}")
 print(f"Embedding 模型：{EMBEDDING_MODEL}")
@@ -370,6 +369,8 @@ def main():
     # Save index info
     search_ids_path = config_dir / "search_ids.json"
     search_info = {
+        "scenario_key": scenario["key"],
+        "data_folder": scenario["dataFolder"],
         "index_name": INDEX_NAME,
         "document_count": len(documents),
         "pdf_files": [p.name for p in pdf_files]

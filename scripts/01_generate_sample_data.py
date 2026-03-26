@@ -614,12 +614,17 @@ if os.path.exists(env_path):
         if line.startswith("DATA_FOLDER="):
             lines[i] = f"DATA_FOLDER={data_dir}"
             updated = True
-            break
+        elif line.startswith("SCENARIO_KEY="):
+            lines[i] = "SCENARIO_KEY="
 
     if not updated:
         lines.append(f"DATA_FOLDER={data_dir}")
+
+    if not any(line.startswith("SCENARIO_KEY=") for line in lines):
+        lines.append("SCENARIO_KEY=")
 
     with open(env_path, "w") as f:
         f.write("\n".join(lines))
 
     print(f"[OK] Updated .env with DATA_FOLDER={data_dir}")
+    print("[OK] Cleared SCENARIO_KEY so custom data folder becomes the active scenario source")

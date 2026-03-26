@@ -11,6 +11,7 @@ import time
 
 # Load environment from azd + project .env
 from load_env import load_all_env
+from scenario_utils import resolve_data_paths, resolve_scenario
 load_all_env()
 
 # Azure imports
@@ -22,22 +23,18 @@ load_all_env()
 p = argparse.ArgumentParser(description="把資料載入 Fabric Lakehouse")
 p.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
                help="資料資料夾路徑（預設讀取 .env）")
+p.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
+               help="要使用的情境 key（優先於 DATA_FOLDER）")
 p.add_argument("--skip-tables", action="store_true",
                help="略過載入 Delta 資料表（只上傳檔案）")
 args = p.parse_args()
 
-# Validate data folder
-data_dir = args.data_folder
-if not data_dir:
-    print("錯誤：未設定 DATA_FOLDER。")
-    print("      請先執行 01_generate_sample_data.py，或自行傳入 --data-folder")
-    sys.exit(1)
-
-data_dir = os.path.abspath(data_dir)
-
-# Set up paths for new folder structure (config/, tables/, documents/)
-config_dir = os.path.join(data_dir, "config")
-tables_dir = os.path.join(data_dir, "tables")
+scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="fabricIq")
+paths = resolve_data_paths(scenario)
+data_dir = scenario["absoluteDataFolder"]
+config_dir = os.fspath(paths["config_dir"])
+tables_dir = os.fspath(paths["tables_dir"])
+scenario_key = scenario["key"]
 
 # Check for required files
 config_path = os.path.join(config_dir, "ontology_config.json")
@@ -80,6 +77,7 @@ ONELAKE_URL = "onelake.dfs.fabric.microsoft.com"
 print(f"\n{'='*60}")
 print("把資料載入 Fabric Lakehouse")
 print(f"{'='*60}")
+print(f"Scenario：{scenario_key}")
 print(f"資料資料夾：{data_dir}")
 print(f"Workspace：{WORKSPACE_ID}")
 print(f"Lakehouse：{LAKEHOUSE_NAME}")

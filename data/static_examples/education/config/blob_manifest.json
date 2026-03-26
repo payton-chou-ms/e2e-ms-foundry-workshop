@@ -1,0 +1,30 @@
+{
+  "scenario_key": "static_education",
+  "data_folder": "data/static_examples/education",
+  "blob_endpoint": "https://stda4zzppizpdfh2.blob.core.windows.net/",
+  "blob_container": "static-education",
+  "uploaded_at": "2026-03-25T17:11:29.486265+00:00",
+  "file_count": 4,
+  "files": [
+    {
+      "path": "documents/academic_handbook.pdf",
+      "source": "documents/academic_handbook.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-education/documents/academic_handbook.pdf"
+    },
+    {
+      "path": "documents/enrollment_policies.pdf",
+      "source": "documents/enrollment_policies.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-education/documents/enrollment_policies.pdf"
+    },
+    {
+      "path": "tables/courses.csv",
+      "source": "tables/courses.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-education/tables/courses.csv"
+    },
+    {
+      "path": "tables/students.csv",
+      "source": "tables/students.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-education/tables/students.csv"
+    }
+  ]
+}

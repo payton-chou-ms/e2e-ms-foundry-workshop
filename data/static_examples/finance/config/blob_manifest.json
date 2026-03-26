@@ -1,0 +1,30 @@
+{
+  "scenario_key": "static_finance",
+  "data_folder": "data/static_examples/finance",
+  "blob_endpoint": "https://stda4zzppizpdfh2.blob.core.windows.net/",
+  "blob_container": "static-finance",
+  "uploaded_at": "2026-03-25T17:11:37.577690+00:00",
+  "file_count": 4,
+  "files": [
+    {
+      "path": "documents/compliance_guide.pdf",
+      "source": "documents/compliance_guide.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-finance/documents/compliance_guide.pdf"
+    },
+    {
+      "path": "documents/lending_policy.pdf",
+      "source": "documents/lending_policy.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-finance/documents/lending_policy.pdf"
+    },
+    {
+      "path": "tables/accounts.csv",
+      "source": "tables/accounts.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-finance/tables/accounts.csv"
+    },
+    {
+      "path": "tables/loans.csv",
+      "source": "tables/loans.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-finance/tables/loans.csv"
+    }
+  ]
+}

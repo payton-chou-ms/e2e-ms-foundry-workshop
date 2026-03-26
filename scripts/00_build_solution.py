@@ -60,6 +60,8 @@ parser.add_argument("--usecase", type=str,
                     help="產生資料用的使用情境（覆蓋 .env 設定）")
 parser.add_argument("--size", choices=["small", "medium", "large"],
                     help="資料量大小（覆蓋 .env 設定）")
+parser.add_argument("--scenario", type=str,
+                    help="既有情境 key（傳給 scenario-aware 腳本）")
 parser.add_argument("--clean", action="store_true",
                     help="清除並重新建立 Fabric 項目（切換情境時使用）")
 
@@ -98,6 +100,9 @@ elif args.foundry_iq:
     pipeline = FOUNDRY_IQ_PIPELINE.copy()
 else:
     pipeline = DEFAULT_PIPELINE.copy()
+
+if args.scenario:
+    pipeline = [step for step in pipeline if step != "01"]
 
 # Apply --from filter
 if args.from_step:
@@ -194,6 +199,8 @@ for i, step in enumerate(pipeline, 1):
 if args.industry:
     print(f"\n  產業：{args.industry}")
     print(f"  使用情境：{args.usecase}")
+if args.scenario:
+    print(f"  Scenario：{args.scenario}")
 
 if args.dry_run:
     print("\n[DRY RUN] 不會真的執行任何腳本。")
@@ -266,10 +273,14 @@ def run_step(step_id):
     if step_id == "02" and args.clean:
         cmd.append("--clean")
 
+    if args.scenario and step_id != "01":
+        cmd.extend(["--scenario", args.scenario])
+
     # Create a clean environment that forces re-reading from .env
     # Remove DATA_FOLDER so child process reads fresh value from .env
     clean_env = os.environ.copy()
     clean_env.pop("DATA_FOLDER", None)
+    clean_env.pop("SCENARIO_KEY", None)
 
     # Run with output captured
     result = subprocess.run(cmd, cwd=os.path.dirname(script_dir),

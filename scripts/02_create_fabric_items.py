@@ -13,6 +13,7 @@ from datetime import datetime
 
 # Load environment from azd + project .env
 from load_env import load_all_env
+from scenario_utils import build_scenario_resource_name, resolve_data_paths, resolve_scenario
 load_all_env()
 
 # Azure imports
@@ -24,6 +25,8 @@ load_all_env()
 p = argparse.ArgumentParser(description="建立 Fabric Lakehouse 與 Ontology")
 p.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
                help="資料資料夾路徑（預設讀取 .env）")
+p.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
+               help="要使用的情境 key（優先於 DATA_FOLDER）")
 p.add_argument("--solutionname", default=os.getenv("SOLUTION_NAME") or os.getenv("SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
                help="方案名稱前綴（預設讀取 SOLUTION_NAME 或 SOLUTION_PREFIX）")
 p.add_argument("--clean", action="store_true",
@@ -35,21 +38,11 @@ if not WORKSPACE_ID:
     print("錯誤：.env 中未設定 FABRIC_WORKSPACE_ID")
     sys.exit(1)
 
-# Validate data folder
-data_dir = args.data_folder
-if not data_dir:
-    print("錯誤：未設定 DATA_FOLDER。")
-    print("      請先執行 01_generate_sample_data.py，或自行傳入 --data-folder")
-    sys.exit(1)
-
-data_dir = os.path.abspath(data_dir)
-
-# Set up paths for new folder structure (config/, tables/, documents/)
-config_dir = os.path.join(data_dir, "config")
-
-# Check for config dir (new structure) or fallback to old structure
-if not os.path.exists(config_dir):
-    config_dir = data_dir
+scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="fabricIq")
+paths = resolve_data_paths(scenario)
+data_dir = scenario["absoluteDataFolder"]
+config_dir = os.fspath(paths["config_dir"])
+scenario_key = scenario["key"]
 
 config_path = os.path.join(config_dir, "ontology_config.json")
 
@@ -62,7 +55,8 @@ if not os.path.exists(config_path):
     print("      請先執行 01_generate_sample_data.py")
     sys.exit(1)
 
-SOLUTION_NAME = args.solutionname
+base_solution_name = args.solutionname
+SOLUTION_NAME = build_scenario_resource_name(base_solution_name, scenario_key)
 FABRIC_API = "https://api.fabric.microsoft.com/v1"
 
 with open(config_path) as f:
@@ -71,6 +65,7 @@ with open(config_path) as f:
 print(f"\n{'='*60}")
 print(f"正在為 {SOLUTION_NAME} 設定 Fabric")
 print(f"{'='*60}")
+print(f"Scenario：{scenario_key}")
 print(f"Workspace ID：{WORKSPACE_ID}")
 print(f"情境：{ontology_config['name']}")
 print(f"資料表：{', '.join(ontology_config['tables'].keys())}")
@@ -211,8 +206,8 @@ else:
 with open(suffix_file, "w") as f:
     f.write(str(new_suffix))
 
-lakehouse_name = f"{SOLUTION_NAME}_lakehouse_{new_suffix}"
-ontology_name = f"{SOLUTION_NAME}_ontology_{new_suffix}"
+lakehouse_name = f"{SOLUTION_NAME}-lakehouse-{new_suffix}"
+ontology_name = f"{SOLUTION_NAME}-ontology-{new_suffix}"
 
 # ============================================================================
 # Step 1: Create Lakehouse
@@ -498,6 +493,10 @@ fabric_ids = {
     "lakehouse_name": lakehouse_name,
     "ontology_id": ontology_id,
     "ontology_name": ontology_name,
+    "workspace_id": WORKSPACE_ID,
+    "scenario_key": scenario_key,
+    "data_folder": scenario["dataFolder"],
+    "base_solution_name": base_solution_name,
     "solution_name": SOLUTION_NAME,
     "created_at": datetime.now().isoformat()
 }

@@ -1,33 +1,53 @@
 {
   "search_type": "scenario_multi_index",
+  "scenario_key": "retail_launch_incident",
   "scenario": "retail_launch_incident",
-  "generated_at": "2026-03-23T11:49:24.779592+00:00",
-  "blob_endpoint": "https://stdanedkbf5d5cst.blob.core.windows.net/",
-  "blob_container": "default",
-  "blob_prefix": "retail_launch_incident/documents",
+  "generated_at": "2026-03-25T17:15:32.954612+00:00",
+  "blob_endpoint": "https://stda4zzppizpdfh2.blob.core.windows.net/",
+  "blob_container": "retail-launch-incident",
+  "blob_prefixes": [
+    "documents",
+    "tables"
+  ],
   "blob_files": [
     {
       "name": "comms-customer-message-guidelines.pdf",
-      "blob_name": "retail_launch_incident/documents/comms-customer-message-guidelines.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/comms-customer-message-guidelines.pdf"
+      "kind": "document",
+      "blob_name": "documents/comms-customer-message-guidelines.pdf",
+      "blob_url": "https://stda4zzppizpdfh2.blob.core.windows.net/retail-launch-incident/documents/comms-customer-message-guidelines.pdf"
     },
     {
       "name": "comms-launch-campaign-brief.pdf",
-      "blob_name": "retail_launch_incident/documents/comms-launch-campaign-brief.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/comms-launch-campaign-brief.pdf"
+      "kind": "document",
+      "blob_name": "documents/comms-launch-campaign-brief.pdf",
+      "blob_url": "https://stda4zzppizpdfh2.blob.core.windows.net/retail-launch-incident/documents/comms-launch-campaign-brief.pdf"
     },
     {
       "name": "ops-shift-lead-response-guide.pdf",
-      "blob_name": "retail_launch_incident/documents/ops-shift-lead-response-guide.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/ops-shift-lead-response-guide.pdf"
+      "kind": "document",
+      "blob_name": "documents/ops-shift-lead-response-guide.pdf",
+      "blob_url": "https://stda4zzppizpdfh2.blob.core.windows.net/retail-launch-incident/documents/ops-shift-lead-response-guide.pdf"
     },
     {
       "name": "ops-store-incident-playbook.pdf",
-      "blob_name": "retail_launch_incident/documents/ops-store-incident-playbook.pdf",
-      "blob_url": "https://stdanedkbf5d5cst.blob.core.windows.net/default/retail_launch_incident/documents/ops-store-incident-playbook.pdf"
+      "kind": "document",
+      "blob_name": "documents/ops-store-incident-playbook.pdf",
+      "blob_url": "https://stda4zzppizpdfh2.blob.core.windows.net/retail-launch-incident/documents/ops-store-incident-playbook.pdf"
+    },
+    {
+      "name": "launch_incidents.csv",
+      "kind": "table",
+      "blob_name": "tables/launch_incidents.csv",
+      "blob_url": "https://stda4zzppizpdfh2.blob.core.windows.net/retail-launch-incident/tables/launch_incidents.csv"
+    },
+    {
+      "name": "store_response_actions.csv",
+      "kind": "table",
+      "blob_name": "tables/store_response_actions.csv",
+      "blob_url": "https://stda4zzppizpdfh2.blob.core.windows.net/retail-launch-incident/tables/store_response_actions.csv"
     }
   ],
-  "index_name": "danedkbf5d5cst-retail_launch_incident-documents",
+  "index_name": "da4zzppizpdfh2-retail_launch_incident-documents",
   "document_count": 5,
   "pdf_files": [
     "comms-customer-message-guidelines.pdf",
@@ -41,9 +61,9 @@
   ],
   "indexes": [
     {
-      "name": "danedkbf5d5cst-retail_launch_incident-documents",
+      "name": "da4zzppizpdfh2-retail_launch_incident-documents",
       "kind": "document_chunks",
-      "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-documents-source",
+      "knowledge_source_name": "da4zzppizpdfh2-retail-launch-incident-documents-source",
       "document_count": 5,
       "source_files": [
         "comms-customer-message-guidelines.pdf",
@@ -65,9 +85,9 @@
       "semantic_configuration_name": "default-semantic"
     },
     {
-      "name": "danedkbf5d5cst-retail_launch_incident-tables",
+      "name": "da4zzppizpdfh2-retail_launch_incident-tables",
       "kind": "table_rows",
-      "knowledge_source_name": "danedkbf5d5cst-retail-launch-incident-tables-source",
+      "knowledge_source_name": "da4zzppizpdfh2-retail-launch-incident-tables-source",
       "document_count": 8,
       "source_files": [
         "launch_incidents.csv",

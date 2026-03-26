@@ -1,0 +1,53 @@
+{
+  "scenario_key": "default",
+  "data_folder": "data/default",
+  "knowledge_type": "azure_search_knowledge_base",
+  "search_endpoint": "https://srch-da4zzppizpdfh2.search.windows.net",
+  "search_index_name": "da4zzppizpdfh2-default-documents",
+  "search_index_names": [
+    "da4zzppizpdfh2-default-documents"
+  ],
+  "knowledge_source_name": "da4zzppizpdfh2-default-foundry-iq-source",
+  "knowledge_source_names": [
+    "da4zzppizpdfh2-default-foundry-iq-source"
+  ],
+  "search_sources": [
+    {
+      "index_name": "da4zzppizpdfh2-default-documents",
+      "knowledge_source_name": "da4zzppizpdfh2-default-foundry-iq-source",
+      "source_data_fields": [
+        "content",
+        "title",
+        "source",
+        "page_number",
+        "chunk_id"
+      ],
+      "search_fields": [
+        "content",
+        "title"
+      ],
+      "semantic_configuration_name": "default-semantic",
+      "kind": "document_chunks",
+      "document_count": 4,
+      "source_files": [
+        "ticket_management_policies.pdf",
+        "customer_service_policies.pdf",
+        "outage_management_policies.pdf"
+      ]
+    }
+  ],
+  "knowledge_base_name": "da4zzppizpdfh2-default-foundry-iq-kb",
+  "project_connection_name": "da4zzppizpdfh2-default-foundry-iq-connection",
+  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-0325-lab/providers/Microsoft.CognitiveServices/accounts/aisa-da4zzppizpdfh2/projects/aifp-da4zzppizpdfh2/connections/da4zzppizpdfh2-default-foundry-iq-connection",
+  "mcp_endpoint": "https://srch-da4zzppizpdfh2.search.windows.net/knowledgebases/da4zzppizpdfh2-default-foundry-iq-kb/mcp?api-version=2025-11-01-preview",
+  "document_count": 4,
+  "pdf_files": [
+    "ticket_management_policies.pdf",
+    "customer_service_policies.pdf",
+    "outage_management_policies.pdf"
+  ],
+  "table_files": [],
+  "blob_files": [],
+  "source_folder": "/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/default/documents",
+  "status": "ready"
+}

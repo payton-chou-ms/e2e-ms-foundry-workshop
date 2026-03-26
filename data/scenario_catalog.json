@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "defaultScenario": "default",
+  "scenarios": [
+    {
+      "key": "default",
+      "title": "Default Telecommunications",
+      "dataFolder": "data/default",
+      "blobContainer": "default",
+      "capabilities": {
+        "blob": true,
+        "search": true,
+        "foundryIq": true,
+        "fabricIq": true
+      }
+    },
+    {
+      "key": "retail_launch_incident",
+      "title": "Retail Launch Incident",
+      "dataFolder": "data/retail_launch_incident",
+      "blobContainer": "retail-launch-incident",
+      "capabilities": {
+        "blob": true,
+        "search": true,
+        "foundryIq": true,
+        "fabricIq": true
+      }
+    },
+    {
+      "key": "contract_keyword_review",
+      "title": "Contract Keyword Review",
+      "dataFolder": "data/contract_keyword_review",
+      "blobContainer": "contract-keyword-review",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_education",
+      "title": "Static Education Example",
+      "dataFolder": "data/static_examples/education",
+      "blobContainer": "static-education",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_energy",
+      "title": "Static Energy Example",
+      "dataFolder": "data/static_examples/energy",
+      "blobContainer": "static-energy",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_finance",
+      "title": "Static Finance Example",
+      "dataFolder": "data/static_examples/finance",
+      "blobContainer": "static-finance",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_hospitality",
+      "title": "Static Hospitality Example",
+      "dataFolder": "data/static_examples/hospitality",
+      "blobContainer": "static-hospitality",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_insurance",
+      "title": "Static Insurance Example",
+      "dataFolder": "data/static_examples/insurance",
+      "blobContainer": "static-insurance",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_logistics",
+      "title": "Static Logistics Example",
+      "dataFolder": "data/static_examples/logistics",
+      "blobContainer": "static-logistics",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_manufacturing",
+      "title": "Static Manufacturing Example",
+      "dataFolder": "data/static_examples/manufacturing",
+      "blobContainer": "static-manufacturing",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_retail",
+      "title": "Static Retail Example",
+      "dataFolder": "data/static_examples/retail",
+      "blobContainer": "static-retail",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    },
+    {
+      "key": "static_telecommunications",
+      "title": "Static Telecommunications Example",
+      "dataFolder": "data/static_examples/telecommunications",
+      "blobContainer": "static-telecommunications",
+      "capabilities": {
+        "blob": true,
+        "search": false,
+        "foundryIq": false,
+        "fabricIq": false
+      }
+    }
+  ]
+}

@@ -39,11 +39,13 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from credential_utils import get_credential
 from load_env import load_all_env
+from scenario_utils import resolve_scenario
 
 load_all_env()
 
 
 SCENARIO_DIR = Path(__file__).resolve().parent
+SCENARIO = resolve_scenario("retail_launch_incident", str(SCENARIO_DIR), require_capability="search")
 CONFIG_DIR = SCENARIO_DIR / "config"
 DOCS_DIR = SCENARIO_DIR / "documents"
 TABLES_DIR = SCENARIO_DIR / "tables"
@@ -54,7 +56,7 @@ AZURE_AI_ENDPOINT = os.getenv("AZURE_AI_ENDPOINT") or os.getenv(
 ).split("/api/projects")[0]
 AZURE_AI_SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
 AZURE_STORAGE_BLOB_ENDPOINT = os.getenv("AZURE_STORAGE_BLOB_ENDPOINT")
-AZURE_STORAGE_BLOB_CONTAINER = os.getenv("AZURE_STORAGE_BLOB_CONTAINER", "default")
+AZURE_STORAGE_BLOB_CONTAINER = os.getenv("AZURE_STORAGE_BLOB_CONTAINER") or SCENARIO["blobContainer"]
 EMBEDDING_MODEL = os.getenv("AZURE_EMBEDDING_MODEL") or os.getenv(
     "EMBEDDING_MODEL", "text-embedding-3-large"
 )
@@ -264,7 +266,11 @@ def get_embedding(client: AzureOpenAI, text: str) -> list[float]:
     return response.data[0].embedding
 
 
-def upload_pdf_blobs(blob_service_client: BlobServiceClient, pdf_files: list[Path]) -> list[dict[str, str]]:
+def upload_source_blobs(
+    blob_service_client: BlobServiceClient,
+    pdf_files: list[Path],
+    csv_files: list[Path],
+) -> list[dict[str, str]]:
     container_client = blob_service_client.get_container_client(AZURE_STORAGE_BLOB_CONTAINER)
     try:
         container_client.get_container_properties()
@@ -274,13 +280,12 @@ def upload_pdf_blobs(blob_service_client: BlobServiceClient, pdf_files: list[Pat
         print("      請先確認 azd up 已成功建立 storage-connection 與 default container")
         sys.exit(1)
 
-    blob_prefix = f"{SCENARIO_DIR.name}/documents/"
-    for existing_blob in container_client.list_blobs(name_starts_with=blob_prefix):
+    for existing_blob in container_client.list_blobs():
         container_client.delete_blob(existing_blob.name)
 
     uploaded_files: list[dict[str, str]] = []
     for pdf_file in pdf_files:
-        blob_name = f"{SCENARIO_DIR.name}/documents/{pdf_file.name}"
+        blob_name = f"documents/{pdf_file.name}"
         with pdf_file.open("rb") as handle:
             container_client.upload_blob(
                 name=blob_name,
@@ -292,6 +297,26 @@ def upload_pdf_blobs(blob_service_client: BlobServiceClient, pdf_files: list[Pat
         uploaded_files.append(
             {
                 "name": pdf_file.name,
+                "kind": "document",
+                "blob_name": blob_name,
+                "blob_url": f"{AZURE_STORAGE_BLOB_ENDPOINT.rstrip('/')}/{AZURE_STORAGE_BLOB_CONTAINER}/{blob_name}",
+            }
+        )
+
+    for csv_file in csv_files:
+        blob_name = f"tables/{csv_file.name}"
+        with csv_file.open("rb") as handle:
+            container_client.upload_blob(
+                name=blob_name,
+                data=handle,
+                overwrite=True,
+                content_settings=ContentSettings(content_type="text/csv"),
+            )
+
+        uploaded_files.append(
+            {
+                "name": csv_file.name,
+                "kind": "table",
                 "blob_name": blob_name,
                 "blob_url": f"{AZURE_STORAGE_BLOB_ENDPOINT.rstrip('/')}/{AZURE_STORAGE_BLOB_CONTAINER}/{blob_name}",
             }
@@ -379,11 +404,12 @@ def write_metadata(
 ):
     metadata = {
         "search_type": "scenario_multi_index",
+        "scenario_key": SCENARIO["key"],
         "scenario": SCENARIO_DIR.name,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "blob_endpoint": AZURE_STORAGE_BLOB_ENDPOINT,
         "blob_container": AZURE_STORAGE_BLOB_CONTAINER,
-        "blob_prefix": f"{SCENARIO_DIR.name}/documents",
+        "blob_prefixes": ["documents", "tables"],
         "blob_files": blob_files,
         "index_name": DOCUMENT_INDEX_NAME,
         "document_count": len(pdf_documents),
@@ -454,16 +480,16 @@ def main():
     create_search_index(index_client, TABLE_INDEX_NAME)
     print("[OK] 搜尋索引已就緒")
 
-    print("\n上傳 PDF 原檔到 Blob Storage...")
+    print("\n上傳來源檔案到 Blob Storage...")
     try:
-        blob_files = upload_pdf_blobs(blob_service_client, pdf_files)
+        blob_files = upload_source_blobs(blob_service_client, pdf_files, csv_files)
     except HttpResponseError as exc:
         print("錯誤：Blob Storage 存取失敗")
         print(f"      ErrorCode：{exc.error_code or exc.__class__.__name__}")
         print("      這個 workshop 需使用 Microsoft Entra ID 直接寫入 Blob。")
         print("      請確認 storage account 已啟用 Public network access，且目前使用者具備 Blob data plane 權限。")
         raise
-    print(f"[OK] 已上傳 {len(blob_files)} 份 PDF 原檔")
+    print(f"[OK] 已上傳 {len(blob_files)} 份來源檔")
 
     print("\n建立 PDF 檢索文件...")
     pdf_documents = build_pdf_documents(openai_client, pdf_files)

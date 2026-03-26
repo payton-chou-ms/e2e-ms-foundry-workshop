@@ -7,6 +7,7 @@ import json
 
 # Load environment from azd + project .env
 from load_env import load_all_env
+from scenario_utils import resolve_data_paths, resolve_scenario
 load_all_env()
 
 # ============================================================================
@@ -18,28 +19,23 @@ p.add_argument("--from-fabric", action="store_true", help="從 Fabric API 讀取
 p.add_argument("--from-config", action="store_true", help="使用本機設定（預設）")
 p.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
                help="資料資料夾路徑（預設讀取 .env）")
+p.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
+               help="要使用的情境 key（優先於 DATA_FOLDER）")
 args = p.parse_args()
 
 # Default to config if neither specified
 if not args.from_fabric:
     args.from_config = True
 
-data_dir = args.data_folder
-if not data_dir:
-    print("錯誤：未設定 DATA_FOLDER。")
-    print("      請先執行 01_generate_sample_data.py，或自行傳入 --data-folder")
-    sys.exit(1)
-
-data_dir = os.path.abspath(data_dir)
-
-# Set up paths for new folder structure
-config_dir = os.path.join(data_dir, "config")
-if not os.path.exists(config_dir):
-    config_dir = data_dir  # Fallback to old structure
+scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="fabricIq")
+paths = resolve_data_paths(scenario)
+data_dir = scenario["absoluteDataFolder"]
+config_dir = os.fspath(paths["config_dir"])
 
 print(f"\n{'='*60}")
 print("產生最佳化 Schema Prompt")
 print(f"{'='*60}")
+print(f"Scenario：{scenario['key']}")
 
 # ============================================================================
 # Load Schema
@@ -139,7 +135,7 @@ elif args.from_fabric:
     # If no parts from API, fall back to local config
     if not parts:
         print("  注意：Ontology API 沒有回傳 definition parts，改用本機設定")
-        config_path = os.path.join(data_dir, "ontology_config.json")
+        config_path = os.path.join(config_dir, "ontology_config.json")
         if os.path.exists(config_path):
             with open(config_path) as f:
                 config = json.load(f)

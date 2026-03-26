@@ -3,17 +3,26 @@
 import requests
 from azure.identity import AzureCliCredential
 from load_env import load_all_env
+from scenario_utils import resolve_data_paths, resolve_scenario
 import os
 import sys
 import json
 import time
 import base64
+import argparse
 
 # Get script directory for relative paths
 script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Load environment from azd + project .env
 load_all_env()
+
+parser = argparse.ArgumentParser(description="建立 Fabric Data Agent")
+parser.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
+                    help="要使用的情境 key（優先於 DATA_FOLDER）")
+parser.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
+                    help="資料資料夾路徑（預設讀取 .env）")
+args = parser.parse_args()
 
 
 # ============================================================================
@@ -22,23 +31,15 @@ load_all_env()
 
 # Project settings - from .env
 WORKSPACE_ID = os.getenv("FABRIC_WORKSPACE_ID")
-DATA_FOLDER = os.getenv("DATA_FOLDER")
 
 if not WORKSPACE_ID:
     print("錯誤：.env 中未設定 FABRIC_WORKSPACE_ID")
     sys.exit(1)
 
-if not DATA_FOLDER:
-    print("錯誤：.env 中未設定 DATA_FOLDER")
-    print("      請先執行 01_generate_sample_data.py")
-    sys.exit(1)
-
-data_dir = os.path.abspath(DATA_FOLDER)
-
-# Set up paths for new folder structure
-config_dir = os.path.join(data_dir, "config")
-if not os.path.exists(config_dir):
-    config_dir = data_dir  # Fallback to old structure
+scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="fabricIq")
+paths = resolve_data_paths(scenario)
+data_dir = scenario["absoluteDataFolder"]
+config_dir = os.fspath(paths["config_dir"])
 
 # Load fabric_ids.json
 fabric_ids_path = os.path.join(config_dir, "fabric_ids.json")
@@ -59,6 +60,7 @@ FABRIC_API = "https://api.fabric.microsoft.com/v1"
 print(f"\n{'='*60}")
 print("建立 Fabric Data Agent")
 print(f"{'='*60}")
+print(f"Scenario：{scenario['key']}")
 print(f"Workspace ID：{WORKSPACE_ID}")
 print(f"Ontology ID：{ONTOLOGY_ID}")
 print(f"Data Agent 名稱：{DATA_AGENT_NAME}")

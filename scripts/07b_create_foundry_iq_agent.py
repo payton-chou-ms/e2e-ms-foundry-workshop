@@ -5,7 +5,9 @@ from credential_utils import get_credential
 from load_env import load_all_env
 from azure.ai.projects.models import MCPTool, PromptAgentDefinition
 from foundry_trace import configure_foundry_tracing
+from scenario_utils import resolve_data_paths, resolve_scenario, scenario_resource_suffix
 from pathlib import Path
+import argparse
 import json
 import os
 import random
@@ -20,10 +22,16 @@ def _short_prefix(length=3):
 
 load_all_env()
 
+parser = argparse.ArgumentParser(description="建立使用 MCP knowledge base 工具的 Foundry IQ agent")
+parser.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
+                    help="要使用的情境 key（優先於 DATA_FOLDER）")
+parser.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
+                    help="資料資料夾路徑（預設讀取 .env）")
+args = parser.parse_args()
+
 PROJECT_ENDPOINT = os.getenv("AZURE_AI_PROJECT_ENDPOINT")
 MODEL = os.getenv("AZURE_CHAT_MODEL") or os.getenv(
     "MODEL_DEPLOYMENT", "gpt-5.4-mini")
-DATA_FOLDER = os.getenv("DATA_FOLDER")
 SOLUTION_NAME = os.getenv("SOLUTION_NAME") or os.getenv(
     "SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo")
 
@@ -32,15 +40,10 @@ if not PROJECT_ENDPOINT:
     print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
-if not DATA_FOLDER:
-    print("錯誤：.env 中未設定 DATA_FOLDER")
-    print("      請先執行 01_generate_sample_data.py")
-    sys.exit(1)
-
-data_dir = Path(DATA_FOLDER)
-config_dir = data_dir / "config"
-if not config_dir.exists():
-    config_dir = data_dir
+scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="foundryIq")
+paths = resolve_data_paths(scenario)
+data_dir = Path(scenario["absoluteDataFolder"])
+config_dir = paths["config_dir"]
 
 config_path = config_dir / "ontology_config.json"
 knowledge_ids_path = config_dir / "knowledge_ids.json"
@@ -77,7 +80,7 @@ if not mcp_endpoint:
 
 scenario_name = ontology_config.get("name", "Business Data")
 scenario_desc = ontology_config.get("description", "")
-agent_name = f"{_short_prefix()}-iq-agent"
+agent_name = f"{_short_prefix()}-{scenario_resource_suffix(scenario['key'])}-iq-agent"
 
 instructions = f"""你是一位協助處理 {scenario_name} 問題的助理。
 
@@ -93,6 +96,7 @@ print(f"\n{'='*60}")
 print("建立 Foundry IQ Agent")
 print(f"{'='*60}")
 print(f"Project Endpoint：{PROJECT_ENDPOINT}")
+print(f"Scenario：{scenario['key']}")
 print(f"Agent 名稱：{agent_name}")
 print(f"模型：{MODEL}")
 print(f"情境：{scenario_name}")
@@ -150,6 +154,7 @@ with project_client:
 agent_metadata = {
     "agent_id": agent.id,
     "agent_name": agent.name,
+    "scenario_key": scenario["key"],
     "knowledge_type": knowledge_ids.get("knowledge_type", "azure_search_knowledge_base"),
     "knowledge_base_name": knowledge_base_name,
     "project_connection_id": project_connection_id,

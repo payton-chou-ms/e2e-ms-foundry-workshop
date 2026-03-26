@@ -11,6 +11,7 @@ from azure.search.documents import SearchClient
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from load_env import load_all_env
+from scenario_utils import build_scenario_resource_name, resolve_data_paths, resolve_scenario
 import os
 import sys
 import json
@@ -22,6 +23,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--agent-id", default=os.getenv("FOUNDRY_AGENT_ID"))
 parser.add_argument("--foundry-only", action="store_true",
                     help="只使用 Search 的模式（不使用 Fabric / SQL）")
+parser.add_argument("--scenario", default="",
+                    help="要使用的情境 key（優先於 DATA_FOLDER）")
+parser.add_argument("--data-folder", default="",
+                    help="資料資料夾路徑（預設讀取 .env）")
 args = parser.parse_args()
 
 FOUNDRY_ONLY = args.foundry_only
@@ -50,7 +55,6 @@ SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
 
 # Project settings - from .env
 WORKSPACE_ID = os.getenv("FABRIC_WORKSPACE_ID")
-DATA_FOLDER = os.getenv("DATA_FOLDER")
 
 if not ENDPOINT:
     print("錯誤：未設定 AZURE_AI_PROJECT_ENDPOINT")
@@ -62,21 +66,14 @@ if not FOUNDRY_ONLY and not WORKSPACE_ID:
     print("      若要略過 Fabric，請使用 --foundry-only；否則請補上 FABRIC_WORKSPACE_ID")
     sys.exit(1)
 
-if not DATA_FOLDER:
-    print("錯誤：.env 中未設定 DATA_FOLDER")
-    print("      請先執行 01_generate_sample_data.py")
-    sys.exit(1)
-
 if not SEARCH_ENDPOINT:
     print("錯誤：.env 中未設定 AZURE_AI_SEARCH_ENDPOINT")
     sys.exit(1)
 
-data_dir = os.path.abspath(DATA_FOLDER)
-
-# Set up paths for new folder structure
-config_dir = os.path.join(data_dir, "config")
-if not os.path.exists(config_dir):
-    config_dir = data_dir  # Fallback to old structure
+scenario = resolve_scenario(args.scenario or os.getenv("SCENARIO_KEY") or None, args.data_folder or os.getenv("DATA_FOLDER"), require_capability="search")
+paths = resolve_data_paths(scenario)
+data_dir = scenario["absoluteDataFolder"]
+config_dir = os.fspath(paths["config_dir"])
 
 # Get agent ID
 AGENT_ID = args.agent_id
@@ -119,7 +116,7 @@ else:
     if os.path.exists(fabric_ids_path):
         with open(fabric_ids_path) as f:
             solution_name = json.load(f).get("solution_name", "demo")
-    INDEX_NAME = f"{solution_name}-documents"
+    INDEX_NAME = f"{build_scenario_resource_name(solution_name, scenario['key'])}-documents"
 
 # ============================================================================
 # Load Sample Questions
@@ -176,6 +173,7 @@ if FOUNDRY_ONLY:
 else:
     print("Orchestrator Agent 對話")
 print(f"{'='*60}")
+print(f"Scenario：{scenario['key']}")
 print("可用工具：")
 for line in get_tool_summary_lines(FOUNDRY_ONLY):
     print(f"  {line}")

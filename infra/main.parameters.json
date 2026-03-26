@@ -58,7 +58,7 @@
       "value": 1
     },
     "deployBrowserAutomation": {
-      "value": true
+      "value": "${AZURE_DEPLOY_BROWSER_AUTOMATION}"
     },
     "browserAutomationLocation": {
       "value": "${AZURE_LOCATION}"

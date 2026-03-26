@@ -1,0 +1,30 @@
+{
+  "scenario_key": "static_energy",
+  "data_folder": "data/static_examples/energy",
+  "blob_endpoint": "https://stda4zzppizpdfh2.blob.core.windows.net/",
+  "blob_container": "static-energy",
+  "uploaded_at": "2026-03-25T17:11:33.377196+00:00",
+  "file_count": 4,
+  "files": [
+    {
+      "path": "documents/emergency_response.pdf",
+      "source": "documents/emergency_response.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-energy/documents/emergency_response.pdf"
+    },
+    {
+      "path": "documents/safety_protocols.pdf",
+      "source": "documents/safety_protocols.pdf",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-energy/documents/safety_protocols.pdf"
+    },
+    {
+      "path": "tables/outages.csv",
+      "source": "tables/outages.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-energy/tables/outages.csv"
+    },
+    {
+      "path": "tables/substations.csv",
+      "source": "tables/substations.csv",
+      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-energy/tables/substations.csv"
+    }
+  ]
+}

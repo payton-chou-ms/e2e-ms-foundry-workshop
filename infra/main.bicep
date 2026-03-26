@@ -123,6 +123,11 @@ var resolvedBrowserAutomationLocation = contains(
 param aiDeploymentsLocation string
 
 var solutionPrefix = 'da${padLeft(take(uniqueId, 12), 12, '0')}'
+var scenarioCatalog = loadJsonContent('../data/scenario_catalog.json')
+var scenarioDefinitions = [for scenario in scenarioCatalog.scenarios: {
+  key: scenario.key
+  containerName: scenario.blobContainer
+}]
 
 //Get the current deployer's information
 var deployerInfo = deployer()
@@ -165,6 +170,7 @@ module foundry './modules/foundry.bicep' = {
     imageDeploymentName: imageOpenAIDeploymentName
     imageModelName: imageOpenAIModelName
     imageModelVersion: imageOpenAIModelVersion
+    scenarioDefinitions: scenarioDefinitions
     deployingUserPrincipalId: deployingUserPrincipalId
   }
 }
@@ -206,6 +212,7 @@ output AZURE_STORAGE_ACCOUNT_NAME string = foundry.outputs.storageName
 output AZURE_STORAGE_ACCOUNT_RESOURCE_ID string = foundry.outputs.storageId
 output AZURE_STORAGE_BLOB_ENDPOINT string = foundry.outputs.storageBlobEndpoint
 output AZURE_AI_PROJECT_STORAGE_CONNECTION_NAME string = foundry.outputs.storageConnectionName
+output AZURE_STORAGE_SCENARIO_CONTAINERS_JSON string = string(foundry.outputs.scenarioStorageConnections)
 
 // Monitoring
 output AZURE_APPINSIGHTS_NAME string = foundry.outputs.appInsightsName

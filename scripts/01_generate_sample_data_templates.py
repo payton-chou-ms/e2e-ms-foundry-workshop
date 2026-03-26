@@ -848,16 +848,21 @@ if os.path.exists(env_path):
         if line.startswith("DATA_FOLDER="):
             lines[i] = f"DATA_FOLDER={data_folder_path}"
             updated = True
-            break
+        elif line.startswith("SCENARIO_KEY="):
+            lines[i] = "SCENARIO_KEY="
     
     if not updated:
         # Add it if not found
         lines.append(f"DATA_FOLDER={data_folder_path}")
+
+    if not any(line.startswith("SCENARIO_KEY=") for line in lines):
+        lines.append("SCENARIO_KEY=")
     
     with open(env_path, "w") as f:
         f.write("\n".join(lines))
     
     print(f"Updated .env with DATA_FOLDER={data_folder_path}")
+    print("Cleared SCENARIO_KEY to keep the generated data folder active")
 else:
     print(f"Note: .env not found. Set DATA_FOLDER={data_folder_path} manually.")
 

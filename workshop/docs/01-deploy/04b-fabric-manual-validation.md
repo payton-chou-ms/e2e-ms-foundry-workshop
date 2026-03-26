@@ -21,8 +21,8 @@ Portal URL:
 
 `02_create_fabric_items.py` 會建立：
 
-- `lakehouse_name = <solution_name>_lakehouse_<suffix>`
-- `ontology_name = <solution_name>_ontology_<suffix>`
+- `lakehouse_name = <solution_name>-lakehouse-<suffix>`
+- `ontology_name = <solution_name>-ontology-<suffix>`
 
 而且它會把結果寫到資料資料夾下的 `config/fabric_ids.json`。
 
@@ -50,7 +50,7 @@ https://app.fabric.microsoft.com/groups/<workspace-id>/...
 ## Step 2. 找到這次腳本建立的 Lakehouse
 
 1. 在 workspace item 清單中搜尋 `lakehouse`
-2. 找名稱像 `<solution_name>_lakehouse_<suffix>` 的項目
+2. 找名稱像 `<solution_name>-lakehouse-<suffix>` 的項目
 3. 點進該 **Lakehouse**
 4. 進入後，先檢查左側或主畫面的 **Tables**、**Files** 區塊是否存在
 
