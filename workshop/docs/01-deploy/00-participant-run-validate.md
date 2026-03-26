@@ -117,7 +117,7 @@ python scripts/check_fabric_items.py
 - [ ] Path 2 時，agent 能回答至少一個資料問題
 - [ ] Path 2 時，agent 能回答至少一個同時結合文件與資料的問題
 
-完整流程可參考 [建置解決方案](04-run-scenario.md)。
+完整流程可參考 [建置與驗證解決方案](04-run-scenario.md)。
 
 ## 這條路徑不涵蓋的內容
 

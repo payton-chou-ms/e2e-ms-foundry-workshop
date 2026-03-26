@@ -79,4 +79,4 @@ Portal URL:
 
 ---
 
-[← 建置方案](04-run-scenario.md) | [Microsoft Fabric 手動驗證 →](04b-fabric-manual-validation.md)
+[← 建置與驗證解決方案](04-run-scenario.md) | [Microsoft Fabric 手動驗證 →](04b-fabric-manual-validation.md)

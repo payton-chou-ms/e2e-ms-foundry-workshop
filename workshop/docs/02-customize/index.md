@@ -2,6 +2,8 @@
 
 這一節的目標，是把前面跑通的 workshop 主流程，快速換成更貼近你情境的資料、文件和測試問題。
 
+主線很單純：先決定你的產業與 use case，再決定是重跑整套流程，還是只先產生新資料。
+
 !!! info "何時使用本節"
     請在完成 [管理員部署](../01-deploy/00-admin-deploy-share.md) 或 [參與者執行與驗證](../01-deploy/00-participant-run-validate.md) 之後再開始
 
@@ -109,9 +111,7 @@ python scripts/01_generate_sample_data.py \
 | **本體（Ontology）** | 用於 NL→SQL 的商業規則與關係 |
 | **範例問題** | 用來測試方案的問題集 |
 
-!!! note "固定範例資產"
-    為了讓每個 tab 都對應到實際可查看的檔案，這份 workshop 材料提供固定樣本資產於 `data/static_examples/<scenario>/`
-    每個固定樣本資料夾也都包含 `config/sample_questions.txt`，可直接對應該 tab 的問題集
+固定樣本資產都放在 `data/static_examples/<scenario>/`，每個資料夾也都包含 `config/sample_questions.txt`，可直接對應該 tab 的問題集。
 
 ## 範例轉換
 
@@ -311,4 +311,4 @@ python scripts/01_generate_sample_data.py \
 
 ---
 
-[← 建置解決方案](../01-deploy/04-run-scenario.md) | [產生與建置 →](02-generate.md)
+[← 建置與驗證解決方案](../01-deploy/04-run-scenario.md) | [產生與建置 →](02-generate.md)

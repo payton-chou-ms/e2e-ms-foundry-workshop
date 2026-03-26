@@ -2,7 +2,7 @@
 
 本節不是要把你變成這套方案的維運者，而是幫你把前面跑過的流程一一對回去，弄清楚「剛剛到底發生了什麼」。
 
-如果你已經把 workshop 主流程跑過一次，現在最適合做的事不是背術語，而是把這六個學習主題和你剛剛看到的體驗對起來。
+這一節的讀法也很單純：先從「答案怎麼接地」開始，再回頭看 agent、tool、model 和 control plane。
 
 ## 六個學習主題
 
@@ -105,4 +105,4 @@ flowchart LR
 
 ---
 
-[← 建置與測試 PoC](../02-customize/03-demo.md) | [Foundry Model: 部署策略 →](00-foundry-model.md)
+[← 建置與測試（自訂 PoC）](../02-customize/03-demo.md) | [Foundry 模型：部署策略 →](00-foundry-model.md)

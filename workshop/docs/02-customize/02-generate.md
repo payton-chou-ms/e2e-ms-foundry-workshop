@@ -210,4 +210,4 @@ cat data/*/config/sample_questions.txt
 
 ---
 
-[← 總覽](index.md) | [建置與測試 PoC →](03-demo.md)
+[← 為你的使用案例自訂](index.md) | [建置與測試（自訂 PoC） →](03-demo.md)

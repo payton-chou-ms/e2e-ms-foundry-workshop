@@ -57,4 +57,4 @@ python scripts/08_test_foundry_agent.py
 
 ---
 
-[← 建置方案](04-run-scenario.md) | [為你的使用案例自訂 →](../02-customize/index.md)
+[← 建置與驗證解決方案](04-run-scenario.md) | [為你的使用案例自訂 →](../02-customize/index.md)

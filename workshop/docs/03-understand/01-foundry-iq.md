@@ -71,4 +71,4 @@ PDFs/Word/PPT → Text Extraction → Chunking → Embedding → Vector Index
 
 ---
 
-[← 概觀](index.md) | [Fabric IQ：資料 →](02-fabric-iq.md)
+[← 深入解析](index.md) | [Fabric IQ：資料 →](02-fabric-iq.md)

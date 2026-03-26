@@ -1,8 +1,8 @@
 # 建置與驗證解決方案
 
 !!! info "兩條路徑都會使用"
-       管理員使用本頁來驗證預設部署
-       本頁一律假設：目前**還沒有預載資料與 Agent**
+       管理員使用本頁來驗證預設部署。
+       本頁一律假設：目前**還沒有預載資料與 Agent**。
 
 如果你接手的是**管理員已經預載好的共享環境**，請改看 [參與者執行與驗證](00-participant-run-validate.md)。
 
@@ -106,6 +106,6 @@ python scripts/00_admin_prepare_demo.py --mode preload-only --scenarios default 
        - [x] Path 1B：如果你選 Foundry-native 變體，也可在 Foundry 內用 knowledge base 回答文件問題
        - [x] Path 2：**Foundry IQ + Fabric IQ** 可同時回答文件與資料問題
 
-    ---
+---
 
 [← 設定開發環境](03-configure.md) | [Microsoft Foundry 手動 Demo →](04a-manual-experiments.md)

@@ -99,4 +99,4 @@ response 不只是最後一段文字，它可能包含 function call。本機 lo
 
 ---
 
-[← Foundry IQ：文件](01-foundry-iq.md) | [Foundry 工具：函式合約 →](03-foundry-tool.md)
+[← Foundry IQ：文件智慧](01-foundry-iq.md) | [Foundry 工具：函式合約 →](03-foundry-tool.md)

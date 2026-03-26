@@ -64,7 +64,7 @@ python scripts/00_admin_prepare_demo.py
 - 文件問答的 search-only 準備
 - 文件問答的 Foundry-native IQ 準備
 
-如果你想分開理解每一條路徑，再回頭看 [建置解決方案](04-run-scenario.md)。
+如果你想分開理解每一條路徑，再回頭看 [建置與驗證解決方案](04-run-scenario.md)。
 
 在分享之前先執行一次預設情境。這可以確認：
 

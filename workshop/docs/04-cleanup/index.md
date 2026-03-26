@@ -1,6 +1,6 @@
 # 清理資源
 
-完成後請刪除 Azure 資源以管理成本。
+這一節只有一件事：刪除 Azure 資源，避免 workshop 繼續產生成本。
 
 ## 刪除 Azure 資源
 
@@ -49,4 +49,4 @@ azd down
 
 ---
 
-[後續步驟 →](next-steps.md)
+[← 多代理程式延伸：情境工作流](../03-understand/05-multi-agent-extension.md) | [後續步驟 →](next-steps.md)

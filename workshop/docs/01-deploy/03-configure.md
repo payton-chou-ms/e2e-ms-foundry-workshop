@@ -127,4 +127,4 @@ DATA_FOLDER=data/default
 
 ---
 
-[← 參與者執行與驗證](00-participant-run-validate.md) | [建置解決方案 →](04-run-scenario.md)
+[← 參與者執行與驗證](00-participant-run-validate.md) | [建置與驗證解決方案 →](04-run-scenario.md)

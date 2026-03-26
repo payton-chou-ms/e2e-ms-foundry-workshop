@@ -81,4 +81,4 @@ flowchart LR
 
 ---
 
-[← 概觀](index.md) | [Foundry IQ：文件 →](01-foundry-iq.md)
+[← 深入解析](index.md) | [Foundry IQ：文件智慧 →](01-foundry-iq.md)

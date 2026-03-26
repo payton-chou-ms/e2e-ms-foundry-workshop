@@ -135,4 +135,4 @@ FROM <table_name>
 
 ---
 
-[← Microsoft Foundry 手動 Demo](04a-manual-experiments.md) | [腳本用途與執行順序總覽 →](05-script-sequence.md)
+[← Microsoft Foundry 手動 Demo](04a-manual-experiments.md) | [腳本用途、快速路徑與執行順序 →](05-script-sequence.md)
