@@ -64,7 +64,7 @@
 示例：
 
 - `azd up`
-- `python scripts/00_build_solution.py --from 02`
+- `python scripts/00_admin_prepare_demo.py --mode full --from-step 02`
 - `FABRIC_WORKSPACE_ID`
 - `workshop/docs/01-deploy/04-run-scenario.md`
 - `DefaultAzureCredential`

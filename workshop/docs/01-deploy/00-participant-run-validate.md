@@ -161,7 +161,7 @@ python -c "from scripts.load_env import load_all_env; load_all_env(); import os;
 建置：
 
 ```bash
-python scripts/00_build_solution.py --foundry-only
+python scripts/00_admin_prepare_demo.py --mode foundry-only
 ```
 
 測試：
@@ -195,7 +195,7 @@ python scripts/check_fabric_items.py
 建置：
 
 ```bash
-python scripts/00_build_solution.py --from 02
+python scripts/00_admin_prepare_demo.py --mode full --from-step 02
 ```
 
 測試：

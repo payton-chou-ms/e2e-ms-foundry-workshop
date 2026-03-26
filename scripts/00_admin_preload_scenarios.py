@@ -1,4 +1,4 @@
-"""Admin helper to preload multiple scenarios into Blob, Search, Foundry IQ, and Fabric IQ."""
+"""DEPRECATED: internal preload helper. Use 00_admin_prepare_demo.py instead."""
 
 from __future__ import annotations
 
@@ -28,6 +28,9 @@ def run_step(label: str, command: list[str], env: dict[str, str], dry_run: bool)
 
 
 def main():
+    if os.getenv("PREPARE_DEMO_INTERNAL_CALL") != "1":
+        print("警告：scripts/00_admin_preload_scenarios.py 已 deprecated，請改用 scripts/00_admin_prepare_demo.py")
+
     parser = argparse.ArgumentParser(description="Admin 預先載入多個 scenarios")
     parser.add_argument("--scenarios", nargs="*", default=[],
                         help="要預載的情境 key。若省略，會處理 scenario catalog 中全部項目")

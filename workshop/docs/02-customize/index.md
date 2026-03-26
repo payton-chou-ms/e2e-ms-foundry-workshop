@@ -34,11 +34,11 @@
 
 1. 改 `.env` 裡的 `INDUSTRY`、`USECASE`、`DATA_SIZE`
 2. 在命令列直接傳 `--industry`、`--usecase`、`--size`
-3. 重新執行資料生成或完整 build script
+3. 重新執行資料生成或公開 prepare script
 
 如果你只是要把 workshop 換成另一個產業情境，通常**不用修改**這些 script 原始碼：
 
-- `scripts/00_build_solution.py`
+- `scripts/00_admin_prepare_demo.py`
 - `scripts/01_generate_sample_data.py`
 - `scripts/02_create_fabric_items.py`
 - `scripts/03_load_fabric_data.py`
@@ -57,7 +57,7 @@
 如果你要把整個 PoC 換成新的產業與使用案例，最簡單的方式是直接重跑完整 build：
 
 ```bash
-python scripts/00_build_solution.py --clean \
+python scripts/00_admin_prepare_demo.py --mode full --clean \
     --industry "Insurance" \
     --usecase "Property insurance with claims processing and policy management" \
     --size small

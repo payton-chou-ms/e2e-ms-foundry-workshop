@@ -18,14 +18,14 @@
 - **本機 workshop runtime**：
 
 ```bash
-python scripts/00_build_solution.py --foundry-only
+python scripts/00_admin_prepare_demo.py --mode foundry-only
 python scripts/08_test_foundry_agent.py --foundry-only
 ```
 
 - **Foundry-native IQ Agent**：
 
 ```bash
-python scripts/00_build_solution.py --foundry-iq
+python scripts/00_admin_prepare_demo.py --mode foundry-iq
 python scripts/08b_test_foundry_iq_agent.py
 ```
 
@@ -34,7 +34,7 @@ python scripts/08b_test_foundry_iq_agent.py
 適合同時做文件問答和資料問答。
 
 ```bash
-python scripts/00_build_solution.py --from 02
+python scripts/00_admin_prepare_demo.py --mode full --from-step 02
 python scripts/08_test_foundry_agent.py
 ```
 

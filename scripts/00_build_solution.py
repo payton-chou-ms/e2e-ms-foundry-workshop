@@ -1,5 +1,6 @@
-"""完整方案建置腳本。"""
+"""DEPRECATED: internal build pipeline. Use 00_admin_prepare_demo.py instead."""
 
+from content_understanding_defaults import ensure_content_understanding_defaults
 from load_env import load_all_env
 import argparse
 import subprocess
@@ -38,7 +39,7 @@ FOUNDRY_IQ_PIPELINE = ["01", "06b", "07b"]
 # ============================================================================
 
 parser = argparse.ArgumentParser(
-    description="端到端建置流程：資料 → 知識庫 → Agent → API → App",
+    description="[DEPRECATED] 端到端建置流程：資料 → 知識庫 → Agent → API → App",
     formatter_class=argparse.RawDescriptionHelpFormatter,
     epilog="""
 範例：
@@ -81,8 +82,13 @@ parser.add_argument("--dry-run", action="store_true",
                     help="只顯示將要執行的內容，不實際執行")
 parser.add_argument("--continue-on-error", action="store_true",
                     help="即使某一步失敗也繼續往下執行")
+parser.add_argument("--yes", action="store_true",
+                    help="非互動模式；直接執行而不等待 Enter")
 
 args = parser.parse_args()
+
+if os.getenv("PREPARE_DEMO_INTERNAL_CALL") != "1":
+    print("警告：scripts/00_build_solution.py 已 deprecated，請改用 scripts/00_admin_prepare_demo.py")
 
 # ============================================================================
 # Determine Pipeline
@@ -206,9 +212,10 @@ if args.dry_run:
     print("\n[DRY RUN] 不會真的執行任何腳本。")
     sys.exit(0)
 
-print()
-input("按 Enter 開始執行...")
-print()
+if not args.yes:
+    print()
+    input("按 Enter 開始執行...")
+    print()
 
 # ============================================================================
 # Run Pipeline
@@ -225,31 +232,12 @@ def run_step(step_id):
 
     # Inline step: configure Content Understanding defaults
     if step_id == "cu-defaults":
-        try:
-            from azure.ai.contentunderstanding import ContentUnderstandingClient
-            from azure.identity import DefaultAzureCredential
-            endpoint = os.getenv("AZURE_AI_ENDPOINT")
-            if not endpoint:
-                print("略過（未設定 AZURE_AI_ENDPOINT）")
-                return True
-            client = ContentUnderstandingClient(
-                endpoint=endpoint, credential=DefaultAzureCredential())
-            try:
-                defaults = client.get_defaults()
-                if defaults.get("modelDeployments"):
-                    print("[OK]（已設定）")
-                    return True
-            except Exception:
-                pass
-            client.update_defaults(model_deployments={
-                "gpt-4.1-mini": "gpt-4.1-mini",
-                "text-embedding-3-large": "text-embedding-3-large",
-            })
-            print("[OK]")
-            return True
-        except Exception as exc:
-            print(f"略過（{exc}）")
-            return True
+        configured, message = ensure_content_understanding_defaults()
+        if configured:
+            print(f"[OK]（{message}）")
+        else:
+            print(f"略過（{message}）")
+        return True
 
     if not script_path or not os.path.exists(script_path):
         print("略過（找不到腳本）")

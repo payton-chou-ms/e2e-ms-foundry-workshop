@@ -18,6 +18,18 @@
 
 如果你已經是在課程提供的環境、壓縮封裝或內部鏡像中操作，只要切換到專案根目錄後再繼續下面步驟即可。
 
+## 超速部署（略過所有說明，只留下指令，如果要詳細部署說明請直接往下一節看）
+
+```bash
+az login --tenant <TENANT_ID> --use-device-code
+
+azd auth login --tenant-id <TENANT_ID> --use-device-code
+
+azd up --subscription <SUBSCRIPTION_ID>
+```
+
+如果你這次不是用這組 tenant / subscription，請改成自己的值再執行。
+
 ## 登入 Azure
 
 ```bash
@@ -98,27 +110,6 @@ azd up --subscription <SUBSCRIPTION_ID>
 
 ### 其他常見情境
 
-如果你後面還需要直接執行 Azure CLI 指令，例如 `az account list` 或 `az account show`，再另外登入 Azure CLI 即可：
-
-```bash
-az login --tenant <TENANT_ID>
-```
-
-如果你想把環境設定固定下來，避免之後重跑時忘記區域或 subscription，可以再做下面這一步：
-
-```bash
-azd env set AZURE_LOCATION eastus2
-azd env set AZURE_ENV_AI_DEPLOYMENTS_LOCATION eastus2
-azd up --subscription <SUBSCRIPTION_ID>
-```
-
-如果你已經用 Azure CLI 登入，只想切到正確的訂用帳戶，也可以先這樣做：
-
-```bash
-az account set --subscription <SUBSCRIPTION_ID>
-azd up
-```
-
 如果部署途中看到 `AADSTS50076` 或 `reauthentication required`，通常代表這次操作被要求補做 MFA。這時直接重新登入 `az` / `azd` 並完成驗證即可：
 
 如果在部署、更新資源設定或手動補角色時看到 `RequestDisallowedByAzure`，通常更接近 Azure Policy、deny assignment 或組織治理限制，而不是單純登入過期。這時應先檢查 policy / deny assignment，再決定是否需要調整模板或請管理員放行。
@@ -143,9 +134,8 @@ azd up --environment <environment-name>
 
 這次部署除了主要 chat 和 embedding 模型，也會額外建立或盡力而為地嘗試建立：
 
-- `gpt-4.1-mini`。這個 deployment 仍維持直接部署，因為目前 Content Understanding 的預設值流程會依賴它
-- 盡力而為地嘗試建立一個部署在 Foundry account 內的 `gpt-image-1.5` model deployment，用於 `13_demo_image_generation.py`。如果該區域或 quota 不允許，`azd up` 仍會完成，只有影像示範會被略過
 - 盡力而為地嘗試建立一組 default OpenAI model deployments，用於手動實驗或額外展示。這組 bundle 目前包含：
+    - `gpt-image-1.5`
     - `gpt-5-nano`
     - `gpt-4.1-nano`
     - `gpt-4o-mini`
@@ -187,8 +177,10 @@ azd up --environment <environment-name>
 !!! note "Scenario containers 與 admin preload"
     新版部署會預先建立每個 scenario 對應的 Blob container。
     Azure 資源部署完成後，管理員可再執行：
-    `python scripts/00_admin_preload_scenarios.py`
-    把不同 scenario 的 Blob、Search、Foundry IQ 與 Fabric IQ 資料先載入共享環境。
+    `python scripts/00_admin_prepare_demo.py`
+    把 `default` scenario 的 preload 與兩種文件問答 agent 一次準備好。
+
+    這一步目前**沒有直接塞進 `azd up`**，因為它同時牽涉資料平面權限、Foundry/Fabric 內容建立，以及非固定名稱的 agent 建立流程；預設仍建議在 `azd up` 完成後手動跑一次這支 wrapper。
 
 !!! warning "請等待完成"
     部署大約需要 7-8 分鐘。請在看到成功訊息之後再繼續操作

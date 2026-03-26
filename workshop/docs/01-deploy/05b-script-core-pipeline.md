@@ -14,21 +14,21 @@
 08 測試 agent
 ```
 
-平常不一定要手動逐支執行，因為 `00_build_solution.py` 會幫你串起主要步驟。
+平常不一定要手動逐支執行，因為 `00_admin_prepare_demo.py` 會作為公開入口，替你切到對應的 prepare 路徑。
 
 ## 主流程腳本對照
 
-### `00_build_solution.py`
+### `00_admin_prepare_demo.py`
 
-- 用途：主流程總控腳本
-- 什麼時候跑：你想快速把 workshop 建起來時
+- 用途：公開的單一 prepare 入口
+- 什麼時候跑：你想快速準備共享環境、文件問答，或完整 demo 路徑時
 
 ```bash
-python scripts/00_build_solution.py --from 02
-python scripts/00_build_solution.py --foundry-only
-python scripts/00_build_solution.py --foundry-iq
-python scripts/00_build_solution.py --clean
-python scripts/00_build_solution.py --from 04
+python scripts/00_admin_prepare_demo.py
+python scripts/00_admin_prepare_demo.py --mode foundry-only
+python scripts/00_admin_prepare_demo.py --mode foundry-iq
+python scripts/00_admin_prepare_demo.py --mode full --from-step 02
+python scripts/00_admin_prepare_demo.py --mode full --clean --industry "Insurance" --usecase "Property insurance with claims processing and policy management"
 ```
 
 ### `01_generate_sample_data.py`
