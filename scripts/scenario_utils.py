@@ -26,8 +26,64 @@ def normalize_container_name(value: str) -> str:
     return normalized[:63]
 
 
+def normalize_resource_token(value: str, max_length: int | None = None) -> str:
+    normalized = re.sub(r"[^a-z0-9-]", "-", value.lower())
+    normalized = re.sub(r"-+", "-", normalized).strip("-")
+    if not normalized:
+        normalized = "demo"
+    if max_length is not None:
+        normalized = normalized[:max_length].strip("-")
+    return normalized or "demo"
+
+
 def scenario_resource_suffix(scenario_key: str) -> str:
     return scenario_key.replace("_", "-")
+
+
+def scenario_short_name(scenario: dict | str) -> str:
+    if isinstance(scenario, dict):
+        short_name = scenario.get("shortName")
+        scenario_key = scenario["key"]
+    else:
+        short_name = None
+        scenario_key = scenario
+
+    if short_name:
+        return normalize_resource_token(short_name, max_length=24)
+
+    aliases = {
+        "default": "telco",
+        "telecommunications": "telco",
+        "retail_launch_incident": "retail-launch",
+        "contract_keyword_review": "contract-review",
+        "manufacturing": "mfg",
+    }
+    if scenario_key in aliases:
+        return aliases[scenario_key]
+
+    cleaned_key = scenario_key.removeprefix("static_")
+    token_aliases = {
+        "telecommunications": "telco",
+        "manufacturing": "mfg",
+    }
+    parts = [token_aliases.get(part, part)
+             for part in cleaned_key.split("_") if part]
+    return normalize_resource_token("-".join(parts), max_length=24)
+
+
+def solution_short_name(value: str | None, max_length: int = 6) -> str:
+    normalized = normalize_resource_token(value or "demo")
+    compact = re.sub(r"[^a-z0-9]", "", normalized)
+    if len(compact) <= max_length:
+        return compact or "demo"
+    return compact[-max_length:]
+
+
+def build_deployment_name(base_name: str | None, scenario: dict | str, role: str, *, max_length: int = 64) -> str:
+    scenario_slug = scenario_short_name(scenario)
+    role_slug = normalize_resource_token(role, max_length=20)
+    parts = [solution_short_name(base_name), scenario_slug, role_slug]
+    return normalize_resource_token("-".join(part for part in parts if part), max_length=max_length)
 
 
 def build_scenario_resource_name(base_name: str, scenario_key: str, separator: str = "-") -> str:
@@ -77,13 +133,15 @@ def _derive_dynamic_scenario(data_folder: str) -> dict:
         relative_path = data_path.relative_to(REPO_ROOT).as_posix()
     except ValueError:
         relative_path = data_path.as_posix()
-    scenario_key = re.sub(r"[^a-z0-9_]+", "_", data_path.name.lower()).strip("_")
+    scenario_key = re.sub(r"[^a-z0-9_]+", "_",
+                          data_path.name.lower()).strip("_")
     if not scenario_key:
         scenario_key = "custom"
 
     return {
         "key": scenario_key,
         "title": data_path.name,
+        "shortName": normalize_resource_token(scenario_key, max_length=24),
         "dataFolder": relative_path,
         "blobContainer": normalize_container_name(scenario_key),
         "capabilities": {
@@ -103,23 +161,43 @@ def resolve_scenario(
     require_capability: str | None = None,
 ) -> dict:
     catalog = load_scenario_catalog()
+    explicit_key = bool(scenario_key)
+    explicit_data_folder = bool(data_folder)
     selected_key = scenario_key or os.getenv("SCENARIO_KEY")
     selected_data_folder = data_folder or os.getenv("DATA_FOLDER")
 
     scenario = None
     if selected_key:
         scenario = next(
-            (item for item in catalog.get("scenarios", []) if item["key"] == selected_key),
+            (item for item in catalog.get("scenarios", [])
+             if item["key"] == selected_key),
             None,
         )
         if scenario is None:
-            raise ValueError(f"找不到 scenario key：{selected_key}")
-        if selected_data_folder:
-            matched_scenario = _match_catalog_entry_by_data_folder(selected_data_folder, catalog)
+            if selected_data_folder:
+                matched_scenario = _match_catalog_entry_by_data_folder(
+                    selected_data_folder, catalog)
+                scenario = matched_scenario or _derive_dynamic_scenario(
+                    selected_data_folder)
+                scenario["key"] = selected_key
+            else:
+                raise ValueError(f"找不到 scenario key：{selected_key}")
+        elif explicit_data_folder:
+            matched_scenario = _match_catalog_entry_by_data_folder(
+                selected_data_folder, catalog)
             if matched_scenario is None:
                 scenario = _derive_dynamic_scenario(selected_data_folder)
+                scenario["key"] = selected_key
+            elif matched_scenario["key"] == selected_key:
+                scenario = matched_scenario
+        elif not explicit_key and selected_data_folder:
+            matched_scenario = _match_catalog_entry_by_data_folder(
+                selected_data_folder, catalog)
+            if matched_scenario and matched_scenario["key"] == selected_key:
+                scenario = matched_scenario
     else:
-        scenario = _match_catalog_entry_by_data_folder(selected_data_folder, catalog)
+        scenario = _match_catalog_entry_by_data_folder(
+            selected_data_folder, catalog)
         if scenario is None and selected_data_folder:
             scenario = _derive_dynamic_scenario(selected_data_folder)
 

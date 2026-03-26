@@ -24,7 +24,7 @@ from azure.search.documents.indexes.models import (
 
 from credential_utils import get_credential
 from load_env import load_all_env
-from scenario_utils import build_scenario_env, build_scenario_resource_name, resolve_data_paths, resolve_scenario
+from scenario_utils import build_deployment_name, build_scenario_env, resolve_data_paths, resolve_scenario
 
 load_all_env()
 
@@ -40,8 +40,8 @@ PROJECT_RESOURCE_ID = os.getenv("AZURE_AI_PROJECT_RESOURCE_ID")
 SEARCH_ENDPOINT = os.getenv("AZURE_AI_SEARCH_ENDPOINT")
 SOLUTION_NAME = os.getenv("SOLUTION_NAME") or os.getenv(
     "SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo")
-scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="foundryIq")
-scenario_solution_name = build_scenario_resource_name(SOLUTION_NAME, scenario["key"])
+scenario = resolve_scenario(args.scenario or None,
+                            args.data_folder, require_capability="foundryIq")
 
 CONNECTION_API_VERSION = "2025-10-01-preview"
 KNOWLEDGE_BASE_MCP_API_VERSION = "2025-11-01-preview"
@@ -73,9 +73,13 @@ docs_dir = paths["docs_dir"]
 
 knowledge_ids_path = config_dir / "knowledge_ids.json"
 search_ids_path = config_dir / "search_ids.json"
-knowledge_source_name = f"{scenario_solution_name}-foundry-iq-source"
-knowledge_base_name = f"{scenario_solution_name}-foundry-iq-kb"
-project_connection_name = f"{scenario_solution_name}-foundry-iq-connection"
+deployment_prefix = build_deployment_name(
+    SOLUTION_NAME, scenario, "", max_length=32).rstrip("-")
+knowledge_source_name = f"{deployment_prefix}-src"
+knowledge_base_name = build_deployment_name(
+    SOLUTION_NAME, scenario, "kb", max_length=48)
+project_connection_name = build_deployment_name(
+    SOLUTION_NAME, scenario, "kb-con", max_length=48)
 
 
 def normalize_knowledge_source_name(value: str) -> str:
@@ -92,12 +96,14 @@ def run_search_ingestion(force: bool = False):
         print("\n已找到既有 search_ids.json，沿用現有 scenario ingestion metadata...")
         return
 
-    script_path = scenario_script_path if scenario_script_path.exists() else Path(__file__).with_name("06_upload_to_search.py")
+    script_path = scenario_script_path if scenario_script_path.exists(
+    ) else Path(__file__).with_name("06_upload_to_search.py")
     child_env = build_scenario_env(scenario)
     print("\n確認 Azure AI Search 索引已完成載入...")
     cmd = [sys.executable, str(script_path)]
     if not scenario_script_path.exists():
-        cmd.extend(["--scenario", scenario["key"], "--data-folder", scenario["dataFolder"]])
+        cmd.extend(["--scenario", scenario["key"],
+                   "--data-folder", scenario["dataFolder"]])
     subprocess.run(cmd, check=True, env=child_env)
 
 
@@ -161,14 +167,16 @@ def normalize_search_sources(search_ids: dict):
     indexes = search_ids.get("indexes") or []
     if indexes:
         normalized_sources = []
-        for index in indexes:
+        for position, index in enumerate(indexes, start=1):
+            source_role = "src" if len(indexes) == 1 else f"src-{position}"
             normalized_sources.append(
                 {
                     "index_name": index["name"],
                     "knowledge_source_name": normalize_knowledge_source_name(
                         index.get(
                             "knowledge_source_name",
-                            f"{knowledge_base_name}-{index['name']}-source",
+                            build_deployment_name(
+                                SOLUTION_NAME, scenario, source_role, max_length=48),
                         )
                     ),
                     "source_data_fields": index.get(
@@ -190,7 +198,11 @@ def normalize_search_sources(search_ids: dict):
         {
             "index_name": search_ids["index_name"],
             "knowledge_source_name": normalize_knowledge_source_name(
-                search_ids.get("knowledge_source_name", knowledge_source_name)
+                search_ids.get(
+                    "knowledge_source_name",
+                    build_deployment_name(
+                        SOLUTION_NAME, scenario, "src", max_length=48),
+                )
             ),
             "source_data_fields": ["content", "title", "source", "page_number", "chunk_id"],
             "search_fields": ["content", "title"],
@@ -205,10 +217,14 @@ def normalize_search_sources(search_ids: dict):
 def create_knowledge_source(index_client: SearchIndexClient, source_config: dict):
     knowledge_source = SearchIndexKnowledgeSource(
         name=source_config["knowledge_source_name"],
-        description=f"Workshop knowledge source for {SOLUTION_NAME} ({source_config['kind']})",
+        description=(
+            f"{scenario['title']} source in Azure AI Search"
+            f" ({source_config['kind']}, index={source_config['index_name']})"
+        ),
         search_index_parameters=SearchIndexKnowledgeSourceParameters(
             search_index_name=source_config["index_name"],
-            source_data_fields=_field_references(source_config["source_data_fields"]),
+            source_data_fields=_field_references(
+                source_config["source_data_fields"]),
             search_fields=_field_references(source_config["search_fields"]),
             semantic_configuration_name=source_config["semantic_configuration_name"],
         ),
@@ -219,8 +235,12 @@ def create_knowledge_source(index_client: SearchIndexClient, source_config: dict
 def create_knowledge_base(index_client: SearchIndexClient, source_names: list[str]):
     knowledge_base = KnowledgeBase(
         name=knowledge_base_name,
-        description=f"Workshop Foundry IQ knowledge base for {SOLUTION_NAME}",
-        knowledge_sources=[KnowledgeSourceReference(name=source_name) for source_name in source_names],
+        description=(
+            f"Grounded knowledge for {scenario['title']} using indexed documents"
+            " and tables from this workshop scenario."
+        ),
+        knowledge_sources=[KnowledgeSourceReference(
+            name=source_name) for source_name in source_names],
         retrieval_reasoning_effort=KnowledgeRetrievalMinimalReasoningEffort(),
         output_mode=KnowledgeRetrievalOutputMode.EXTRACTIVE_DATA,
     )
@@ -261,7 +281,8 @@ def create_project_connection(mcp_endpoint: str):
 
 def main():
     pdf_files = sorted(docs_dir.glob("*.pdf"))
-    csv_files = sorted((data_dir / "tables").glob("*.csv")) if (data_dir / "tables").exists() else []
+    csv_files = sorted((data_dir / "tables").glob("*.csv")
+                       ) if (data_dir / "tables").exists() else []
     if not pdf_files and not csv_files:
         print("錯誤：找不到可供 Foundry IQ 匯入的 PDF 或 CSV 檔")
         print(f"      查找位置：{docs_dir} 與 {data_dir / 'tables'}")
@@ -286,7 +307,8 @@ def main():
     index_client = SearchIndexClient(SEARCH_ENDPOINT, credential)
 
     run_search_ingestion()
-    search_ids = ensure_search_indexes_ready(index_client, load_search_metadata())
+    search_ids = ensure_search_indexes_ready(
+        index_client, load_search_metadata())
     source_configs = normalize_search_sources(search_ids)
 
     print("\n建立或更新 knowledge source...")

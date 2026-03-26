@@ -1,30 +1,30 @@
 {
   "scenario_key": "static_retail",
   "data_folder": "data/static_examples/retail",
-  "blob_endpoint": "https://stda4zzppizpdfh2.blob.core.windows.net/",
+  "blob_endpoint": "https://stda5b3uyfjkkxwj.blob.core.windows.net/",
   "blob_container": "static-retail",
-  "uploaded_at": "2026-03-25T17:11:57.542330+00:00",
+  "uploaded_at": "2026-03-26T10:21:39.002656+00:00",
   "file_count": 4,
   "files": [
     {
       "path": "documents/return_policy.pdf",
       "source": "documents/return_policy.pdf",
-      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-retail/documents/return_policy.pdf"
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-retail/documents/return_policy.pdf"
     },
     {
       "path": "documents/shipping_guide.pdf",
       "source": "documents/shipping_guide.pdf",
-      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-retail/documents/shipping_guide.pdf"
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-retail/documents/shipping_guide.pdf"
     },
     {
       "path": "tables/orders.csv",
       "source": "tables/orders.csv",
-      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-retail/tables/orders.csv"
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-retail/tables/orders.csv"
     },
     {
       "path": "tables/products.csv",
       "source": "tables/products.csv",
-      "url": "https://stda4zzppizpdfh2.blob.core.windows.net/static-retail/tables/products.csv"
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-retail/tables/products.csv"
     }
   ]
 }

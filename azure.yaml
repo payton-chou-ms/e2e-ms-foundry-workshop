@@ -9,11 +9,11 @@ hooks:
   postprovision:
     posix:
       shell: sh
-      run: python scripts/deploy_optional_image_model.py
+      run: python scripts/deploy_optional_model.py
       interactive: false
       continueOnError: true
     windows:
       shell: pwsh
-      run: python scripts/deploy_optional_image_model.py
+      run: python scripts/deploy_optional_model.py
       interactive: false
       continueOnError: true

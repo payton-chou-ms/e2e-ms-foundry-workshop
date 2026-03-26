@@ -139,19 +139,20 @@ azd up --environment <environment-name>
     - `gpt-5-nano`
     - `gpt-4.1-nano`
     - `gpt-4o-mini`
-    - `gpt-oss-120B`
     - `o3-mini`
     - `gpt-5.3-chat`
     - `gpt-5-pro`
-    - `gpt-5.2-codex`
+    - `gpt-5-codex`
+    - `gpt-5.1-codex`
     - `gpt-5.1-codex-mini`
-    - `gpt-5.3-codex`
-    - `gpt-5.2`
-    - `gpt-5.4`
+    - `gpt-5`
+    - `gpt-5.1`
+    - `gpt-5-mini`
     - `gpt-5.4-nano`
     - `gpt-5.4-mini`
-    - `gpt-5.4-pro`
     如果該區域或 quota 不允許，`azd up` 仍會完成，失敗的 deployment 只會被記錄在 `.azure/<env>/.env` 的 best-effort status 變數中
+
+    其中 `gpt-image-1.5` 是獨立的 optional image model。它可能因 subscription entitlement 或特殊 quota 限制而無法建立；這種情況不會影響其餘 OpenAI bundle 的部署結果。
 - 一個 Playwright Workspace，用於 `10_demo_browser_automation.py`。它會優先使用你選的 Azure location；如果該區域不支援 Playwright Workspace，才會自動改用 `eastus`
 
 !!! note "如果這次要跳過 Browser Automation 資源"

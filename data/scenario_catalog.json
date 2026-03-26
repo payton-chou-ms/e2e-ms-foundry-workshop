@@ -5,6 +5,7 @@
     {
       "key": "default",
       "title": "Default Telecommunications",
+      "shortName": "telco",
       "dataFolder": "data/default",
       "blobContainer": "default",
       "capabilities": {
@@ -17,6 +18,7 @@
     {
       "key": "retail_launch_incident",
       "title": "Retail Launch Incident",
+      "shortName": "retail-launch",
       "dataFolder": "data/retail_launch_incident",
       "blobContainer": "retail-launch-incident",
       "capabilities": {
@@ -29,6 +31,7 @@
     {
       "key": "contract_keyword_review",
       "title": "Contract Keyword Review",
+      "shortName": "contract-review",
       "dataFolder": "data/contract_keyword_review",
       "blobContainer": "contract-keyword-review",
       "capabilities": {
@@ -41,6 +44,7 @@
     {
       "key": "static_education",
       "title": "Static Education Example",
+      "shortName": "education",
       "dataFolder": "data/static_examples/education",
       "blobContainer": "static-education",
       "capabilities": {
@@ -53,6 +57,7 @@
     {
       "key": "static_energy",
       "title": "Static Energy Example",
+      "shortName": "energy",
       "dataFolder": "data/static_examples/energy",
       "blobContainer": "static-energy",
       "capabilities": {
@@ -65,6 +70,7 @@
     {
       "key": "static_finance",
       "title": "Static Finance Example",
+      "shortName": "finance",
       "dataFolder": "data/static_examples/finance",
       "blobContainer": "static-finance",
       "capabilities": {
@@ -77,6 +83,7 @@
     {
       "key": "static_hospitality",
       "title": "Static Hospitality Example",
+      "shortName": "hospitality",
       "dataFolder": "data/static_examples/hospitality",
       "blobContainer": "static-hospitality",
       "capabilities": {
@@ -89,6 +96,7 @@
     {
       "key": "static_insurance",
       "title": "Static Insurance Example",
+      "shortName": "insurance",
       "dataFolder": "data/static_examples/insurance",
       "blobContainer": "static-insurance",
       "capabilities": {
@@ -101,6 +109,7 @@
     {
       "key": "static_logistics",
       "title": "Static Logistics Example",
+      "shortName": "logistics",
       "dataFolder": "data/static_examples/logistics",
       "blobContainer": "static-logistics",
       "capabilities": {
@@ -113,6 +122,7 @@
     {
       "key": "static_manufacturing",
       "title": "Static Manufacturing Example",
+      "shortName": "manufacturing",
       "dataFolder": "data/static_examples/manufacturing",
       "blobContainer": "static-manufacturing",
       "capabilities": {
@@ -125,6 +135,7 @@
     {
       "key": "static_retail",
       "title": "Static Retail Example",
+      "shortName": "retail",
       "dataFolder": "data/static_examples/retail",
       "blobContainer": "static-retail",
       "capabilities": {
@@ -137,6 +148,7 @@
     {
       "key": "static_telecommunications",
       "title": "Static Telecommunications Example",
+      "shortName": "telco-static",
       "dataFolder": "data/static_examples/telecommunications",
       "blobContainer": "static-telecommunications",
       "capabilities": {

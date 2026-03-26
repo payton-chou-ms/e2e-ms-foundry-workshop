@@ -5,24 +5,18 @@ from credential_utils import get_credential
 from load_env import load_all_env
 from azure.ai.projects.models import MCPTool, PromptAgentDefinition
 from foundry_trace import configure_foundry_tracing
-from scenario_utils import resolve_data_paths, resolve_scenario, scenario_resource_suffix
+from scenario_utils import build_deployment_name, resolve_data_paths, resolve_scenario
 from pathlib import Path
 import argparse
 import json
 import os
-import random
-import string
 import sys
-
-
-def _short_prefix(length=3):
-    chars = string.ascii_lowercase + string.digits
-    return "".join(random.choice(chars) for _ in range(length))
 
 
 load_all_env()
 
-parser = argparse.ArgumentParser(description="建立使用 MCP knowledge base 工具的 Foundry IQ agent")
+parser = argparse.ArgumentParser(
+    description="建立使用 MCP knowledge base 工具的 Foundry IQ agent")
 parser.add_argument("--scenario", default=os.getenv("SCENARIO_KEY", ""),
                     help="要使用的情境 key（優先於 DATA_FOLDER）")
 parser.add_argument("--data-folder", default=os.getenv("DATA_FOLDER"),
@@ -40,7 +34,8 @@ if not PROJECT_ENDPOINT:
     print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
-scenario = resolve_scenario(args.scenario or None, args.data_folder, require_capability="foundryIq")
+scenario = resolve_scenario(args.scenario or None,
+                            args.data_folder, require_capability="foundryIq")
 paths = resolve_data_paths(scenario)
 data_dir = Path(scenario["absoluteDataFolder"])
 config_dir = paths["config_dir"]
@@ -80,7 +75,7 @@ if not mcp_endpoint:
 
 scenario_name = ontology_config.get("name", "Business Data")
 scenario_desc = ontology_config.get("description", "")
-agent_name = f"{_short_prefix()}-{scenario_resource_suffix(scenario['key'])}-iq-agent"
+agent_name = build_deployment_name(SOLUTION_NAME, scenario, "iq")
 
 instructions = f"""你是一位協助處理 {scenario_name} 問題的助理。
 
@@ -120,7 +115,7 @@ elif trace_session.warning:
     print(f"警告：{trace_session.warning}")
 
 mcp_kb_tool = MCPTool(
-    server_label="knowledge-base",
+    server_label="kb",
     server_url=mcp_endpoint,
     require_approval="never",
     allowed_tools=["knowledge_base_retrieve"],

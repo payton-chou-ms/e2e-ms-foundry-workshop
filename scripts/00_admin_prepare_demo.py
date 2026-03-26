@@ -9,7 +9,7 @@ import sys
 
 from content_understanding_defaults import ensure_content_understanding_defaults
 from load_env import load_all_env
-from scenario_utils import build_scenario_env, resolve_scenario
+from scenario_utils import build_scenario_env, list_scenarios, resolve_scenario
 
 
 load_all_env()
@@ -17,6 +17,10 @@ load_all_env()
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(SCRIPT_DIR)
 INTERNAL_CALL_ENV = "PREPARE_DEMO_INTERNAL_CALL"
+
+
+def get_default_shared_scenarios() -> list[str]:
+    return [scenario["key"] for scenario in list_scenarios()]
 
 
 def run_step(label: str, command: list[str], env: dict[str, str], dry_run: bool) -> bool:
@@ -101,7 +105,8 @@ def run_agent_creation(args: argparse.Namespace, base_env: dict[str, str]) -> bo
                     "Foundry-native IQ agent",
                     [
                         sys.executable,
-                        os.path.join(SCRIPT_DIR, "07b_create_foundry_iq_agent.py"),
+                        os.path.join(
+                            SCRIPT_DIR, "07b_create_foundry_iq_agent.py"),
                         "--scenario",
                         scenario_key,
                     ],
@@ -164,22 +169,27 @@ def main() -> int:
     )
     parser.add_argument(
         "--mode",
-        choices=["shared", "preload-only", "foundry-only", "foundry-iq", "full"],
+        choices=["shared", "preload-only",
+                 "foundry-only", "foundry-iq", "full"],
         default="shared",
         help="shared=共享環境預載+兩種 agent；preload-only=只做 scenario preload；其餘模式沿用舊 build pipeline",
     )
     parser.add_argument(
         "--scenarios",
         nargs="+",
-        default=["default"],
-        help="shared / preload-only 模式要準備的 scenario key；預設只處理 default",
+        default=None,
+        help="shared / preload-only 模式要準備的 scenario key；未指定時會處理 scenario catalog 中全部項目",
     )
-    parser.add_argument("--scenario", help="foundry-only / foundry-iq / full 模式使用的單一 scenario key")
+    parser.add_argument(
+        "--scenario", help="foundry-only / foundry-iq / full 模式使用的單一 scenario key")
     parser.add_argument("--from-step", help="full 模式可指定從哪一步開始，例如 02")
-    parser.add_argument("--industry", type=str, help="full 模式覆蓋 .env 的 INDUSTRY")
+    parser.add_argument("--industry", type=str,
+                        help="full 模式覆蓋 .env 的 INDUSTRY")
     parser.add_argument("--usecase", type=str, help="full 模式覆蓋 .env 的 USECASE")
-    parser.add_argument("--size", choices=["small", "medium", "large"], help="full 模式覆蓋 .env 的 DATA_SIZE")
-    parser.add_argument("--clean", action="store_true", help="full 模式清除並重建 Fabric 項目")
+    parser.add_argument(
+        "--size", choices=["small", "medium", "large"], help="full 模式覆蓋 .env 的 DATA_SIZE")
+    parser.add_argument("--clean", action="store_true",
+                        help="full 模式清除並重建 Fabric 項目")
     parser.add_argument("--skip-cu-defaults", action="store_true")
     parser.add_argument("--skip-preload", action="store_true")
     parser.add_argument("--skip-foundry-only-agent", action="store_true")
@@ -193,7 +203,12 @@ def main() -> int:
     parser.add_argument("--continue-on-error", action="store_true")
     args = parser.parse_args()
 
-    if args.mode in {"foundry-only", "foundry-iq", "full"} and args.scenarios != ["default"]:
+    if args.mode in {"shared", "preload-only"}:
+        args.scenarios = args.scenarios or get_default_shared_scenarios()
+    else:
+        args.scenarios = args.scenarios or []
+
+    if args.mode in {"foundry-only", "foundry-iq", "full"} and args.scenarios:
         print("警告：build 模式只會使用 --scenario；--scenarios 會被忽略。")
 
     if args.mode in {"shared", "preload-only"} and args.skip_preload and args.skip_foundry_only_agent and args.skip_foundry_iq_agent:

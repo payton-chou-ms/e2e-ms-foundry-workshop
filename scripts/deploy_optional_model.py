@@ -27,7 +27,6 @@ FAILED_OPENAI_MODEL_DETAILS_ENV = "AZURE_FAILED_BEST_EFFORT_OPENAI_MODEL_DEPLOYM
 OPENAI_MODELS_STATUS_ENV = "AZURE_BEST_EFFORT_OPENAI_MODEL_DEPLOYMENTS_STATUS"
 
 BEST_EFFORT_MODEL_NAME_ALIASES = {
-    "gpt-oss-120b": "gpt-oss-120b",
     "gpt-5.2-codex": "gpt-5-codex",
     "gpt-5.3-codex": "gpt-5-codex",
     "gpt-5.2": "gpt-5",
@@ -117,12 +116,6 @@ DEFAULT_BEST_EFFORT_OPENAI_MODELS = [
     {
         "deploymentName": "gpt-5.4-mini",
         "modelName": "gpt-5.4-mini",
-        "skuName": "GlobalStandard",
-        "capacity": 1,
-    },
-    {
-        "deploymentName": "gpt-5-pro",
-        "modelName": "gpt-5-pro",
         "skuName": "GlobalStandard",
         "capacity": 1,
     },

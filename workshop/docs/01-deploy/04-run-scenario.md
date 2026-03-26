@@ -37,6 +37,25 @@ python scripts/08_test_foundry_agent.py
 
 這一頁先只保留兩條主流程。
 
+### 選配：先把示範資料上傳到 Blob containers
+
+如果你要在 Storage Account 裡直接看到預載檔案，這一步要另外執行。
+
+`foundry-only`、`foundry-iq`、`full` 這三種 build mode 不會自動把下列示範資料上傳到 Blob containers：
+
+- `data/default` -> `default`
+- `data/retail_launch_incident` -> `retail-launch-incident`
+- `data/contract_keyword_review` -> `contract-keyword-review`
+- `data/static_examples/*` -> `static-education`、`static-energy`、`static-finance`、`static-hospitality`、`static-insurance`、`static-logistics`、`static-manufacturing`、`static-retail`、`static-telecommunications`
+
+要預載這些 Blob 素材，請另外執行：
+
+```bash
+python scripts/00_admin_prepare_demo.py --mode preload-only --scenarios default retail_launch_incident contract_keyword_review static_education static_energy static_finance static_hospitality static_insurance static_logistics static_manufacturing static_retail static_telecommunications --skip-search --skip-foundry-knowledge --skip-fabric
+```
+
+這一步只會上傳 `documents`、`tables`、`input`、`intermediate`、`output` 這些素材目錄，不會建立 Search index、Knowledge base 或 Agent。
+
 !!! tip "如果要換情境"
        請直接到 [產生自訂資料](../02-customize/02-generate.md) 看完整做法。
        本頁只保留預設情境的建置與驗證。

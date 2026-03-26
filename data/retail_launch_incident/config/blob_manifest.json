@@ -1,0 +1,40 @@
+{
+  "scenario_key": "retail_launch_incident",
+  "data_folder": "data/retail_launch_incident",
+  "blob_endpoint": "https://stda5b3uyfjkkxwj.blob.core.windows.net/",
+  "blob_container": "retail-launch-incident",
+  "uploaded_at": "2026-03-26T10:20:37.409866+00:00",
+  "file_count": 6,
+  "files": [
+    {
+      "path": "documents/comms-customer-message-guidelines.pdf",
+      "source": "documents/comms-customer-message-guidelines.pdf",
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/retail-launch-incident/documents/comms-customer-message-guidelines.pdf"
+    },
+    {
+      "path": "documents/comms-launch-campaign-brief.pdf",
+      "source": "documents/comms-launch-campaign-brief.pdf",
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/retail-launch-incident/documents/comms-launch-campaign-brief.pdf"
+    },
+    {
+      "path": "documents/ops-shift-lead-response-guide.pdf",
+      "source": "documents/ops-shift-lead-response-guide.pdf",
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/retail-launch-incident/documents/ops-shift-lead-response-guide.pdf"
+    },
+    {
+      "path": "documents/ops-store-incident-playbook.pdf",
+      "source": "documents/ops-store-incident-playbook.pdf",
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/retail-launch-incident/documents/ops-store-incident-playbook.pdf"
+    },
+    {
+      "path": "tables/launch_incidents.csv",
+      "source": "tables/launch_incidents.csv",
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/retail-launch-incident/tables/launch_incidents.csv"
+    },
+    {
+      "path": "tables/store_response_actions.csv",
+      "source": "tables/store_response_actions.csv",
+      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/retail-launch-incident/tables/store_response_actions.csv"
+    }
+  ]
+}

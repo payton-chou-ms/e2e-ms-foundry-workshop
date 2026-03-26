@@ -12,22 +12,16 @@ from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from load_env import load_all_env
 from scenario_utils import (
+    build_deployment_name,
     build_scenario_resource_name,
     resolve_data_paths,
     resolve_scenario,
     scenario_resource_suffix,
 )
 import os
-import random
-import string
 import sys
 import json
 import argparse
-
-
-def _short_prefix(length=3):
-    chars = string.ascii_lowercase + string.digits
-    return "".join(random.choice(chars) for _ in range(length))
 
 
 # Parse arguments first
@@ -70,7 +64,8 @@ if not SEARCH_ENDPOINT:
     print("      請先執行 'azd up' 部署 Azure 資源")
     sys.exit(1)
 
-scenario = resolve_scenario(args.scenario or os.getenv("SCENARIO_KEY") or None, args.data_folder or os.getenv("DATA_FOLDER"), require_capability="search")
+scenario = resolve_scenario(args.scenario or os.getenv(
+    "SCENARIO_KEY") or None, args.data_folder or os.getenv("DATA_FOLDER"), require_capability="search")
 paths = resolve_data_paths(scenario)
 data_dir = scenario["absoluteDataFolder"]
 config_dir = os.fspath(paths["config_dir"])
@@ -126,7 +121,8 @@ if os.path.exists(search_ids_path):
         "index_name", f"{fabric_ids.get('solution_name', 'demo')}-documents")
 else:
     fallback_solution_name = fabric_ids.get("solution_name") or build_scenario_resource_name(
-        os.getenv("SOLUTION_NAME") or os.getenv("SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
+        os.getenv("SOLUTION_NAME") or os.getenv(
+            "SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
         scenario["key"],
     )
     INDEX_NAME = f"{fallback_solution_name}-documents"
@@ -137,12 +133,12 @@ WORKSPACE_ID = fabric_ids.get("workspace_id")
 LAKEHOUSE_NAME = fabric_ids.get("lakehouse_name")
 SOLUTION_NAME = fabric_ids.get(
     "solution_name") or build_scenario_resource_name(
-        os.getenv("SOLUTION_NAME") or os.getenv("SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
+        os.getenv("SOLUTION_NAME") or os.getenv(
+            "SOLUTION_PREFIX") or os.getenv("AZURE_ENV_NAME", "demo"),
         scenario["key"],
-    )
-# Agent name: short prefix + role
-agent_role = "search-agent" if FOUNDRY_ONLY else "agent"
-AGENT_NAME = f"{_short_prefix()}-{scenario_suffix}-{agent_role}"
+)
+agent_role = "search" if FOUNDRY_ONLY else "agent"
+AGENT_NAME = build_deployment_name(SOLUTION_NAME, scenario, agent_role)
 
 print(f"\n{'='*60}")
 if FOUNDRY_ONLY:
