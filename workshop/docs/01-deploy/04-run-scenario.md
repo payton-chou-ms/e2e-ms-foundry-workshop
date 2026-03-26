@@ -6,14 +6,6 @@
 
 如果你接手的是**管理員已經預載好的共享環境**，請改看 [參與者執行與驗證](00-participant-run-validate.md)。
 
-如果你是管理員，而且只是想用一行指令先把共享環境 prepare 好，直接跑：
-
-```bash
-python scripts/00_admin_prepare_demo.py
-```
-
-這支入口 script 會先做 scenario preload，再建立 search-only 與 Foundry-native IQ 兩種文件問答準備。
-
 ## 超速使用（略過說明，只留下最短指令；如果要看差異再往下看）
 
 以下都以 `default` 這個預設 scenario 為前提
