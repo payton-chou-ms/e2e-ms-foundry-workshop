@@ -90,6 +90,33 @@ python scripts/00_admin_prepare_demo.py
 - 分享所需的本機設定值
 - 告知下一位使用者是只需驗證範例情境，還是也要執行自訂步驟
 
+#### 學員的 Data Plane 權限
+
+如果下一位使用者不只是登入 portal，而是要實際跑 agent、查 Search 或直接讀寫 Blob，還要補上資料平面權限。
+
+| 要做的事 | 建議最小權限 | 建議範圍 |
+|------|---------------|----------|
+| 跑既有 agent、驗證文件/資料查詢 | `Azure AI User` | Foundry account 或 project 上層資源 |
+| 查詢既有 Azure AI Search index | `Search Index Data Reader` | Search service 或單一 index |
+| 重跑文件上傳，但不改 index 結構 | `Search Index Data Contributor` | Search service 或單一 index |
+| 建立 / 更新 index、indexer、skillset | `Search Service Contributor` | Search service |
+| 讀既有 Blob 內容 | `Storage Blob Data Reader` | Storage account 或單一 container |
+| 上傳 / 覆寫 / 刪除 Blob | `Storage Blob Data Contributor` | Storage account 或單一 container |
+
+建議做法：
+
+- 只走參與者驗證路徑時，先給 `Azure AI User`，必要時再補 `Search Index Data Reader` 與 `Storage Blob Data Reader`
+- 要重跑資料準備或知識建置流程時，再補 `Search Service Contributor`、`Search Index Data Contributor`、`Storage Blob Data Contributor`
+- 要走 Fabric 路徑時，另外還要確認 Fabric workspace role 是否足夠
+
+官方文件：
+
+- Foundry authentication / authorization：<https://learn.microsoft.com/azure/foundry/concepts/authentication-authorization-foundry>
+- Foundry built-in roles：<https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry>
+- Azure AI Search RBAC：<https://learn.microsoft.com/azure/search/search-security-rbac>
+- Blob 以 Microsoft Entra ID 授權：<https://learn.microsoft.com/azure/storage/blobs/authorize-access-azure-active-directory>
+- Fabric workspace roles：<https://learn.microsoft.com/fabric/fundamentals/roles-workspaces>
+
 ## 建議保留給下一次操作的資訊
 
 下次不管是你自己回來接手，還是換另一位學員接手，至少要留下面這些資訊：

@@ -8,7 +8,7 @@
 
 ## 超速使用（略過說明，只留下最短指令；如果要看差異再往下看）
 
-以下都以 `default` 這個預設 scenario 為前提
+以下都以 `default` 這個預設 scenario 為前提。
 
 #### Path 1A: Foundry IQ only
 
@@ -33,28 +33,18 @@ python scripts/08_test_foundry_agent.py
 
 ## 執行完整流程
 
-如果你想看每一支 script 的用途，再看 [腳本用途與執行順序](05-script-sequence.md)。
-
-這一頁先只保留兩條主流程。
+如果你只想知道該跑哪一條，直接用上面的「超速使用」即可。
+如果你想理解各 mode 背後差在哪裡，再看 [腳本用途與執行順序](05-script-sequence.md) 和 [主流程腳本 01-08](05b-script-core-pipeline.md)。
 
 ### 選配：先把示範資料上傳到 Blob containers
 
-如果你要在 Storage Account 裡直接看到預載檔案，這一步要另外執行。
-
-`foundry-only`、`foundry-iq`、`full` 這三種 build mode 不會自動把下列示範資料上傳到 Blob containers：
-
-- `data/default` -> `default`
-- `data/retail_launch_incident` -> `retail-launch-incident`
-- `data/contract_keyword_review` -> `contract-keyword-review`
-- `data/static_examples/*` -> `static-education`、`static-energy`、`static-finance`、`static-hospitality`、`static-insurance`、`static-logistics`、`static-manufacturing`、`static-retail`、`static-telecommunications`
-
-要預載這些 Blob 素材，請另外執行：
+如果你要在 Storage Account 裡直接看到預載檔案，這一步才需要另外執行：
 
 ```bash
 python scripts/00_admin_prepare_demo.py --mode preload-only --scenarios default retail_launch_incident contract_keyword_review static_education static_energy static_finance static_hospitality static_insurance static_logistics static_manufacturing static_retail static_telecommunications --skip-search --skip-foundry-knowledge --skip-fabric
 ```
 
-這一步只會上傳 `documents`、`tables`、`input`、`intermediate`、`output` 這些素材目錄，不會建立 Search index、Knowledge base 或 Agent。
+這一步只會上傳素材目錄，不會建立 Search index、Knowledge base 或 Agent。
 
 !!! tip "如果要換情境"
        請直接到 [產生自訂資料](../02-customize/02-generate.md) 看完整做法。
@@ -69,24 +59,14 @@ python scripts/00_admin_prepare_demo.py --mode preload-only --scenarios default 
 - 文件 source：`data/default/documents`
 - sample question：`data/default/config/sample_questions.txt` 裡的 `DOCUMENT QUESTIONS`
 
-這條 path 其實有兩種 prepare 模式，差別只在文件問答能力建立的位置：
+這條 path 有兩種 prepare 模式，差別只在文件問答能力建立的位置：
 
 - **search-only 版本**：走 search-only prepare 路徑，後面用 `08_test_foundry_agent.py --foundry-only` 驗證
 - **Foundry-native 版本**：走 knowledge base + MCP prepare 路徑，後面用 `08b_test_foundry_iq_agent.py` 驗證
 
 #### Path 1A: 本機 workshop runtime
 
-先建置：
-
-```bash
-python scripts/00_admin_prepare_demo.py --mode foundry-only
-```
-
-再測試：
-
-```bash
-python scripts/08_test_foundry_agent.py --foundry-only
-```
+用上面「超速使用」區塊的兩行指令即可。
 
 #### Path 1B: Foundry-native IQ Agent
 
@@ -94,17 +74,7 @@ python scripts/08_test_foundry_agent.py --foundry-only
 
 - 主要差異：會建立 Foundry knowledge base、project connection，以及 Foundry-native IQ agent
 
-先建置：
-
-```bash
-python scripts/00_admin_prepare_demo.py --mode foundry-iq
-```
-
-再測試：
-
-```bash
-python scripts/08b_test_foundry_iq_agent.py
-```
+同樣直接用上面「超速使用」區塊的兩行指令即可。
 
 ### Path 2: Foundry IQ + Fabric IQ
 
@@ -119,17 +89,7 @@ python scripts/08b_test_foundry_iq_agent.py
        - `SQL QUESTIONS` 可用來測 Fabric IQ
        - `COMBINED INSIGHT QUESTIONS` 可用來測整合問答
 
-先建置：
-
-```bash
-python scripts/00_admin_prepare_demo.py --mode full --from-step 02
-```
-
-再測試：
-
-```bash
-python scripts/08_test_foundry_agent.py
-```
+同樣直接用上面「超速使用」區塊的兩行指令即可。
 
 ## 選配 demo
 

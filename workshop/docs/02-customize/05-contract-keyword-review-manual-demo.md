@@ -83,7 +83,7 @@ flowchart LR
 2. `07-待審閱合約.docx`
 3. `04-規則檔.xlsx`
 
-對應原則很簡單：
+主線只要先讓學員看懂三份輸入各自扮演什麼角色：
 
 1. `06-合約範本.docx` 是基準版本
 2. `07-待審閱合約.docx` 是待審閱版本
@@ -95,6 +95,8 @@ flowchart LR
 2. 哪些欄位或關鍵字需要特別命中
 3. 哪些內容原則可改、不可改，或必須人工確認
 4. 命中後應輸出什麼提醒或建議
+
+完成這一步後，你應該能清楚指出：哪份是 baseline、哪份是 submitted、哪份是 rule source。
 
 ## Step 2：重建正式中間產物
 
@@ -146,6 +148,12 @@ flowchart LR
 
 這份 HTML 只保留作為 reference，不再是主流程的必要中間產物。展示主線仍以可比較段落結構與最終審閱結果為主。
 
+完成這一步後，你應該至少檢查：
+
+1. 兩份合約都有 Markdown 與 JSON 中間產物。
+2. 規則檔已轉成 `04-規則清單.json` 或 `04-規則清單.md`。
+3. 可比較段落有固定編號，後面才能穩定對照審閱意見。
+
 ## Step 3：執行 reviewer 展示
 
 前面這一步是把正式中間產物備齊；接下來，就可以直接示範 reviewer 如何根據段落結構與規則清單輸出審閱建議。
@@ -165,40 +173,42 @@ flowchart LR
 
 ### reviewer instruction
 
-使用下面這段 instruction：
+主線說明到這裡即可：reviewer 要根據兩份可比較段落與規則清單，輸出可執行的審閱建議。
 
-```text
-You are a contract keyword review assistant for internal legal review.
+??? example "Reviewer instruction"
 
-Your task is to compare two pre-extracted contract structures and produce review advice.
+    ```text
+    You are a contract keyword review assistant for internal legal review.
 
-Inputs:
-- baseline comparable content, such as `06-合約範本-可比較段落.json`
-- submitted comparable content, such as `07-待審閱合約-可比較段落.json`
-- rules data, such as `04-規則清單.json` or `04-規則清單.md`
+    Your task is to compare two pre-extracted contract structures and produce review advice.
 
-You must follow these rules:
-- Use the two comparable contract structures as the primary source of what changed.
-- Use the rules workbook output as the source of review policy and advice style.
-- Do not invent legal conclusions that are not supported by the comparable content or rules.
-- If a difference is only a business-detail field, say that the requesting unit should confirm it.
-- If a clause is a standard clause that should usually not be modified, say so clearly.
-- If the available structure is not enough to make a reliable judgment, say that human legal review is required.
+    Inputs:
+    - baseline comparable content, such as `06-合約範本-可比較段落.json`
+    - submitted comparable content, such as `07-待審閱合約-可比較段落.json`
+    - rules data, such as `04-規則清單.json` or `04-規則清單.md`
 
-Working method:
-1. Match paragraphs or clauses by reading order and topic.
-2. Focus on meaningful changes such as project name, payment terms, attachment numbering, checkbox state, responsibility allocation, and standard-clause wording.
-3. Map each meaningful change to one or more applicable rules.
-4. Produce operational review comments that a business unit or legal reviewer can act on immediately.
+    You must follow these rules:
+    - Use the two comparable contract structures as the primary source of what changed.
+    - Use the rules workbook output as the source of review policy and advice style.
+    - Do not invent legal conclusions that are not supported by the comparable content or rules.
+    - If a difference is only a business-detail field, say that the requesting unit should confirm it.
+    - If a clause is a standard clause that should usually not be modified, say so clearly.
+    - If the available structure is not enough to make a reliable judgment, say that human legal review is required.
 
-Always return your answer in this structure:
-1. Difference summary
-2. Matched rules
-3. Review advice
-4. Items requiring human confirmation
+    Working method:
+    1. Match paragraphs or clauses by reading order and topic.
+    2. Focus on meaningful changes such as project name, payment terms, attachment numbering, checkbox state, responsibility allocation, and standard-clause wording.
+    3. Map each meaningful change to one or more applicable rules.
+    4. Produce operational review comments that a business unit or legal reviewer can act on immediately.
 
-Prefer concise, operational review comments over long explanations.
-```
+    Always return your answer in this structure:
+    1. Difference summary
+    2. Matched rules
+    3. Review advice
+    4. Items requiring human confirmation
+
+    Prefer concise, operational review comments over long explanations.
+    ```
 
 ### 測試 reviewer 問題
 
@@ -211,6 +221,12 @@ Prefer concise, operational review comments over long explanations.
 
 請根據規則檔判斷：哪些差異可以由使用單位自行確認，哪些差異應升級送法務室審閱。
 ```
+
+做完這一步後，你應該看到 reviewer：
+
+1. 只針對實質差異輸出建議。
+2. 能指出命中的規則，而不是只做一般摘要。
+3. 會把不夠確定的項目標成需要人工確認。
 
 ## Step 4：展示最終結果
 
@@ -233,6 +249,8 @@ Prefer concise, operational review comments over long explanations.
 1. 建議是否真的對應到段落差異
 2. 命中的規則是否來自 `04-規則清單.json`
 3. 人工確認事項是否被明確標示，而不是被 AI 直接武斷決定
+
+如果這三件事都成立，這個 manual demo 就足夠支撐課堂展示，不需要再額外帶太多診斷腳本。
 
 ## 檢查點
 

@@ -117,58 +117,13 @@ grep -E '^(FABRIC_WORKSPACE_ID|DATA_FOLDER)=' .env
 
 ## 常見失敗與你該先查什麼
 
-### `FeatureNotAvailable`
-
-代表這個 workspace 雖然可能已綁 Fabric 容量，但目前還不能用本 workshop 需要的 ontology 功能。
-
-先做這些事：
-
-- 確認你用的是正確 tenant 下的 workspace
-- 確認不是拿到只有一般容量設定、但未開通對應功能的 workspace
-- 如果當下只需要跑 workshop，先改走 `--foundry-only`
-
-### `InvalidInput` / `DisplayName is Invalid for ArtifactType`
-
-如果你用 `02_create_fabric_items.py` 建立 Lakehouse 時，連像 `Item 1` 這種官方 REST 範例名稱都失敗，通常就不該再繼續懷疑命名字串本身。
-
-這更常代表：
-
-- 目前 workspace 雖然存在，但不是可建立 Data Engineering item 的 Fabric workspace type
-- capacity 綁定尚未完全生效，或該 workspace 尚未具備這個 API 所需能力
-- 你目前看到的是 Fabric service 的誤導性錯誤訊息，而不是實際根因
-
-先做這些事：
-
-- 到 workspace settings 確認 `Workspace type` 真的是 Fabric workspace
-- 確認 workspace 綁定的 capacity 是可建立 Lakehouse 的 Fabric capacity
-- 若你能開 portal，但 API 仍拒絕建立 Lakehouse，請先請管理員從 Fabric Admin portal 重新確認 workspace / capacity 指派狀態
-
-### `FABRIC_WORKSPACE_ID` 未設定或設錯
-
-這會直接讓 `02_create_fabric_items.py`、`03_load_fabric_data.py`、`08_test_foundry_agent.py` 這類腳本在前面就停止。
-
-先做這些事：
-
-- 檢查 `.env`
-- 重新對照 workspace URL
-- 確認不是把別人的 workspace ID 貼進來
-
-### Fabric API / OneLake `403`
-
-通常不是腳本壞掉，而是執行身分沒有對到 workspace access。
-
-先做這些事：
-
-- `az account show` 確認本機目前登入帳號
-- 確認該帳號或其所屬群組已加進 workspace access
-- 重新登入 Azure CLI 後再重試
-
-### Workspace 裡找不到 lakehouse 或 ontology
-
-常見原因只有兩種：
-
-- 其實還沒跑建立流程
-- 之前已切換 suffix 或 solution prefix，現在看的不是同一組 item
+| 錯誤 | 更可能的原因 | 先查什麼 |
+|------|--------------|----------|
+| `FeatureNotAvailable` | workspace 尚未具備 ontology 相關能力 | tenant、workspace 類型、capacity 是否正確 |
+| `InvalidInput` / `DisplayName is Invalid for ArtifactType` | 多半不是名字本身，而是 workspace type / capacity / 功能可用性不對 | `Workspace type`、capacity 綁定、是否真的能建立 Lakehouse |
+| `FABRIC_WORKSPACE_ID` 未設定或設錯 | `.env` 與實際 workspace 不一致 | `.env`、workspace URL |
+| Fabric API / OneLake `403` | 執行身分沒有對到 workspace access | `az account show`、workspace access |
+| 找不到 lakehouse 或 ontology | 還沒建立成功，或看的不是同一組 suffix | `check_fabric_items.py`、目前 solution prefix |
 
 如果你只是想快速盤點目前環境，可執行：
 

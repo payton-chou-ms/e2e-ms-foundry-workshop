@@ -28,13 +28,13 @@
 
 ## script 方面實際要改什麼
 
-先講最重要的一句：**大多數情況下，你不需要改 Python script 內容，只需要改輸入值與執行命令。**
+先記住一句就好：**大多數情況下，你不需要改 Python script 內容，只需要改輸入值與執行命令。**
 
-這個 workshop 的自訂，主要是透過下面三種方式完成：
-
-1. 改 `.env` 裡的 `INDUSTRY`、`USECASE`、`DATA_SIZE`
-2. 在命令列直接傳 `--industry`、`--usecase`、`--size`
-3. 重新執行資料生成或公開 prepare script
+| 你要改什麼 | 怎麼改 |
+|------------|--------|
+| 產業 / use case / 資料量 | 改 `.env`，或在命令列傳 `--industry`、`--usecase`、`--size` |
+| 重跑整套流程 | 執行公開 prepare 入口 |
+| 只先看新資料 | 只跑 `01_generate_sample_data.py` |
 
 如果你只是要把 workshop 換成另一個產業情境，通常**不用修改**這些 script 原始碼：
 
@@ -43,12 +43,6 @@
 - `scripts/02_create_fabric_items.py`
 - `scripts/03_load_fabric_data.py`
 - `scripts/07_create_foundry_agent.py`
-
-你真正要改的，通常只有：
-
-1. 情境輸入值
-2. 要不要重跑完整流程
-3. 要不要只重跑資料生成相關步驟
 
 ## 先記住兩種最常用的改法
 
@@ -70,6 +64,10 @@ python scripts/00_admin_prepare_demo.py --mode full --clean \
 3. prompt 生成
 4. Search 上傳
 5. agent 建立
+
+!!! note "固定範例資產"
+    本頁下方各個產業 tab 都對應到 `data/static_examples/<scenario>/`。
+    這一段是共用說明，不需要在每個 tab 裡再重新理解一次。
 
 ### 改法 B：只重跑資料生成
 

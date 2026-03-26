@@ -77,51 +77,48 @@ python scripts/00_admin_prepare_demo.py --mode full --clean \
 
 ## 產生流程
 
-!!! note "關於下面的輸出範例"
-  下列區塊是腳本常見的實際 console 輸出範例
-  訊息語言與細節可能會隨腳本版本略有不同，請以步驟順序與成功標記為準
-
-第一次跑時，你可以只看三件事：
+第一次跑時，你只要確認三件事：
 
 1. 有沒有成功生成 ontology、CSV、PDF 與 sample questions
 2. 最後有沒有輸出一個新的 `data/...` 目錄
-3. 後續測試用的 `sample_questions.txt` 是否存在
+3. `sample_questions.txt` 是否存在
 
-```
-============================================================
-Generating Custom Data with AI
-============================================================
+??? example "完整 console 輸出參考"
+    ```text
+    ============================================================
+    Generating Custom Data with AI
+    ============================================================
 
-Industry: Insurance
-Use Case: Property insurance with claims processing and policy management
+    Industry: Insurance
+    Use Case: Property insurance with claims processing and policy management
 
-[1/4] Generating ontology configuration...
-  → Analyzing use case for entities and relationships
-  → Created: Policies, Claims, Customers, Agents
-  → Defined: 6 relationships, 4 business rules
-  ✓ ontology_config.json
+    [1/4] Generating ontology configuration...
+      → Analyzing use case for entities and relationships
+      → Created: Policies, Claims, Customers, Agents
+      → Defined: 6 relationships, 4 business rules
+      ✓ ontology_config.json
 
-[2/4] Generating structured data (CSV)...
-  → policies.csv (16 rows) — Policy details, coverage, premiums
-  → claims.csv (40 rows) — Claim status, amounts, dates
-  → customers.csv (20 rows) — Policyholder information
-  → agents.csv (8 rows) — Agent assignments
-  ✓ 4 CSV files generated
+    [2/4] Generating structured data (CSV)...
+      → policies.csv (16 rows) — Policy details, coverage, premiums
+      → claims.csv (40 rows) — Claim status, amounts, dates
+      → customers.csv (20 rows) — Policyholder information
+      → agents.csv (8 rows) — Agent assignments
+      ✓ 4 CSV files generated
 
-[3/4] Generating documents (PDF)...
-  → claims_process.pdf — How to file and process claims
-  → coverage_guide.pdf — Policy coverage explanations
-  → underwriting_policy.pdf — Risk assessment guidelines
-  ✓ 3 documents generated
+    [3/4] Generating documents (PDF)...
+      → claims_process.pdf — How to file and process claims
+      → coverage_guide.pdf — Policy coverage explanations
+      → underwriting_policy.pdf — Risk assessment guidelines
+      ✓ 3 documents generated
 
-[4/4] 產生示範問題...
-  → 15 題涵蓋資料、文件與混合情境的示範問題
-  ✓ sample_questions.txt
+    [4/4] 產生示範問題...
+      → 15 題涵蓋資料、文件與混合情境的示範問題
+      ✓ sample_questions.txt
 
-============================================================
-Data generated: data/20260202_143022_insurance/
-============================================================
-```
+    ============================================================
+    Data generated: data/20260202_143022_insurance/
+    ============================================================
+    ```
 
 ## 檢視產生的內容
 
@@ -147,48 +144,49 @@ cat data/*/config/sample_questions.txt
 
 完整建置約需 5 分鐘。
 
-讀這段輸出時，不需要逐行比對；你只要確認每個主要階段都有成功標記即可：
+你不需要逐行比對；只要確認下面四個階段都有成功標記即可：
 
 - AI 資料有生成
 - Fabric workspace 有建立
 - 文件有上傳到 Search
-- Orchestrator Agent 有建立
+- Agent 有建立
 
-```
-============================================================
-Building Solution: Insurance
-============================================================
+??? example "完整 build 輸出參考"
+    ```text
+    ============================================================
+    Building Solution: Insurance
+    ============================================================
 
-[01a/07] Generating AI data...
-  ✓ Ontology, CSVs, PDFs, and questions generated
+    [01a/07] Generating AI data...
+      ✓ Ontology, CSVs, PDFs, and questions generated
 
-[02/07] Setting up Fabric workspace...
-  ✓ Cleaned previous artifacts
-  ✓ Lakehouse: iqworkshop_lakehouse
-  ✓ Warehouse: iqworkshop_warehouse
+    [02/07] Setting up Fabric workspace...
+      ✓ Cleaned previous artifacts
+      ✓ Lakehouse: iqworkshop_lakehouse
+      ✓ Warehouse: iqworkshop_warehouse
 
-[03/07] Loading data into Fabric...
-  ✓ policies.csv → 16 rows
-  ✓ claims.csv → 40 rows
-  ✓ customers.csv → 20 rows
-  ✓ agents.csv → 8 rows
+    [03/07] Loading data into Fabric...
+      ✓ policies.csv → 16 rows
+      ✓ claims.csv → 40 rows
+      ✓ customers.csv → 20 rows
+      ✓ agents.csv → 8 rows
 
-[04/07] Generating NL2SQL prompt...
-  ✓ Schema prompt created for insurance domain
+    [04/07] Generating NL2SQL prompt...
+      ✓ Schema prompt created for insurance domain
 
-[05/07] Creating Fabric Data Agent...
-  ✓ Agent: fabric-agent-insurance
+    [05/07] Creating Fabric Data Agent...
+      ✓ Agent: fabric-agent-insurance
 
-[06/07] Uploading documents to AI Search...
-  ✓ 3 documents → 24 chunks indexed
+    [06/07] Uploading documents to AI Search...
+      ✓ 3 documents → 24 chunks indexed
 
-[07/07] Creating Orchestrator Agent...
-  ✓ Agent: insurance-multi-agent
+    [07/07] Creating Orchestrator Agent...
+      ✓ Agent: insurance-multi-agent
 
-============================================================
-Build complete! Ready for customer PoC.
-============================================================
-```
+    ============================================================
+    Build complete! Ready for customer PoC.
+    ============================================================
+    ```
 
 ## 疑難排解
 

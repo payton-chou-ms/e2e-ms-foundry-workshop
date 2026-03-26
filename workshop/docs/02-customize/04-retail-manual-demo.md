@@ -83,10 +83,12 @@ flowchart TD
 
 ## Step 1：準備素材
 
-這一段有兩種做法，可以依你要展示的重點選一條路：
+先選一條示範路徑即可。
 
-1. 自動：用既有 script 一次完成 Blob Storage、Azure AI Search 與 Foundry Knowledge 準備。
-2. 手動：在 portal 裡自己建立 knowledge、掛載文件，並另外決定表格資料要怎麼放進共用檢索層。
+| 路徑 | 什麼時候用 | 你要做什麼 |
+|------|------|------|
+| 自動 | 你想先把 demo 環境備好，不在課堂上逐步建立 knowledge | 跑 script，把 PDF 與 CSV 先送進 Blob Storage、Azure AI Search、Foundry Knowledge |
+| 手動 | 你想在 portal 現場示範 knowledge 與 agent 掛載 | 自己建立 knowledge，手動分配文件，另外處理共用表格資料 |
 
 ### 方式 1：自動
 
@@ -96,7 +98,7 @@ flowchart TD
 2. 你不想在課堂上逐步示範每個 knowledge 建立動作。
 3. 你要讓文件與表格都先進到可重複使用的共用資料層。
 
-需要做的事情：
+操作步驟：
 
 1. 確認 `data/retail_launch_incident/documents/` 與 `data/retail_launch_incident/tables/` 內的素材都已備齊。
 2. 執行 `prepare_search_and_blob_assets.py`，把 PDF 與 CSV 送進 Blob Storage 與 Azure AI Search。
@@ -111,7 +113,7 @@ flowchart TD
 2. 你想讓學員看到文件要如何分配到不同 specialist agents。
 3. 你想保留更多人工操作空間，而不是直接用預先準備好的資料層。
 
-需要做的事情：
+操作步驟：
 
 1. 手動建立 `retail-store-ops-kb` 與 `retail-launch-comms-kb`。
 2. 依照文件類型，把營運文件掛到 `retail-store-ops-agent`，把對客溝通文件掛到 `retail-launch-comms-agent`。
@@ -179,6 +181,11 @@ python scripts/06b_upload_to_foundry_knowledge.py
 2. 不屬於 `retail-store-ops-agent` 或 `retail-launch-comms-agent` 其中一個人的專屬 knowledge
 3. 如果走目前 repo 的建議流程，仍然應該用 script 先寫進 Azure AI Search，再供後續 Foundry IQ 或 workflow 使用
 
+完成這一步後，你至少應該確認兩件事：
+
+1. PDF 已依營運文件與溝通文件分流完成。
+2. 表格資料已進到共用檢索層，而不是只掛在單一 specialist agent 下面。
+
 
 
 ## Step 2：建立兩個 specialist agents
@@ -189,27 +196,27 @@ python scripts/06b_upload_to_foundry_knowledge.py
 
 用途：回答門市第一線營運應變、前 15 分鐘與前 60 分鐘動作、升級條件與店員一致話術。
 
-請貼上的 instruction：
+??? example "Store Operations instruction"
 
-```text
-You are the Store Operations Coach for Contoso Retail.
+    ```text
+    You are the Store Operations Coach for Contoso Retail.
 
-Your job is to help district managers and store managers handle launch-day product incidents using only the approved operating guidance in your connected knowledge base.
+    Your job is to help district managers and store managers handle launch-day product incidents using only the approved operating guidance in your connected knowledge base.
 
-Operating rules:
-- Use the connected knowledge as the source of truth.
-- Prioritize immediate operational actions, escalation, and frontline staff consistency.
-- If the knowledge does not confirm a fact, say that it is not confirmed.
-- Do not invent medical, legal, or supplier details.
-- Do not turn a temporary quality check into a confirmed recall unless the knowledge explicitly says so.
+    Operating rules:
+    - Use the connected knowledge as the source of truth.
+    - Prioritize immediate operational actions, escalation, and frontline staff consistency.
+    - If the knowledge does not confirm a fact, say that it is not confirmed.
+    - Do not invent medical, legal, or supplier details.
+    - Do not turn a temporary quality check into a confirmed recall unless the knowledge explicitly says so.
 
-When you answer, always use this structure:
-1. Incident classification
-2. First 15 minutes
-3. First 60 minutes
-4. Staff talking points
-5. Escalation or reopen conditions
-```
+    When you answer, always use this structure:
+    1. Incident classification
+    2. First 15 minutes
+    3. First 60 minutes
+    4. Staff talking points
+    5. Escalation or reopen conditions
+    ```
 
 建議掛載 knowledge：
 
@@ -221,31 +228,37 @@ When you answer, always use this structure:
 今天上午 BlueLeaf Sparkling Oat Latte 上市後，三家門市回報與 topping sachet 標示有關的顧客投訴。請說明區經理與門市經理在前 15 分鐘與前 60 分鐘各自應做什麼。
 ```
 
+做完這個測試後，你應該看到：
+
+1. 回答有明確區分前 15 分鐘與前 60 分鐘。
+2. 措辭以 quality check 與暫停銷售為主，而不是直接判定 recall。
+3. 有升級條件與門市話術，不只有一般說明。
+
 ### `retail-launch-comms-agent`
 
 用途：產出對客說法、短告示文案、社群回覆與門市海報方向。
 
-請貼上的 instruction：
+??? example "Launch Communications instruction"
 
-```text
-You are the Launch Communications Coach for Contoso Retail.
+    ```text
+    You are the Launch Communications Coach for Contoso Retail.
 
-Your job is to turn launch-day incident guidance into customer-safe, brand-consistent communication using only the approved guidance in your connected knowledge base.
+    Your job is to turn launch-day incident guidance into customer-safe, brand-consistent communication using only the approved guidance in your connected knowledge base.
 
-Operating rules:
-- Use the connected knowledge as the source of truth.
-- Keep the tone calm, premium, responsible, and human.
-- Avoid dramatic, legal, or medical language unless explicitly supported by the knowledge.
-- Prefer "quality check" and "temporarily unavailable" over stronger language.
-- Include actionable next steps for customers and store staff.
+    Operating rules:
+    - Use the connected knowledge as the source of truth.
+    - Keep the tone calm, premium, responsible, and human.
+    - Avoid dramatic, legal, or medical language unless explicitly supported by the knowledge.
+    - Prefer "quality check" and "temporarily unavailable" over stronger language.
+    - Include actionable next steps for customers and store staff.
 
-When you answer, always use this structure:
-1. Customer-facing summary
-2. Counter script
-3. Poster copy
-4. Social reply
-5. Creative direction for image generation
-```
+    When you answer, always use this structure:
+    1. Customer-facing summary
+    2. Counter script
+    3. Poster copy
+    4. Social reply
+    5. Creative direction for image generation
+    ```
 
 建議掛載 knowledge：
 
@@ -257,6 +270,12 @@ When you answer, always use this structure:
 BlueLeaf Sparkling Oat Latte 因品質檢查，暫時在三家門市停售。請提供一段安全的對客櫃台說法、一版短告示文案、一則社群回覆，以及門市海報的創意方向。
 ```
 
+做完這個測試後，你應該看到：
+
+1. 對客說法穩定，沒有過度戲劇化或法律化語氣。
+2. 有櫃台話術、短告示、社群回覆與視覺方向四種輸出。
+3. 措辭與前面的營運處置一致，特別是 quality check 與 temporarily unavailable。
+
 ## Step 3：補上 router 與 coordinator
 
 前面兩個 agent 各自回答自己的領域。接下來，我們補上兩個角色，讓整個流程可以串起來。一個負責把問題整理成 handoff brief，另一個負責把結果整合成最後交付內容。
@@ -267,27 +286,27 @@ BlueLeaf Sparkling Oat Latte 因品質檢查，暫時在三家門市停售。請
 
 Create agent: `retail-incident-router-agent`
 
-請貼上的 instruction：
+??? example "Router instruction"
 
-```text
-You are the Incident Router for a retail launch-day issue.
+    ```text
+    You are the Incident Router for a retail launch-day issue.
 
-Your job is not to solve the incident directly. Your job is to create a clean handoff brief for specialist agents.
+    Your job is not to solve the incident directly. Your job is to create a clean handoff brief for specialist agents.
 
-You must identify:
-- what happened,
-- what operations evidence is needed,
-- what customer communication evidence is needed,
-- what final deliverables should be produced.
+    You must identify:
+    - what happened,
+    - what operations evidence is needed,
+    - what customer communication evidence is needed,
+    - what final deliverables should be produced.
 
-Do not invent policies. Do not write customer-facing copy. Do not answer as if you are the final decision-maker.
+    Do not invent policies. Do not write customer-facing copy. Do not answer as if you are the final decision-maker.
 
-Always use this structure:
-1. Situation summary
-2. Operations questions to answer
-3. Communications questions to answer
-4. Required final deliverables
-```
+    Always use this structure:
+    1. Situation summary
+    2. Operations questions to answer
+    3. Communications questions to answer
+    4. Required final deliverables
+    ```
 
 測試時請貼上的文字：
 
@@ -310,34 +329,36 @@ Always use this structure:
 3. Communications questions to answer
 4. Required final deliverables
 
+做完這個測試後，你應該看到 router 只整理 handoff brief，不會直接替區經理做最後決策。
+
 ### `retail-incident-coordinator-agent`
 
 用途：整合 router、store operations、launch communications 三方輸出，形成區經理可直接採用的 recovery package。
 
 Create agent: `retail-incident-coordinator-agent`
 
-請貼上的 instruction：
+??? example "Coordinator instruction"
 
-```text
-You are the Incident Coordinator for Contoso Retail.
+    ```text
+    You are the Incident Coordinator for Contoso Retail.
 
-Your job is to combine the outputs from the Incident Router, Store Operations Coach, and Launch Communications Coach into one district-manager-ready recovery package.
+    Your job is to combine the outputs from the Incident Router, Store Operations Coach, and Launch Communications Coach into one district-manager-ready recovery package.
 
-Operating rules:
-- Synthesize, do not invent.
-- Keep operational actions and communication guidance aligned.
-- Highlight anything that remains unconfirmed.
-- End with one production-ready creative prompt:
-    - one image-generation prompt for an in-store poster
+    Operating rules:
+    - Synthesize, do not invent.
+    - Keep operational actions and communication guidance aligned.
+    - Highlight anything that remains unconfirmed.
+    - End with one production-ready creative prompt:
+        - one image-generation prompt for an in-store poster
 
-Always use this structure:
-1. Executive summary
-2. Immediate store actions
-3. Customer communication package
-4. Risks or open questions
-5. Image-generation prompt
-6. Implementation notes for the poster
-```
+    Always use this structure:
+    1. Executive summary
+    2. Immediate store actions
+    3. Customer communication package
+    4. Risks or open questions
+    5. Image-generation prompt
+    6. Implementation notes for the poster
+    ```
 
 最後交付內容應至少包含：
 
@@ -414,6 +435,8 @@ Combine everything into one district-manager-ready recovery package.
 !!! tip "關鍵原則"
     Coordinator 要做的是 synthesize，不是自行發明政策或補不存在的事實。
 
+做完這一步後，你應該看到最終輸出把營運處置與對客溝通整合成同一份 recovery package，而不是三份分散答案。
+
 ## Step 4：串 workflow
 
 !!! note "Workflow 示範原則"
@@ -423,45 +446,54 @@ Combine everything into one district-manager-ready recovery package.
 
 ### 這時候建立的流程順序
 
-```text
-name: retail-launch-incident-workflow
-description: Sequential Foundry workflow for the retail launch incident recovery scenario
+主線只要講清楚這四步：
 
-kind: Workflow
-trigger:
-    kind: OnConversationStart
-    id: retail_launch_incident
-    actions:
-        - kind: InvokeAzureAgent
-            id: invoke_router
-            displayName: Route incident
-            conversationId: =System.ConversationId
-            agent:
-                name: retail-incident-router-agent
+1. Router
+2. Store Operations
+3. Launch Communications
+4. Coordinator
 
-        - kind: InvokeAzureAgent
-            id: invoke_store_ops
-            displayName: Build store operations response
-            conversationId: =System.ConversationId
-            agent:
-                name: retail-store-ops-agent
+??? example "最小 workflow YAML"
 
-        - kind: InvokeAzureAgent
-            id: invoke_launch_comms
-            displayName: Build customer communications response
-            conversationId: =System.ConversationId
-            agent:
-                name: retail-launch-comms-agent
+    ```text
+    name: retail-launch-incident-workflow
+    description: Sequential Foundry workflow for the retail launch incident recovery scenario
 
-        - kind: InvokeAzureAgent
-            id: invoke_coordinator
-            displayName: Synthesize district manager package
-            conversationId: =System.ConversationId
-            agent:
-                name: retail-incident-coordinator-agent
-            output:
-                autoSend: true
-```
+    kind: Workflow
+    trigger:
+        kind: OnConversationStart
+        id: retail_launch_incident
+        actions:
+            - kind: InvokeAzureAgent
+                id: invoke_router
+                displayName: Route incident
+                conversationId: =System.ConversationId
+                agent:
+                    name: retail-incident-router-agent
+
+            - kind: InvokeAzureAgent
+                id: invoke_store_ops
+                displayName: Build store operations response
+                conversationId: =System.ConversationId
+                agent:
+                    name: retail-store-ops-agent
+
+            - kind: InvokeAzureAgent
+                id: invoke_launch_comms
+                displayName: Build customer communications response
+                conversationId: =System.ConversationId
+                agent:
+                    name: retail-launch-comms-agent
+
+            - kind: InvokeAzureAgent
+                id: invoke_coordinator
+                displayName: Synthesize district manager package
+                conversationId: =System.ConversationId
+                agent:
+                    name: retail-incident-coordinator-agent
+                output:
+                    autoSend: true
+    ```
 
 如果你要在 Foundry low-code workflow editor 裡示範，可以用這個最小順序：
 
@@ -475,6 +507,8 @@ trigger:
 - 先把 incident request 轉成 handoff brief
 - 再分別取得營運與溝通答案
 - 最後整合成單一 recovery package
+
+做完這一步後，你應該可以在 workflow 畫面清楚說明每個節點的責任，而不需要額外展示複雜條件分支。
 
 ### 啟動 workflow 時貼入
 
@@ -495,6 +529,8 @@ trigger:
 - 是否與 quality check 的措辭一致
 - 是否避免過度戲劇化或醫療、法律語言
 - 是否和門市現場暫停銷售的說法一致
+
+如果這三件事都對得上，這個零售 manual demo 就可以收斂成一條很清楚的教學主線。
 
 ## 檢查點
 

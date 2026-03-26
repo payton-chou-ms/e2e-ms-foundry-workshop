@@ -6,6 +6,13 @@
 
 ## 選擇適合你的起點
 
+如果你只想先決定自己該看哪一頁，先看下面這張表。
+
+| 你現在要做什麼 | 直接去看 |
+|------------------|------------|
+| 自己部署 Azure 與 Fabric | [管理員部署](00-admin-deploy-share.md) |
+| 環境已準備好，只要執行與驗證 | [參與者執行與驗證](00-participant-run-validate.md) |
+
 ### 管理員部署
 
 如果你想自己把整套 Azure 與 Fabric 環境準備完成，請走這條路徑。
@@ -65,34 +72,16 @@
 
 ![Architecture Diagram](../assets/architecture.png)
 
-這張圖的目的不是要你在部署前把所有元件背起來，而是幫你知道前面跑通的主流程，背後大致依賴哪些能力。
+這張圖的目的不是要你先背架構，而是讓你知道主流程背後主要依賴哪些能力。
 
-第一次看時，只要先分成兩層理解就夠了：
+第一次看時，只要先記住：
 
-### Workshop 主流程
+- Microsoft Foundry 負責模型與 agent
+- Azure AI Search 負責文件搜尋
+- Microsoft Fabric 負責資料層
+- Application Insights 是選配追蹤能力
 
-- Foundry 中的提示詞代理程式（prompt agent）
-- 用於結構化資料的 SQL 工具
-- 用於非結構化知識的文件搜尋工具
-- Foundry IQ 與 Fabric IQ 作為兩條資料接地路徑
-
-### 主流程背後的六個技術主題
-
-| 主軸 | 部署意義 |
-|------|----------|
-| **Foundry Model** | 主流程需要哪些模型，哪些只是延伸選配 |
-| **Foundry Agent** | agent 定義怎麼被建立並在後續測試中重複使用 |
-| **Foundry Tool** | 主流程依賴哪些工具，以及它們怎麼被限制在安全範圍內 |
-| **Foundry IQ + Fabric IQ** | 文件與資料如何成為回答問題的依據 |
-| **Foundry Control Plane** | 背後有哪些 Azure 資源在支撐整個體驗 |
-| **多代理程式延伸** | 主線看懂後，如何再延伸成多角色工作流 |
-
-換句話說，你前面操作時看到的是一個簡潔的對話式 PoC；這張圖只是幫你知道，背後有哪些主要能力在支撐它。
-
-- **Microsoft Fabric** 提供資料層，讓 agent 可以回答結構化資料問題
-- **Microsoft Foundry** 負責保存 agent 定義與模型部署
-- **Azure AI Search** 提供文件搜尋與片段擷取能力
-- **Application Insights** 在需要時可接收追蹤資料，但不是主流程必要條件
+如果你想理解更多技術拆解，再回頭看 [深入解析](../03-understand/index.md)。
 
 ---
 

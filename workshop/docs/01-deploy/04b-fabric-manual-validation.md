@@ -97,23 +97,7 @@ FROM <table_name>
 
 你只需要確認「查得到資料」，不需要在這一步驗證所有商業邏輯。
 
-## Step 6. 檢查 semantic model
-
-如果你想從報表或 Direct Lake 視角確認資料結構，可以再做這一步。
-
-1. 保持在 **SQL analytics endpoint** 或 lakehouse 頁面
-2. 找 **New semantic model** 或相近按鈕
-3. 檢查 workspace 中是否已存在預設 semantic model
-4. 如需手動建立：
-
-- 選 **New semantic model**
-- 輸入名稱
-- 勾選要納入的 tables
-- 選 **Confirm**
-
-這不是 workshop 主流程必要步驟，但很適合用來跟業務同仁展示「同一組 Lakehouse tables 之後也能接報表層」。
-
-## Step 7. 找到 Ontology 並確認結構
+## Step 6. 找到 Ontology 並確認結構
 
 這一步是在對照 `02_create_fabric_items.py` 建 ontology 與 relationships 的行為。
 
@@ -132,21 +116,10 @@ FROM <table_name>
 1. `ontology_config.json` 內容本身缺欄位或 relationships
 2. `02_create_fabric_items.py` 在建立 bindings 或 relationships 時中途中斷
 
-## Step 8. 用 Fabric 視角驗證 agent 之後會問的問題
+!!! tip "不是主線必要，但可以另外展示"
+	如果你想從報表或 Direct Lake 視角確認資料結構，可以再檢查 semantic model。
 
-這一步不是要你在 portal 重建 agent，而是用人工方式驗證「agent 應該能從資料裡回答什麼」。
-
-建議手動檢查三類問題：
-
-1. **總量 / 聚合**
-2. **排行 / 分群**
-3. **關聯 / join 類型**
-
-做法：
-
-1. 先在 ontology 看 relationship 是否存在
-2. 再到 SQL analytics endpoint 用簡單 SQL 驗證資料真的能 join 起來
-3. 最後再回 agent 測試同一題，看回答是否和你人工驗證結果一致
+	如果你想驗證 agent 之後會問的問題，可再到 SQL analytics endpoint 手動做一題簡單的聚合或 join 查詢。
 
 ## Script 路徑和 Portal 操作對照表
 

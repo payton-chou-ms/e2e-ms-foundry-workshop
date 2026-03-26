@@ -56,27 +56,29 @@ Workshop 代理程式使用一個小型、明確的工具合約。讓你的 demo
 
 ### 範例輸出
 
-```text
-[SQL Tool] Executing query:
-    SELECT TOP 5 claim_id, status
-    FROM claims
+??? example "SQL tool 輸出範例"
+    ```text
+    [SQL Tool] Executing query:
+        SELECT TOP 5 claim_id, status
+        FROM claims
 
-| claim_id | status |
-|---|---|
-| CLM-1001 | Open |
-| CLM-1002 | Pending |
+    | claim_id | status |
+    |---|---|
+    | CLM-1001 | Open |
+    | CLM-1002 | Pending |
 
-(2 rows returned)
-```
+    (2 rows returned)
+    ```
 
-```text
-[Search Tool] Searching for: outage communication policy (top=3)...
+??? example "Search tool 輸出範例"
+    ```text
+    [Search Tool] Searching for: outage communication policy (top=3)...
 
---- Result 1 ---
-Source: outage-policy.pdf (Page 2)
-Title: Outage Management Policy
-Content: Customers must be notified within 15 minutes of a confirmed outage...
-```
+    --- Result 1 ---
+    Source: outage-policy.pdf (Page 2)
+    Title: Outage Management Policy
+    Content: Customers must be notified within 15 minutes of a confirmed outage...
+    ```
 
 ## 測試技巧
 
