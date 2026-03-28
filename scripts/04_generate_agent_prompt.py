@@ -1,4 +1,4 @@
-"""根據 Ontology 產生最佳化 schema prompt。"""
+"""維護者入口：根據 Ontology 產生最佳化 schema prompt。"""
 
 import argparse
 import os

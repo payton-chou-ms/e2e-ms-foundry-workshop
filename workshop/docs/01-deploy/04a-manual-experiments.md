@@ -4,7 +4,7 @@
 
 目的很單純：回到 Microsoft Foundry portal，快速帶大家看這次 workshop 已經建好的 project、agent、knowledge、tools 和 model。
 
-如果你現在要驗證的是 Lakehouse、tables、ontology 或 SQL endpoint，請改看 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
+如果你現在要驗證的是 Lakehouse、tables、ontology 或 SQL endpoint，請改看附錄中的 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
 
 ## Live tour 前先確認
 
@@ -75,8 +75,8 @@ Portal URL:
 - 不在這一頁逐項介紹 Foundry 全部功能
 - 不在這一頁重跑完整測試腳本
 
-如果你接下來要驗證資料物件，請改看 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
+如果你接下來要驗證資料物件，請改看附錄中的 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
 
 ---
 
-[← 建置與驗證解決方案](04-run-scenario.md) | [Microsoft Fabric 手動驗證 →](04b-fabric-manual-validation.md)
+[← 建置與驗證解決方案](04-run-scenario.md) | [附錄中的 Microsoft Fabric 手動驗證 →](04b-fabric-manual-validation.md)

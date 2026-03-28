@@ -1,6 +1,8 @@
-# 建立 Fabric 工作區
+# 附錄：建立 Fabric 工作區
 
 建立並設定你的 Microsoft Fabric 工作區以使用 Fabric IQ。
+
+這一頁已移到附錄。建議先把 Foundry 主線完成，再回來處理這一段。
 
 !!! info "主要適用對象"
 	本頁主要供**管理員部署**路徑使用
@@ -54,4 +56,4 @@
 | Workspace name | 工作區設定 |
 
 
-[← 部署 Azure 資源](01-deploy-azure.md) | [Fabric 詳細設定 →](fabric/workspace-settings.md)
+[← 附錄：Fabric 延伸](../05-appendix/index.md) | [Fabric 詳細設定 →](fabric/workspace-settings.md)

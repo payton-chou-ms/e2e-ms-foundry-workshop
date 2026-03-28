@@ -10,7 +10,7 @@
 
 | 你現在要做什麼 | 直接去看 |
 |------------------|------------|
-| 自己部署 Azure 與 Fabric | [管理員部署](00-admin-deploy-share.md) |
+| 自己部署 Azure 並先跑通 Foundry 主線 | [管理員部署](00-admin-deploy-share.md) |
 | 環境已準備好，只要執行與驗證 | [參與者執行與驗證](00-participant-run-validate.md) |
 
 ### 管理員部署
@@ -20,11 +20,13 @@
 你將會：
 
 - 使用 `azd up` 部署 Azure 資源
-- 建立或選擇 Fabric 工作區
-- 完成 Fabric 詳細設定檢查
+- 設定主線所需的本機環境
+- 先完成 Foundry agent 建立與驗證
 - 設定共用環境
 - 確認後續使用這套環境的人需要哪些存取權限
 - 整理出一個可直接使用的環境
+
+Fabric 相關設定、手動驗證與資料 grounding 已移到 [附錄：Fabric 延伸](../05-appendix/index.md)。建議先把 Foundry 線全部完成，再回來補這一段。
 
 [前往管理員部署](00-admin-deploy-share.md)
 

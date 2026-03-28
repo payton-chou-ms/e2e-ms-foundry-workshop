@@ -1,4 +1,4 @@
-"""建立 Fabric Lakehouse 與 Ontology。"""
+"""維護者入口：建立 Fabric Lakehouse 與 Ontology。"""
 
 import requests
 from azure.identity import AzureCliCredential

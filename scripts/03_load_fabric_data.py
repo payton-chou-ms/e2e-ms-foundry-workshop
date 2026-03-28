@@ -1,4 +1,4 @@
-"""把資料載入 Fabric Lakehouse。"""
+"""維護者入口：把資料載入 Fabric Lakehouse。"""
 
 import requests
 from azure.storage.filedatalake import DataLakeServiceClient

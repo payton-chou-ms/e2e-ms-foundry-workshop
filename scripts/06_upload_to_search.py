@@ -1,4 +1,4 @@
-"""把 PDF 文件上傳到 Azure AI Search。"""
+"""維護者入口：把 PDF 文件上傳到 Azure AI Search。"""
 
 from pypdf import PdfReader
 from azure.search.documents.indexes.models import (

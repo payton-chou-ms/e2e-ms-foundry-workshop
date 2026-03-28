@@ -6,7 +6,7 @@
 
 如果你接手的是**管理員已經預載好的共享環境**，請改看 [參與者執行與驗證](00-participant-run-validate.md)。
 
-## 超速使用（略過說明，只留下最短指令；如果要看差異再往下看）
+## 超速使用（主線只保留 Foundry path）
 
 以下都以 `default` 這個預設 scenario 為前提。
 
@@ -24,12 +24,7 @@ python scripts/admin_prepare_foundry_iq_demo.py
 python scripts/participant_validate_foundry_iq.py
 ```
 
-#### Path 2: Foundry IQ + Fabric IQ
-
-```bash
-python scripts/admin_prepare_docs_data_demo.py
-python scripts/participant_validate_docs_data.py
-```
+如果你之後要補文件 + 資料整合路徑，請改看 [附錄：Fabric 延伸](../05-appendix/index.md)。
 
 ## 執行完整流程
 
@@ -76,20 +71,15 @@ python scripts/admin_prepare_shared_demo.py --mode preload-only --scenarios defa
 
 同樣直接用上面「超速使用」區塊的兩行指令即可。
 
-### Path 2: Foundry IQ + Fabric IQ
+### Fabric 線延後到附錄
 
-適合同時做文件問答和資料問答。
+如果你要把這套 PoC 擴充成文件 + 資料整合問答，請等 Foundry 主線全部完成後，再回頭看 [附錄：Fabric 延伸](../05-appendix/index.md)。
 
-同樣使用 `data/default` 這套預設資料。
+附錄會補上：
 
-- 文件 source：`data/default/documents`
-- 資料表 source：`data/default/tables`
-- sample question：`data/default/config/sample_questions.txt`
-       - `DOCUMENT QUESTIONS` 可用來測 Foundry IQ
-       - `SQL QUESTIONS` 可用來測 Fabric IQ
-       - `COMBINED INSIGHT QUESTIONS` 可用來測整合問答
-
-同樣直接用上面「超速使用」區塊的兩行指令即可。
+- `admin_prepare_docs_data_demo.py` / `participant_validate_docs_data.py` 這條完整路徑
+- Fabric workspace、Lakehouse、Ontology 的設定與手動驗證
+- `Fabric IQ` 的資料 grounding 說明
 
 ## 選配 demo
 
@@ -104,7 +94,7 @@ python scripts/admin_prepare_shared_demo.py --mode preload-only --scenarios defa
 
        - [x] Path 1：**Foundry IQ** 可回答文件問題
        - [x] Path 1B：如果你選 Foundry-native 變體，也可在 Foundry 內用 knowledge base 回答文件問題
-       - [x] Path 2：**Foundry IQ + Fabric IQ** 可同時回答文件與資料問題
+       - [ ] 如果你之後要補資料問答，可再進附錄完成 Fabric 線
 
 ---
 

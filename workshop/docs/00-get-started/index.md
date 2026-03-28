@@ -9,7 +9,7 @@
 
 - 具備 Contributor 權限的 Azure subscription
 - `gpt-5.4-mini` 與 `text-embedding-3-large` 的模型容量
-- Microsoft Fabric 工作區（供 Fabric IQ 功能使用）
+- Microsoft Fabric 工作區（只有要延伸到 Fabric 附錄時才需要）
 - [Visual Studio Code](https://code.visualstudio.com/download)
 - [Azure Developer CLI (azd)](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd)
 - [Python 3.10+](https://www.python.org/downloads/)
@@ -32,24 +32,28 @@
 
 ### Step 1：部署方案
 
-請先從以下兩條路徑中擇一開始：
+請先從以下兩條路徑中擇一開始。兩條都先以 Foundry 主線為主，不需要先做 Fabric：
 
 | 路徑 | 適用情境 | 主要頁面 |
 |------|----------|----------|
-| **管理員部署** | 你想自己把整套 Azure 與 Fabric 環境準備完成 | [管理員部署](../01-deploy/00-admin-deploy-share.md) |
+| **管理員部署** | 你想自己把 Azure 與 Foundry 主線先準備完成 | [管理員部署](../01-deploy/00-admin-deploy-share.md) |
 | **學員執行與驗證** | 你已拿到現成環境，只需要執行範例情境與驗證代理程式 | [學員執行與驗證](../01-deploy/00-participant-run-validate.md) |
 
-這兩條路徑最終都會收斂到相同的範例情境與驗證步驟。
+這兩條路徑最終都會收斂到同一套 Foundry 驗證步驟。
 
 完整部署路徑包含：
 
 - 準備支撐 workshop 的 Azure 資源，包括 Foundry project、模型部署、AI Search、Storage、Application Insights，以及選配的 image OpenAI 與 Playwright Workspace
-- 建立 workspace 並完成 **Microsoft Fabric** 詳細設定檢查
 - 設定開發環境
 - 讓代理程式對範例資料實際運作
 - 約需 15 分鐘
 
-如果你負責管理員部署，Fabric 這一段不要只停在建立 workspace。請把 [建立 Fabric 工作區](../01-deploy/02-setup-fabric.md) 和 [Fabric 詳細設定](../01-deploy/fabric/workspace-settings.md) 一起看完，再往下走。
+如果你負責管理員部署，建議先把 Foundry 主線跑通。Fabric 相關設定與驗證已移到 [附錄：Fabric 延伸](../05-appendix/index.md)，等主線完成後再回頭補即可。
+
+可以先把它理解成兩階段：
+
+1. 先完成 Foundry path：文件問答、agent 建立、驗證
+2. 之後若有需要，再補 Fabric path：資料問答、Lakehouse、Ontology、SQL grounding
 
 ### Step 2：依使用案例自訂
 
@@ -80,7 +84,7 @@
 - **Foundry Agent**：代理程式定義存在哪裡，建立後又是怎麼被重複使用
 - **Foundry Tool**：`execute_sql` 和 `search_documents` 各自負責什麼，工具邊界怎麼控制
 - **Foundry IQ**：文件怎麼進 Azure AI Search，agent 又怎麼取回可引用的段落
-- **Fabric IQ**：資料表、schema 與 prompt 怎麼把商業問題轉成唯讀 SQL
+- **Fabric IQ**：資料表、schema 與 prompt 怎麼把商業問題轉成唯讀 SQL（等主線跑通後再看附錄）
 - **Foundry Control Plane**：哪些 Azure 資源在背後支撐整個體驗
 
 如果你之後還想把這個單一 agent 的 PoC 延伸成多角色 workflow，再接著看 **多代理程式延伸**。

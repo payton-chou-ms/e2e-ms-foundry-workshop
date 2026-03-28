@@ -98,12 +98,12 @@
 
 - [x] 更新 `data/*/README.md`（已掃描，現階段無需變更）
 - [x] 更新 `tmp/*.md`
-- [ ] 更新註解檔中的舊腳本說明
+- [x] 更新註解檔中的舊腳本說明
 
 ### 3. Phase 3 收尾
 
 - [x] 統一 `internal/*.py` 的 deprecation 文案，避免再導向 `00_admin_prepare_demo.py`
-- [ ] 決定 `01`~`07b` root scripts 的最終定位：保留維護者入口，或逐步改成 shim
+- [x] 決定 `01`~`07b` root scripts 的最終定位：保留 `01`、`02`、`03`、`04`、`06`、`06a`、`06b`、`07`、`07b` 作為維護者入口；`05` 維持 legacy shim
 - [x] 抽查 `README.md`、`guides/`、`ref/` 是否仍把 legacy script 當主線入口
 
 ---

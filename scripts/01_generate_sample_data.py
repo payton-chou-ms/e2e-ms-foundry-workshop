@@ -1,5 +1,5 @@
-"""
-01a - Generate Sample Data using AI Agent
+"""維護者入口：使用 AI 產生客製資料與範例資料腳本。
+
 Uses AI to generate a custom data generation script for ANY industry and use case.
 
 Usage:

@@ -62,6 +62,8 @@ PDFs/Word/PPT → Text Extraction → Chunking → Embedding → Vector Index
 3. 文件答案保留來源與頁碼，容易人工驗證
 4. 回答品質很大一部分來自 retrieval quality，不是只靠模型
 
+如果你之後要把這條文件路徑再延伸到資料問答，請回頭看 [附錄：Fabric 延伸](../05-appendix/index.md)。
+
 ## 官方延伸閱讀
 
 - [RAG in Azure AI Search](https://learn.microsoft.com/azure/search/retrieval-augmented-generation-overview)
@@ -71,4 +73,4 @@ PDFs/Word/PPT → Text Extraction → Chunking → Embedding → Vector Index
 
 ---
 
-[← 深入解析](index.md) | [Fabric IQ：資料 →](02-fabric-iq.md)
+[← 深入解析](index.md) | [Foundry Control Plane：資源拓撲 →](04-control-plane.md)

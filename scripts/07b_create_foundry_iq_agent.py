@@ -1,4 +1,4 @@
-"""建立使用 MCP knowledge base 工具的 Foundry IQ agent。"""
+"""維護者入口：建立使用 MCP knowledge base 工具的 Foundry IQ agent。"""
 
 from azure.ai.projects import AIProjectClient
 from credential_utils import get_credential

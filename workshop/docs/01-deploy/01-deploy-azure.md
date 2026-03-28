@@ -160,4 +160,4 @@ python scripts/admin_prepare_shared_demo.py
 
     新版部署會預先建立每個 scenario 對應的 Blob container。Azure 資源部署完成後，再手動執行 `python scripts/admin_prepare_shared_demo.py` 即可把預設 demo 環境補齊。
 
-[← 管理員部署](00-admin-deploy-share.md) | [建立 Fabric 工作區 →](02-setup-fabric.md)
+[← 管理員部署](00-admin-deploy-share.md) | [設定開發環境 →](03-configure.md)

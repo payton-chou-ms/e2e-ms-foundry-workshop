@@ -1,6 +1,6 @@
 # 深入解析
 
-本節不是要把你變成這套方案的維運者，而是幫你把前面跑過的流程一一對回去，弄清楚「剛剛到底發生了什麼」。
+本節不是要把你變成這套方案的維運者，而是幫你把前面跑過的 Foundry 主線一一對回去，弄清楚「剛剛到底發生了什麼」。
 
 這一節的讀法也很單純：先從「答案怎麼接地」開始，再回頭看 agent、tool、model 和 control plane。
 
@@ -13,7 +13,7 @@
 | **Foundry Model** | 你看到的回答，背後到底用了哪些模型？哪些是主線必要，哪些是延伸選配？ | [Foundry Model: 部署策略](00-foundry-model.md) |
 | **Foundry Agent** | 問題進來之後，agent 怎麼決定下一步？ | [Foundry Agent: 執行時協調](02-foundry-agent.md) |
 | **Foundry Tool** | agent 可以做哪些事？哪些事它不能做？ | [Foundry Tool: 函式工具合約](03-foundry-tool.md) |
-| **智慧接地層** | 為什麼它回答的是你的文件和你的資料，而不是一般常識？ | [Foundry IQ: 文件](01-foundry-iq.md) 和 [Fabric IQ: 資料](02-fabric-iq.md) |
+| **智慧接地層** | 為什麼它回答的是你的文件，而不是一般常識？ | [Foundry IQ: 文件](01-foundry-iq.md) |
 | **Foundry Control Plane** | 背後有哪些 Azure 資源在支撐整個體驗？你現在先需要記住哪些？ | [Foundry Control Plane: 資源拓撲](04-control-plane.md) |
 | **多代理程式延伸** | 如果以後不想把所有事都塞給同一個 agent，可以怎麼拆角色？ | [多代理程式延伸：情境工作流](05-multi-agent-extension.md) |
 
@@ -31,8 +31,8 @@ flowchart LR
     A --> T
     T --> IQ[智慧接地層]
     IQ --> FIQ[Foundry IQ 文件]
-    IQ --> DB[Fabric IQ 資料]
     FIQ --> S[Azure AI Search]
+    IQ -. 附錄延伸 .-> DB[Fabric IQ 資料]
     DB --> L[Fabric Lakehouse SQL]
     A -. 延伸 .-> MA[多代理程式工作流]
     T -. 共用工具 .-> MA
@@ -56,7 +56,6 @@ flowchart LR
 | **Foundry Agent** | agent 定義怎麼建立，以及執行時誰負責做什麼 |
 | **Foundry Tool** | 工具合約、執行迴圈，以及哪些 guardrails 在保護主流程 |
 | **Foundry IQ** | 文件如何被索引、搜尋，最後變成可引用的答案片段 |
-| **Fabric IQ** | 資料問題如何被引導成唯讀 SQL，最後回到答案中 |
 | **Foundry Control Plane** | 支撐這些流程的 Azure 資源地圖，以及你先需要記住的最少概念 |
 | **多代理程式延伸** | 單一 agent 看懂後，如何把同一套能力拆成多角色工作流 |
 
@@ -64,7 +63,7 @@ flowchart LR
 
 | 如果你現在卡在… | 從這裡開始 |
 |-------------------|-----------|
-| 「我知道它能回答，但還不懂它為什麼知道答案」 | **Foundry IQ** 和 **Fabric IQ** |
+| 「我知道它能回答，但還不懂它為什麼知道答案」 | 先看 **Foundry IQ**；Fabric IQ 留到附錄 |
 | 「我不確定 agent 什麼時候會查工具」 | **Foundry Agent** |
 | 「我想知道它能做哪些事、不能做哪些事」 | **Foundry Tool** |
 | 「我不確定主流程實際依賴了哪些模型」 | **Foundry Model** |
@@ -90,8 +89,8 @@ flowchart LR
 不用。你先看懂「答案從哪裡來」和「agent 怎麼決定下一步」就夠了。像連線、追蹤、角色指派這些底層細節，等你要部署、治理或延伸時再回頭補就可以。
 
 !!! note "導覽順序說明"
-    深入解析導覽會把 **智慧接地層** 拆成兩頁來講：先是 **Foundry IQ**，再是 **Fabric IQ**
-    所以導覽列看起來會比這裡多一頁，但你可以把它們當成同一個學習主題的上下兩半來讀
+    深入解析主線先只保留 Foundry 相關內容。
+    如果你之後要補資料 grounding，再回到附錄看 **Fabric IQ**。
 
 ## 深入解析頁面
 
@@ -99,9 +98,10 @@ flowchart LR
 - **[Foundry Agent: 執行時協調](02-foundry-agent.md)**：代理程式定義、建立/測試流程、追蹤與發佈邊界
 - **[Foundry Tool: 函式工具合約](03-foundry-tool.md)**：核心工具、結構描述、執行迴圈與擴充策略
 - **[Foundry IQ: 文件](01-foundry-iq.md)**：文件如何被索引到 Azure AI Search，並由 `search_documents` 取回引用段落
-- **[Fabric IQ: 資料](02-fabric-iq.md)**：情境設定與 schema prompt 如何引導唯讀 NL→SQL
 - **[Foundry Control Plane: 資源拓撲](04-control-plane.md)**：支撐主流程的 Azure 資源地圖，以及你先需要知道的最少概念
 - **[多代理程式延伸：情境工作流](05-multi-agent-extension.md)**：單一 agent 主線看懂後，如何再往多角色工作流延伸
+
+Fabric 相關深入解析已移到 [附錄：Fabric 延伸](../05-appendix/index.md)。
 
 ---
 

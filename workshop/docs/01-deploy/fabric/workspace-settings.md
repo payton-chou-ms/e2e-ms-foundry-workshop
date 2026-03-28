@@ -1,6 +1,8 @@
-# Fabric 詳細設定
+# 附錄：Fabric 詳細設定
 
 這一頁不是教你再建立一次 workspace，而是把管理員部署時真正要確認的 Fabric 設定集中整理在一起。
+
+這一頁已移到附錄。建議先把 Foundry 主線跑通，再回來檢查 Fabric workspace、Lakehouse 與 Ontology。
 
 如果你只需要一個最短路徑，先看 [建立 Fabric 工作區](../02-setup-fabric.md)。
 如果你要把環境整理成可分享、可重複使用的 workshop 環境，這一頁才是你真正要對照的檢查清單。
@@ -9,13 +11,15 @@
 	本頁主要供管理員部署與環境維護者使用。
 	若你只是參與者，通常只需要確認自己能開啟既有 workspace，並拿到正確的 `FABRIC_WORKSPACE_ID`。
 
+本頁提到的 `02_create_fabric_items.py` 與 `03_load_fabric_data.py` 都是維護者入口，用來拆解檢查底層 Fabric 流程；學員主線仍以 `admin_prepare_docs_data_demo.py` 為主。
+
 ## 先看最小必要條件
 
 | 設定項 | 為什麼需要 | 你要在哪裡確認 |
 |--------|------------|----------------|
 | Workspace 已綁定 Fabric 容量 | 沒有 Fabric 容量就無法走完整 Fabric IQ 路徑 | Workspace settings → `Workspace type` |
 | 你的登入身分可存取該 workspace | 腳本會用目前 Azure CLI 身分呼叫 Fabric API 與 OneLake | Workspace access + `az account show` |
-| Workspace 可使用 Ontology | `02_create_fabric_items.py` 會建立 ontology；若功能不可用會直接失敗 | 建立流程是否出現 `FeatureNotAvailable` |
+| Workspace 可使用 Ontology | 維護者入口 `02_create_fabric_items.py` 會建立 ontology；若功能不可用會直接失敗 | 建立流程是否出現 `FeatureNotAvailable` |
 | 已記錄正確的 Workspace ID | `.env`、後續建置與分享都靠這個值定位 workspace | Workspace URL `/groups/<workspace-id>/...` |
 | `.env` 已填 `FABRIC_WORKSPACE_ID` | 主流程腳本都會先檢查這個變數 | 專案根目錄 `.env` |
 | 已決定要分享給哪些人或群組 | 後續學員是否能看見 lakehouse / ontology 取決於 workspace access | Workspace access |
@@ -91,8 +95,8 @@ grep -E '^(FABRIC_WORKSPACE_ID|DATA_FOLDER)=' .env
 
 | 腳本 | 會碰到的 Fabric 行為 | 依賴哪些設定 |
 |------|----------------------|----------------|
-| `02_create_fabric_items.py` | 建立 lakehouse 與 ontology，並把結果寫到 `config/fabric_ids.json` | Workspace ID、Fabric API 權限、Ontology 可用性 |
-| `03_load_fabric_data.py` | 把 CSV 上傳到 OneLake，再載入成 Delta tables | Workspace access、OneLake 存取、正確的 lakehouse 資訊 |
+| `02_create_fabric_items.py`（維護者入口） | 建立 lakehouse 與 ontology，並把結果寫到 `config/fabric_ids.json` | Workspace ID、Fabric API 權限、Ontology 可用性 |
+| `03_load_fabric_data.py`（維護者入口） | 把 CSV 上傳到 OneLake，再載入成 Delta tables | Workspace access、OneLake 存取、正確的 lakehouse 資訊 |
 | `check_fabric_items.py` | 檢查現有 lakehouse / ontology 是否存在 | Workspace ID、CLI 身分有權讀取 workspace |
 | `participant_validate_docs_data.py` | 讀取 lakehouse metadata，讓 agent 可以執行唯讀 SQL | 前面已成功建 item，且目前身分可讀取 |
 

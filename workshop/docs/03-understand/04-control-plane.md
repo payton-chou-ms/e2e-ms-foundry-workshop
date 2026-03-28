@@ -116,4 +116,4 @@ flowchart TB
 
 ---
 
-[← Fabric IQ：資料](02-fabric-iq.md) | [多代理程式延伸：情境工作流 →](05-multi-agent-extension.md)
+[← Foundry IQ：文件](01-foundry-iq.md) | [多代理程式延伸：情境工作流 →](05-multi-agent-extension.md)

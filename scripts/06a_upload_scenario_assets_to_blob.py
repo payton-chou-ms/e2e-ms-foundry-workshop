@@ -1,4 +1,4 @@
-"""Upload scenario source assets into the scenario-specific blob container."""
+"""維護者入口：上傳情境來源資產到專屬 blob container。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""建立 Foundry IQ knowledge base。"""
+"""維護者入口：建立 Foundry IQ knowledge base。"""
 
 from pathlib import Path
 import json

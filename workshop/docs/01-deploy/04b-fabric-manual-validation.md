@@ -1,6 +1,8 @@
-# Microsoft Fabric 手動驗證
+# 附錄：Microsoft Fabric 手動驗證
 
 這一頁專門用來驗證結構化資料與 Fabric 物件是否已正確建立。
+
+這一頁已移到附錄，建議在 Foundry 主線全部完成後，再回來做這些手動檢查。
 
 如果你現在要做的是 Foundry portal demo，請先看 [Microsoft Foundry 手動 Demo](04a-manual-experiments.md)。
 
@@ -18,6 +20,8 @@ Portal URL:
 ## Step 0. 先知道你要找哪些 Fabric item
 
 這個 repo 的 Fabric 物件命名不是隨機的。
+
+這裡提到的 `02_create_fabric_items.py`、`03_load_fabric_data.py`、`04_generate_agent_prompt.py` 都是維護者入口，用來對照底層流程；如果你只是跑 workshop 主線，仍優先使用公開的 `admin_prepare_docs_data_demo.py`。
 
 `02_create_fabric_items.py` 會建立：
 
@@ -125,9 +129,9 @@ FROM <table_name>
 
 | Script / 成果 | 你在 portal 應該去哪裡看 | 你要確認什麼 |
 |---------------|--------------------------|----------------|
-| `02_create_fabric_items.py` | Fabric workspace | `*_lakehouse_*` 與 `*_ontology_*` 是否出現 |
-| `03_load_fabric_data.py` | Fabric Lakehouse `Files` / `Tables` | CSV 已上傳，表格已載入 |
-| `04_generate_agent_prompt.py` | 本機檔案，不在 portal | 主要看 `schema_prompt.txt` 是否產生 |
+| `02_create_fabric_items.py`（維護者入口） | Fabric workspace | `*_lakehouse_*` 與 `*_ontology_*` 是否出現 |
+| `03_load_fabric_data.py`（維護者入口） | Fabric Lakehouse `Files` / `Tables` | CSV 已上傳，表格已載入 |
+| `04_generate_agent_prompt.py`（維護者入口） | 本機檔案，不在 portal | 主要看 `schema_prompt.txt` 是否產生 |
 
 ## Portal URL
 
@@ -135,4 +139,4 @@ FROM <table_name>
 
 ---
 
-[← Microsoft Foundry 手動 Demo](04a-manual-experiments.md) | [腳本用途、快速路徑與執行順序 →](05-script-sequence.md)
+[← Fabric 詳細設定](fabric/workspace-settings.md) | [Fabric IQ：資料 →](../03-understand/02-fabric-iq.md)

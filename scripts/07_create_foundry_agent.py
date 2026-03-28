@@ -1,4 +1,4 @@
-"""建立可使用 SQL 與 AI Search 的 AI Foundry agent。"""
+"""維護者入口：建立可使用 SQL 與 AI Search 的 AI Foundry agent。"""
 
 from foundry_tool_contract import (
     build_execute_sql_tool,

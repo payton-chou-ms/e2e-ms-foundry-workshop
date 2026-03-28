@@ -60,13 +60,10 @@ nav:
       - 總覽: 01-deploy/index.md
       - 管理員部署並分享: 01-deploy/00-admin-deploy-share.md
       - 部署 Azure 資源: 01-deploy/01-deploy-azure.md
-      - 建立 Fabric 工作區: 01-deploy/02-setup-fabric.md
-      - Fabric 詳細設定: 01-deploy/fabric/workspace-settings.md
       - 參與者執行並驗證: 01-deploy/00-participant-run-validate.md
       - 設定開發環境: 01-deploy/03-configure.md
       - 建置方案: 01-deploy/04-run-scenario.md
       - Microsoft Foundry 手動 Demo: 01-deploy/04a-manual-experiments.md
-      - Microsoft Fabric 手動驗證: 01-deploy/04b-fabric-manual-validation.md
       - 腳本用途與執行順序:
           - 總覽: 01-deploy/05-script-sequence.md
           - 進階：維護者腳本對照: 01-deploy/05b-script-core-pipeline.md
@@ -85,9 +82,14 @@ nav:
       - "Foundry Agent: 執行時協調": 03-understand/02-foundry-agent.md
       - "Foundry Tool: 函式工具合約": 03-understand/03-foundry-tool.md
       - "Foundry IQ: 文件": 03-understand/01-foundry-iq.md
-      - "Fabric IQ: 資料": 03-understand/02-fabric-iq.md
       - "Foundry Control Plane: 資源拓撲": 03-understand/04-control-plane.md
       - "Multi-Agent Extension: 情境工作流": 03-understand/05-multi-agent-extension.md
+  - 附錄：Fabric 延伸:
+      - 總覽: 05-appendix/index.md
+      - 建立 Fabric 工作區: 01-deploy/02-setup-fabric.md
+      - Fabric 詳細設定: 01-deploy/fabric/workspace-settings.md
+      - Microsoft Fabric 手動驗證: 01-deploy/04b-fabric-manual-validation.md
+      - "Fabric IQ: 資料": 03-understand/02-fabric-iq.md
   - 清理:
       - 刪除資源: 04-cleanup/index.md
       - 下一步: 04-cleanup/next-steps.md

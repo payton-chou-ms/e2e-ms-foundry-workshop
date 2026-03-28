@@ -102,7 +102,7 @@ flowchart TD
 
 1. 確認 `data/retail_launch_incident/documents/` 與 `data/retail_launch_incident/tables/` 內的素材都已備齊。
 2. 執行 `prepare_search_and_blob_assets.py`，把 PDF 與 CSV 送進 Blob Storage 與 Azure AI Search。
-3. 執行 `scripts/06b_upload_to_foundry_knowledge.py`，讓 Search index 對應到 Foundry Knowledge。
+3. 執行維護者入口 `scripts/06b_upload_to_foundry_knowledge.py`，讓 Search index 對應到 Foundry Knowledge。
 4. 回到 portal，把 knowledge 掛到後面要建立的 agents。
 
 ### 方式 2：手動
@@ -130,6 +130,8 @@ flowchart TD
 python data/retail_launch_incident/prepare_search_and_blob_assets.py
 python scripts/06b_upload_to_foundry_knowledge.py
 ```
+
+如果你不是在做這種手動示範，而只是要把 Foundry IQ 路徑準備好，主線仍建議先用 `python scripts/admin_prepare_foundry_iq_demo.py`。
 
 這個流程會自動完成三件事：
 

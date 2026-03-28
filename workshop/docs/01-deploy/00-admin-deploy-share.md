@@ -5,7 +5,6 @@
 ## 什麼情況適合走這條路徑
 
 - 你想從零開始部署 Azure 資源
-- 你想自己建立或選擇 Fabric 工作區
 - 你想整理出一套可重複使用的 workshop 環境
 
 如果你想先快速判斷自己是否需要 Azure 部署權限，先看 [部署總覽中的 Azure 權限對照](index.md#azure-permissions)。
@@ -13,9 +12,9 @@
 ## 這條路徑涵蓋的內容
 
 1. 部署 Azure 資源
-2. 建立或選擇 Fabric 工作區
-3. 設定共用環境
-4. 執行範例情境一次
+2. 設定共用環境
+3. 先完成 Foundry 主線驗證
+4. 視需要補上 Fabric 線
 5. 將準備好的環境提供給其他學員，或留給自己後續重複使用
 
 ## 開始之前
@@ -24,8 +23,9 @@
 
 - 目標資源群組（或其上層 scope）的 Azure 資源建立權限
 - 目標資源群組（或其上層 scope）的 Azure 角色指派建立權限
-- Fabric 工作區管理員或同等撰寫權限
 - 所選 Azure 區域的必要模型容量與配額
+
+如果你後續要補 Fabric 線，還需要 Fabric 工作區管理員或同等撰寫權限。
 
 ## 建議執行順序
 
@@ -33,13 +33,7 @@
 
 請依照 [部署 Azure 資源](01-deploy-azure.md) 操作。
 
-### 2. 建立或選擇 Fabric 工作區
-
-請依照 [建立 Fabric 工作區](02-setup-fabric.md) 操作。
-
-如果你要把這套環境交給其他學員或下次的自己重複使用，請再補看 [Fabric 詳細設定](fabric/workspace-settings.md)，把 workspace access、`FABRIC_WORKSPACE_ID`、執行身分與 ontology 可用性一次整理清楚。
-
-### 3. 設定共用環境
+### 2. 設定共用環境
 
 請依照 [設定開發環境](03-configure.md) 操作。
 
@@ -50,7 +44,7 @@
 - 你希望後續重複使用的環境命名慣例
 - 需要 Azure 和 Fabric 存取權的身分或群組
 
-### 4. 建置並驗證預設情境
+### 3. 建置並驗證預設情境
 
 如果你要先把共享環境一次準備好，建議直接執行：
 
@@ -69,9 +63,19 @@ python scripts/admin_prepare_shared_demo.py
 在分享之前先執行一次預設情境。這可以確認：
 
 - Azure 資源運作正常
-- Fabric 項目可以建立
 - 文件已索引
 - 協調代理程式能回答範例問題
+
+### 4. 視需要補上 Fabric 線
+
+如果你要把這套 PoC 延伸成文件 + 資料的完整路徑，再回頭看 [附錄：Fabric 延伸](../05-appendix/index.md)。
+
+那一段會補上：
+
+- 建立或選擇 Fabric 工作區
+- 完成 Fabric 詳細設定檢查
+- 手動驗證 Lakehouse、Ontology 與 SQL endpoint
+- 理解 Fabric IQ 如何把問題導向唯讀 SQL
 
 ### 5. 整理給後續使用者
 
