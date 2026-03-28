@@ -4,7 +4,7 @@
 
 這一頁已移到附錄。建議先把 Foundry 主線跑通，再回來檢查 Fabric workspace、Lakehouse 與 Ontology。
 
-如果你只需要一個最短路徑，先看 [建立 Fabric 工作區](../02-setup-fabric.md)。
+如果你只需要一個最短路徑，先看 [建立 Fabric 工作區](01-setup-fabric.md)。
 如果你要把環境整理成可分享、可重複使用的 workshop 環境，這一頁才是你真正要對照的檢查清單。
 
 !!! info "主要適用對象"
@@ -117,7 +117,7 @@ grep -E '^(FABRIC_WORKSPACE_ID|DATA_FOLDER)=' .env
 - 目前環境是「已完成建置」還是「只完成部署」
 - 是否允許學員重跑 Fabric 建置流程，或只能做驗證
 
-這樣下一位使用者在看 [參與者執行並驗證](../00-participant-run-validate.md) 時，才不需要反覆回頭猜目前環境狀態。
+這樣下一位使用者在看 [參與者執行並驗證](../01-deploy/00-participant-run-validate.md) 時，才不需要反覆回頭猜目前環境狀態。
 
 ## 常見失敗與你該先查什麼
 
@@ -135,7 +135,7 @@ grep -E '^(FABRIC_WORKSPACE_ID|DATA_FOLDER)=' .env
 python scripts/check_fabric_items.py
 ```
 
-如果 item 已存在，但你還想逐步對照 portal 內容，請直接看 [Microsoft Fabric 手動驗證](../04b-fabric-manual-validation.md)。
+如果 item 已存在，但你還想逐步對照 portal 內容，請直接看 [Microsoft Fabric 手動驗證](03-manual-validation.md)。
 
 ## 官方文件
 
@@ -145,4 +145,4 @@ python scripts/check_fabric_items.py
 
 ---
 
-[← 建立 Fabric 工作區](../02-setup-fabric.md) | [Microsoft Fabric 手動驗證 →](../04b-fabric-manual-validation.md)
+[← 建立 Fabric 工作區](01-setup-fabric.md) | [Microsoft Fabric 手動驗證 →](03-manual-validation.md)

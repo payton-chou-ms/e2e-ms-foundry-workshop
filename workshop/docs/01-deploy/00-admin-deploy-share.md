@@ -14,7 +14,7 @@
 1. 部署 Azure 資源
 2. 設定共用環境
 3. 先完成 Foundry 主線驗證
-4. 視需要補上 Fabric 線
+4. 視需要補上資料附錄
 5. 將準備好的環境提供給其他學員，或留給自己後續重複使用
 
 ## 開始之前
@@ -25,7 +25,7 @@
 - 目標資源群組（或其上層 scope）的 Azure 角色指派建立權限
 - 所選 Azure 區域的必要模型容量與配額
 
-如果你後續要補 Fabric 線，還需要 Fabric 工作區管理員或同等撰寫權限。
+如果你後續要補資料附錄，還需要附錄資料工作區的管理或撰寫權限。
 
 ## 建議執行順序
 
@@ -39,10 +39,10 @@
 
 在這個階段，記下後續操作還會用到的值，特別是：
 
-- `FABRIC_WORKSPACE_ID`
-- Fabric workspace URL
+- 附錄資料工作區 ID
+- 附錄資料工作區 URL
 - 你希望後續重複使用的環境命名慣例
-- 需要 Azure 和 Fabric 存取權的身分或群組
+- 需要 Azure 和附錄資料存取權的身分或群組
 
 ### 3. 建置並驗證預設情境
 
@@ -66,16 +66,16 @@ python scripts/admin_prepare_shared_demo.py
 - 文件已索引
 - 協調代理程式能回答範例問題
 
-### 4. 視需要補上 Fabric 線
+### 4. 視需要補上資料附錄
 
-如果你要把這套 PoC 延伸成文件 + 資料的完整路徑，再回頭看 [附錄：Fabric 延伸](../05-appendix/index.md)。
+如果你要把這套 PoC 延伸成文件 + 資料的完整路徑，再回頭看 [附錄延伸](../05-appendix/index.md)。
 
 那一段會補上：
 
-- 建立或選擇 Fabric 工作區
-- 完成 Fabric 詳細設定檢查
+- 建立或選擇附錄資料工作區
+- 完成附錄資料設定檢查
 - 手動驗證 Lakehouse、Ontology 與 SQL endpoint
-- 理解 Fabric IQ 如何把問題導向唯讀 SQL
+- 理解資料 IQ 如何把問題導向唯讀 SQL
 
 ### 5. 整理給後續使用者
 
@@ -85,12 +85,12 @@ python scripts/admin_prepare_shared_demo.py
 
 - 誰只需要執行測試
 - 誰需要重建資料或自訂情境
-- 誰需要管理 Azure 資源與 Fabric 產物
+- 誰需要管理 Azure 資源與附錄資料產物
 
 在你把環境交出去之前，至少先整理好下面這些項目：
 
 - 授予所需使用者或群組 Azure 存取權
-- 授予所需使用者 Fabric 工作區存取權
+- 授予所需使用者附錄資料工作區存取權
 - 分享所需的本機設定值
 - 告知下一位使用者是只需驗證範例情境，還是也要執行自訂步驟
 
@@ -111,7 +111,7 @@ python scripts/admin_prepare_shared_demo.py
 
 - 只走參與者驗證路徑時，先給 `Azure AI User`，必要時再補 `Search Index Data Reader` 與 `Storage Blob Data Reader`
 - 要重跑資料準備或知識建置流程時，再補 `Search Service Contributor`、`Search Index Data Contributor`、`Storage Blob Data Contributor`
-- 要走 Fabric 路徑時，另外還要確認 Fabric workspace role 是否足夠
+- 要走資料附錄時，另外還要確認附錄資料工作區角色是否足夠
 
 官方文件：
 
@@ -119,7 +119,7 @@ python scripts/admin_prepare_shared_demo.py
 - Foundry built-in roles：<https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry>
 - Azure AI Search RBAC：<https://learn.microsoft.com/azure/search/search-security-rbac>
 - Blob 以 Microsoft Entra ID 授權：<https://learn.microsoft.com/azure/storage/blobs/authorize-access-azure-active-directory>
-- Fabric workspace roles：<https://learn.microsoft.com/fabric/fundamentals/roles-workspaces>
+- 附錄資料工作區角色文件：請從 [附錄：資料延伸](../05-appendix/index.md) 進入
 
 ## 建議保留給下一次操作的資訊
 
@@ -127,7 +127,7 @@ python scripts/admin_prepare_shared_demo.py
 
 - 專案來源位置或網址
 - 預期的登入身分或租用戶
-- `FABRIC_WORKSPACE_ID`
+- 附錄資料工作區 ID
 - 應從 [參與者執行與驗證](00-participant-run-validate.md) 開始，還是從後續自訂頁面開始
 
 ## 何時算是完成這條路徑

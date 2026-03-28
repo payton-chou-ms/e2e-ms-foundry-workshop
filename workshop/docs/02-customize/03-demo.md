@@ -27,7 +27,7 @@ cat data/default/config/sample_questions.txt
 
 | 分類 | 來源 | 範例 |
 |------|------|------|
-| **結構化資料問題** | Fabric IQ（資料） | "How many open claims do we have?" |
+| **結構化資料問題** | 資料查詢 IQ（資料） | "How many open claims do we have?" |
 | **非結構化資料問題** | Foundry IQ（文件） | "What's our process for filing a property claim?" |
 | **組合式問題** | 兩個來源 | "Which claims are approaching our SLA deadline based on our process guidelines?" |
 
@@ -40,7 +40,7 @@ Workshop 代理程式使用一個小型、明確的工具合約。讓你的 demo
 
 | 工具 | 用於 | 不要用於 | 輸入結構描述 | 結果格式 |
 |------|------|----------|------------|----------|
-| **execute_sql** | 在 Fabric 表格中做計數、加總、趨勢、排名、join 與記錄查詢 | 政策、程序、敘事性說明，或任何寫入操作 | `sql_query: string` | 含列數的 Markdown 表格 |
+| **execute_sql** | 在資料表格中做計數、加總、趨勢、排名、join 與記錄查詢 | 政策、程序、敘事性說明，或任何寫入操作 | `sql_query: string` | 含列數的 Markdown 表格 |
 | **search_documents** | 政策、程序、FAQ、指引，以及其他非結構化文件內容 | 計算或大範圍表格掃描 | `query: string`, `top?: integer` | 含來源、標題與頁數的引用段落 |
 
 在 `--foundry-only` 模式下，代理程式只註冊 `search_documents`。

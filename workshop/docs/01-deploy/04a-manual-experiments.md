@@ -1,10 +1,10 @@
-# Microsoft Foundry 手動 Demo
+# Microsoft Foundry Live Tour
 
 這一頁只保留 live tour 需要的最小內容。
 
 目的很單純：回到 Microsoft Foundry portal，快速帶大家看這次 workshop 已經建好的 project、agent、knowledge、tools 和 model。
 
-如果你現在要驗證的是 Lakehouse、tables、ontology 或 SQL endpoint，請改看附錄中的 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
+如果你現在要驗證的是 Lakehouse、tables、ontology 或 SQL endpoint，請改看附錄中的 [資料手動驗證](../05-appendix/03-manual-validation.md)。
 
 ## Live tour 前先確認
 
@@ -71,12 +71,12 @@ Portal URL:
 
 ## 不要在這一頁展開的內容
 
-- 不在這一頁細講 Fabric 物件
+- 不在這一頁細講附錄資料物件
 - 不在這一頁逐項介紹 Foundry 全部功能
 - 不在這一頁重跑完整測試腳本
 
-如果你接下來要驗證資料物件，請改看附錄中的 [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md)。
+如果你接下來要驗證資料物件，請改看附錄中的 [資料手動驗證](../05-appendix/03-manual-validation.md)。
 
 ---
 
-[← 建置與驗證解決方案](04-run-scenario.md) | [附錄中的 Microsoft Fabric 手動驗證 →](04b-fabric-manual-validation.md)
+[← 建置與驗證解決方案](04-run-scenario.md) | [附錄中的資料手動驗證 →](../05-appendix/03-manual-validation.md)

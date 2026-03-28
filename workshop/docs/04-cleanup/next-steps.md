@@ -25,7 +25,7 @@
 ### 資源
 
 - [Microsoft Foundry 文件](https://learn.microsoft.com/azure/ai-studio/)
-- [Microsoft Fabric 文件](https://learn.microsoft.com/fabric/)
+- [附錄：資料延伸](../05-appendix/index.md)
 - [負責任 AI 實務](https://www.microsoft.com/ai/responsible-ai)
 
 

@@ -56,7 +56,7 @@ flowchart TB
         J[Agent]
         K[函式工具]
         L[Search 查詢]
-        M[Fabric SQL 查詢]
+        M[資料 SQL 查詢]
     end
 
     A --> B --> C

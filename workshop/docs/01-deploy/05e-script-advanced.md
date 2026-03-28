@@ -4,7 +4,7 @@
 
 ### `15_test_multi_agent_workflow.py`
 
-用途：**單一入口** 的 Fabric + Search multi-agent demo。預設會先依照 `multi_agent/workflow.yaml` 建立或更新零售 incident scenario 的 agents，然後立刻執行整條 workflow。
+用途：**單一入口** 的資料查詢 + Search multi-agent demo。預設會先依照 `multi_agent/workflow.yaml` 建立或更新零售 incident scenario 的 agents，然後立刻執行整條 workflow。
 
 ```bash
 python scripts/15_test_multi_agent_workflow.py
@@ -14,12 +14,12 @@ python scripts/15_test_multi_agent_workflow.py --scenario launch_incident_respon
 
 ### `15b_test_multi_agent_search_only_workflow.py`
 
-用途：**單一入口** 的 search-only multi-agent demo。不需要 Fabric，預設會先建立或更新指定 scenario 的 search-only agents，然後立刻執行整條 workflow。
+用途：**單一入口** 的 search-only multi-agent demo。不需要資料查詢附錄，預設會先建立或更新指定 scenario 的 search-only agents，然後立刻執行整條 workflow。
 
 ```bash
 python scripts/15b_test_multi_agent_search_only_workflow.py
 python scripts/15b_test_multi_agent_search_only_workflow.py --scenario launch_incident_response
-python scripts/15b_test_multi_agent_search_only_workflow.py --scenario launch_incident_response --question "如果沒有 Fabric 資料，只靠文件知識，門市應該如何對 BlueLeaf 上市事件做第一時間應對？"
+python scripts/15b_test_multi_agent_search_only_workflow.py --scenario launch_incident_response --question "如果沒有資料查詢能力，只靠文件知識，門市應該如何對 BlueLeaf 上市事件做第一時間應對？"
 ```
 
 ### `16_agent_framework_workflow_example.py`

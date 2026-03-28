@@ -26,8 +26,8 @@
 
 | 模式 | 啟用的工具 | 使用時機 |
 |------|-----------|---------|
-| **完整模式** | `execute_sql` + `search_documents` | Fabric + Search 都可用 |
-| **僅 Foundry 模式** | 僅 `search_documents` | Fabric 不可用時 |
+| **完整模式** | `execute_sql` + `search_documents` | 資料查詢與文件檢索都可用 |
+| **僅 Foundry 模式** | 僅 `search_documents` | 資料查詢工具未啟用時 |
 
 search-only 模式下，agent 根本沒有 SQL 工具可用（不是「知道有但不用」）。
 

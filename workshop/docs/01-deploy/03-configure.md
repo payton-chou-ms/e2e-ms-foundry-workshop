@@ -45,25 +45,15 @@ pip install -r requirements.txt
 python -c "import azure.ai.projects; print('Ready!')"
 ```
 
-## 設定 Fabric（附錄）
+## 附錄資料設定
 
-只有在你要執行 Fabric IQ 相關內容時，才需要做這一段。
+只有在你要執行附錄中的資料整合內容時，才需要做這一段。
 
-建議先完成 Foundry 主線；如果目前只是要把 workshop 跑通，可以先跳過這裡，之後再回到 [附錄：Fabric 延伸](../05-appendix/index.md)。
-
-### 取得工作區 ID
-
-1. 前往 [Microsoft Fabric](https://app.fabric.microsoft.com/)
-2. 開啟你的工作區
-3. 從 URL 複製工作區 ID：
-
-```
-https://app.fabric.microsoft.com/groups/{workspace-id}/...
-```
+建議先完成 Foundry 主線；如果目前只是要把 workshop 跑通，可以先跳過這裡，之後再回到 [附錄延伸](../05-appendix/index.md)。
 
 ### 更新環境檔案
 
-將 `.env.example` 複製為 `.env` 並更新 Fabric 設定：
+將 `.env.example` 複製為 `.env`：
 
 ```bash
 cp .env.example .env
@@ -72,9 +62,6 @@ cp .env.example .env
 編輯專案根目錄的 `.env`：
 
 ```env
-# --- Microsoft Fabric (required) ---
-FABRIC_WORKSPACE_ID=your-workspace-id-here
-
 # --- Active Scenario (preferred) ---
 SCENARIO_KEY=default
 
@@ -82,7 +69,7 @@ SCENARIO_KEY=default
 DATA_FOLDER=data/default
 ```
 
-如果你是第一次跑 workshop，建議先填 `SCENARIO_KEY`。`FABRIC_WORKSPACE_ID` 只有在你稍後要補 Fabric 附錄時再填即可。
+如果你是第一次跑 workshop，建議先填 `SCENARIO_KEY`。附錄資料工作區相關設定，等你真的要跑附錄內容時再補即可。
 
 !!! note "跳過 Browser Automation 部署"
     `.env` 不控制 `azd up` 是否建立 Playwright Workspace。
@@ -113,7 +100,7 @@ DATA_FOLDER=data/default
     等你真的要測 `10_demo_browser_automation.py` 時，再看 [Browser Automation 補充設定](05d-browser-automation-setup.md) 即可。
 
 !!! note "共用環境交接"
-    如果這套環境是別人先幫你部署好的，請先拿到主線必要設定；`FABRIC_WORKSPACE_ID` 可等你要做附錄中的 Fabric 路徑時再補。
+    如果這套環境是別人先幫你部署好的，請先拿到主線必要設定；附錄資料工作區設定可等你要做附錄資料路徑時再補。
 
 ## 檢查點
 
@@ -122,7 +109,7 @@ DATA_FOLDER=data/default
 - [x] `azd up` 已成功完成
 - [x] Python 環境已啟用
 - [x] 相依套件已安裝
-- [x] Fabric 工作區 ID 已設定（只有要做附錄中的 Fabric 路徑時才需要）
+- [x] 附錄資料工作區設定已備妥（只有要做附錄資料路徑時才需要）
 
 !!! success "準備就緒"
     請繼續至下一步實際看到成果

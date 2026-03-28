@@ -86,10 +86,11 @@ nav:
       - "Multi-Agent Extension: 情境工作流": 03-understand/05-multi-agent-extension.md
   - 附錄：Fabric 延伸:
       - 總覽: 05-appendix/index.md
-      - 建立 Fabric 工作區: 01-deploy/02-setup-fabric.md
-      - Fabric 詳細設定: 01-deploy/fabric/workspace-settings.md
-      - Microsoft Fabric 手動驗證: 01-deploy/04b-fabric-manual-validation.md
-      - "Fabric IQ: 資料": 03-understand/02-fabric-iq.md
+      - 建立 Fabric 工作區: 05-appendix/01-setup-fabric.md
+      - Fabric 詳細設定: 05-appendix/02-workspace-settings.md
+      - Microsoft Fabric 手動驗證: 05-appendix/03-manual-validation.md
+      - "Fabric IQ: 資料": 05-appendix/04-fabric-iq.md
+      - 維護者：資料腳本對照: 05-appendix/05-maintainer-data-scripts.md
   - 清理:
       - 刪除資源: 04-cleanup/index.md
       - 下一步: 04-cleanup/next-steps.md

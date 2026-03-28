@@ -24,22 +24,12 @@ python scripts/admin_prepare_foundry_iq_demo.py
 python scripts/participant_validate_foundry_iq.py
 ```
 
-如果你之後要補文件 + 資料整合路徑，請改看 [附錄：Fabric 延伸](../05-appendix/index.md)。
+如果你之後要補文件 + 資料整合路徑，請改看 [附錄延伸](../05-appendix/index.md)。
 
 ## 執行完整流程
 
 如果你只想知道該跑哪一條，直接用上面的「超速使用」即可。
 如果你想理解各 mode 背後差在哪裡，再看 [腳本用途與執行順序](05-script-sequence.md) 和 [進階：維護者腳本對照](05b-script-core-pipeline.md)。
-
-### 選配：先把示範資料上傳到 Blob containers
-
-如果你要在 Storage Account 裡直接看到預載檔案，這一步才需要另外執行：
-
-```bash
-python scripts/admin_prepare_shared_demo.py --mode preload-only --scenarios default retail_launch_incident contract_keyword_review static_education static_energy static_finance static_hospitality static_insurance static_logistics static_manufacturing static_retail static_telecommunications --skip-search --skip-foundry-knowledge --skip-fabric
-```
-
-這一步只會上傳素材目錄，不會建立 Search index、Knowledge base 或 Agent。
 
 !!! tip "如果要換情境"
        請直接到 [產生自訂資料](../02-customize/02-generate.md) 看完整做法。
@@ -47,7 +37,7 @@ python scripts/admin_prepare_shared_demo.py --mode preload-only --scenarios defa
 
 ### Path 1: Foundry IQ only
 
-適合先做文件問答，不接 Fabric。
+適合先做文件問答，不接資料附錄。
 
 預設 use case 使用 `data/default` 這套資料。
 
@@ -71,15 +61,15 @@ python scripts/admin_prepare_shared_demo.py --mode preload-only --scenarios defa
 
 同樣直接用上面「超速使用」區塊的兩行指令即可。
 
-### Fabric 線延後到附錄
+### 資料路徑延後到附錄
 
-如果你要把這套 PoC 擴充成文件 + 資料整合問答，請等 Foundry 主線全部完成後，再回頭看 [附錄：Fabric 延伸](../05-appendix/index.md)。
+如果你要把這套 PoC 擴充成文件 + 資料整合問答，請等 Foundry 主線全部完成後，再回頭看 [附錄延伸](../05-appendix/index.md)。
 
 附錄會補上：
 
 - `admin_prepare_docs_data_demo.py` / `participant_validate_docs_data.py` 這條完整路徑
-- Fabric workspace、Lakehouse、Ontology 的設定與手動驗證
-- `Fabric IQ` 的資料 grounding 說明
+- 資料工作區、Lakehouse、Ontology 的設定與手動驗證
+- 資料 IQ 的 grounding 說明
 
 ## 選配 demo
 
@@ -94,8 +84,8 @@ python scripts/admin_prepare_shared_demo.py --mode preload-only --scenarios defa
 
        - [x] Path 1：**Foundry IQ** 可回答文件問題
        - [x] Path 1B：如果你選 Foundry-native 變體，也可在 Foundry 內用 knowledge base 回答文件問題
-       - [ ] 如果你之後要補資料問答，可再進附錄完成 Fabric 線
+       - [ ] 如果你之後要補資料問答，可再進附錄完成資料路徑
 
 ---
 
-[← 設定開發環境](03-configure.md) | [Microsoft Foundry 手動 Demo →](04a-manual-experiments.md)
+[← 設定開發環境](03-configure.md) | [Microsoft Foundry Live Tour →](04a-manual-experiments.md)

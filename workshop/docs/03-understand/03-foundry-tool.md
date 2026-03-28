@@ -17,7 +17,7 @@
 
 | 工具 | 用途 | 不適合做 |
 |------|------|---------|
-| `execute_sql` | 計數、彙總、排名、特定記錄查詢（Fabric） | 政策、流程、任何寫入 |
+| `execute_sql` | 計數、彙總、排名、特定記錄查詢（資料查詢） | 政策、流程、任何寫入 |
 | `search_documents` | 政策、流程、FAQ（Azure AI Search） | 計算、大範圍資料掃描 |
 
 僅 Foundry 模式下只註冊 `search_documents`。工具合約集中定義在 `scripts/foundry_tool_contract.py`。
@@ -83,7 +83,7 @@ Agent instructions 裡有明確的路由規則（由 `build_tool_instruction_blo
 
 ## 常見問題
 
-**為什麼不直接從模型呼叫 Search 或 Fabric？**
+**為什麼不直接從模型呼叫 Search 或資料後端？**
 模型只能請求具名函式，本機 runtime 負責執行與驗證。這是 function calling 的基本模式。
 
 **工具定義可以在 Foundry portal 維護嗎？**

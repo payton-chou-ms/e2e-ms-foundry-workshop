@@ -62,7 +62,7 @@ PDFs/Word/PPT → Text Extraction → Chunking → Embedding → Vector Index
 3. 文件答案保留來源與頁碼，容易人工驗證
 4. 回答品質很大一部分來自 retrieval quality，不是只靠模型
 
-如果你之後要把這條文件路徑再延伸到資料問答，請回頭看 [附錄：Fabric 延伸](../05-appendix/index.md)。
+如果你之後要把這條文件路徑再延伸到資料問答，請回頭看 [附錄延伸](../05-appendix/index.md)。
 
 ## 官方延伸閱讀
 

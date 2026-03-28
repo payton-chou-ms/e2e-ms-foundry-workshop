@@ -85,4 +85,4 @@ Agent:
 
 ---
 
-[← Foundry IQ：文件](01-foundry-iq.md) | [清理 →](../04-cleanup/index.md)
+[← Microsoft Fabric 手動驗證](03-manual-validation.md) | [清理 →](../04-cleanup/index.md)

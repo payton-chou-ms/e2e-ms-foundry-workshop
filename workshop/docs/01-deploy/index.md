@@ -15,7 +15,7 @@
 
 ### 管理員部署
 
-如果你想自己把整套 Azure 與 Fabric 環境準備完成，請走這條路徑。
+如果你想自己把整套 Azure 與附錄資料環境準備完成，請走這條路徑。
 
 你將會：
 
@@ -26,13 +26,13 @@
 - 確認後續使用這套環境的人需要哪些存取權限
 - 整理出一個可直接使用的環境
 
-Fabric 相關設定、手動驗證與資料 grounding 已移到 [附錄：Fabric 延伸](../05-appendix/index.md)。建議先把 Foundry 線全部完成，再回來補這一段。
+資料延伸相關設定、手動驗證與資料 grounding 已移到 [附錄延伸](../05-appendix/index.md)。建議先把 Foundry 線全部完成，再回來補這一段。
 
 [前往管理員部署](00-admin-deploy-share.md)
 
 ### 參與者執行與驗證
 
-如果 Azure 資源和 Fabric 工作區已經為你準備好，請走這條路徑。
+如果 Azure 資源和主線所需環境已經為你準備好，請走這條路徑。
 
 你將會：
 
@@ -80,7 +80,7 @@ Fabric 相關設定、手動驗證與資料 grounding 已移到 [附錄：Fabric
 
 - Microsoft Foundry 負責模型與 agent
 - Azure AI Search 負責文件搜尋
-- Microsoft Fabric 負責資料層
+- 附錄資料工作區負責資料層
 - Application Insights 是選配追蹤能力
 
 如果你想理解更多技術拆解，再回頭看 [深入解析](../03-understand/index.md)。

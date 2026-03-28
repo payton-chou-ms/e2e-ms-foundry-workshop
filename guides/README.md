@@ -18,7 +18,7 @@
 - `workshop/docs/01-deploy/00-admin-deploy-share.md`
 - `workshop/docs/01-deploy/00-participant-run-validate.md`
 - `workshop/docs/01-deploy/01-deploy-azure.md`
-- `workshop/docs/01-deploy/02-setup-fabric.md`
+- `workshop/docs/05-appendix/01-setup-fabric.md`
 - `workshop/docs/01-deploy/03-configure.md`
 - `workshop/docs/01-deploy/04-run-scenario.md`
 

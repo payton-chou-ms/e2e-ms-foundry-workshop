@@ -43,7 +43,7 @@ flowchart LR
 | 路徑 | 入口 | 適合先學什麼 |
 |------|------|-------------|
 | **宣告式 workflow** | `multi_agent/workflow.yaml` + `scripts/15_test_multi_agent_workflow.py` | 角色、步驟、scenario 怎麼拆開 |
-| **宣告式（search-only）** | 同上 + `scripts/15b_test_multi_agent_search_only_workflow.py` | 沒有 Fabric 時的文件路徑 |
+| **宣告式（search-only）** | 同上 + `scripts/15b_test_multi_agent_search_only_workflow.py` | 沒有資料查詢能力時的文件路徑 |
 | **Code-first workflow** | `scripts/16_agent_framework_workflow_example.py` | 最小可跑的程式化 workflow |
 
 ### 宣告式路徑

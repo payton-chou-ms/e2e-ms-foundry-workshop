@@ -12,10 +12,11 @@
 
 ## 建議閱讀順序
 
-1. [建立 Fabric 工作區](../01-deploy/02-setup-fabric.md)
-2. [Fabric 詳細設定](../01-deploy/fabric/workspace-settings.md)
-3. [Microsoft Fabric 手動驗證](../01-deploy/04b-fabric-manual-validation.md)
-4. [Fabric IQ：資料](../03-understand/02-fabric-iq.md)
+1. [建立 Fabric 工作區](01-setup-fabric.md)
+2. [Fabric 詳細設定](02-workspace-settings.md)
+3. [Microsoft Fabric 手動驗證](03-manual-validation.md)
+4. [Fabric IQ：資料](04-fabric-iq.md)
+5. [維護者：資料腳本對照](05-maintainer-data-scripts.md)
 
 ## 主線與附錄的分工
 
@@ -26,4 +27,4 @@
 
 ---
 
-[← 深入解析](../03-understand/index.md) | [建立 Fabric 工作區 →](../01-deploy/02-setup-fabric.md)
+[← 深入解析](../03-understand/index.md) | [建立 Fabric 工作區 →](01-setup-fabric.md)

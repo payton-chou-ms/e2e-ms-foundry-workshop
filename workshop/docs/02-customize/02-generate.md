@@ -21,7 +21,7 @@
 
 | script | 什麼時候用 | 會做什麼 |
 |--------|------------|-----------|
-| `author_rebuild_custom_poc.py` | 你要重建完整 PoC 或切換 prepare 路徑 | 轉到對應 prepare 路徑，重跑資料、Fabric、Search、agent |
+| `author_rebuild_custom_poc.py` | 你要重建完整 PoC 或切換 prepare 路徑 | 轉到對應 prepare 路徑，重跑資料、資料附錄、Search、agent |
 | `author_generate_custom_data.py` | 你只想先生成新的資料與文件 | 只產生新的 data folder，不重建後面資源 |
 
 `author_rebuild_custom_poc.py` 會把你提供的 `--industry`、`--usecase`、`--size` 往下傳給現有 prepare pipeline，所以第一次使用時，直接改公開入口的執行參數通常最省事。
@@ -36,7 +36,7 @@ python scripts/author_rebuild_custom_poc.py
 
 | 旗標 | 用途 |
 |------|------|
-| `--clean` | 重設 Fabric 產物（切換情境時必要） |
+| `--clean` | 重設資料附錄產物（切換情境時必要） |
 
 ### 替代方式：內嵌參數
 
@@ -60,7 +60,7 @@ python scripts/author_generate_custom_data.py \
 這種做法適合下面兩種情況：
 
 1. 你想先看 AI 生成的資料品質
-2. 你還沒決定要不要把這組資料正式建進 Fabric / Search / agent
+2. 你還沒決定要不要把這組資料正式建進資料附錄 / Search / agent
 
 ### 如果你是第一次自訂，建議直接用哪個？
 
@@ -147,7 +147,7 @@ cat data/*/config/sample_questions.txt
 你不需要逐行比對；只要確認下面四個階段都有成功標記即可：
 
 - AI 資料有生成
-- Fabric workspace 有建立
+- 資料附錄工作區有建立
 - 文件有上傳到 Search
 - Agent 有建立
 
@@ -160,12 +160,12 @@ cat data/*/config/sample_questions.txt
     [01a/07] Generating AI data...
       ✓ Ontology, CSVs, PDFs, and questions generated
 
-    [02/07] Setting up Fabric workspace...
+    [02/07] Setting up data workspace...
       ✓ Cleaned previous artifacts
       ✓ Lakehouse: iqworkshop_lakehouse
       ✓ Warehouse: iqworkshop_warehouse
 
-    [03/07] Loading data into Fabric...
+    [03/07] Loading data into the data workspace...
       ✓ policies.csv → 16 rows
       ✓ claims.csv → 40 rows
       ✓ customers.csv → 20 rows
@@ -174,8 +174,8 @@ cat data/*/config/sample_questions.txt
     [04/07] Generating NL2SQL prompt...
       ✓ Schema prompt created for insurance domain
 
-    [05/07] Creating Fabric Data Agent...
-      ✓ Agent: fabric-agent-insurance
+    [05/07] Creating data query agent...
+      ✓ Agent: data-agent-insurance
 
     [06/07] Uploading documents to AI Search...
       ✓ 3 documents → 24 chunks indexed
@@ -196,11 +196,11 @@ cat data/*/config/sample_questions.txt
 - 嘗試使用 `--size small` 加快產生速度
 - 確認 Azure AI Services 配額
 
-### --clean 時出現 Fabric 錯誤
+### --clean 時出現資料附錄錯誤
 
-- 確認 `FABRIC_WORKSPACE_ID` 正確
-- 確認你對工作區具備可建立與清理 Fabric 產物的權限
-- 等待一分鐘後重試（Fabric 操作可能較慢）
+- 確認資料工作區 ID 設定正確
+- 確認你對工作區具備可建立與清理資料附錄產物的權限
+- 等待一分鐘後重試（資料附錄操作可能較慢）
 
 ### 我看到很多輸出，但不確定算不算成功
 

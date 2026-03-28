@@ -9,7 +9,7 @@
 	參與者應使用已經準備好並分享給他們的工作區。
 
 !!! tip "需要完整設定檢查清單時"
-	如果你現在不是只想把 workspace 建起來，而是要把環境整理成可分享、可重複使用的 workshop 環境，請一起看 [Fabric 詳細設定](fabric/workspace-settings.md)。
+	如果你現在不是只想把 workspace 建起來，而是要把環境整理成可分享、可重複使用的 workshop 環境，請一起看 [Fabric 詳細設定](02-workspace-settings.md)。
 
 ## 先決條件
 
@@ -44,7 +44,7 @@
 - 你知道後續要分享給哪些人或群組
 - 如果要走完整路徑，這個 workspace 對 ontology 建立是可用的
 
-上述細節請直接看 [Fabric 詳細設定](fabric/workspace-settings.md)。
+上述細節請直接看 [Fabric 詳細設定](02-workspace-settings.md)。
 
 ## 取得工作區資訊
 
@@ -56,4 +56,4 @@
 | Workspace name | 工作區設定 |
 
 
-[← 附錄：Fabric 延伸](../05-appendix/index.md) | [Fabric 詳細設定 →](fabric/workspace-settings.md)
+[← 附錄：Fabric 延伸](index.md) | [Fabric 詳細設定 →](02-workspace-settings.md)

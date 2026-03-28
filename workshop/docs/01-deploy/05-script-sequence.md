@@ -11,7 +11,7 @@
 
 ### Path 1: Foundry IQ only
 
-適合先做文件問答，不接 Fabric。
+適合先做文件問答，不接資料附錄。
 
 這條 path 有兩種變體：
 
@@ -29,17 +29,17 @@ python scripts/admin_prepare_foundry_iq_demo.py
 python scripts/participant_validate_foundry_iq.py
 ```
 
-### Fabric 線留到附錄
+### 資料路徑留到附錄
 
-如果你之後要把主線擴充成文件 + 資料整合問答，再回到 [附錄：Fabric 延伸](../05-appendix/index.md)。
+如果你之後要把主線擴充成文件 + 資料整合問答，再回到 [附錄延伸](../05-appendix/index.md)。
 
 ## 先看哪一頁
 
 | 你的目標 | 建議先看哪一頁 |
 |----------|----------------|
 | 想理解維護者用的底層腳本對照 | [進階：維護者腳本對照](05b-script-core-pipeline.md) |
-| 想在 Foundry portal 內做 guided demo | [Microsoft Foundry 手動 Demo](04a-manual-experiments.md) |
-| 想手動驗證 Fabric 資料物件 | [附錄中的 Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md) |
+| 想在 Foundry portal 內做 guided demo | [Microsoft Foundry Live Tour](04a-manual-experiments.md) |
+| 想手動驗證資料物件 | [附錄中的資料手動驗證](../05-appendix/03-manual-validation.md) |
 | 想看選配 demo | [選配 demo 09-13](05c-script-optional-demos.md) |
 | 要測 Browser Automation | [Browser Automation 補充設定](05d-browser-automation-setup.md) |
 | 想看 multi-agent 與新版 Agent Framework 範例 | [Multi-agent 與進階範例](05e-script-advanced.md) |
@@ -50,9 +50,9 @@ python scripts/participant_validate_foundry_iq.py
 - 如果你只是在補 demo，再直接看 [選配 demo 09-13](05c-script-optional-demos.md)
 - 如果你要測 `10_demo_browser_automation.py`，只看 [Browser Automation 補充設定](05d-browser-automation-setup.md) 即可
 
-補充：`05b` 裡列出的 `01`、`02`、`03`、`04`、`06`、`06a`、`06b`、`07`、`07b` 都是維護者入口；`05_create_fabric_agent.py` 只保留為 legacy shim。
+補充：`05b` 裡列出的主線維護者入口以 `01`、`04`、`06`、`06a`、`06b`、`07`、`07b` 為主；資料附錄專用腳本另收在附錄頁。
 
-如果你現在只是要先完成 Foundry 線，Path 1 就夠了；Fabric 整合路徑與手動驗證都留到附錄再做。
+如果你現在只是要先完成 Foundry 線，Path 1 就夠了；資料整合路徑與手動驗證都留到附錄再做。
 
 ---
 

@@ -4,7 +4,7 @@
 
 這一頁已移到附錄，建議在 Foundry 主線全部完成後，再回來做這些手動檢查。
 
-如果你現在要做的是 Foundry portal demo，請先看 [Microsoft Foundry 手動 Demo](04a-manual-experiments.md)。
+如果你現在要做的是 Foundry portal demo，請先看 [Microsoft Foundry Live Tour](../01-deploy/04a-manual-experiments.md)。
 
 ## 這一頁適合做什麼
 
@@ -139,4 +139,4 @@ FROM <table_name>
 
 ---
 
-[← Fabric 詳細設定](fabric/workspace-settings.md) | [Fabric IQ：資料 →](../03-understand/02-fabric-iq.md)
+[← Fabric 詳細設定](02-workspace-settings.md) | [Fabric IQ：資料 →](04-fabric-iq.md)

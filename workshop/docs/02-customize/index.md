@@ -63,7 +63,7 @@ python scripts/admin_prepare_docs_data_demo.py --clean \
 這是最建議第一次使用者採用的方式，因為它會一路重跑：
 
 1. 資料生成
-2. Fabric 產物建立與載入
+2. 資料附錄產物建立與載入
 3. prompt 生成
 4. Search 上傳
 5. agent 建立
@@ -83,7 +83,7 @@ python scripts/author_generate_custom_data.py \
     --size small
 ```
 
-這樣只會先產生新的 `data/<timestamp>_<scenario>/`，不會自動重建後面的 Fabric / Search / agent。
+這樣只會先產生新的 `data/<timestamp>_<scenario>/`，不會自動重建後面的資料附錄 / Search / agent。
 
 ## 什麼情況下才需要真的改 script
 

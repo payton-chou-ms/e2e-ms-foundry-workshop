@@ -32,8 +32,8 @@ flowchart LR
     T --> IQ[智慧接地層]
     IQ --> FIQ[Foundry IQ 文件]
     FIQ --> S[Azure AI Search]
-    IQ -. 附錄延伸 .-> DB[Fabric IQ 資料]
-    DB --> L[Fabric Lakehouse SQL]
+    IQ -. 附錄延伸 .-> DB[資料 IQ]
+    DB --> L[資料工作區 SQL]
     A -. 延伸 .-> MA[多代理程式工作流]
     T -. 共用工具 .-> MA
     IQ -. 共用接地能力 .-> MA
@@ -63,7 +63,7 @@ flowchart LR
 
 | 如果你現在卡在… | 從這裡開始 |
 |-------------------|-----------|
-| 「我知道它能回答，但還不懂它為什麼知道答案」 | 先看 **Foundry IQ**；Fabric IQ 留到附錄 |
+| 「我知道它能回答，但還不懂它為什麼知道答案」 | 先看 **Foundry IQ**；資料 IQ 留到附錄 |
 | 「我不確定 agent 什麼時候會查工具」 | **Foundry Agent** |
 | 「我想知道它能做哪些事、不能做哪些事」 | **Foundry Tool** |
 | 「我不確定主流程實際依賴了哪些模型」 | **Foundry Model** |
@@ -78,7 +78,7 @@ flowchart LR
 
 ### 資料是怎麼被保護的？
 
-先記住主線就好：文件留在 Azure AI Search，資料留在 Fabric，模型與驗證都走 Azure 內的資源與身分。等你需要部署或治理細節時，再回頭看各頁的補充說明。
+先記住主線就好：文件留在 Azure AI Search，資料查詢延伸留在附錄，模型與驗證都走 Azure 內的資源與身分。等你需要部署或治理細節時，再回頭看各頁的補充說明。
 
 ### 為什麼這個答案比較值得信任？
 
@@ -90,7 +90,7 @@ flowchart LR
 
 !!! note "導覽順序說明"
     深入解析主線先只保留 Foundry 相關內容。
-    如果你之後要補資料 grounding，再回到附錄看 **Fabric IQ**。
+    如果你之後要補資料 grounding，再回到附錄看 **資料 IQ**。
 
 ## 深入解析頁面
 
@@ -101,7 +101,7 @@ flowchart LR
 - **[Foundry Control Plane: 資源拓撲](04-control-plane.md)**：支撐主流程的 Azure 資源地圖，以及你先需要知道的最少概念
 - **[多代理程式延伸：情境工作流](05-multi-agent-extension.md)**：單一 agent 主線看懂後，如何再往多角色工作流延伸
 
-Fabric 相關深入解析已移到 [附錄：Fabric 延伸](../05-appendix/index.md)。
+資料相關深入解析已移到 [附錄延伸](../05-appendix/index.md)。
 
 ---
 

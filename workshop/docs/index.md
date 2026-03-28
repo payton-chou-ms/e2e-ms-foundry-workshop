@@ -8,7 +8,7 @@
 
 這個 workshop 刻意把主流程維持得很單純，讓你先抓住「問題怎麼被回答」，再往下看背後的設計：
 
-- 完整模式下：一個 prompt agent、兩個 core tools、兩條 grounding path：文件走 Foundry IQ，商業資料走 Fabric IQ
+- 完整模式下：一個 prompt agent、兩個 core tools、兩條 grounding path：文件走 Foundry IQ，商業資料走資料查詢 IQ
 - Foundry-only 模式下：一個 prompt agent、一個 core tool、一條 grounding path：只走 Foundry IQ 文件路徑
 
 當你把主線跑通之後，再回頭看下面五個核心主軸會比較容易。它們不是要你一開始全部背起來，而是幫你把剛剛跑過的流程拆開看清楚：
@@ -18,7 +18,7 @@
 | **Foundry Model** | 哪些模型真的在主流程裡用到，哪些只是延伸選配 |
 | **Foundry Agent** | agent 怎麼決定何時查文件、何時查資料、何時整合答案 |
 | **Foundry Tool** | agent 可以呼叫哪些工具，以及這些工具怎麼避免亂查亂做 |
-| **Foundry IQ + Fabric IQ** | 文件答案和資料答案分別是怎麼接地出來的 |
+| **Foundry IQ + 資料查詢 IQ** | 文件答案和資料答案分別是怎麼接地出來的 |
 | **Foundry Control Plane** | 背後有哪些 Azure 資源在支撐整個體驗，以及你現在其實不用一次記住全部 |
 
 首頁先幫你抓住主線。等你對 PoC 的執行方式有感覺之後，再回頭看這五個主軸，技術細節才不會變成一串抽象名詞。
@@ -31,7 +31,7 @@
 
 | 路徑 | 適合誰 | 你會完成什麼 |
 |------|--------|----------------|
-| **管理員部署** | 你要自己把 Azure 與 Foundry 主線先準備好 | 部署 Azure 資源、完成主線驗證，再視需要回到附錄補 Fabric |
+| **管理員部署** | 你要自己把 Azure 與 Foundry 主線先準備好 | 部署 Azure 資源、完成主線驗證，再視需要回到附錄補資料延伸 |
 | **學員執行與驗證** | 你已拿到現成環境，只需要實際跑 workshop | 使用已準備好的環境驗證範例情境並執行代理程式 |
 
 如果你是從零開始準備環境，建議先走「管理員部署」，之後再回到「學員執行與驗證」把主流程完整跑過一次。
@@ -55,7 +55,7 @@ flowchart TD
     U --> R{你走哪條執行路徑？}
     R --> F[完整模式<br/>prompt agent + execute_sql + search_documents]
     R --> S[Foundry-only 模式<br/>prompt agent + search_documents]
-    F --> IQ[答案如何接地<br/>Foundry IQ 文件 + Fabric IQ 資料]
+    F --> IQ[答案如何接地<br/>Foundry IQ 文件 + 資料查詢 IQ 資料]
     S --> IQ
     IQ --> A[Foundry Agent<br/>誰負責協調問題與工具]
     A --> T[Foundry Tool<br/>工具合約與 guardrails]
@@ -64,7 +64,7 @@ flowchart TD
     C -. 進階延伸 .-> MA[多代理程式延伸<br/>需要更多角色與工作流時再看]
 ```
 
-Fabric 相關內容已移到附錄。建議先把 Foundry 線全部跑完，再回頭補 [附錄：Fabric 延伸](05-appendix/index.md)。
+資料附錄內容已移到附錄。建議先把 Foundry 線全部跑完，再回頭補 [附錄：資料延伸](05-appendix/index.md)。
 
 你可以用下面這個順序來讀這張圖：
 

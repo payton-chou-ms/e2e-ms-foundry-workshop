@@ -23,11 +23,11 @@ azd down
 !!! warning "重要"
     請務必執行清理以避免持續產生費用！
 
-## 清理 Fabric（選擇性）
+## 清理資料附錄（選擇性）
 
-如果你建立了 Fabric 產物並希望移除它們：
+如果你建立了資料附錄產物並希望移除它們：
 
-1. 前往 [Microsoft Fabric](https://app.fabric.microsoft.com/)
+1. 前往資料工作區入口網站
 2. 開啟你的工作區
 3. 刪除為本 workshop 建立的 Lakehouse 和 Warehouse
 
