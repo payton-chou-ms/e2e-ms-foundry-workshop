@@ -158,6 +158,7 @@ workshop/site/
 # Generated runtime files
 _generated_script.py
 scripts/fabric_suffix.txt
+mng/
 
 # Generated scenario outputs
 data/[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]_*/

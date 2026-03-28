@@ -24,6 +24,8 @@ python scripts/author_generate_custom_data.py
 python scripts/author_rebuild_custom_poc.py --industry "Insurance" --usecase "Property insurance with claims processing and policy management"
 ```
 
+`admin_prepare_shared_demo.py` 預設會附帶 `--skip-fabric`，也就是只準備共享示範所需的 Foundry 主線；若維護者真的要連附錄資料路徑一起建立，請顯式加上 `--with-fabric`。
+
 如果你要除錯、拆解流程，或理解背後的 internal / pipeline 分工，再往下看維護者腳本對照。
 
 ## 維護者核心流程順序

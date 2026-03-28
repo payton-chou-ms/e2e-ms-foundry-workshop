@@ -1,0 +1,5 @@
+{
+    "terminal.integrated.env.osx": {
+        "AZURE_CONFIG_DIR": "/Users/payton/work/01_lab/e2e-ms-foundry-workshop/mng"
+    }
+}

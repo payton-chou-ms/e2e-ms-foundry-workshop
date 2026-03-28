@@ -21,6 +21,28 @@ def load_script_module(script_name: str, module_name: str):
 
 
 class PublicEntrypointTests(unittest.TestCase):
+    def test_admin_prepare_shared_demo_skips_fabric_by_default(self):
+        module = load_script_module(
+            "admin_prepare_shared_demo.py",
+            "admin_prepare_shared_demo",
+        )
+
+        command = module.build_command(["--scenarios", "default"])
+
+        self.assertEqual(Path(command[1]).parts[-2:], ("internal", "prepare_demo.py"))
+        self.assertEqual(command[2:], ["--skip-fabric", "--scenarios", "default"])
+
+    def test_admin_prepare_shared_demo_allows_explicit_fabric_opt_in(self):
+        module = load_script_module(
+            "admin_prepare_shared_demo.py",
+            "admin_prepare_shared_demo_opt_in",
+        )
+
+        command = module.build_command(["--with-fabric", "--scenarios", "default"])
+
+        self.assertEqual(Path(command[1]).parts[-2:], ("internal", "prepare_demo.py"))
+        self.assertEqual(command[2:], ["--scenarios", "default"])
+
     def test_admin_prepare_docs_demo_builds_foundry_only_command(self):
         module = load_script_module(
             "admin_prepare_docs_demo.py",

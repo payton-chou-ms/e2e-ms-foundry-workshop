@@ -39,6 +39,18 @@ class ScriptPositioningPolicyTests(unittest.TestCase):
         self.assertIn("Deprecated shim", docstring)
         self.assertNotIn("維護者入口", docstring)
 
+    def test_foundry_knowledge_ingestion_uses_upload_documents_entrypoint(self):
+        knowledge_scripts = [
+            "06b_upload_to_foundry_knowledge.py",
+            "pipelines/search/create_foundry_knowledge.py",
+        ]
+
+        for script_name in knowledge_scripts:
+            with self.subTest(script_name=script_name):
+                source = (SCRIPTS_DIR / script_name).read_text(encoding="utf-8")
+                self.assertIn('with_name("upload_documents.py")', source)
+                self.assertNotIn('with_name("06_upload_to_search.py")', source)
+
     def test_default_config_comments_use_generic_workflow_language(self):
         expected_comments = {
             "agent_ids.json": "This file is populated when you create the workshop agent, for example via scripts/admin_prepare_docs_demo.py or scripts/admin_prepare_docs_data_demo.py",
