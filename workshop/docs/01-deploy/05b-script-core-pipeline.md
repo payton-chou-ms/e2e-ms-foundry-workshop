@@ -1,8 +1,28 @@
-# 主流程腳本 01-08
+# 進階：維護者腳本對照
 
-這一頁整理主流程最常碰到的 script。
+這一頁是維護者／講師用的進階參考頁。
 
-## 主流程順序
+學員如果只想知道要跑哪些命令，請優先看公開入口，不需要理解底下的 internal / pipeline 腳本。
+
+## 建議優先使用的公開入口
+
+```bash
+python scripts/admin_prepare_shared_demo.py
+python scripts/admin_prepare_docs_demo.py
+python scripts/admin_prepare_foundry_iq_demo.py
+python scripts/admin_prepare_docs_data_demo.py
+
+python scripts/participant_validate_docs.py
+python scripts/participant_validate_foundry_iq.py
+python scripts/participant_validate_docs_data.py
+
+python scripts/author_generate_custom_data.py
+python scripts/author_rebuild_custom_poc.py --industry "Insurance" --usecase "Property insurance with claims processing and policy management"
+```
+
+如果你要除錯、拆解流程，或理解背後的 internal / pipeline 分工，再往下看維護者腳本對照。
+
+## 維護者核心流程順序
 
 ```text
 01 產生情境資料
@@ -14,14 +34,14 @@
 08 測試 agent
 ```
 
-平常不一定要手動逐支執行，因為 `00_admin_prepare_demo.py` 會作為公開入口，替你切到對應的 prepare 路徑。
+平常不一定要手動逐支執行，因為新的公開 wrappers 會替你切到對應的 prepare / validate 路徑。這一段主要是給維護者理解底層組成。
 
-## 主流程腳本對照
+## 維護者腳本對照
 
-### `00_admin_prepare_demo.py`
+### `00_admin_prepare_demo.py`（legacy shim）
 
-- 用途：公開的單一 prepare 入口
-- 什麼時候跑：你想快速準備共享環境、文件問答，或完整 demo 路徑時
+- 用途：目前的內部 prepare orchestration；對外已由新的 `admin_prepare_*` wrappers 包裝
+- 什麼時候跑：你在除錯或維護舊路徑時
 
 ```bash
 python scripts/00_admin_prepare_demo.py
@@ -34,10 +54,10 @@ python scripts/00_admin_prepare_demo.py --mode full --clean --industry "Insuranc
 ### `01_generate_sample_data.py`
 
 - 用途：根據輸入情境產生新的 sample data
-- 什麼時候跑：你要換新的情境資料時
+- 什麼時候跑：你在公開入口之外，直接做資料生成除錯時
 
 ```bash
-python scripts/01_generate_sample_data.py
+python scripts/author_generate_custom_data.py
 ```
 
 如果你要看 `--industry` / `--usecase` / `--size` 的完整自訂方式，請回 [產生自訂資料](../02-customize/02-generate.md)。
@@ -80,7 +100,7 @@ python scripts/04_generate_agent_prompt.py
 python scripts/04_generate_agent_prompt.py --from-config
 ```
 
-### `05_create_fabric_agent.py`
+### `05_create_fabric_agent.py`（legacy shim）
 
 - 用途：較早期的 Fabric Data Agent 路徑
 - 什麼時候跑：一般學員通常不用跑，主要保留作為舊路徑參考
@@ -126,23 +146,23 @@ python scripts/07_create_foundry_agent.py --foundry-only
 python scripts/07b_create_foundry_iq_agent.py
 ```
 
-### `08_test_foundry_agent.py`
+### `08_test_foundry_agent.py`（legacy shim）
 
-- 用途：測試已建立好的 agent
-- 什麼時候跑：`07` 跑完之後
+- 用途：舊版測試入口名稱；目前保留為 shim
+- 什麼時候跑：你在維護舊筆記或比對 legacy 路徑時
 
 ```bash
-python scripts/08_test_foundry_agent.py
-python scripts/08_test_foundry_agent.py --foundry-only
+python scripts/participant_validate_docs_data.py
+python scripts/participant_validate_docs.py
 ```
 
-### `08b_test_foundry_iq_agent.py`
+### `08b_test_foundry_iq_agent.py`（legacy shim）
 
-- 用途：測試 `07b` 建立出的 Foundry-native IQ agent
-- 什麼時候跑：`07b` 跑完之後
+- 用途：舊版 Foundry IQ 測試入口名稱；目前保留為 shim
+- 什麼時候跑：你在維護舊筆記或比對 legacy 路徑時
 
 ```bash
-python scripts/08b_test_foundry_iq_agent.py
+python scripts/participant_validate_foundry_iq.py
 ```
 
 ---

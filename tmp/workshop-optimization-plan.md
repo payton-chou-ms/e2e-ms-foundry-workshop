@@ -1,308 +1,241 @@
-# Workshop 文件優化計畫
+# Workshop 腳本重整計畫
 
-> 掃描範圍：`workshop/docs/` 全部 30 頁（含子目錄）
-> 產出日期：2026-03-26
-> 更新日期：2026-03-26
-> 角色定位：以 Lab Manuscript Editor agent 的編輯標準為基礎
-
----
-
-## 目前狀態
-
-本計畫原本是逐頁優化提案；目前已更新為執行後狀態。
-
-已完成：
-
-1. 第一輪：`03-understand` 全頁壓縮
-2. 第二輪：`01-deploy-azure` 主線收斂與補充區塊分離
-3. 第三輪：`02-customize` 兩個 manual demo 壓縮與補上每步驗證句
-4. 第四輪：多數 🟡 中優先頁面微調完成
-
-目前剩餘工作以 🟢 低優先的格式一致性、跨頁導覽與少量首頁微調為主，不再有高優先待辦。
+> 掃描範圍：`scripts/`、`tests/`、`README.md`、`workshop/docs/`、`data/*/README.md`
+> 更新日期：2026-03-28
+> 目的：把 `00` 到 `08b` 的工程編號流程，重整成學員可理解的公開入口 + 維護者可管理的內部 pipeline
 
 ---
 
-## 優化原則
+## 問題定義
 
-1. **不加內容**：只壓縮、重排、分離，不膨脹頁面
-2. **教學優先**：每頁都要能回答「學員在這頁要做什麼、要確認什麼」
-3. **主線先行**：先呈現最短正確路徑，再放 Tips / Notes / 延伸
-4. **官方連結補位**：進階概念不展開講解，改附官方 URL
+目前正式文件已經接近角色導向：
 
----
+1. 管理員部署
+2. 參與者驗證
+3. 客製情境
 
-## 總覽層級問題
+但 `scripts/` 仍然以 `00` 到 `08b` 的工程步驟編號暴露主流程，造成三個問題：
 
-| # | 問題 | 影響 | 建議 |
-|---|------|------|------|
-| G1 | `03-understand` 原本過長且重複解釋官網概念 | 已完成 | 已壓縮為短版教學頁，改以表格、白話句與官方連結為主 |
-| G2 | `01-deploy` 頁數多且部分頁面職責重疊 | 大致完成 | 已把入口選擇、主線步驟與參與者/管理員分工拉開 |
-| G3 | 全站 callout 用法不一致 | 部分完成 | 已整理主要高流量頁面；剩餘頁面可於低優先巡檢時再統一 |
+1. 學員看到的是 pipeline 編號，不是學習任務。
+2. 正式文件與腳本目錄使用兩套不同的心智模型。
+3. 維護者雖然需要細粒度 pipeline，但學員不應該先理解它們。
 
----
-
-## 逐頁優化項目
-
-### `index.md`（首頁）
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| 🟢 低 | Mermaid 圖仍在首頁 | 目前已下移到主線說明之後，不再阻擋起手閱讀；是否再移到 `03-understand` 可留作低優先決定 |
-| 🟢 低 | 五主軸表格與 `03-understand/index` 仍有部分重疊 | 目前可接受；若後續再微調，可把首頁再縮成更短導引 |
-
-### `00-get-started/index.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 頁面結構已清楚 | 維持現狀 |
+核心判斷：目前真正需要重整的不是 Azure / Fabric 流程本身，而是 CLI surface 和腳本資訊架構。
 
 ---
 
-### `01-deploy/index.md`（部署總覽）
+## 設計目標
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 架構圖說明段落偏長 | 已壓縮為短版導引 |
-| ✅ 已完成 | Azure 權限對照表位置偏後 | 已前移，入口更清楚 |
-
-### `01-deploy/00-admin-deploy-share.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 結構清楚，已有 numbered steps | 已補 Data Plane 權限整理，保留為管理員交接頁 |
-
-### `01-deploy/00-participant-run-validate.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 頁面過長，checklist 與敘述混在一起 | 已改成短版 checklist + 最小驗證流程 |
-| ✅ 已完成 | 驗證指令區塊過多 | 已收進折疊區，只保留主線必需指令 |
-
-### `01-deploy/01-deploy-azure.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 主線被大量 Notes/Warnings 稀釋 | 已改成超速部署 + 主線步驟 + 折疊補充 |
-| ✅ 已完成 | best-effort model bundle 清單過長 | 已移入折疊區 |
-| ✅ 已完成 | Data Plane 權限放錯頁 | 已搬到 `00-admin-deploy-share.md` |
-
-### `01-deploy/02-setup-fabric.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 簡潔，步驟清楚 | 維持現狀 |
-
-### `01-deploy/fabric/workspace-settings.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 常見失敗區塊偏長 | 已改成 `錯誤 → 原因 → 先查什麼` 表格 |
-
-### `01-deploy/03-configure.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 結構清楚，Notes 使用得當 | 維持現狀 |
-
-### `01-deploy/04-run-scenario.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 完整流程重複前面的指令 | 已改成超速使用優先，詳細差異改導到參考頁 |
-| ✅ 已完成 | Blob preload 指令區塊過長 | 已壓縮成單一代碼塊與一句說明 |
-
-### `01-deploy/04a-manual-experiments.md` ✅ 已完成
-
-> 已精簡為 live tour 導向短版
-
-### `01-deploy/04b-fabric-manual-validation.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | Steps 過多 | semantic model 與人工 SQL 驗證已移到 Tip |
-| ✅ 已完成 | 對照表很實用 | 保留 |
-
-### `01-deploy/05-script-sequence.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 已是導航頁 | 維持現狀 |
-
-### `01-deploy/05b-script-core-pipeline.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 已是純參考表 | 維持現狀 |
-
-### `01-deploy/05c-script-optional-demos.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 簡潔 | 維持現狀 |
-
-### `01-deploy/05d-browser-automation-setup.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 已是短版操作頁 | 維持現狀 |
-
-### `01-deploy/05e-script-advanced.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 簡潔 | 維持現狀 |
+1. 學員只需要理解角色與任務，不需要理解 `00` 到 `08b`。
+2. 正式文件只教公開入口，不把內部 pipeline 當主線。
+3. 維護者仍保有可拆解、可除錯的細粒度腳本。
+4. 舊指令在過渡期內仍可執行，避免 workshop 筆記與環境說明一次全部失效。
 
 ---
 
-### `02-customize/index.md`
+## 目標資訊架構
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | tabs 前的共用說明重複 | 已提煉成共用 note |
-| ✅ 已完成 | script 說明重複 | 已合併成表格 |
+### 使用者可見層
 
-### `02-customize/02-generate.md`
+學員與講師主要只碰這幾類入口：
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | console 輸出範例過長 | 已移入折疊區 |
-| ✅ 已完成 | 疑難排解段簡潔 | 維持 |
+1. `prepare`
+2. `validate`
+3. `customize`
+4. `advanced`
 
-### `02-customize/03-demo.md`
+### 建議目錄模型
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 範例輸出偏長 | 已收成折疊區，主文保留工具表格與測試問題 |
+長期目標結構如下：
 
-### `02-customize/04-retail-manual-demo.md`
+```text
+scripts/
+  admin_prepare_shared_demo.py
+  admin_prepare_docs_demo.py
+  admin_prepare_foundry_iq_demo.py
+  admin_prepare_docs_data_demo.py
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | agent instruction 全文貼入 | 已改成折疊區 |
-| ✅ 已完成 | Step 缺少驗證句 | 已補上每步完成後應看到什麼 |
+  participant_validate_docs.py
+  participant_validate_docs_data.py
+  participant_validate_foundry_iq.py
 
-### `02-customize/05-contract-keyword-review-manual-demo.md`
+  author_generate_custom_data.py
+  author_rebuild_custom_poc.py
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | reviewer instruction 過長 | 已收成折疊區 |
-| ✅ 已完成 | Steps 結構合理但篇幅偏長 | 已保留主線並補上驗證句 |
+  pipelines/
+	 agents/
+	 fabric/
+	 search/
+	 data/
 
----
+  internal/
+	 preload_scenarios.py
+	 build_solution.py
 
-### `03-understand/index.md`
+  legacy/
+	 create_fabric_data_agent.py
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 導航頁做得好 | 維持；與首頁的少量重疊目前可接受 |
+  shared/
+	 load_env.py
+	 scenario_utils.py
+	 credential_utils.py
+	 foundry_trace.py
+	 foundry_tool_contract.py
+```
 
-### `03-understand/00-foundry-model.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 官網重點重複展開 | 已壓縮 |
-| ✅ 已完成 | bundle 清單重複 | 已改成摘要 + 連結 |
-
-### `03-understand/01-foundry-iq.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 流程圖與結論重複 | 已壓縮整併 |
-| ✅ 已完成 | 官網重點段落過長 | 已改成短版教學頁 |
-
-### `03-understand/02-foundry-agent.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 結論重複 | 已整併 |
-| ✅ 已完成 | Mermaid 流程圖清楚 | 保留 |
-| ✅ 已完成 | 追蹤行為可收折疊 | 已收斂 |
-
-### `03-understand/02-fabric-iq.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 官網重點反覆展開 | 已壓縮 |
-| ✅ 已完成 | 綜合範例 | 保留 |
-
-### `03-understand/03-foundry-tool.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 選配工具段過長 | 已改成摘要與導引 |
-| ✅ 已完成 | 核心工具合約部分寫得好 | 保留 |
-
-### `03-understand/04-control-plane.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | Control Plane 頁面過重 | 已濃縮成短版導覽 |
-| ✅ 已完成 | Mermaid 圖清楚 | 保留 |
-
-### `03-understand/05-multi-agent-extension.md`
-
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 結構合理，可微調但不急 | 已納入第一輪完成範圍 |
+第一階段不會一次搬完所有檔案，而是先建立新的公開入口，並保留既有實作。
 
 ---
 
-### `04-cleanup/index.md`
+## 公開入口命名
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 簡潔明確 | 維持現狀 |
+### 管理員入口
 
-### `04-cleanup/next-steps.md`
+1. `admin_prepare_shared_demo.py`
+	說明：準備共享 workshop 環境
+2. `admin_prepare_docs_demo.py`
+	說明：準備文件問答示範
+3. `admin_prepare_foundry_iq_demo.py`
+	說明：準備 Foundry-native IQ 示範
+4. `admin_prepare_docs_data_demo.py`
+	說明：準備文件 + 資料整合示範
 
-| 優先 | 項目 | 說明 |
-|------|------|------|
-| ✅ 已完成 | 簡潔 | 維持現狀 |
+### 參與者入口
 
----
+1. `participant_validate_docs.py`
+	說明：驗證文件問答路徑
+2. `participant_validate_docs_data.py`
+	說明：驗證文件 + 資料問答路徑
+3. `participant_validate_foundry_iq.py`
+	說明：驗證 Foundry-native IQ agent
 
-## 優先級摘要
+### 作者入口
 
-| 優先級 | 頁數 | 重點 |
-|--------|------|------|
-| ✅ 已完成 | 多數高 / 中優先頁面 | `03-understand` 全頁、`01-deploy` 主線頁、`02-customize` 主線頁與兩個 manual demo |
-| 🟢 低 | 少量頁面 | 首頁、少數導航頁、全站 callout 與前後導覽一致性可再微調 |
-
-## 建議執行順序
-
-1. **第一輪：03-understand 六頁** ✅ 已完成
-   - 00-foundry-model.md：350→95 行
-   - 01-foundry-iq.md：340→75 行
-   - 02-foundry-agent.md：300→100 行
-   - 02-fabric-iq.md：300→85 行
-   - 03-foundry-tool.md：350→95 行
-   - 04-control-plane.md：350→100 行
-   - 05-multi-agent-extension.md：410→110 行
-
-2. **第二輪：01-deploy-azure** ✅ 已完成
-   - 超速部署已提到首位
-   - best-effort model bundle、Playwright、RBAC 已移到補充區
-   - Data Plane 權限已搬到 `00-admin-deploy-share`
-
-3. **第三輪：02-customize 兩個 manual demo** ✅ 已完成
-   - Agent / reviewer instruction 已收成摺疊區
-   - 每個 Step 已補驗證句
-
-4. **第四輪：剩餘 🟡 中優先頁面** ✅ 大致完成
-   - `01-deploy` 與 `02-customize` 的中優先頁面已完成主線微調
-   - 剩餘工作以低優先一致性巡檢為主
-
-## 建議下一步
-
-1. 若要再做一輪，只針對首頁與少量導航頁做更一致的短版導覽。
-2. 全站巡檢 `!!! tip` / `!!! note` / `!!! warning` 的用法是否完全一致。
-3. 檢查前後頁導覽文字是否都維持相同語氣與命名。
+1. `author_generate_custom_data.py`
+	說明：只產生客製資料
+2. `author_rebuild_custom_poc.py`
+	說明：重建整套自訂 PoC
 
 ---
 
-## 不在此計畫範圍
+## 現有腳本對應
 
-- 不改 MkDocs 設定（`mkdocs.yml`）
-- 不改 script 原始碼
-- 不新增頁面
-- 不做翻譯（文件已統一為繁中）
+| 現有腳本 | 目標定位 |
+|---|---|
+| `00_admin_prepare_demo.py` | 內部 prepare orchestration；外部由新的 `admin_prepare_*` wrappers 取代 |
+| `00_admin_preload_scenarios.py` | `internal/` |
+| `00_build_solution.py` | `internal/` |
+| `01_generate_sample_data.py` | `author_generate_custom_data.py` 對應的實作 |
+| `01_generate_sample_data_templates.py` | `pipelines/data/` 或 `legacy/` |
+| `02_create_fabric_items.py` | `pipelines/fabric/` |
+| `03_load_fabric_data.py` | `pipelines/fabric/` |
+| `04_generate_agent_prompt.py` | `pipelines/fabric/` |
+| `05_create_fabric_agent.py` | `legacy/` |
+| `06_upload_to_search.py` | `pipelines/search/` |
+| `06a_upload_scenario_assets_to_blob.py` | `pipelines/search/` |
+| `06b_upload_to_foundry_knowledge.py` | `pipelines/search/` |
+| `07_create_foundry_agent.py` | `pipelines/agents/` |
+| `07b_create_foundry_iq_agent.py` | `pipelines/agents/` |
+| `08_test_foundry_agent.py` | `pipelines/agents/` |
+| `08b_test_foundry_iq_agent.py` | `pipelines/agents/` |
+
+---
+
+## 過渡策略
+
+### 原則
+
+1. 先新增新入口，再重整內部實作。
+2. 舊腳本保留一段相容期。
+3. 正式文件立刻改教新入口。
+4. 內部 pipeline 與 legacy 路徑只在進階文件中出現。
+
+### 相容層
+
+舊腳本在過渡期應該：
+
+1. 仍可執行
+2. 明確告知新的公開入口名稱
+3. 將既有 exit code 行為維持不變
+
+---
+
+## 分階段實作
+
+### Phase 1：公開入口落地
+
+目標：先建立新的 CLI surface，不搬核心邏輯。
+
+範圍：
+
+1. 新增公開 wrapper 腳本
+2. 新增 wrapper 測試
+3. 更新主要文件中的主線命令
+4. 更新暫存計畫與待辦文件
+
+不在這一階段：
+
+1. 不搬移 `pipelines/`
+2. 不改既有核心腳本內部邏輯
+3. 不一次清掉所有舊命名
+
+### Phase 2：搬移內部實作
+
+目標：把 agent / fabric / search / data 的實作腳本收進 `pipelines/`。
+
+### Phase 3：建立 deprecation shim
+
+目標：把舊命名正式降級為相容層，避免學員再把 legacy script 當成主入口。
+
+目前狀態：
+
+1. `00_admin_prepare_demo.py`、`00_admin_preload_scenarios.py`、`00_build_solution.py`、`08_test_foundry_agent.py`、`08b_test_foundry_iq_agent.py` 已改成 shim。
+2. shim 會保留可執行性，並提示新的公開入口。
+3. 主線 docs 已大致切到新入口。
+
+剩餘重點：
+
+1. 清掉 `data/*/README.md`、`tmp/*.md`、註解文字中的舊主線命名。
+2. 決定是否要把更多 `01`~`07b` root scripts 也逐步 shim 化，或保留為維護者入口。
+3. 統一 `internal/` 檔案內的 deprecation 文案，避免再導向舊的 `00_admin_prepare_demo.py`。
+
+### Phase 4：文件封板與站點重建
+
+目標：把文件、站內搜尋、與教學語言全面封板到新入口模型。
+
+剩餘重點：
+
+1. 將 learner-facing 文件中的「01-08 主流程」語言進一步降到進階／維護者頁。
+2. 把 `05b-script-core-pipeline.md` 明確改成 advanced / maintainer reference，而不是半主線頁。
+3. 重建 `workshop/site/`，確認站內搜尋結果與產生頁面不再優先曝光舊命名。
+4. 做最後 smoke check：抽查新公開入口、舊 shim、以及主要頁面的命令一致性。
+
+---
+
+## 驗收標準
+
+1. 學員不需要理解 `00` 到 `08b` 就能跑主線。
+2. `README.md` 與 deploy 主線頁面優先使用新入口名稱。
+3. 進階頁面才解釋 pipeline 腳本。
+4. 舊命令在過渡期仍能用。
+5. 文件與 CLI 講的是同一套角色語言。
+
+---
+
+## 目前實作決策
+
+目前已完成 Phase 1 主體、Phase 2 主體，以及 Phase 3 的核心 shim 工作。
+
+接下來應把重點放在：
+
+1. Phase 3 收尾：清理非主線引用與內部 deprecation 文案。
+2. Phase 4 封板：把文件與產出網站正式對齊新入口。
+
+---
+
+## 暫不處理
+
+1. 不修改 Azure / Fabric 佈署語意
+2. 不一次更動所有 `scripts/` 檔案位置
+3. 不在本輪重建所有 generated site 內容
+4. 不把 `guides/` 重新變成第二份正式教學來源

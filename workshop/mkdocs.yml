@@ -69,7 +69,7 @@ nav:
       - Microsoft Fabric 手動驗證: 01-deploy/04b-fabric-manual-validation.md
       - 腳本用途與執行順序:
           - 總覽: 01-deploy/05-script-sequence.md
-          - 主流程腳本 01-08: 01-deploy/05b-script-core-pipeline.md
+          - 進階：維護者腳本對照: 01-deploy/05b-script-core-pipeline.md
           - 選配 demo 09-13: 01-deploy/05c-script-optional-demos.md
           - Browser Automation 補充設定: 01-deploy/05d-browser-automation-setup.md
           - Multi-agent 與進階範例: 01-deploy/05e-script-advanced.md

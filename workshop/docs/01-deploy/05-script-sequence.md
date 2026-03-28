@@ -18,15 +18,15 @@
 - **本機 workshop runtime**：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode foundry-only
-python scripts/08_test_foundry_agent.py --foundry-only
+python scripts/admin_prepare_docs_demo.py
+python scripts/participant_validate_docs.py
 ```
 
 - **Foundry-native IQ Agent**：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode foundry-iq
-python scripts/08b_test_foundry_iq_agent.py
+python scripts/admin_prepare_foundry_iq_demo.py
+python scripts/participant_validate_foundry_iq.py
 ```
 
 ### Path 2: Foundry IQ + Fabric IQ
@@ -34,15 +34,15 @@ python scripts/08b_test_foundry_iq_agent.py
 適合同時做文件問答和資料問答。
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode full --from-step 02
-python scripts/08_test_foundry_agent.py
+python scripts/admin_prepare_docs_data_demo.py
+python scripts/participant_validate_docs_data.py
 ```
 
 ## 先看哪一頁
 
 | 你的目標 | 建議先看哪一頁 |
 |----------|----------------|
-| 想理解主流程的核心腳本 | [主流程腳本 01-08](05b-script-core-pipeline.md) |
+| 想理解維護者用的底層腳本對照 | [進階：維護者腳本對照](05b-script-core-pipeline.md) |
 | 想在 Foundry portal 內做 guided demo | [Microsoft Foundry 手動 Demo](04a-manual-experiments.md) |
 | 想手動驗證 Fabric 資料物件 | [Microsoft Fabric 手動驗證](04b-fabric-manual-validation.md) |
 | 想看選配 demo | [選配 demo 09-13](05c-script-optional-demos.md) |
@@ -51,7 +51,7 @@ python scripts/08_test_foundry_agent.py
 
 ## 你可以怎麼使用這一組頁面
 
-- 如果你要理解主流程，再看 [主流程腳本 01-08](05b-script-core-pipeline.md)
+- 如果你要理解底層 internal / pipeline 分工，再看 [進階：維護者腳本對照](05b-script-core-pipeline.md)
 - 如果你只是在補 demo，再直接看 [選配 demo 09-13](05c-script-optional-demos.md)
 - 如果你要測 `10_demo_browser_automation.py`，只看 [Browser Automation 補充設定](05d-browser-automation-setup.md) 即可
 

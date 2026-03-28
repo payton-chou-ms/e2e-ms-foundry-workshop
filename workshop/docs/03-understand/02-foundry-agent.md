@@ -8,8 +8,8 @@
 
 | 元件 | 做什麼 | workshop 對應 |
 |------|--------|---------------|
-| **Agent** | 定義 model、instructions、tools 的持久化物件 | `07_create_foundry_agent.py` 建立 |
-| **Conversation** | 保存多輪互動歷史與工具呼叫記錄 | `08_test_foundry_agent.py` 建立 `conversation.id` |
+| **Agent** | 定義 model、instructions、tools 的持久化物件 | `admin_prepare_docs_data_demo.py` 背後會呼叫 `pipelines/agents/create_workshop_agent.py` 建立 |
+| **Conversation** | 保存多輪互動歷史與工具呼叫記錄 | `participant_validate_docs_data.py` 背後使用 `pipelines/agents/test_workshop_agent.py` 建立 `conversation.id` |
 | **Response** | 每次執行的輸出，可能含訊息或 tool calls | `openai_client.responses.create(...)` 的結果 |
 
 ## Agent 定義的三個輸入
@@ -35,11 +35,11 @@ search-only 模式下，agent 根本沒有 SQL 工具可用（不是「知道有
 
 ```mermaid
 flowchart LR
-    A[07_create] --> B[載入情境設定]
+    A[create_workshop_agent] --> B[載入情境設定]
     B --> C[建立指令與工具]
     C --> D[建立 PromptAgentDefinition]
     D --> E[存 agent_id]
-    E --> F[08_test]
+    E --> F[test_workshop_agent]
     F --> G[取得 agent → 建立 conversation]
     G --> H[建立 response]
     H --> I[本機處理 function_call]
@@ -62,7 +62,7 @@ response 不只是最後一段文字，它可能包含 function call。本機 lo
 這個設計讓你在 demo 時可以直接看到送出的 SQL 或搜尋查詢。
 
 ??? note "追蹤行為（選用）"
-    追蹤透過 `scripts/foundry_trace.py` 啟用，預設**關閉**。
+    追蹤透過 `scripts/shared/foundry_trace.py` 啟用，預設**關閉**。
 
     | 環境變數 | 用途 |
     |---------|------|

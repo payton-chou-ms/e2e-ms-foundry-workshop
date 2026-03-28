@@ -280,6 +280,6 @@ print(f"""
 估計 token 數：約 {len(prompt_text.split())}
 
 下一步：
-    - 執行 05_create_fabric_agent.py，建立使用 Fabric Data Agent 工具的 Foundry agent
-    - 或執行 07_create_sql_agent.py，建立使用 pyodbc SQL 工具的 agent
+    - 延續公開流程：執行 admin_prepare_docs_data_demo.py --from-step 05
+    - 或直接執行 07_create_foundry_agent.py，建立使用 Search 與 Fabric/SQL 工具的 agent
 """)

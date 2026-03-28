@@ -36,15 +36,16 @@
 |------------|--------|
 | 產業 / use case / 資料量 | 改 `.env`，或在命令列傳 `--industry`、`--usecase`、`--size` |
 | 重跑整套流程 | 執行公開 prepare 入口 |
-| 只先看新資料 | 只跑 `01_generate_sample_data.py` |
+| 只先看新資料 | 只跑 `author_generate_custom_data.py` |
 
-如果你只是要把 workshop 換成另一個產業情境，通常**不用修改**這些 script 原始碼：
+如果你只是要把 workshop 換成另一個產業情境，通常**不用修改**底層 internal / pipeline script。
 
-- `scripts/00_admin_prepare_demo.py`
-- `scripts/01_generate_sample_data.py`
-- `scripts/02_create_fabric_items.py`
-- `scripts/03_load_fabric_data.py`
-- `scripts/07_create_foundry_agent.py`
+大多數情況下，你只需要操作這兩個公開入口：
+
+- `scripts/admin_prepare_docs_data_demo.py`
+- `scripts/author_generate_custom_data.py`
+
+只有在你要除錯或維護底層流程時，才需要回頭看 internal / pipeline 腳本。
 
 ## 先記住兩種最常用的改法
 
@@ -53,7 +54,7 @@
 如果你要把整個 PoC 換成新的產業與使用案例，最簡單的方式是直接重跑完整 build：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode full --clean \
+python scripts/admin_prepare_docs_data_demo.py --clean \
     --industry "Insurance" \
     --usecase "Property insurance with claims processing and policy management" \
     --size small
@@ -76,7 +77,7 @@ python scripts/00_admin_prepare_demo.py --mode full --clean \
 如果你只是想先看新的資料、文件和 sample questions 長什麼樣子，可以只跑：
 
 ```bash
-python scripts/01_generate_sample_data.py \
+python scripts/author_generate_custom_data.py \
     --industry "Insurance" \
     --usecase "Property insurance with claims processing and policy management" \
     --size small

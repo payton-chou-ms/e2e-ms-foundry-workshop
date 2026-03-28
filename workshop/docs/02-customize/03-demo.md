@@ -11,7 +11,7 @@
 產生完成後，測試代理程式：
 
 ```bash
-python scripts/08_test_foundry_agent.py
+python scripts/participant_validate_docs_data.py
 ```
 
 ## 使用產生的範例問題
@@ -47,7 +47,7 @@ Workshop 代理程式使用一個小型、明確的工具合約。讓你的 demo
 
 ### 回應迴圈
 
-當你執行 `python scripts/08_test_foundry_agent.py` 時，執行時會依照以下迴圈：
+當你執行 `python scripts/participant_validate_docs_data.py` 時，底層會呼叫 workshop agent 測試 pipeline，執行時會依照以下迴圈：
 
 1. 模型檢視問題，決定是否需要 `execute_sql`、`search_documents`，或兩者皆需
 2. 本機腳本執行每個被請求的工具，並列印預覽讓你看到發生了什麼

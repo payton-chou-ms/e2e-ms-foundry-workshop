@@ -13,35 +13,35 @@
 #### Path 1A: Foundry IQ only
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode foundry-only
-python scripts/08_test_foundry_agent.py --foundry-only
+python scripts/admin_prepare_docs_demo.py
+python scripts/participant_validate_docs.py
 ```
 
 #### Path 1B: Foundry-native IQ Agent
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode foundry-iq
-python scripts/08b_test_foundry_iq_agent.py
+python scripts/admin_prepare_foundry_iq_demo.py
+python scripts/participant_validate_foundry_iq.py
 ```
 
 #### Path 2: Foundry IQ + Fabric IQ
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode full --from-step 02
-python scripts/08_test_foundry_agent.py
+python scripts/admin_prepare_docs_data_demo.py
+python scripts/participant_validate_docs_data.py
 ```
 
 ## 執行完整流程
 
 如果你只想知道該跑哪一條，直接用上面的「超速使用」即可。
-如果你想理解各 mode 背後差在哪裡，再看 [腳本用途與執行順序](05-script-sequence.md) 和 [主流程腳本 01-08](05b-script-core-pipeline.md)。
+如果你想理解各 mode 背後差在哪裡，再看 [腳本用途與執行順序](05-script-sequence.md) 和 [進階：維護者腳本對照](05b-script-core-pipeline.md)。
 
 ### 選配：先把示範資料上傳到 Blob containers
 
 如果你要在 Storage Account 裡直接看到預載檔案，這一步才需要另外執行：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode preload-only --scenarios default retail_launch_incident contract_keyword_review static_education static_energy static_finance static_hospitality static_insurance static_logistics static_manufacturing static_retail static_telecommunications --skip-search --skip-foundry-knowledge --skip-fabric
+python scripts/admin_prepare_shared_demo.py --mode preload-only --scenarios default retail_launch_incident contract_keyword_review static_education static_energy static_finance static_hospitality static_insurance static_logistics static_manufacturing static_retail static_telecommunications --skip-search --skip-foundry-knowledge --skip-fabric
 ```
 
 這一步只會上傳素材目錄，不會建立 Search index、Knowledge base 或 Agent。
@@ -61,8 +61,8 @@ python scripts/00_admin_prepare_demo.py --mode preload-only --scenarios default 
 
 這條 path 有兩種 prepare 模式，差別只在文件問答能力建立的位置：
 
-- **search-only 版本**：走 search-only prepare 路徑，後面用 `08_test_foundry_agent.py --foundry-only` 驗證
-- **Foundry-native 版本**：走 knowledge base + MCP prepare 路徑，後面用 `08b_test_foundry_iq_agent.py` 驗證
+- **search-only 版本**：走 search-only prepare 路徑，後面用 `participant_validate_docs.py` 驗證
+- **Foundry-native 版本**：走 knowledge base + MCP prepare 路徑，後面用 `participant_validate_foundry_iq.py` 驗證
 
 #### Path 1A: 本機 workshop runtime
 

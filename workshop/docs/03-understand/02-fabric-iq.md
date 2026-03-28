@@ -18,8 +18,8 @@
 
 | 官網概念 | workshop 對應 |
 |---------|---------------|
-| Lakehouse Delta tables | `02_create_fabric_items.py` + `03_load_fabric_data.py` |
-| SQL analytics endpoint | `08_test_foundry_agent.py` 取得 endpoint 並執行唯讀 SQL |
+| Lakehouse Delta tables | `pipelines/fabric/create_items.py` + `pipelines/fabric/load_lakehouse_data.py` |
+| SQL analytics endpoint | `participant_validate_docs_data.py` 背後使用 `pipelines/agents/test_workshop_agent.py` 取得 endpoint 並執行唯讀 SQL |
 | Schema grounding | `ontology_config.json` + `schema_prompt.txt` 提供表結構與 join 關係 |
 | SQL guardrails | Agent instructions 限制只允許唯讀查詢 |
 

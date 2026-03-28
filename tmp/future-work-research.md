@@ -23,9 +23,9 @@
 
 這個 workshop 目前已經有幾個可以延伸的基礎：
 
-- `scripts/07_create_foundry_agent.py` 與 `scripts/08_test_foundry_agent.py`：單一 Foundry Agent 的建立與測試流程。
+- `scripts/pipelines/agents/create_workshop_agent.py` 與 `scripts/participant_validate_docs_data.py`：單一 Foundry Agent 的建立與測試流程。
 - `scripts/14_create_multi_agent_workflow.py`、`scripts/15_test_multi_agent_workflow.py`、`multi_agent/workflow.yaml`：多代理工作流的延伸入口。
-- `scripts/06_upload_to_search.py`：文件上傳與搜尋索引流程。
+- `scripts/pipelines/search/upload_documents.py`：文件上傳與搜尋索引流程。
 - `infra/` 與 `infra/modules/foundry.bicep`：目前的 Azure 資源部署骨架。
 - `workshop/docs/`：正式文件入口，後續新增能力時需要補齊部署、操作與理解文件。
 
@@ -129,8 +129,8 @@
 - `infra/modules/`：新增 Azure Content Safety 相關資源。
 - `infra/modules/foundry.bicep`：把 safety 資源與主部署流程接起來。
 - `scripts/`：新增共用 safety utility，例如 input/output 檢查模組。
-- `scripts/07_create_foundry_agent.py`：若 Foundry Agent 建立流程支援 safety / RAI 設定，應納入建立邏輯。
-- `scripts/08_test_foundry_agent.py`：補使用者輸入與 agent 輸出的 safety 檢查。
+- `scripts/pipelines/agents/create_workshop_agent.py`：若 Foundry Agent 建立流程支援 safety / RAI 設定，應納入建立邏輯。
+- `scripts/participant_validate_docs_data.py`：補使用者輸入與 agent 輸出的 safety 檢查。
 - `multi_agent/workflow.yaml`：針對多代理最終輸出或中間節點增加 safety gate。
 - `workshop/docs/`：補政策、門檻、誤判處理方式。
 
@@ -307,8 +307,8 @@ Agent365 展示牽涉的重點，和目前主線 workshop 不完全相同：
 
 ### 可能要補的部分
 
-- `scripts/07_create_foundry_agent.py`：擴充 agent 建立流程，讓它能選擇 hosted tools / managed tools。
-- `scripts/08_test_foundry_agent.py`：新增 hosted tool 的驗證路徑，例如 file search、grounding、code interpreter 的測試案例。
+- `scripts/pipelines/agents/create_workshop_agent.py`：擴充 agent 建立流程，讓它能選擇 hosted tools / managed tools。
+- `scripts/participant_validate_docs_data.py`：新增 hosted tool 的驗證路徑，例如 file search、grounding、code interpreter 的測試案例。
 - `scripts/14_create_multi_agent_workflow.py` 與 `multi_agent/workflow.yaml`：若多代理流程要採用 hosted agent / hosted tools，需要重新定義 agent node 與 tool wiring。
 - `data/`：準備 file search / grounding / code interpreter 可重現的 sample data。
 - `workshop/docs/01-deploy/`：補 hosted agent 版本的建置與驗證步驟。

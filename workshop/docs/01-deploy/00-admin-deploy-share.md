@@ -55,7 +55,7 @@
 如果你要先把共享環境一次準備好，建議直接執行：
 
 ```bash
-python scripts/00_admin_prepare_demo.py
+python scripts/admin_prepare_shared_demo.py
 ```
 
 這支 wrapper 會依序完成：

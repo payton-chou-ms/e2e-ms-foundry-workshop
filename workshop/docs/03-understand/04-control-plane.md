@@ -18,7 +18,7 @@
 | 類型 | 做什麼 | workshop 範例 |
 |------|--------|---------------|
 | **Control plane** | 建立 resource/project、模型部署、建連線、設定網路與權限 | `azd` 佈署、Bicep |
-| **Data plane** | 呼叫模型、建立 agent、測試 agent | `07_create`、`08_test` |
+| **Data plane** | 呼叫模型、建立 agent、測試 agent | `create_workshop_agent`、`participant_validate_*` |
 
 這解釋了為什麼「部署的人」和「跑 workshop 的人」不一定要是同一個身分。
 
@@ -51,8 +51,8 @@ flowchart TB
     end
 
     subgraph Runtime[執行階段]
-        H[07_create]
-        I[08_test]
+        H[create_workshop_agent]
+        I[participant_validate_*]
         J[Agent]
         K[函式工具]
         L[Search 查詢]

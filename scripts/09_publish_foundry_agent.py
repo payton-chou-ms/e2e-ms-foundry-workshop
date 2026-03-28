@@ -109,7 +109,7 @@ agent_id, agent_name = resolve_agent_inputs(
     args.agent_id, args.agent_name, DATA_FOLDER)
 if not agent_id and not agent_name:
     exit_skip(
-        "找不到 agent 識別資訊。請先執行 07_create_foundry_agent.py，或自行提供 --agent-id / --agent-name。",
+        "找不到 agent 識別資訊。請先執行 admin_prepare_docs_demo.py 或 admin_prepare_docs_data_demo.py 建立 agent，或自行提供 --agent-id / --agent-name。",
         args.strict,
     )
 

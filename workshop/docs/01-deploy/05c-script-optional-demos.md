@@ -57,4 +57,4 @@ python scripts/13_demo_image_generation.py
 
 ---
 
-[← 主流程腳本 01-08](05b-script-core-pipeline.md) | [Browser Automation 補充設定 →](05d-browser-automation-setup.md)
+[← 進階：維護者腳本對照](05b-script-core-pipeline.md) | [Browser Automation 補充設定 →](05d-browser-automation-setup.md)

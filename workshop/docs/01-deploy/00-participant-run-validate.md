@@ -56,14 +56,14 @@
 如果環境已建好，直接測試：
 
 ```bash
-python scripts/08_test_foundry_agent.py --foundry-only
+python scripts/participant_validate_docs.py
 ```
 
 如果環境還沒建好，先建置再測：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode foundry-only
-python scripts/08_test_foundry_agent.py --foundry-only
+python scripts/admin_prepare_docs_demo.py
+python scripts/participant_validate_docs.py
 ```
 
 成功時，你至少應該能問出一題文件問題，並看到 agent 從文件內容回答。
@@ -73,14 +73,14 @@ python scripts/08_test_foundry_agent.py --foundry-only
 如果環境已建好，直接測試：
 
 ```bash
-python scripts/08_test_foundry_agent.py
+python scripts/participant_validate_docs_data.py
 ```
 
 如果環境還沒建好，先建置再測：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode full --from-step 02
-python scripts/08_test_foundry_agent.py
+python scripts/admin_prepare_docs_data_demo.py
+python scripts/participant_validate_docs_data.py
 ```
 
 如果你想先檢查 Fabric item 是否存在，可先執行：

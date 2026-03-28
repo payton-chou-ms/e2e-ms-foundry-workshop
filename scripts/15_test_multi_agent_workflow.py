@@ -2,19 +2,6 @@
 
 import argparse
 
-from azure.ai.projects import AIProjectClient
-from azure.identity import DefaultAzureCredential
-
-from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
-from foundry_trace import configure_foundry_tracing
-from scripts_15_shared import (
-    ensure_workflow_agents,
-    get_agent,
-    load_yaml,
-    resolve_config_path,
-    run_prompt_agent_step,
-)
-
 
 DEFAULT_SCENARIO = "launch_incident_response"
 
@@ -56,6 +43,19 @@ def parse_args(argv=None):
 
 
 def main():
+    from azure.ai.projects import AIProjectClient
+    from azure.identity import DefaultAzureCredential
+
+    from foundry_multi_agent_runtime import WorkshopMultiAgentRuntime
+    from foundry_trace import configure_foundry_tracing
+    from scripts_15_shared import (
+        ensure_workflow_agents,
+        get_agent,
+        load_yaml,
+        resolve_config_path,
+        run_prompt_agent_step,
+    )
+
     args = parse_args()
     runtime = WorkshopMultiAgentRuntime(require_fabric=True)
     config_path = resolve_config_path(runtime, args.config)

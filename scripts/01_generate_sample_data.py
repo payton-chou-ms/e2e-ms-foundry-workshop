@@ -590,13 +590,9 @@ for csv in csv_files:
 print(f"""
 Next steps:
   1. Update .env: DATA_FOLDER={data_dir}
-  2. Run the pipeline:
-     python scripts/02_create_fabric_items.py
-     python scripts/03_load_fabric_data.py
-     python scripts/04_generate_agent_prompt.py
-     python scripts/06_upload_to_search.py
-     python scripts/07_create_foundry_agent.py
-     python scripts/08_test_foundry_agent.py
+    2. Rebuild the public docs + data path:
+         python scripts/admin_prepare_docs_data_demo.py --from-step 02
+         python scripts/participant_validate_docs_data.py
 """)
 
 # ============================================================================

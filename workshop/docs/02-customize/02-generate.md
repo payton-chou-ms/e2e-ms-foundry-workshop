@@ -7,31 +7,31 @@
 如果你現在要自訂情境，先用下面這個簡單判斷：
 
 1. **只想換產業 / use case**：不用改 script 原始碼，改輸入值就好
-2. **想重新建整套 PoC**：跑 `00_admin_prepare_demo.py --mode full --clean`
-3. **只想先看新資料長什麼樣子**：跑 `01_generate_sample_data.py`
+2. **想重新建整套 PoC**：跑 `author_rebuild_custom_poc.py`
+3. **只想先看新資料長什麼樣子**：跑 `author_generate_custom_data.py`
 
 ## 你實際會動到哪些 script
 
 大多數情況下，你只需要操作這兩支：
 
-1. `scripts/00_admin_prepare_demo.py`
-2. `scripts/01_generate_sample_data.py`
+1. `scripts/author_rebuild_custom_poc.py`
+2. `scripts/author_generate_custom_data.py`
 
 它們的分工很簡單：
 
 | script | 什麼時候用 | 會做什麼 |
 |--------|------------|-----------|
-| `00_admin_prepare_demo.py` | 你要重建完整 PoC 或切換 prepare 模式 | 轉到對應 prepare 路徑，重跑資料、Fabric、Search、agent |
-| `01_generate_sample_data.py` | 你只想先生成新的資料與文件 | 只產生新的 data folder，不重建後面資源 |
+| `author_rebuild_custom_poc.py` | 你要重建完整 PoC 或切換 prepare 路徑 | 轉到對應 prepare 路徑，重跑資料、Fabric、Search、agent |
+| `author_generate_custom_data.py` | 你只想先生成新的資料與文件 | 只產生新的 data folder，不重建後面資源 |
 
-`00_admin_prepare_demo.py` 會把你提供的 `--industry`、`--usecase`、`--size` 往下傳給內部 build pipeline，所以第一次使用時，直接改公開入口的執行參數通常最省事。
+`author_rebuild_custom_poc.py` 會把你提供的 `--industry`、`--usecase`、`--size` 往下傳給現有 prepare pipeline，所以第一次使用時，直接改公開入口的執行參數通常最省事。
 
 ## 執行 AI 產生器
 
 在 `.env` 設定完成後，產生客戶專屬資料：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode full --clean
+python scripts/author_rebuild_custom_poc.py
 ```
 
 | 旗標 | 用途 |
@@ -43,7 +43,7 @@ python scripts/00_admin_prepare_demo.py --mode full --clean
 直接在命令列覆蓋 `.env` 的設定：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode full --clean \
+python scripts/author_rebuild_custom_poc.py \
   --industry "Insurance" \
   --usecase "Property insurance with claims processing and policy management"
 ```
@@ -51,7 +51,7 @@ python scripts/00_admin_prepare_demo.py --mode full --clean \
 ### 如果你只想重跑資料生成
 
 ```bash
-python scripts/01_generate_sample_data.py \
+python scripts/author_generate_custom_data.py \
   --industry "Insurance" \
   --usecase "Property insurance with claims processing and policy management" \
   --size small
@@ -67,7 +67,7 @@ python scripts/01_generate_sample_data.py \
 第一次使用時，建議直接用這個：
 
 ```bash
-python scripts/00_admin_prepare_demo.py --mode full --clean \
+python scripts/author_rebuild_custom_poc.py \
   --industry "Your Industry" \
   --usecase "Your use case description" \
   --size small

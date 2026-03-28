@@ -143,8 +143,8 @@ Deep dive 區段目前採用下列主軸組織技術敘事：
 
 #### 腳本成果
 
-- 導入 `00_admin_prepare_demo.py` 作為公開 prepare 入口，並保留舊 build pipeline 作為內部實作
-- 將 tool contract 集中於 `scripts/foundry_tool_contract.py`
+- 導入 `admin_prepare_*` / `participant_validate_*` / `author_*` 作為公開入口，並保留 internal build pipeline 與 legacy shim 作為維護者路徑
+- 將 tool contract 集中於 `scripts/shared/foundry_tool_contract.py`
 - 增加 tracing、publish precheck 與多個 optional demos 的 guarded execution 行為
 - 對齊較新的 Azure / Foundry SDK 類型與執行方式
 
@@ -164,16 +164,16 @@ Deep dive 區段目前採用下列主軸組織技術敘事：
 
 #### 腳本與模組
 
-- `scripts/00_admin_prepare_demo.py`
-- `scripts/07_create_foundry_agent.py`
-- `scripts/08_test_foundry_agent.py`
+- `scripts/admin_prepare_docs_data_demo.py`
+- `scripts/pipelines/agents/create_workshop_agent.py`
+- `scripts/participant_validate_docs_data.py`
 - `scripts/09_demo_content_understanding.py`
 - `scripts/10_demo_browser_automation.py`
 - `scripts/11_demo_web_search.py`
 - `scripts/12_demo_pii_redaction.py`
 - `scripts/13_demo_image_generation.py`
-- `scripts/foundry_trace.py`
-- `scripts/foundry_tool_contract.py`
+- `scripts/shared/foundry_trace.py`
+- `scripts/shared/foundry_tool_contract.py`
 
 #### 文件與站台
 

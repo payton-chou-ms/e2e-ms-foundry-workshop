@@ -94,7 +94,7 @@ grep -E '^(FABRIC_WORKSPACE_ID|DATA_FOLDER)=' .env
 | `02_create_fabric_items.py` | 建立 lakehouse 與 ontology，並把結果寫到 `config/fabric_ids.json` | Workspace ID、Fabric API 權限、Ontology 可用性 |
 | `03_load_fabric_data.py` | 把 CSV 上傳到 OneLake，再載入成 Delta tables | Workspace access、OneLake 存取、正確的 lakehouse 資訊 |
 | `check_fabric_items.py` | 檢查現有 lakehouse / ontology 是否存在 | Workspace ID、CLI 身分有權讀取 workspace |
-| `08_test_foundry_agent.py` | 讀取 lakehouse metadata，讓 agent 可以執行唯讀 SQL | 前面已成功建 item，且目前身分可讀取 |
+| `participant_validate_docs_data.py` | 讀取 lakehouse metadata，讓 agent 可以執行唯讀 SQL | 前面已成功建 item，且目前身分可讀取 |
 
 所以這裡所謂的「Fabric 設定」，實際上至少包含四件事：
 

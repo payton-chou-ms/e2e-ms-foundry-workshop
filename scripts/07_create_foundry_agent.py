@@ -328,7 +328,7 @@ Agent 名稱：{agent.name}
             若要完整功能，請不要加上 --foundry-only。
 
 下一步：
-  python scripts/08_test_foundry_agent.py --foundry-only
+    python scripts/participant_validate_docs.py
 """)
 else:
     tool_summary = "\n".join(
@@ -353,5 +353,5 @@ Agent 名稱：{agent.name}
   - "How many orders meet the minimum for loyalty rewards eligibility?"
 
 Next step:
-  python scripts/08_test_foundry_agent.py
+    python scripts/participant_validate_docs_data.py
 """)

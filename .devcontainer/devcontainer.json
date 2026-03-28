@@ -26,7 +26,7 @@
     }
   },
   "postCreateCommand": "sudo bash -lc 'if ! command -v az >/dev/null 2>&1 || [ \"$(az version --query \"azure-cli\" -o tsv 2>/dev/null)\" != \"2.84.0\" ]; then curl -sL https://aka.ms/InstallAzureCLIDeb | bash; fi' && pip install uv && pip install -r requirements.txt && cp .env.example .env",
-  "postStartCommand": "echo '✅ Ready! Run: azd auth login && azd up to deploy Azure resources, then: python scripts/00_run_pipeline.py --ai'",
+  "postStartCommand": "echo '✅ Ready! Run: azd auth login && azd up to deploy Azure resources, then: python scripts/admin_prepare_docs_data_demo.py'",
   "forwardPorts": [],
   "remoteUser": "vscode",
   "containerEnv": {
