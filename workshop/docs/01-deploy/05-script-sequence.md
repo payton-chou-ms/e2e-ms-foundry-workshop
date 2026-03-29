@@ -39,13 +39,13 @@ python scripts/participant_validate_foundry_iq.py
 |----------|----------------|
 | 想在 Foundry portal 內做 guided demo | [Microsoft Foundry Live Tour](04a-manual-experiments.md) |
 | 想手動驗證資料物件 | [附錄中的資料手動驗證](../05-appendix/03-manual-validation.md) |
-| 想看選配 demo | [選配 demo 09-13](05c-script-optional-demos.md) |
+| 想看延伸示範與快貼範例 | [延伸示範與快貼範例](05c-script-optional-demos.md) |
 | 要測 Browser Automation | [Browser Automation 補充設定](05d-browser-automation-setup.md) |
 | 想看 multi-agent 與新版 Agent Framework 範例 | [Multi-agent 與進階範例](05e-script-advanced.md) |
 
 ## 你可以怎麼使用這一組頁面
 
-- 如果你只是在補 demo，再直接看 [選配 demo 09-13](05c-script-optional-demos.md)
+- 如果你只是在補 demo，再直接看 [延伸示範與快貼範例](05c-script-optional-demos.md)
 - 如果你要測 `10_demo_browser_automation.py`，只看 [Browser Automation 補充設定](05d-browser-automation-setup.md) 即可
 
 如果你是從舊連結或舊筆記跳過來，請注意舊的維護者對照頁現在只保留停用說明，不再提供手動拆解與低階除錯流程；需要資料附錄路徑時，請直接改看 [附錄中的資料腳本對照](../05-appendix/05-maintainer-data-scripts.md)。
@@ -54,4 +54,4 @@ python scripts/participant_validate_foundry_iq.py
 
 ---
 
-[← 建置與驗證解決方案](04-run-scenario.md) | [選配 demo 09-13 →](05c-script-optional-demos.md)
+[← 建置與驗證解決方案](04-run-scenario.md) | [延伸示範與快貼範例 →](05c-script-optional-demos.md)

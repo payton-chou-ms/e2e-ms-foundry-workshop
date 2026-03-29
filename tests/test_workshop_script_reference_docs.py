@@ -1,5 +1,8 @@
 import unittest
 from pathlib import Path
+import textwrap
+
+import yaml
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -8,6 +11,7 @@ DOC_RUN_SCENARIO = REPO_ROOT / "workshop" / "docs" / "01-deploy" / "04-run-scena
 DOC_SCRIPT_SEQUENCE = REPO_ROOT / "workshop" / "docs" / "01-deploy" / "05-script-sequence.md"
 DOC_05B = REPO_ROOT / "workshop" / "docs" / "01-deploy" / "05b-script-core-pipeline.md"
 DOC_OPTIONAL_DEMOS = REPO_ROOT / "workshop" / "docs" / "01-deploy" / "05c-script-optional-demos.md"
+DOC_RETAIL_MANUAL = REPO_ROOT / "workshop" / "docs" / "02-customize" / "04-retail-manual-demo.md"
 DOC_FOUNDRY_AGENT = REPO_ROOT / "workshop" / "docs" / "03-understand" / "02-foundry-agent.md"
 DOC_APPENDIX_DATA = REPO_ROOT / "workshop" / "docs" / "05-appendix" / "05-maintainer-data-scripts.md"
 MKDOCS_CONFIG = REPO_ROOT / "workshop" / "mkdocs.yml"
@@ -15,6 +19,27 @@ PUBLISH_AGENT_SCRIPT = REPO_ROOT / "scripts" / "09_publish_foundry_agent.py"
 
 
 class WorkshopScriptReferenceDocsTests(unittest.TestCase):
+    @staticmethod
+    def extract_yaml_blocks(text: str) -> list[str]:
+        blocks = []
+        in_yaml_block = False
+        current_lines = []
+
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped == "```yaml":
+                in_yaml_block = True
+                current_lines = []
+                continue
+            if in_yaml_block and stripped == "```":
+                blocks.append(textwrap.dedent("\n".join(current_lines)).strip())
+                in_yaml_block = False
+                continue
+            if in_yaml_block:
+                current_lines.append(line)
+
+        return blocks
+
     def test_admin_deploy_page_does_not_inline_shared_demo_wrapper_command(self):
         text = DOC_ADMIN_DEPLOY.read_text(encoding="utf-8")
 
@@ -55,7 +80,16 @@ class WorkshopScriptReferenceDocsTests(unittest.TestCase):
     def test_script_sequence_footer_points_to_optional_demos(self):
         text = DOC_SCRIPT_SEQUENCE.read_text(encoding="utf-8")
 
-        self.assertIn("[選配 demo 09-13 →](05c-script-optional-demos.md)", text)
+        self.assertIn("[延伸示範與快貼範例 →](05c-script-optional-demos.md)", text)
+
+    def test_optional_demo_page_uses_updated_page_title(self):
+        text = DOC_OPTIONAL_DEMOS.read_text(encoding="utf-8")
+        nav = MKDOCS_CONFIG.read_text(encoding="utf-8")
+
+        self.assertIn("# 延伸示範與快貼範例", text)
+        self.assertNotIn("# 選配 demo 09-13", text)
+        self.assertIn("延伸示範與快貼範例: 01-deploy/05c-script-optional-demos.md", nav)
+        self.assertNotIn("選配 demo 09-13: 01-deploy/05c-script-optional-demos.md", nav)
 
     def test_appendix_data_script_page_covers_current_data_entrypoints(self):
         text = DOC_APPENDIX_DATA.read_text(encoding="utf-8")
@@ -98,7 +132,9 @@ class WorkshopScriptReferenceDocsTests(unittest.TestCase):
         text = DOC_OPTIONAL_DEMOS.read_text(encoding="utf-8")
 
         self.assertIn("Agent Framework multi-agent 範例（Magentic pattern）", text)
+        self.assertIn("16b_agent_framework_magentic_example.py", text)
         self.assertIn("MagenticBuilder", text)
+        self.assertIn("agent-framework-orchestrations==1.0.0b260319", text)
         self.assertIn("triage-manager-agent", text)
         self.assertIn("queue-ops-agent", text)
         self.assertIn("customer-comms-agent", text)
@@ -118,7 +154,23 @@ class WorkshopScriptReferenceDocsTests(unittest.TestCase):
 
         self.assertIn("??? example \"執行指令\"", text)
         self.assertIn("??? example \"Flux Prompt A\"", text)
-        self.assertIn("??? example \"最小可貼用 Python 範例\"", text)
+        self.assertIn("??? example \"安裝 preview 套件\"", text)
+
+    def test_workflow_yaml_examples_avoid_compact_invoke_agent_mappings(self):
+        for doc_path in (DOC_OPTIONAL_DEMOS, DOC_RETAIL_MANUAL):
+            with self.subTest(doc_path=doc_path.name):
+                text = doc_path.read_text(encoding="utf-8")
+                self.assertNotIn("- kind: InvokeAzureAgent", text)
+
+    def test_workflow_yaml_examples_parse_successfully(self):
+        for doc_path in (DOC_OPTIONAL_DEMOS, DOC_RETAIL_MANUAL):
+            text = doc_path.read_text(encoding="utf-8")
+            yaml_blocks = self.extract_yaml_blocks(text)
+
+            for index, block in enumerate(yaml_blocks, start=1):
+                with self.subTest(doc_path=doc_path.name, block=index):
+                    parsed = yaml.safe_load(block)
+                    self.assertIsInstance(parsed, dict)
 
 
 if __name__ == "__main__":

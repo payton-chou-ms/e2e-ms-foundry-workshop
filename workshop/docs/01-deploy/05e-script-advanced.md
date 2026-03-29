@@ -32,6 +32,20 @@ python scripts/15b_test_multi_agent_search_only_workflow.py --scenario launch_in
 pip install --pre "agent-framework-core==1.0.0rc3" "agent-framework-azure-ai==1.0.0rc3"
 ```
 
+這個 pinned 版本建立 `AzureAIClient` 時，請保留 async credential 類型，但參數名稱要寫成 `credential=credential`：
+
+```python
+from azure.identity.aio import DefaultAzureCredential
+from agent_framework.azure import AzureAIClient
+
+async with DefaultAzureCredential() as credential:
+	client = AzureAIClient(
+		credential=credential,
+		project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
+		model_deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
+	)
+```
+
 如果你之後要把 workflow 包成 HTTP 服務，再另外補裝 hosting adapter：
 
 ```bash
@@ -43,6 +57,26 @@ pip install --pre "azure-ai-agentserver-core==1.0.0b16" "azure-ai-agentserver-ag
 ```bash
 python scripts/16_agent_framework_workflow_example.py
 python scripts/16_agent_framework_workflow_example.py --question "Summarize the policy risk and next step."
+```
+
+### `16b_agent_framework_magentic_example.py`
+
+如果你想展示的是 code-first 的 manager-plus-specialists orchestration，而不是固定順序 workflow，請改跑這支 Magentic 範例。
+
+目前這條路徑需要額外安裝 orchestration 套件，並且整組版本要對齊到較新的 preview 線：
+
+```bash
+pip install --pre \
+	"agent-framework-core==1.0.0rc5" \
+	"agent-framework-azure-ai==1.0.0rc5" \
+	"agent-framework-orchestrations==1.0.0b260319"
+```
+
+執行方式：
+
+```bash
+python scripts/16b_agent_framework_magentic_example.py
+python scripts/16b_agent_framework_magentic_example.py --question "請為高優先客服佇列事故整理一份簡短應變包。"
 ```
 
 ---

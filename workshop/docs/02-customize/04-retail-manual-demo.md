@@ -457,44 +457,48 @@ Combine everything into one district-manager-ready recovery package.
 
 ??? example "最小 workflow YAML"
 
-    ```text
+    ```yaml
     name: retail-launch-incident-workflow
     description: Sequential Foundry workflow for the retail launch incident recovery scenario
 
     kind: Workflow
     trigger:
-        kind: OnConversationStart
-        id: retail_launch_incident
-        actions:
-            - kind: InvokeAzureAgent
-                id: invoke_router
-                displayName: Route incident
-                conversationId: =System.ConversationId
-                agent:
-                    name: retail-incident-router-agent
+            kind: OnConversationStart
+            id: retail_launch_incident
+            actions:
+                -
+                    kind: InvokeAzureAgent
+                    id: invoke_router
+                    displayName: Route incident
+                    conversationId: =System.ConversationId
+                    agent:
+                        name: retail-incident-router-agent
 
-            - kind: InvokeAzureAgent
-                id: invoke_store_ops
-                displayName: Build store operations response
-                conversationId: =System.ConversationId
-                agent:
-                    name: retail-store-ops-agent
+                -
+                    kind: InvokeAzureAgent
+                    id: invoke_store_ops
+                    displayName: Build store operations response
+                    conversationId: =System.ConversationId
+                    agent:
+                        name: retail-store-ops-agent
 
-            - kind: InvokeAzureAgent
-                id: invoke_launch_comms
-                displayName: Build customer communications response
-                conversationId: =System.ConversationId
-                agent:
-                    name: retail-launch-comms-agent
+                -
+                    kind: InvokeAzureAgent
+                    id: invoke_launch_comms
+                    displayName: Build customer communications response
+                    conversationId: =System.ConversationId
+                    agent:
+                        name: retail-launch-comms-agent
 
-            - kind: InvokeAzureAgent
-                id: invoke_coordinator
-                displayName: Synthesize district manager package
-                conversationId: =System.ConversationId
-                agent:
-                    name: retail-incident-coordinator-agent
-                output:
-                    autoSend: true
+                -
+                    kind: InvokeAzureAgent
+                    id: invoke_coordinator
+                    displayName: Synthesize district manager package
+                    conversationId: =System.ConversationId
+                    agent:
+                        name: retail-incident-coordinator-agent
+                    output:
+                        autoSend: true
     ```
 
 如果你要在 Foundry low-code workflow editor 裡示範，可以用這個最小順序：

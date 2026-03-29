@@ -44,7 +44,8 @@ flowchart LR
 |------|------|-------------|
 | **宣告式 workflow** | `multi_agent/workflow.yaml` + `scripts/15_test_multi_agent_workflow.py` | 角色、步驟、scenario 怎麼拆開 |
 | **宣告式（search-only）** | 同上 + `scripts/15b_test_multi_agent_search_only_workflow.py` | 沒有資料查詢能力時的文件路徑 |
-| **Code-first workflow** | `scripts/16_agent_framework_workflow_example.py` | 最小可跑的程式化 workflow |
+| **Code-first workflow（sequential）** | `scripts/16_agent_framework_workflow_example.py` | 最小可跑的程式化 sequential workflow |
+| **Code-first workflow（Magentic）** | `scripts/16b_agent_framework_magentic_example.py` | manager 先規劃、再分派 specialist 的 orchestration |
 
 ### 宣告式路徑
 
@@ -55,6 +56,8 @@ flowchart LR
 ### Agent Framework 範例
 
 `16_agent_framework_workflow_example.py` 只放兩個角色（`policy-researcher` → `answer-synthesizer`），用 `WorkflowBuilder` 串成最小 sequential workflow。適合從最小可執行程式碼理解多角色概念。
+
+`16b_agent_framework_magentic_example.py` 則改用 `MagenticBuilder`，放一個 `triage-manager-agent` 加兩個 specialists（`queue-ops-agent`、`customer-comms-agent`）。適合理解 open-ended multi-agent orchestration，尤其是「先規劃、再決定下一步找誰」這種模式。
 
 ## 與主 workshop 的關係
 

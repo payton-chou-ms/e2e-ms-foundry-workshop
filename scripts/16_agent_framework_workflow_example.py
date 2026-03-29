@@ -58,7 +58,7 @@ async def main():
     async with (
         DefaultAzureCredential() as credential,
         AzureAIClient(
-            async_credential=credential,
+            credential=credential,
             project_endpoint=project_endpoint,
             model_deployment_name=model_deployment_name,
         ).as_agent(
@@ -66,7 +66,7 @@ async def main():
             instructions="找出和問題最相關的政策重點，列出 3 點。",
         ) as researcher,
         AzureAIClient(
-            async_credential=credential,
+            credential=credential,
             project_endpoint=project_endpoint,
             model_deployment_name=model_deployment_name,
         ).as_agent(

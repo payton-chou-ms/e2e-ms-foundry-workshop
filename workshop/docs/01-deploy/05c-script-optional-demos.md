@@ -1,4 +1,4 @@
-# 選配 demo 09-13
+# 延伸示範與快貼範例
 
 這些都不是主流程必要步驟。只有在你要示範額外能力時才需要。
 
@@ -67,10 +67,35 @@
 	pip install --pre "agent-framework-core==1.0.0rc3" "agent-framework-azure-ai==1.0.0rc3"
 	```
 
+`1.0.0rc3` 這個版本請用 `from azure.identity.aio import DefaultAzureCredential`，而且在 `AzureAIClient(...)` 內傳 `credential=credential`；不要寫成 `async_credential=...`。
+
 ??? example "進階執行指令"
 	```bash
-	python scripts/16_agent_framework_workflow_example.py
 	python scripts/16_agent_framework_workflow_example.py --question "Summarize the policy risk and next step."
+	```
+
+### `16b_agent_framework_magentic_example.py`
+
+示範什麼：用 `MagenticBuilder` 跑 code-first 的 multi-agent orchestration。這支 script 會建立一個 manager agent 加兩個 specialist agents，適合現場展示「先規劃、再分派、最後整合」的 open-ended agent 流程。
+
+??? example "執行指令"
+	```bash
+	python scripts/16b_agent_framework_magentic_example.py
+	```
+
+??? example "安裝 preview 套件"
+	```bash
+	pip install --pre \
+	  "agent-framework-core==1.0.0rc5" \
+	  "agent-framework-azure-ai==1.0.0rc5" \
+	  "agent-framework-orchestrations==1.0.0b260319"
+	```
+
+這支 script 需要 `agent-framework-orchestrations`，而目前可用版本線會把 `Agent Framework` 核心套件帶到 `rc5`，所以不要沿用前面 `16` 的 `rc3` 安裝指令。
+
+??? example "進階執行指令"
+	```bash
+	python scripts/16b_agent_framework_magentic_example.py --question "請為高優先客服佇列事故整理一份簡短應變包。"
 	```
 
 如果你要把 Agent Framework workflow 繼續延伸成更完整的 multi-agent 流程，再回頭看 [Multi-agent 與進階範例](05e-script-advanced.md)。
@@ -204,31 +229,34 @@ Sora 這兩個範例是短影片方向。雖然目前這個 repo 沒有對應的
 
 	kind: Workflow
 	trigger:
-		kind: OnConversationStart
-		id: content_workflow
-		actions:
-			- kind: InvokeAzureAgent
-				id: invoke_researcher
-				displayName: Research phase
-				conversationId: =System.ConversationId
-				agent:
-					name: announcement-researcher-agent
+	  kind: OnConversationStart
+	  id: content_workflow
+	  actions:
+	    -
+	      kind: InvokeAzureAgent
+	      id: invoke_researcher
+	      displayName: Research phase
+	      conversationId: =System.ConversationId
+	      agent:
+	        name: announcement-researcher-agent
 
-			- kind: InvokeAzureAgent
-				id: invoke_writer
-				displayName: Writing phase
-				conversationId: =System.ConversationId
-				agent:
-					name: announcement-writer-agent
+	    -
+	      kind: InvokeAzureAgent
+	      id: invoke_writer
+	      displayName: Writing phase
+	      conversationId: =System.ConversationId
+	      agent:
+	        name: announcement-writer-agent
 
-			- kind: InvokeAzureAgent
-				id: invoke_editor
-				displayName: Editing phase
-				conversationId: =System.ConversationId
-				agent:
-					name: announcement-editor-agent
-				output:
-					autoSend: true
+	    -
+	      kind: InvokeAzureAgent
+	      id: invoke_editor
+	      displayName: Editing phase
+	      conversationId: =System.ConversationId
+	      agent:
+	        name: announcement-editor-agent
+	      output:
+	        autoSend: true
 	```
 
 測試時可直接貼：
@@ -298,31 +326,34 @@ Sora 這兩個範例是短影片方向。雖然目前這個 repo 沒有對應的
 
 	kind: Workflow
 	trigger:
-		kind: OnConversationStart
-		id: translation_workflow
-		actions:
-			- kind: InvokeAzureAgent
-				id: invoke_french
-				displayName: Translate to French
-				conversationId: =System.ConversationId
-				agent:
-					name: french-translator-agent
+	  kind: OnConversationStart
+	  id: translation_workflow
+	  actions:
+	    -
+	      kind: InvokeAzureAgent
+	      id: invoke_french
+	      displayName: Translate to French
+	      conversationId: =System.ConversationId
+	      agent:
+	        name: french-translator-agent
 
-			- kind: InvokeAzureAgent
-				id: invoke_spanish
-				displayName: Translate to Spanish
-				conversationId: =System.ConversationId
-				agent:
-					name: spanish-translator-agent
+	    -
+	      kind: InvokeAzureAgent
+	      id: invoke_spanish
+	      displayName: Translate to Spanish
+	      conversationId: =System.ConversationId
+	      agent:
+	        name: spanish-translator-agent
 
-			- kind: InvokeAzureAgent
-				id: invoke_english_review
-				displayName: Back-translate and review
-				conversationId: =System.ConversationId
-				agent:
-					name: english-review-agent
-				output:
-					autoSend: true
+	    -
+	      kind: InvokeAzureAgent
+	      id: invoke_english_review
+	      displayName: Back-translate and review
+	      conversationId: =System.ConversationId
+	      agent:
+	        name: english-review-agent
+	      output:
+	        autoSend: true
 	```
 
 測試時可直接貼：
@@ -405,104 +436,17 @@ Sora 這兩個範例是短影片方向。雖然目前這個 repo 沒有對應的
 	Do not promise timelines unless they are explicitly provided.
 	```
 
-### 最小可貼用 Python 範例
+### 對應 script
 
-這個範例是 code-first。直接貼成一支檔案，例如 `magentic_queue_triage_example.py` 即可。它沿用官方 `MagenticBuilder` 的寫法，只把 agent 角色換成比較適合 workshop 示範的版本。
+這個 code-first 範例現在已經落成 repo 內的 [scripts/16b_agent_framework_magentic_example.py](/Users/payton/work/01_lab/e2e-ms-foundry-workshop/scripts/16b_agent_framework_magentic_example.py)。它沿用官方 `MagenticBuilder`，但把角色和預設問題改成比較適合 workshop 展示的 queue triage 場景，並且改成 `AzureAIClient` + `DefaultAzureCredential` 的新版寫法。
 
-??? example "最小可貼用 Python 範例"
-	```python
-	import asyncio
-	import os
+如果你要看最小結構，重點就是三個角色：
 
-	from agent_framework import Agent, AgentResponseUpdate, Message, WorkflowEvent
-	from agent_framework.azure import AzureOpenAIResponsesClient
-	from agent_framework.orchestrations import MagenticBuilder, MagenticProgressLedger
-	from azure.identity import AzureCliCredential
+- `triage-manager-agent`
+- `queue-ops-agent`
+- `customer-comms-agent`
 
-
-	async def main():
-		client = AzureOpenAIResponsesClient(
-			project_endpoint=os.environ["AZURE_AI_PROJECT_ENDPOINT"],
-			deployment_name=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
-			credential=AzureCliCredential(),
-		)
-
-		triage_manager_agent = Agent(
-			name="triage-manager-agent",
-			description="Manager that plans and coordinates queue incident response",
-			instructions=(
-				"You are the triage manager for a support queue incident. "
-				"Break the task into useful subtasks, choose the best specialist, "
-				"track progress, and stop when the user has a complete response package."
-			),
-			client=client,
-		)
-
-		queue_ops_agent = Agent(
-			name="queue-ops-agent",
-			description="Specialist in queue triage and incident operations",
-			instructions=(
-				"You are the queue operations specialist. Focus on likely causes, "
-				"immediate triage actions, 15-minute checks, and escalation triggers."
-			),
-			client=client,
-		)
-
-		customer_comms_agent = Agent(
-			name="customer-comms-agent",
-			description="Specialist in support-safe customer messaging",
-			instructions=(
-				"You are the customer communications specialist. Produce a short "
-				"customer explanation, a support-agent talking point, and a short "
-				"status-page update. Keep the tone calm and factual."
-			),
-			client=client,
-		)
-
-		workflow = MagenticBuilder(
-			participants=[queue_ops_agent, customer_comms_agent],
-			manager_agent=triage_manager_agent,
-			intermediate_outputs=True,
-			max_round_count=8,
-			max_stall_count=2,
-			max_reset_count=1,
-		).build()
-
-		task = (
-			"Our premium support queue is suddenly 4x above normal volume after a portal release. "
-			"Create a short response package covering immediate triage actions, what the operations lead "
-			"should verify in the next 15 minutes, and a safe customer-facing message for active incidents."
-		)
-
-		last_message_id = None
-		final_output_event = None
-
-		async for event in workflow.run(task, stream=True):
-			if event.type == "output" and isinstance(event.data, AgentResponseUpdate):
-				message_id = event.data.message_id
-				if message_id != last_message_id:
-					if last_message_id is not None:
-						print("\n")
-					print(f"[{event.executor_id}]", end=" ", flush=True)
-					last_message_id = message_id
-				print(event.data, end="", flush=True)
-			elif event.type == "magentic_orchestrator":
-				print(f"\n[Magentic event] {event.data.event_type.name}")
-				if isinstance(event.data.content, Message):
-					print(event.data.content.text)
-				elif isinstance(event.data.content, MagenticProgressLedger):
-					print(event.data.content.to_dict())
-			elif event.type == "output":
-				final_output_event = event
-
-		print("\n\n=== Final answer ===")
-		final_messages = final_output_event.data
-		print(final_messages[-1].text)
-
-
-	if __name__ == "__main__":
-		asyncio.run(main())
-	```
+以及一個 `MagenticBuilder(participants=[...], manager_agent=...)`。
 
 測試時可直接貼：
 
