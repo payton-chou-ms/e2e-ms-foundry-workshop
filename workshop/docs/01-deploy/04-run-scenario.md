@@ -13,14 +13,13 @@
 #### Path 1A: Foundry IQ only
 
 ```bash
-python scripts/admin_prepare_shared_demo.py --mode foundry-only
 python scripts/participant_validate_docs.py
 ```
 
 #### Path 1B: Foundry-native IQ Agent
 
-```bash
-python scripts/admin_prepare_shared_demo.py --mode foundry-iq
+```bashpython scripts/09_demo_content_understanding.py
+
 python scripts/participant_validate_foundry_iq.py
 ```
 

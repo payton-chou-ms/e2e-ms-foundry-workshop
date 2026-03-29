@@ -89,7 +89,8 @@ if not AGENT_ID:
     if os.path.exists(agent_ids_path):
         with open(agent_ids_path) as f:
             agent_ids = json.load(f)
-        AGENT_ID = agent_ids.get("agent_id")
+        # agents.get() expects the plain name, not the versioned id (name:version)
+        AGENT_ID = agent_ids.get("agent_name") or agent_ids.get("agent_id")
 
 if not AGENT_ID:
     print("錯誤：找不到 agent ID。")
