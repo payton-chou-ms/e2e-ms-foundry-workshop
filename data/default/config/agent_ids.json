@@ -1,7 +1,7 @@
 {
   "_comment": "This file is populated when you create the workshop agent, for example via scripts/admin_prepare_shared_demo.py --mode foundry-only or scripts/admin_prepare_docs_data_demo.py",
-  "agent_id": "efault-telco-search",
+  "agent_id": "efault-telco-search:1",
   "agent_name": "efault-telco-search",
-  "search_index": "dadq4sqofepi64-default-documents",
+  "search_index": "daqne4rp2yfzxd-default-documents",
   "scenario_key": "default"
 }

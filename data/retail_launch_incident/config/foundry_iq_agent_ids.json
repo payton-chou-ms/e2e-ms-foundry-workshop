@@ -1,9 +1,9 @@
 {
-  "agent_id": "fepi64-retail-launch-iq:1",
-  "agent_name": "fepi64-retail-launch-iq",
+  "agent_id": "2yfzxd-retail-launch-iq:1",
+  "agent_name": "2yfzxd-retail-launch-iq",
   "scenario_key": "retail_launch_incident",
   "knowledge_type": "azure_search_knowledge_base",
-  "knowledge_base_name": "fepi64-retail-launch-kb",
-  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-lab0328/providers/Microsoft.CognitiveServices/accounts/aisa-dadq4sqofepi64/projects/aifp-dadq4sqofepi64/connections/fepi64-retail-launch-kb-con",
-  "mcp_endpoint": "https://srch-dadq4sqofepi64.search.windows.net/knowledgebases/fepi64-retail-launch-kb/mcp?api-version=2025-11-01-preview"
+  "knowledge_base_name": "2yfzxd-retail-launch-kb",
+  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-lab0329/providers/Microsoft.CognitiveServices/accounts/aisa-daqne4rp2yfzxd/projects/aifp-daqne4rp2yfzxd/connections/2yfzxd-retail-launch-kb-con",
+  "mcp_endpoint": "https://srch-daqne4rp2yfzxd.search.windows.net/knowledgebases/2yfzxd-retail-launch-kb/mcp?api-version=2025-11-01-preview"
 }

@@ -1,7 +1,7 @@
 # Workshop 腳本重整計畫
 
-> 掃描範圍：`scripts/`、`tests/`、`README.md`、`workshop/docs/`、`data/*/README.md`
-> 更新日期：2026-03-28
+> 掃描範圍：`scripts/`、`tests/`、`README.md`、`workshop/docs/`、`workshop/site/`、`workshop/docs/assets/`、`data/*/README.md`、`tmp/*.md`
+> 更新日期：2026-03-29
 > 目的：把 `00` 到 `08b` 的工程編號流程，重整成學員可理解的公開入口 + 維護者可管理的內部 pipeline
 
 ---
@@ -22,6 +22,23 @@
 
 核心判斷：目前真正需要重整的不是 Azure / Fabric 流程本身，而是 CLI surface 和腳本資訊架構。
 
+補充判斷：目前要一起處理的還有 learner-facing 文件與架構圖資訊架構。即使 CLI surface 已部分轉向角色導向，只要入口頁仍混用主線、附錄、進階延伸，學員看到的仍然不是同一套心智模型。
+
+### 2026-03-29 補充：文件與架構圖問題
+
+這一輪檢查額外確認了兩類問題，已經影響 Phase 4 的封板判斷。
+
+1. 快速開始與部署入口仍有主線 / 附錄 / 權限說明混線。
+2. 部署入口的架構圖不是「目前 workshop 主線的實際架構」，而是把主線、附錄與進階示範混成一張平台示意圖。
+
+已確認的具體症狀：
+
+1. `00-get-started` 把 `Contributor` 寫成所有讀者的最低前置條件，但參與者實際上只需要既有環境存取，管理員則往往還需要角色指派能力。
+2. Step 1 才剛分出管理員與參與者路徑，後面又用「完整部署路徑」把兩條路混回一起。
+3. `01-deploy/index.md` 的架構圖包含 `Frontend App Service`、`API App Service`、`Cosmos DB`、`Agent Framework`、`Fabric Data Agent` 等元素，與目前 repo 主線部署及教學主軸不一致。
+4. 圖下方文字要讀者先記住 `Azure AI Search` 與 `Application Insights`，但圖本身沒有清楚表達這兩個主線元件。
+5. Fabric 在目前文件中已被定位為附錄延伸，但圖上仍被畫成與 Foundry 並列的核心主體。
+
 ---
 
 ## 設計目標
@@ -30,6 +47,8 @@
 2. 正式文件只教公開入口，不把內部 pipeline 當主線。
 3. 維護者仍保有可拆解、可除錯的細粒度腳本。
 4. 舊指令在過渡期內仍可執行，避免 workshop 筆記與環境說明一次全部失效。
+5. learner-facing 文件、站點與架構圖必須全部對齊同一套「主線優先、附錄延後、進階另列」模型。
+6. 架構圖必須優先表達目前 workshop 主線真的會用到的元件，而不是把未來態或延伸態一起畫成主體。
 
 ---
 
@@ -149,6 +168,7 @@ scripts/
 2. 舊腳本保留一段相容期。
 3. 正式文件立刻改教新入口。
 4. 內部 pipeline 與 legacy 路徑只在進階文件中出現。
+5. 主線頁不得再把附錄能力或進階架構當成所有讀者的共同前提。
 
 ### 相容層
 
@@ -209,6 +229,9 @@ scripts/
 2. 把 `05b-script-core-pipeline.md` 明確改成 advanced / maintainer reference，而不是半主線頁。
 3. 重建 `workshop/site/`，確認站內搜尋結果與產生頁面不再優先曝光舊命名。
 4. 做最後 smoke check：抽查新公開入口、舊 shim、以及主要頁面的命令一致性。
+5. 修正 `00-get-started` 與 `01-deploy/index.md` 的角色分流、權限敘述與時間估計，避免管理員 / 參與者路徑重新混線。
+6. 以主線實際架構重做或替換 `workshop/docs/assets/architecture.png`，必要時改回 Mermaid，避免把 App Service / Cosmos DB / Agent Framework / Fabric Data Agent 畫成主線必要元件。
+7. 讓部署入口頁的架構圖與 `03-understand` 章節的心智模型一致：主線先講 Foundry、Search、Storage、Application Insights；Fabric 與 multi-agent 改成附錄或延伸標示。
 
 ---
 
@@ -219,17 +242,28 @@ scripts/
 3. 進階頁面才解釋 pipeline 腳本。
 4. 舊命令在過渡期仍能用。
 5. 文件與 CLI 講的是同一套角色語言。
+6. learner-facing 架構圖不再包含與主線不符的主體元件。
+7. 主線頁面中的前置條件、路徑選擇、架構圖、與後續章節的實作內容彼此一致。
 
 ---
 
-## 目前實作決策
+## 目前狀態與下一步
 
-目前已完成 Phase 1 主體、Phase 2 主體，以及 Phase 3 的核心 shim 工作。
+目前可以確定的狀態是：公開入口已經存在，部分 shim 已落地，但 Phase 4 還不能視為完成。主因不是 CLI，而是 learner-facing 文件與架構圖仍殘留舊心智模型。
 
 接下來應把重點放在：
 
-1. Phase 3 收尾：清理非主線引用與內部 deprecation 文案。
-2. Phase 4 封板：把文件與產出網站正式對齊新入口。
+1. Phase 3 收尾：清理非主線引用、內部 deprecation 文案、以及 `tmp/` / `data/*/README.md` 中殘留的舊主流程語言。
+2. Phase 4 封板：先修正 `00-get-started`、`01-deploy/index.md`、部署入口架構圖，再重建 `workshop/site/`。
+3. 將「主線 / 附錄 / 進階」三層模型寫死到入口頁，避免後續頁面各自漂移。
+
+### 目前不應再延用的舊判斷
+
+以下說法已不適合繼續當成進度判斷依據：
+
+1. 「主線 docs 已大致切到新入口」：命令名稱雖大致更新，但入口頁的權限、流程與架構圖仍未完全對齊。
+2. 「文件封板只剩站點重建」：目前仍有內容面修正，不能直接視為只差 rebuild。
+3. 「架構圖只是輔助說明」：在部署入口頁，這張圖實際上會主導學員的第一層心智模型，因此必須納入正式修正範圍。
 
 ---
 

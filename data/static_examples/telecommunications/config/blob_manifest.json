@@ -1,30 +1,30 @@
 {
   "scenario_key": "static_telecommunications",
   "data_folder": "data/static_examples/telecommunications",
-  "blob_endpoint": "https://stdadq4sqofepi64.blob.core.windows.net/",
+  "blob_endpoint": "https://stdaqne4rp2yfzxd.blob.core.windows.net/",
   "blob_container": "static-telecommunications",
-  "uploaded_at": "2026-03-28T15:12:05.980981+00:00",
+  "uploaded_at": "2026-03-29T02:28:10.156336+00:00",
   "file_count": 4,
   "files": [
     {
       "path": "documents/customer_service_policies.pdf",
       "source": "documents/customer_service_policies.pdf",
-      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-telecommunications/documents/customer_service_policies.pdf"
+      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-telecommunications/documents/customer_service_policies.pdf"
     },
     {
       "path": "documents/outage_management_policies.pdf",
       "source": "documents/outage_management_policies.pdf",
-      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-telecommunications/documents/outage_management_policies.pdf"
+      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-telecommunications/documents/outage_management_policies.pdf"
     },
     {
       "path": "tables/network_outages.csv",
       "source": "tables/network_outages.csv",
-      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-telecommunications/tables/network_outages.csv"
+      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-telecommunications/tables/network_outages.csv"
     },
     {
       "path": "tables/trouble_tickets.csv",
       "source": "tables/trouble_tickets.csv",
-      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-telecommunications/tables/trouble_tickets.csv"
+      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-telecommunications/tables/trouble_tickets.csv"
     }
   ]
 }

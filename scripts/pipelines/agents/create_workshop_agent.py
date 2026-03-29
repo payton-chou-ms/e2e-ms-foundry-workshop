@@ -269,9 +269,9 @@ try:
         )
 
         with trace_session.span("create-agent"):
-            agent = project_client.agents.create(
-                name=AGENT_NAME,
-                definition=agent_definition
+            agent = project_client.agents.create_version(
+                agent_name=AGENT_NAME,
+                definition=agent_definition,
             )
 
         print(f"\n[OK] Agent 建立成功！")

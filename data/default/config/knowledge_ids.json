@@ -2,19 +2,19 @@
   "scenario_key": "default",
   "data_folder": "data/default",
   "knowledge_type": "azure_search_knowledge_base",
-  "search_endpoint": "https://srch-dadq4sqofepi64.search.windows.net",
-  "search_index_name": "dadq4sqofepi64-default-documents",
+  "search_endpoint": "https://srch-daqne4rp2yfzxd.search.windows.net",
+  "search_index_name": "daqne4rp2yfzxd-default-documents",
   "search_index_names": [
-    "dadq4sqofepi64-default-documents"
+    "daqne4rp2yfzxd-default-documents"
   ],
-  "knowledge_source_name": "fepi64-telco-src",
+  "knowledge_source_name": "2yfzxd-telco-src",
   "knowledge_source_names": [
-    "fepi64-telco-src"
+    "2yfzxd-telco-src"
   ],
   "search_sources": [
     {
-      "index_name": "dadq4sqofepi64-default-documents",
-      "knowledge_source_name": "fepi64-telco-src",
+      "index_name": "daqne4rp2yfzxd-default-documents",
+      "knowledge_source_name": "2yfzxd-telco-src",
       "source_data_fields": [
         "content",
         "title",
@@ -36,10 +36,10 @@
       ]
     }
   ],
-  "knowledge_base_name": "fepi64-telco-kb",
-  "project_connection_name": "fepi64-telco-kb-con",
-  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-lab0328/providers/Microsoft.CognitiveServices/accounts/aisa-dadq4sqofepi64/projects/aifp-dadq4sqofepi64/connections/fepi64-telco-kb-con",
-  "mcp_endpoint": "https://srch-dadq4sqofepi64.search.windows.net/knowledgebases/fepi64-telco-kb/mcp?api-version=2025-11-01-preview",
+  "knowledge_base_name": "2yfzxd-telco-kb",
+  "project_connection_name": "2yfzxd-telco-kb-con",
+  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-lab0329/providers/Microsoft.CognitiveServices/accounts/aisa-daqne4rp2yfzxd/projects/aifp-daqne4rp2yfzxd/connections/2yfzxd-telco-kb-con",
+  "mcp_endpoint": "https://srch-daqne4rp2yfzxd.search.windows.net/knowledgebases/2yfzxd-telco-kb/mcp?api-version=2025-11-01-preview",
   "document_count": 4,
   "pdf_files": [
     "ticket_management_policies.pdf",

@@ -1,6 +1,6 @@
 {
-  "agent_id": "cident-retail-launch-search",
+  "agent_id": "cident-retail-launch-search:1",
   "agent_name": "cident-retail-launch-search",
   "scenario_key": "retail_launch_incident",
-  "search_index": "dadq4sqofepi64-retail_launch_incident-documents"
+  "search_index": "daqne4rp2yfzxd-retail_launch_incident-documents"
 }
