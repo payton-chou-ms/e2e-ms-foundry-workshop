@@ -164,8 +164,8 @@ def main() -> int:
         epilog="""
 範例：
     python scripts/admin_prepare_shared_demo.py
-    python scripts/admin_prepare_docs_demo.py
-    python scripts/admin_prepare_foundry_iq_demo.py
+    python scripts/admin_prepare_shared_demo.py --mode foundry-only
+    python scripts/admin_prepare_shared_demo.py --mode foundry-iq
     python scripts/admin_prepare_docs_data_demo.py
     python scripts/author_rebuild_custom_poc.py --industry Insurance --usecase "Property insurance with claims processing"
 """,

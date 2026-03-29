@@ -13,6 +13,49 @@ import os
 _TRACE_INITIALIZED = False
 
 
+def _looks_like_connection_string(value):
+    if not value:
+        return False
+
+    parts = [part.strip() for part in value.split(";") if part.strip()]
+    if not parts:
+        return False
+
+    return all("=" in part for part in parts)
+
+
+def _resolve_connection_string(project_client):
+    connection_string = (
+        os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
+        or os.getenv("AZURE_APPINSIGHTS_CONNECTION_STRING")
+    )
+
+    if connection_string:
+        return connection_string, None
+
+    try:
+        connection_string = project_client.telemetry.get_application_insights_connection_string()
+    except Exception as exc:
+        return None, (
+            "Tracing requested but the project telemetry connection string "
+            f"could not be resolved: {exc}"
+        )
+
+    if not connection_string:
+        return None, (
+            "Tracing requested but no Application Insights connection string "
+            "is available for this project."
+        )
+
+    if not _looks_like_connection_string(connection_string):
+        return None, (
+            "Tracing requested but the resolved telemetry value does not look "
+            "like a connection string."
+        )
+
+    return connection_string, None
+
+
 
 def _env_flag(name, default=False):
     value = os.getenv(name)
@@ -52,27 +95,11 @@ def configure_foundry_tracing(project_client, scenario_name, service_name):
         os.environ.setdefault("AZURE_TRACING_GEN_AI_CONTENT_RECORDING_ENABLED", "true")
         os.environ.setdefault("OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT", "true")
 
-    connection_string = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
-
-    try:
-        if not connection_string:
-            connection_string = project_client.telemetry.get_application_insights_connection_string()
-    except Exception as exc:
+    connection_string, warning = _resolve_connection_string(project_client)
+    if warning:
         return TraceSession(
             enabled=False,
-            warning=(
-                "Tracing requested but the project telemetry connection string "
-                f"could not be resolved: {exc}"
-            ),
-        )
-
-    if not connection_string:
-        return TraceSession(
-            enabled=False,
-            warning=(
-                "Tracing requested but no Application Insights connection string "
-                "is available for this project."
-            ),
+            warning=warning,
         )
 
     try:

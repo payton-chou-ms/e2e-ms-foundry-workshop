@@ -15,6 +15,7 @@
 
 - 開啟 Azure Portal：<https://portal.azure.com/>
 - 找到這次部署建立的 Playwright Workspace
+- 如果 `.azure/<env>/.env` 裡的 `AZURE_PLAYWRIGHT_STATUS=failed`，通常代表這次部署碰到 quota 上限；這種情況先清理 subscription 內不用的 Playwright Workspace，或直接略過這個 demo
 - 進入 `Settings > Access Management`
 - 產生 Access token
 - 回到 `Overview` 複製 Browser endpoint，格式通常是 `wss://...`

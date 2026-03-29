@@ -1,7 +1,9 @@
 import importlib.util
+import os
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import call, patch
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -132,6 +134,80 @@ class DeployOptionalModelTests(unittest.TestCase):
 
         self.assertEqual(resolved["status"], "invalid")
         self.assertEqual(resolved["reason"], "model-not-in-catalog")
+
+    def test_deploy_playwright_workspace_continues_when_quota_is_exhausted(self):
+        module = load_script_module()
+
+        with patch.dict(
+            os.environ,
+            {
+                "AZURE_DEPLOY_BROWSER_AUTOMATION": "true",
+                "AZURE_PLAYWRIGHT_WORKSPACE_NAME": "pww-demo",
+                "AZURE_PLAYWRIGHT_LOCATION": "eastus",
+                "AZURE_PLAYWRIGHT_WORKSPACE_RESOURCE_ID": "/subscriptions/sub/resourceGroups/rg/providers/Microsoft.LoadTestService/playwrightWorkspaces/pww-demo",
+            },
+            clear=False,
+        ):
+            with patch.object(module, "playwright_workspace_exists", return_value=False):
+                with patch.object(
+                    module,
+                    "create_playwright_workspace",
+                    return_value=module.subprocess.CompletedProcess(
+                        args=["az"],
+                        returncode=1,
+                        stdout="",
+                        stderr="WorkspacesLimitExceeded: The maximum limit for workspaces per region in this subscription has been exceeded.",
+                    ),
+                ):
+                    with patch.object(module, "clear_playwright_workspace_vars") as clear_vars:
+                        with patch.object(module, "set_env_value") as set_env_value:
+                            module.deploy_playwright_workspace("rg-demo", "sub-demo")
+
+        clear_vars.assert_called_once_with("failed")
+        set_env_value.assert_not_called()
+
+    def test_deploy_playwright_workspace_marks_ready_when_existing_workspace_is_found(self):
+        module = load_script_module()
+
+        with patch.dict(
+            os.environ,
+            {
+                "AZURE_DEPLOY_BROWSER_AUTOMATION": "true",
+                "AZURE_PLAYWRIGHT_WORKSPACE_NAME": "pww-demo",
+                "AZURE_PLAYWRIGHT_LOCATION": "eastus",
+                "AZURE_PLAYWRIGHT_WORKSPACE_RESOURCE_ID": "/subscriptions/sub/resourceGroups/rg/providers/Microsoft.LoadTestService/playwrightWorkspaces/pww-demo",
+            },
+            clear=False,
+        ):
+            with patch.object(module, "playwright_workspace_exists", return_value=True):
+                with patch.object(
+                    module,
+                    "get_playwright_workspace",
+                    return_value={
+                        "id": "/subscriptions/sub/resourceGroups/rg/providers/Microsoft.LoadTestService/playwrightWorkspaces/pww-demo",
+                        "location": "eastus",
+                        "properties": {
+                            "workspaceId": "workspace-id",
+                            "dataplaneUri": "https://pww-demo.playwright.microsoft.com",
+                        },
+                    },
+                ):
+                    with patch.object(module, "set_env_value") as set_env_value:
+                        module.deploy_playwright_workspace("rg-demo", "sub-demo")
+
+        set_env_value.assert_has_calls(
+            [
+                call("AZURE_PLAYWRIGHT_WORKSPACE_NAME", "pww-demo"),
+                call("AZURE_PLAYWRIGHT_WORKSPACE_RESOURCE_ID", "/subscriptions/sub/resourceGroups/rg/providers/Microsoft.LoadTestService/playwrightWorkspaces/pww-demo"),
+                call("AZURE_PLAYWRIGHT_WORKSPACE_ID", "workspace-id"),
+                call("AZURE_PLAYWRIGHT_LOCATION", "eastus"),
+                call("AZURE_PLAYWRIGHT_DATAPLANE_URI", "https://pww-demo.playwright.microsoft.com"),
+                call("AZURE_PLAYWRIGHT_BROWSER_ENDPOINT", "wss://pww-demo.playwright.microsoft.com/browsers"),
+                call("AZURE_PLAYWRIGHT_AUTH_MODE", "Playwright Service Access Token (manual token generation still required)"),
+                call("AZURE_PLAYWRIGHT_STATUS", "ready"),
+            ],
+            any_order=False,
+        )
 
 
 if __name__ == "__main__":

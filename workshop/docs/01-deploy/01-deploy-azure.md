@@ -80,7 +80,7 @@ azd up
 - Storage Account
 - Application Insights
 - Log Analytics workspace
-- Playwright Workspace（若 `AZURE_DEPLOY_BROWSER_AUTOMATION=true`）
+- Playwright Workspace（若 `AZURE_DEPLOY_BROWSER_AUTOMATION=true` 且 quota 允許）
 - 多個 scenario 對應的 Blob containers
 
 chat、embedding 與其他選配模型會掛在 Microsoft Foundry 底下，不一定會以獨立頂層資源顯示。
@@ -148,6 +148,10 @@ python scripts/admin_prepare_shared_demo.py
 
 ??? note "選配資源與補充"
     **Browser Automation**
+
+    `azd up` 會用 best-effort 方式嘗試建立 Playwright Workspace。
+    如果 subscription 已達到該區域的 workspace 數量上限，主流程仍會完成，
+    並把狀態寫進 `.azure/<env>/.env` 的 `AZURE_PLAYWRIGHT_STATUS`。
 
     如果你這次不需要 `10_demo_browser_automation.py`，可在部署前先設定：
 

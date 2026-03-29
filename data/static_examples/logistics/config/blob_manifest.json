@@ -1,30 +1,30 @@
 {
   "scenario_key": "static_logistics",
   "data_folder": "data/static_examples/logistics",
-  "blob_endpoint": "https://stda5b3uyfjkkxwj.blob.core.windows.net/",
+  "blob_endpoint": "https://stdadq4sqofepi64.blob.core.windows.net/",
   "blob_container": "static-logistics",
-  "uploaded_at": "2026-03-26T10:21:26.189291+00:00",
+  "uploaded_at": "2026-03-28T15:11:45.781379+00:00",
   "file_count": 4,
   "files": [
     {
       "path": "documents/driver_policies.pdf",
       "source": "documents/driver_policies.pdf",
-      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-logistics/documents/driver_policies.pdf"
+      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-logistics/documents/driver_policies.pdf"
     },
     {
       "path": "documents/routing_guidelines.pdf",
       "source": "documents/routing_guidelines.pdf",
-      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-logistics/documents/routing_guidelines.pdf"
+      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-logistics/documents/routing_guidelines.pdf"
     },
     {
       "path": "tables/deliveries.csv",
       "source": "tables/deliveries.csv",
-      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-logistics/tables/deliveries.csv"
+      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-logistics/tables/deliveries.csv"
     },
     {
       "path": "tables/vehicles.csv",
       "source": "tables/vehicles.csv",
-      "url": "https://stda5b3uyfjkkxwj.blob.core.windows.net/static-logistics/tables/vehicles.csv"
+      "url": "https://stdadq4sqofepi64.blob.core.windows.net/static-logistics/tables/vehicles.csv"
     }
   ]
 }

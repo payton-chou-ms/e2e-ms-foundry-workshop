@@ -131,7 +131,7 @@ python data/retail_launch_incident/prepare_search_and_blob_assets.py
 python scripts/06b_upload_to_foundry_knowledge.py
 ```
 
-如果你不是在做這種手動示範，而只是要把 Foundry IQ 路徑準備好，主線仍建議先用 `python scripts/admin_prepare_foundry_iq_demo.py`。
+如果你不是在做這種手動示範，而只是要把 Foundry IQ 路徑準備好，主線仍建議先用 `python scripts/admin_prepare_shared_demo.py --mode foundry-iq`。
 
 這個流程會自動完成三件事：
 

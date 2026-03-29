@@ -19,6 +19,16 @@ IMAGE_DEPLOYMENT_ENV_VARS = (
     "AZURE_IMAGE_MODEL_SKU",
     "AZURE_IMAGE_MODEL_CAPACITY",
 )
+PLAYWRIGHT_WORKSPACE_ENV_VARS = (
+    "AZURE_PLAYWRIGHT_WORKSPACE_NAME",
+    "AZURE_PLAYWRIGHT_WORKSPACE_RESOURCE_ID",
+    "AZURE_PLAYWRIGHT_WORKSPACE_ID",
+    "AZURE_PLAYWRIGHT_LOCATION",
+    "AZURE_PLAYWRIGHT_DATAPLANE_URI",
+    "AZURE_PLAYWRIGHT_BROWSER_ENDPOINT",
+    "AZURE_PLAYWRIGHT_AUTH_MODE",
+)
+PLAYWRIGHT_AUTH_MODE_VALUE = "Playwright Service Access Token (manual token generation still required)"
 
 BEST_EFFORT_OPENAI_MODELS_ENV = "AZURE_BEST_EFFORT_OPENAI_MODEL_DEPLOYMENTS"
 READY_OPENAI_MODELS_ENV = "AZURE_READY_BEST_EFFORT_OPENAI_MODEL_DEPLOYMENTS"
@@ -146,6 +156,13 @@ def clear_image_deployment_vars(status: str):
     set_env_value("AZURE_IMAGE_MODEL_STATUS", status)
 
 
+def clear_playwright_workspace_vars(status: str):
+    for env_name in PLAYWRIGHT_WORKSPACE_ENV_VARS:
+        unset_env_value(env_name)
+
+    set_env_value("AZURE_PLAYWRIGHT_STATUS", status)
+
+
 def get_required_env(name: str) -> str:
     value = (os.getenv(name) or "").strip()
     if not value:
@@ -162,6 +179,14 @@ def parse_json_env(name: str):
         return json.loads(raw_value)
     except json.JSONDecodeError:
         return None
+
+
+def is_truthy_env(name: str, default: bool) -> bool:
+    raw_value = (os.getenv(name) or "").strip()
+    if not raw_value:
+        return default
+
+    return raw_value.casefold() not in {"0", "false", "no", "off"}
 
 
 def wait_for_account(resource_group: str, account_name: str):
@@ -212,6 +237,151 @@ def deployment_exists(resource_group: str, account_name: str, deployment_name: s
         ]
     )
     return result.returncode == 0
+
+
+def get_playwright_workspace_url(resource_id: str) -> str:
+    return f"https://management.azure.com{resource_id}?api-version=2025-09-01"
+
+
+def playwright_workspace_exists(resource_id: str) -> bool:
+    result = run_command(
+        [
+            "az",
+            "rest",
+            "--method",
+            "get",
+            "--url",
+            get_playwright_workspace_url(resource_id),
+            "--output",
+            "json",
+            "--only-show-errors",
+        ]
+    )
+    return result.returncode == 0
+
+
+def get_playwright_workspace(resource_id: str) -> dict:
+    result = run_command(
+        [
+            "az",
+            "rest",
+            "--method",
+            "get",
+            "--url",
+            get_playwright_workspace_url(resource_id),
+            "--output",
+            "json",
+            "--only-show-errors",
+        ]
+    )
+    if result.returncode != 0:
+        message = (result.stderr or result.stdout or "").strip()
+        raise RuntimeError(message or "無法取得 Playwright Workspace")
+
+    try:
+        payload = json.loads(result.stdout or "{}")
+    except json.JSONDecodeError as exc:  # pragma: no cover - defensive guard
+        raise RuntimeError("Playwright Workspace 回應格式無法解析") from exc
+
+    if not isinstance(payload, dict):  # pragma: no cover - defensive guard
+        raise RuntimeError("Playwright Workspace 回應格式不正確")
+
+    return payload
+
+
+def create_playwright_workspace(resource_id: str, location: str) -> subprocess.CompletedProcess[str]:
+    body = {
+        "location": location,
+        "properties": {
+            "localAuth": "Enabled",
+            "regionalAffinity": "Enabled",
+        },
+    }
+    return run_command(
+        [
+            "az",
+            "rest",
+            "--method",
+            "put",
+            "--url",
+            get_playwright_workspace_url(resource_id),
+            "--body",
+            json.dumps(body, ensure_ascii=False, separators=(",", ":")),
+            "--output",
+            "json",
+            "--only-show-errors",
+        ]
+    )
+
+
+def set_playwright_workspace_env(workspace: dict):
+    properties = workspace.get("properties") or {}
+    resource_id = str(workspace.get("id") or "").strip()
+    workspace_name = str(workspace.get("name") or "").strip()
+    workspace_id = str(properties.get("workspaceId") or "").strip()
+    location = str(workspace.get("location") or "").strip()
+    dataplane_uri = str(properties.get("dataplaneUri") or "").strip()
+    if not workspace_name:
+        workspace_name = (os.getenv("AZURE_PLAYWRIGHT_WORKSPACE_NAME") or "").strip()
+    if not workspace_name and resource_id:
+        workspace_name = resource_id.rstrip("/").split("/")[-1]
+    browser_endpoint = ""
+    if dataplane_uri:
+        browser_endpoint = f"{dataplane_uri.replace('https://', 'wss://')}/browsers"
+
+    set_env_value("AZURE_PLAYWRIGHT_WORKSPACE_NAME", workspace_name)
+    set_env_value("AZURE_PLAYWRIGHT_WORKSPACE_RESOURCE_ID", resource_id)
+    set_env_value("AZURE_PLAYWRIGHT_WORKSPACE_ID", workspace_id)
+    set_env_value("AZURE_PLAYWRIGHT_LOCATION", location)
+    set_env_value("AZURE_PLAYWRIGHT_DATAPLANE_URI", dataplane_uri)
+    set_env_value("AZURE_PLAYWRIGHT_BROWSER_ENDPOINT", browser_endpoint)
+    set_env_value("AZURE_PLAYWRIGHT_AUTH_MODE", PLAYWRIGHT_AUTH_MODE_VALUE)
+    set_env_value("AZURE_PLAYWRIGHT_STATUS", "ready")
+
+
+def deploy_playwright_workspace(resource_group: str, subscription_id: str):
+    if not is_truthy_env("AZURE_DEPLOY_BROWSER_AUTOMATION", True):
+        print("[SKIP] AZURE_DEPLOY_BROWSER_AUTOMATION=false，略過 Playwright Workspace deployment")
+        clear_playwright_workspace_vars("disabled")
+        return
+
+    workspace_name = (os.getenv("AZURE_PLAYWRIGHT_WORKSPACE_NAME") or "").strip()
+    workspace_location = (os.getenv("AZURE_PLAYWRIGHT_LOCATION") or "").strip()
+    workspace_resource_id = (os.getenv("AZURE_PLAYWRIGHT_WORKSPACE_RESOURCE_ID") or "").strip()
+    if not workspace_name or not workspace_location:
+        print("[SKIP] 缺少 Playwright Workspace metadata，略過 optional deployment")
+        clear_playwright_workspace_vars("disabled")
+        return
+
+    if not workspace_resource_id:
+        workspace_resource_id = (
+            f"/subscriptions/{subscription_id}/resourceGroups/{resource_group}"
+            f"/providers/Microsoft.LoadTestService/playwrightWorkspaces/{workspace_name}"
+        )
+
+    try:
+        print("[INFO] 嘗試部署 Playwright Workspace，不阻斷 azd up")
+
+        if playwright_workspace_exists(workspace_resource_id):
+            print(f"[OK] Playwright Workspace '{workspace_name}' 已存在")
+            set_playwright_workspace_env(get_playwright_workspace(workspace_resource_id))
+            return
+
+        result = create_playwright_workspace(workspace_resource_id, workspace_location)
+        if result.returncode == 0:
+            print(f"[OK] Playwright Workspace '{workspace_name}' 已建立")
+            set_playwright_workspace_env(get_playwright_workspace(workspace_resource_id))
+            return
+
+        stderr = (result.stderr or result.stdout or "").strip()
+        print("[WARN] Playwright Workspace deployment 失敗，將繼續後續流程")
+        if stderr:
+            print(stderr)
+        clear_playwright_workspace_vars("failed")
+    except Exception as exc:
+        print("[WARN] Playwright Workspace deployment 發生例外，將繼續後續流程")
+        print(str(exc))
+        clear_playwright_workspace_vars("failed")
 
 
 def create_deployment(
@@ -618,14 +788,17 @@ def deploy_best_effort_openai_models(resource_group: str, account_name: str):
 def main() -> int:
     try:
         resource_group = get_required_env("AZURE_RESOURCE_GROUP")
+        subscription_id = get_required_env("AZURE_SUBSCRIPTION_ID")
         account_name = get_required_env("AZURE_AI_SERVICES_NAME")
         wait_for_account(resource_group, account_name)
+        deploy_playwright_workspace(resource_group, subscription_id)
         deploy_image_model(resource_group, account_name)
         deploy_best_effort_openai_models(resource_group, account_name)
         return 0
     except Exception as exc:
         print("[WARN] optional model deployment 發生例外，將繼續後續流程")
         print(str(exc))
+        clear_playwright_workspace_vars("failed")
         clear_image_deployment_vars("failed")
         set_json_env_value(READY_OPENAI_MODELS_ENV, [])
         set_json_env_value(FAILED_OPENAI_MODELS_ENV, [])

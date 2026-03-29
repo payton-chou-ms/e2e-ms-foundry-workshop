@@ -62,6 +62,18 @@ def resolve_env_value(*names):
     return None, None
 
 
+def format_env_source(selected_name, *fallback_names):
+    if not selected_name:
+        return "（未設定）"
+
+    if selected_name not in fallback_names:
+        return selected_name
+
+    return (
+        f"{selected_name}（優先使用的專用變數未設，已 fallback 到 {selected_name}）"
+    )
+
+
 def parse_json_env(name):
     value = os.getenv(name)
     if not value:

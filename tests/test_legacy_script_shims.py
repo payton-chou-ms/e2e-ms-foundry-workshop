@@ -39,6 +39,30 @@ class LegacyScriptShimTests(unittest.TestCase):
         self.assertEqual(Path(command[1]).parts[-2:], ("internal", "prepare_demo.py"))
         self.assertEqual(command[2:], ["--mode", "shared"])
 
+    def test_docs_prepare_script_prints_deprecation_notice(self):
+        module = load_script_module("admin_prepare_docs_demo.py", "legacy_docs_prepare_demo")
+        stdout = io.StringIO()
+
+        with patch.object(module, "run_command", return_value=0):
+            with redirect_stdout(stdout):
+                exit_code = module.main(["--scenario", "default"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("deprecated", stdout.getvalue().lower())
+        self.assertIn("admin_prepare_shared_demo.py", stdout.getvalue())
+
+    def test_foundry_iq_prepare_script_prints_deprecation_notice(self):
+        module = load_script_module("admin_prepare_foundry_iq_demo.py", "legacy_foundry_iq_prepare_demo")
+        stdout = io.StringIO()
+
+        with patch.object(module, "run_command", return_value=0):
+            with redirect_stdout(stdout):
+                exit_code = module.main(["--scenario", "default"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn("deprecated", stdout.getvalue().lower())
+        self.assertIn("admin_prepare_shared_demo.py", stdout.getvalue())
+
     def test_legacy_foundry_agent_test_script_prints_deprecation_notice(self):
         module = load_script_module("08_test_foundry_agent.py", "legacy_test_workshop_agent")
         stdout = io.StringIO()

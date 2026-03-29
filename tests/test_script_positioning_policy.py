@@ -53,7 +53,7 @@ class ScriptPositioningPolicyTests(unittest.TestCase):
 
     def test_default_config_comments_use_generic_workflow_language(self):
         expected_comments = {
-            "agent_ids.json": "This file is populated when you create the workshop agent, for example via scripts/admin_prepare_docs_demo.py or scripts/admin_prepare_docs_data_demo.py",
+            "agent_ids.json": "This file is populated when you create the workshop agent, for example via scripts/admin_prepare_shared_demo.py --mode foundry-only or scripts/admin_prepare_docs_data_demo.py",
             "fabric_ids.json": "This file is populated when you prepare Fabric items for the workshop scenario",
         }
         stale_script_names = [

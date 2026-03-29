@@ -13,14 +13,14 @@
 #### Path 1A: Foundry IQ only
 
 ```bash
-python scripts/admin_prepare_docs_demo.py
+python scripts/admin_prepare_shared_demo.py --mode foundry-only
 python scripts/participant_validate_docs.py
 ```
 
 #### Path 1B: Foundry-native IQ Agent
 
 ```bash
-python scripts/admin_prepare_foundry_iq_demo.py
+python scripts/admin_prepare_shared_demo.py --mode foundry-iq
 python scripts/participant_validate_foundry_iq.py
 ```
 
@@ -29,7 +29,7 @@ python scripts/participant_validate_foundry_iq.py
 ## 執行完整流程
 
 如果你只想知道該跑哪一條，直接用上面的「超速使用」即可。
-如果你想理解各 mode 背後差在哪裡，再看 [腳本用途與執行順序](05-script-sequence.md) 和 [進階：維護者腳本對照](05b-script-core-pipeline.md)。
+如果你想理解各 mode 背後差在哪裡，再看 [腳本用途與執行順序](05-script-sequence.md)。
 
 !!! tip "如果要換情境"
        請直接到 [產生自訂資料](../02-customize/02-generate.md) 看完整做法。

@@ -42,7 +42,7 @@ python scripts/03_load_fabric_data.py
 python scripts/05_create_fabric_agent.py
 ```
 
-如果你只是要跑通主線，請回到 [腳本用途與執行順序](../01-deploy/05-script-sequence.md) 或 [進階：維護者腳本對照](../01-deploy/05b-script-core-pipeline.md)。
+如果你只是要跑通主線，請回到 [腳本用途與執行順序](../01-deploy/05-script-sequence.md)。
 
 ---
 

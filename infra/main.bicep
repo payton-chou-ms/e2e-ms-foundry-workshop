@@ -98,6 +98,11 @@ var resolvedBrowserAutomationLocation = contains(
   )
   ? requestedBrowserAutomationLocation
   : 'eastus'
+var playwrightWorkspaceName = '${abbrs.testing.playwrightWorkspace}${solutionPrefix}'
+var playwrightWorkspaceResourceId = resourceId(
+  'Microsoft.LoadTestService/playwrightWorkspaces',
+  playwrightWorkspaceName
+)
 
 @allowed([
   'australiaeast'
@@ -175,14 +180,6 @@ module foundry './modules/foundry.bicep' = {
   }
 }
 
-module playwrightWorkspace './modules/playwright_workspace.bicep' = if (deployBrowserAutomation) {
-  params: {
-    location: resolvedBrowserAutomationLocation
-    tags: tags
-    workspaceName: '${abbrs.testing.playwrightWorkspace}${solutionPrefix}'
-  }
-}
-
 // Outputs for azd (saved to .azure/<env>/.env)
 output AZURE_LOCATION string = aiDeploymentsLocation
 output AZURE_TENANT_ID string = tenant().tenantId
@@ -244,17 +241,16 @@ output AZURE_IMAGE_MODEL_SKU string = deployImageModel ? imageOpenAIDeploymentSk
 output AZURE_IMAGE_MODEL_CAPACITY string = deployImageModel ? string(imageOpenAIDeploymentCapacity) : ''
 output AZURE_IMAGE_MODEL_STATUS string = deployImageModel ? 'pending' : 'disabled'
 output AZURE_PLAYWRIGHT_WORKSPACE_NAME string = deployBrowserAutomation
-  ? playwrightWorkspace!.outputs.workspaceName
+  ? playwrightWorkspaceName
   : ''
 output AZURE_PLAYWRIGHT_WORKSPACE_RESOURCE_ID string = deployBrowserAutomation
-  ? playwrightWorkspace!.outputs.workspaceResourceId
+  ? playwrightWorkspaceResourceId
   : ''
-output AZURE_PLAYWRIGHT_WORKSPACE_ID string = deployBrowserAutomation ? playwrightWorkspace!.outputs.workspaceId : ''
-output AZURE_PLAYWRIGHT_LOCATION string = deployBrowserAutomation ? playwrightWorkspace!.outputs.location : ''
-output AZURE_PLAYWRIGHT_DATAPLANE_URI string = deployBrowserAutomation ? playwrightWorkspace!.outputs.dataplaneUri : ''
-output AZURE_PLAYWRIGHT_BROWSER_ENDPOINT string = deployBrowserAutomation
-  ? playwrightWorkspace!.outputs.browserEndpoint
-  : ''
+output AZURE_PLAYWRIGHT_WORKSPACE_ID string = ''
+output AZURE_PLAYWRIGHT_LOCATION string = deployBrowserAutomation ? resolvedBrowserAutomationLocation : ''
+output AZURE_PLAYWRIGHT_DATAPLANE_URI string = ''
+output AZURE_PLAYWRIGHT_BROWSER_ENDPOINT string = ''
 output AZURE_PLAYWRIGHT_AUTH_MODE string = deployBrowserAutomation
   ? 'Playwright Service Access Token (manual token generation still required)'
   : ''
+output AZURE_PLAYWRIGHT_STATUS string = deployBrowserAutomation ? 'pending' : 'disabled'

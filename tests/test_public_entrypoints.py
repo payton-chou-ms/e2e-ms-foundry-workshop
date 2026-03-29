@@ -52,10 +52,25 @@ class PublicEntrypointTests(unittest.TestCase):
         command = module.build_command(["--scenario", "default"])
 
         self.assertEqual(command[0], sys.executable)
-        self.assertEqual(Path(command[1]).parts[-2:], ("internal", "prepare_demo.py"))
+        self.assertEqual(Path(command[1]).name, "admin_prepare_shared_demo.py")
         self.assertEqual(
             command[2:],
             ["--mode", "foundry-only", "--scenario", "default"],
+        )
+
+    def test_admin_prepare_foundry_iq_demo_builds_shared_demo_shim_command(self):
+        module = load_script_module(
+            "admin_prepare_foundry_iq_demo.py",
+            "admin_prepare_foundry_iq_demo",
+        )
+
+        command = module.build_command(["--scenario", "default"])
+
+        self.assertEqual(command[0], sys.executable)
+        self.assertEqual(Path(command[1]).name, "admin_prepare_shared_demo.py")
+        self.assertEqual(
+            command[2:],
+            ["--mode", "foundry-iq", "--scenario", "default"],
         )
 
     def test_admin_prepare_docs_data_demo_defaults_to_full_from_step_02(self):

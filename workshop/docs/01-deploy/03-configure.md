@@ -96,7 +96,8 @@ DATA_FOLDER=data/default
     `12_demo_pii_redaction.py` 直接用 `AZURE_AI_ENDPOINT` 和 `DefaultAzureCredential` 即可
 
 !!! note "Browser Automation 的手動交接"
-    `azd up` 會自動建立 Playwright Workspace，但 Browser Automation 還需要你手動建立 Foundry connection。
+    `azd up` 會用 best-effort 方式嘗試建立 Playwright Workspace；如果碰到 subscription quota 上限，主流程仍會完成。
+    Browser Automation 還需要你手動建立 Foundry connection。
     等你真的要測 `10_demo_browser_automation.py` 時，再看 [Browser Automation 補充設定](05d-browser-automation-setup.md) 即可。
 
 !!! note "共用環境交接"
@@ -116,4 +117,4 @@ DATA_FOLDER=data/default
 
 ---
 
-[← 參與者執行與驗證](00-participant-run-validate.md) | [建置與驗證解決方案 →](04-run-scenario.md)
+[← 部署 Azure 資源](01-deploy-azure.md) | [參與者執行與驗證 →](00-participant-run-validate.md)

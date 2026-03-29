@@ -8,7 +8,13 @@ from pathlib import Path
 import requests
 
 from load_env import load_all_env
-from optional_demo_utils import finish_skip, print_demo_header, resolve_env_value, resolve_image_model_deployment
+from optional_demo_utils import (
+    finish_skip,
+    format_env_source,
+    print_demo_header,
+    resolve_env_value,
+    resolve_image_model_deployment,
+)
 
 try:
     from azure.identity import DefaultAzureCredential
@@ -72,9 +78,20 @@ def main():
         "AZURE_AI_ENDPOINT",
         "AZURE_AI_SERVICES_ENDPOINT",
     )
+    endpoint_source = format_env_source(
+        endpoint_name,
+        "AZURE_OPENAI_ENDPOINT",
+        "AZURE_AI_ENDPOINT",
+        "AZURE_AI_SERVICES_ENDPOINT",
+    )
     key, key_name = resolve_env_value(
         "AZURE_IMAGE_OPENAI_API_KEY",
         "AZURE_IMAGE_API_KEY",
+        "AZURE_OPENAI_API_KEY",
+        "AZURE_AI_KEY",
+    )
+    credential_source = format_env_source(
+        key_name,
         "AZURE_OPENAI_API_KEY",
         "AZURE_AI_KEY",
     )
@@ -92,7 +109,7 @@ def main():
             cred = DefaultAzureCredential()
             bearer_token = cred.get_token(
                 "https://cognitiveservices.azure.com/.default").token
-            key_name = "DefaultAzureCredential（bearer token）"
+            credential_source = "DefaultAzureCredential（bearer token）"
         except Exception as exc:
             finish_skip(
                 f"未設定 Azure OpenAI API key，而且 AAD 驗證失敗（{exc}）。",
@@ -101,7 +118,7 @@ def main():
 
     if not endpoint:
         finish_skip(
-            "影像生成所需的 Azure OpenAI endpoint 尚未設定。請設定 AZURE_IMAGE_OPENAI_ENDPOINT 或 AZURE_OPENAI_ENDPOINT。",
+            "影像生成所需的 Azure OpenAI endpoint 尚未設定。請設定 AZURE_IMAGE_OPENAI_ENDPOINT、AZURE_IMAGE_ENDPOINT、AZURE_OPENAI_ENDPOINT、AZURE_AI_ENDPOINT 或 AZURE_AI_SERVICES_ENDPOINT。",
             strict=args.strict,
         )
 
@@ -128,8 +145,8 @@ def main():
         "output_format": "png",
     }
 
-    print(f"Endpoint 來源：{endpoint_name}")
-    print(f"憑證來源：{key_name}")
+    print(f"Endpoint 來源：{endpoint_source}")
+    print(f"憑證來源：{credential_source}")
     print(f"Deployment 來源：{deployment_name}")
     print(f"Deployment：{deployment}")
     print(f"輸出位置：{output_path}")

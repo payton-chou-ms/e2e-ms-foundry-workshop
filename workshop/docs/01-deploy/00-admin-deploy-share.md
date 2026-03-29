@@ -46,25 +46,9 @@
 
 ### 3. 建置並驗證預設情境
 
-如果你要先把共享環境一次準備好，建議直接執行：
+這一步請改看 [建置與驗證解決方案](04-run-scenario.md)。
 
-```bash
-python scripts/admin_prepare_shared_demo.py
-```
-
-這支 wrapper 會依序完成：
-
-- `default` scenario 的 preload
-- 文件問答的 search-only 準備
-- 文件問答的 Foundry-native IQ 準備
-
-預設會略過資料附錄的 Fabric 建置。如果你真的要把附錄資料路徑也一起建立，請改成：
-
-```bash
-python scripts/admin_prepare_shared_demo.py --with-fabric
-```
-
-如果你想分開理解每一條路徑，再回頭看 [建置與驗證解決方案](04-run-scenario.md)。
+那一頁會說明共享環境主線該怎麼準備、應該走哪些 wrapper，以及什麼時候才需要把附錄資料路徑一起補上。
 
 在分享之前先執行一次預設情境。這可以確認：
 

@@ -5,7 +5,12 @@ import os
 import time
 
 from load_env import load_all_env
-from optional_demo_utils import finish_skip, print_demo_header, resolve_env_value
+from optional_demo_utils import (
+    finish_skip,
+    format_env_source,
+    print_demo_header,
+    resolve_env_value,
+)
 
 load_all_env()
 
@@ -67,26 +72,34 @@ def main():
         "LANGUAGE_ENDPOINT",
         "AZURE_AI_ENDPOINT",
     )
+    endpoint_source = format_env_source(
+        endpoint_name,
+        "AZURE_AI_ENDPOINT",
+    )
     key, key_name = resolve_env_value(
         "AZURE_LANGUAGE_KEY",
         "LANGUAGE_KEY",
         "AZURE_AI_KEY",
     )
+    credential_source = format_env_source(
+        key_name,
+        "AZURE_AI_KEY",
+    )
 
     if not endpoint:
         finish_skip(
-            "尚未設定 Language endpoint。請設定 AZURE_LANGUAGE_ENDPOINT 或 AZURE_AI_ENDPOINT 後再執行 PII demo。",
+            "尚未設定 Language endpoint。請設定 AZURE_LANGUAGE_ENDPOINT、LANGUAGE_ENDPOINT 或 AZURE_AI_ENDPOINT 後再執行 PII demo。",
             strict=args.strict,
         )
 
     if key:
         credential = AzureKeyCredential(key)
-        cred_source = key_name
+        cred_source = credential_source
     else:
         credential = DefaultAzureCredential()
         cred_source = "DefaultAzureCredential"
 
-    print(f"Endpoint 來源：{endpoint_name}")
+    print(f"Endpoint 來源：{endpoint_source}")
     print(f"憑證來源：{cred_source}")
     print(f"輸入文字：{args.text}")
 

@@ -18,14 +18,14 @@
 - **本機 workshop runtime**：
 
 ```bash
-python scripts/admin_prepare_docs_demo.py
+python scripts/admin_prepare_shared_demo.py --mode foundry-only
 python scripts/participant_validate_docs.py
 ```
 
 - **Foundry-native IQ Agent**：
 
 ```bash
-python scripts/admin_prepare_foundry_iq_demo.py
+python scripts/admin_prepare_shared_demo.py --mode foundry-iq
 python scripts/participant_validate_foundry_iq.py
 ```
 
@@ -37,7 +37,6 @@ python scripts/participant_validate_foundry_iq.py
 
 | 你的目標 | 建議先看哪一頁 |
 |----------|----------------|
-| 想理解維護者用的底層腳本對照 | [進階：維護者腳本對照](05b-script-core-pipeline.md) |
 | 想在 Foundry portal 內做 guided demo | [Microsoft Foundry Live Tour](04a-manual-experiments.md) |
 | 想手動驗證資料物件 | [附錄中的資料手動驗證](../05-appendix/03-manual-validation.md) |
 | 想看選配 demo | [選配 demo 09-13](05c-script-optional-demos.md) |
@@ -46,14 +45,13 @@ python scripts/participant_validate_foundry_iq.py
 
 ## 你可以怎麼使用這一組頁面
 
-- 如果你要理解底層 internal / pipeline 分工，再看 [進階：維護者腳本對照](05b-script-core-pipeline.md)
 - 如果你只是在補 demo，再直接看 [選配 demo 09-13](05c-script-optional-demos.md)
 - 如果你要測 `10_demo_browser_automation.py`，只看 [Browser Automation 補充設定](05d-browser-automation-setup.md) 即可
 
-補充：`05b` 裡列出的主線維護者入口以 `01`、`04`、`06`、`06a`、`06b`、`07`、`07b` 為主；資料附錄專用腳本另收在附錄頁。
+如果你是從舊連結或舊筆記跳過來，請注意舊的維護者對照頁現在只保留停用說明，不再提供手動拆解與低階除錯流程；需要資料附錄路徑時，請直接改看 [附錄中的資料腳本對照](../05-appendix/05-maintainer-data-scripts.md)。
 
 如果你現在只是要先完成 Foundry 線，Path 1 就夠了；資料整合路徑與手動驗證都留到附錄再做。
 
 ---
 
-[← 建置與驗證解決方案](04-run-scenario.md) | [為你的使用案例自訂 →](../02-customize/index.md)
+[← 建置與驗證解決方案](04-run-scenario.md) | [選配 demo 09-13 →](05c-script-optional-demos.md)

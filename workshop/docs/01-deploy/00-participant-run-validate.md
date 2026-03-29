@@ -2,6 +2,8 @@
 
 當 Azure 與 Foundry 主線環境已經為你準備好時，請走這條路徑。
 
+如果你還沒完成本機 Python、套件安裝或 `.env` 設定，先去 [設定開發環境](03-configure.md)，完成後再回來這一頁做驗證。
+
 ## 這條路徑適合誰
 
 - 已拿到現成環境的學員
@@ -9,6 +11,14 @@
 - 想先確認 agent 可用，再回頭看部署細節的學員
 
 如果你還不確定自己需不需要 Azure 部署權限，先看 [部署總覽中的 Azure 權限對照](index.md#azure-permissions)。
+
+## 先做什麼
+
+先用下面這個原則判斷，不要直接跳到驗證指令：
+
+- 你是第一次在這台機器開啟 repo：先完成 [設定開發環境](03-configure.md)
+- 你已經有可用的 `.venv`、相依套件和 `.env`：直接留在本頁繼續驗證
+- 你接手的是管理員已建好的共享環境：通常也要先快速檢查一次 [設定開發環境](03-configure.md) 內的本機設定段落
 
 ## 開始前先確認
 
@@ -59,7 +69,7 @@ python scripts/participant_validate_docs.py
 如果環境還沒建好，先建置再測：
 
 ```bash
-python scripts/admin_prepare_docs_demo.py
+python scripts/admin_prepare_shared_demo.py --mode foundry-only
 python scripts/participant_validate_docs.py
 ```
 
@@ -110,4 +120,4 @@ python scripts/participant_validate_docs.py
 
 ---
 
-[← 部署 Azure 資源](01-deploy-azure.md) | [設定開發環境 →](03-configure.md)
+[← 設定開發環境](03-configure.md) | [建置與驗證解決方案 →](04-run-scenario.md)

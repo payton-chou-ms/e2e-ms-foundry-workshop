@@ -13,7 +13,7 @@ if SCRIPTS_ROOT not in sys.path:
     sys.path.insert(0, SCRIPTS_ROOT)
 
 import requests
-from azure.core.exceptions import ResourceNotFoundError
+from azure.core.exceptions import ClientAuthenticationError, ResourceNotFoundError
 from azure.identity import get_bearer_token_provider
 from azure.search.documents.indexes import SearchIndexClient
 from azure.search.documents.indexes.models import (
@@ -29,6 +29,7 @@ from azure.search.documents.indexes.models import (
 from credential_utils import get_credential
 from load_env import load_all_env
 from scenario_utils import build_deployment_name, build_scenario_env, resolve_data_paths, resolve_scenario
+from shared.credential_utils import _resolve_cli_tenant_id
 
 load_all_env()
 
@@ -101,7 +102,7 @@ def run_search_ingestion(force: bool = False):
         return
 
     script_path = scenario_script_path if scenario_script_path.exists(
-    ) else Path(__file__).with_name("06_upload_to_search.py")
+    ) else Path(__file__).with_name("upload_documents.py")
     child_env = build_scenario_env(scenario)
     print("\n確認 Azure AI Search 索引已完成載入...")
     cmd = [sys.executable, str(script_path)]
@@ -133,7 +134,7 @@ def ensure_search_indexes_ready(index_client: SearchIndexClient, search_ids: dic
 def load_search_metadata():
     if not search_ids_path.exists():
         print("錯誤：搜尋匯入後仍找不到 search_ids.json")
-        print("      請先成功完成 06_upload_to_search.py")
+        print("      請先成功完成 upload_documents.py")
         sys.exit(1)
 
     with open(search_ids_path) as f:
@@ -283,6 +284,20 @@ def create_project_connection(mcp_endpoint: str):
     return payload.get("id") or f"{PROJECT_RESOURCE_ID}/connections/{project_connection_name}"
 
 
+def print_project_connection_auth_guidance(error: Exception):
+    tenant_id = _resolve_cli_tenant_id()
+    print("[ERROR] 建立 Foundry project connection 失敗：Azure 驗證失敗。")
+    print("        目前 Azure CLI 登入的帳號或租戶無法存取此 Foundry project 所在的訂用帳戶。")
+    if tenant_id:
+        print("        請先重新登入正確租戶後再重試：")
+        print("        az logout")
+        print(f"        az login --tenant \"{tenant_id}\" --use-device-code")
+    else:
+        print("        請先確認 AZURE_TENANT_ID 或 AZURE_SUBSCRIPTION_ID 設定正確，")
+        print("        然後重新執行 az login --use-device-code。")
+    print(f"        詳細訊息：{error}")
+
+
 def main():
     pdf_files = sorted(docs_dir.glob("*.pdf"))
     csv_files = sorted((data_dir / "tables").glob("*.csv")
@@ -335,7 +350,16 @@ def main():
     )
 
     print("\n建立或更新 Foundry project connection...")
-    project_connection_id = create_project_connection(mcp_endpoint)
+    try:
+        project_connection_id = create_project_connection(mcp_endpoint)
+    except ClientAuthenticationError as error:
+        print_project_connection_auth_guidance(error)
+        sys.exit(1)
+    except requests.HTTPError as error:
+        if error.response is not None and error.response.status_code == 401:
+            print_project_connection_auth_guidance(error)
+            sys.exit(1)
+        raise
     print(f"[OK] Project connection '{project_connection_name}' 已就緒")
 
     metadata = {

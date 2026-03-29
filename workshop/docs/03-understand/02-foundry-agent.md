@@ -73,7 +73,7 @@ response 不只是最後一段文字，它可能包含 function call。本機 lo
     缺少遙測只會產生警告，不會阻擋主流程。
 
 ??? note "發佈路徑"
-    `09_publish_foundry_agent.py` 是獨立的後續步驟。它會檢查 Azure CLI / Bot Service 就緒狀態，並列印手動 UI 發佈步驟與 RBAC 提醒。發佈涉及新的應用程式身分、RBAC 重新指派、Teams/M365 封裝等治理步驟，所以刻意和主流程分開。
+    發佈不是主 workshop 必做步驟。若你真的要把 agent 往外發佈到 Agent Application、Teams 或 Microsoft 365 Copilot，請直接在 Foundry portal 走手動 UI 流程，並另外處理新的應用程式身分、RBAC 重新指派、Bot Service / Teams 封裝與治理審查。
 
 ## 本頁重點
 

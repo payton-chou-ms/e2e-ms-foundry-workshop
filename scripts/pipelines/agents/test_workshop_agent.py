@@ -93,7 +93,7 @@ if not AGENT_ID:
 
 if not AGENT_ID:
     print("錯誤：找不到 agent ID。")
-    print("      請先執行 admin_prepare_docs_demo.py 或 admin_prepare_docs_data_demo.py，或自行提供 --agent-id")
+    print("      請先執行 admin_prepare_shared_demo.py --mode foundry-only 或 admin_prepare_docs_data_demo.py，或自行提供 --agent-id")
     sys.exit(1)
 
 # Load Fabric IDs (optional in foundry-only mode)
