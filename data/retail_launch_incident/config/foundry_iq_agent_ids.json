@@ -1,9 +1,9 @@
 {
-  "agent_id": "2yfzxd-retail-launch-iq:1",
-  "agent_name": "2yfzxd-retail-launch-iq",
+  "agent_id": "t7whau-retail-launch-iq:1",
+  "agent_name": "t7whau-retail-launch-iq",
   "scenario_key": "retail_launch_incident",
   "knowledge_type": "azure_search_knowledge_base",
-  "knowledge_base_name": "2yfzxd-retail-launch-kb",
-  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-lab0329/providers/Microsoft.CognitiveServices/accounts/aisa-daqne4rp2yfzxd/projects/aifp-daqne4rp2yfzxd/connections/2yfzxd-retail-launch-kb-con",
-  "mcp_endpoint": "https://srch-daqne4rp2yfzxd.search.windows.net/knowledgebases/2yfzxd-retail-launch-kb/mcp?api-version=2025-11-01-preview"
+  "knowledge_base_name": "t7whau-retail-launch-kb",
+  "project_connection_id": "/subscriptions/e111bfa2-2c15-41ff-b40c-49bdc314137d/resourceGroups/rg-20260411-foundry/providers/Microsoft.CognitiveServices/accounts/aisa-darz6g6mt7whau/projects/aifp-darz6g6mt7whau/connections/t7whau-retail-launch-kb-con",
+  "mcp_endpoint": "https://srch-darz6g6mt7whau.search.windows.net/knowledgebases/t7whau-retail-launch-kb/mcp?api-version=2025-11-01-preview"
 }

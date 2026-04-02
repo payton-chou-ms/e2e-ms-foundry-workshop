@@ -2,21 +2,21 @@
   "scenario_key": "retail_launch_incident",
   "data_folder": "data/retail_launch_incident",
   "knowledge_type": "azure_search_knowledge_base",
-  "search_endpoint": "https://srch-daqne4rp2yfzxd.search.windows.net",
-  "search_index_name": "daqne4rp2yfzxd-retail_launch_incident-documents",
+  "search_endpoint": "https://srch-darz6g6mt7whau.search.windows.net",
+  "search_index_name": "darz6g6mt7whau-retail_launch_incident-documents",
   "search_index_names": [
-    "daqne4rp2yfzxd-retail_launch_incident-documents",
-    "daqne4rp2yfzxd-retail_launch_incident-tables"
+    "darz6g6mt7whau-retail_launch_incident-documents",
+    "darz6g6mt7whau-retail_launch_incident-tables"
   ],
-  "knowledge_source_name": "daqne4rp2yfzxd-retail-launch-incident-documents-source",
+  "knowledge_source_name": "darz6g6mt7whau-retail-launch-incident-documents-source",
   "knowledge_source_names": [
-    "daqne4rp2yfzxd-retail-launch-incident-documents-source",
-    "daqne4rp2yfzxd-retail-launch-incident-tables-source"
+    "darz6g6mt7whau-retail-launch-incident-documents-source",
+    "darz6g6mt7whau-retail-launch-incident-tables-source"
   ],
   "search_sources": [
     {
-      "index_name": "daqne4rp2yfzxd-retail_launch_incident-documents",
-      "knowledge_source_name": "daqne4rp2yfzxd-retail-launch-incident-documents-source",
+      "index_name": "darz6g6mt7whau-retail_launch_incident-documents",
+      "knowledge_source_name": "darz6g6mt7whau-retail-launch-incident-documents-source",
       "source_data_fields": [
         "content",
         "title",
@@ -39,8 +39,8 @@
       ]
     },
     {
-      "index_name": "daqne4rp2yfzxd-retail_launch_incident-tables",
-      "knowledge_source_name": "daqne4rp2yfzxd-retail-launch-incident-tables-source",
+      "index_name": "darz6g6mt7whau-retail_launch_incident-tables",
+      "knowledge_source_name": "darz6g6mt7whau-retail-launch-incident-tables-source",
       "source_data_fields": [
         "content",
         "title",
@@ -61,10 +61,10 @@
       ]
     }
   ],
-  "knowledge_base_name": "2yfzxd-retail-launch-kb",
-  "project_connection_name": "2yfzxd-retail-launch-kb-con",
-  "project_connection_id": "/subscriptions/846817e9-ac19-4006-9827-a1254967d5d4/resourceGroups/rg-lab0329/providers/Microsoft.CognitiveServices/accounts/aisa-daqne4rp2yfzxd/projects/aifp-daqne4rp2yfzxd/connections/2yfzxd-retail-launch-kb-con",
-  "mcp_endpoint": "https://srch-daqne4rp2yfzxd.search.windows.net/knowledgebases/2yfzxd-retail-launch-kb/mcp?api-version=2025-11-01-preview",
+  "knowledge_base_name": "t7whau-retail-launch-kb",
+  "project_connection_name": "t7whau-retail-launch-kb-con",
+  "project_connection_id": "/subscriptions/e111bfa2-2c15-41ff-b40c-49bdc314137d/resourceGroups/rg-20260411-foundry/providers/Microsoft.CognitiveServices/accounts/aisa-darz6g6mt7whau/projects/aifp-darz6g6mt7whau/connections/t7whau-retail-launch-kb-con",
+  "mcp_endpoint": "https://srch-darz6g6mt7whau.search.windows.net/knowledgebases/t7whau-retail-launch-kb/mcp?api-version=2025-11-01-preview",
   "document_count": 13,
   "pdf_files": [
     "comms-customer-message-guidelines.pdf",
@@ -81,39 +81,39 @@
       "name": "comms-customer-message-guidelines.pdf",
       "kind": "document",
       "blob_name": "documents/comms-customer-message-guidelines.pdf",
-      "blob_url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/retail-launch-incident/documents/comms-customer-message-guidelines.pdf"
+      "blob_url": "https://stdarz6g6mt7whau.blob.core.windows.net/retail-launch-incident/documents/comms-customer-message-guidelines.pdf"
     },
     {
       "name": "comms-launch-campaign-brief.pdf",
       "kind": "document",
       "blob_name": "documents/comms-launch-campaign-brief.pdf",
-      "blob_url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/retail-launch-incident/documents/comms-launch-campaign-brief.pdf"
+      "blob_url": "https://stdarz6g6mt7whau.blob.core.windows.net/retail-launch-incident/documents/comms-launch-campaign-brief.pdf"
     },
     {
       "name": "ops-shift-lead-response-guide.pdf",
       "kind": "document",
       "blob_name": "documents/ops-shift-lead-response-guide.pdf",
-      "blob_url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/retail-launch-incident/documents/ops-shift-lead-response-guide.pdf"
+      "blob_url": "https://stdarz6g6mt7whau.blob.core.windows.net/retail-launch-incident/documents/ops-shift-lead-response-guide.pdf"
     },
     {
       "name": "ops-store-incident-playbook.pdf",
       "kind": "document",
       "blob_name": "documents/ops-store-incident-playbook.pdf",
-      "blob_url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/retail-launch-incident/documents/ops-store-incident-playbook.pdf"
+      "blob_url": "https://stdarz6g6mt7whau.blob.core.windows.net/retail-launch-incident/documents/ops-store-incident-playbook.pdf"
     },
     {
       "name": "launch_incidents.csv",
       "kind": "table",
       "blob_name": "tables/launch_incidents.csv",
-      "blob_url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/retail-launch-incident/tables/launch_incidents.csv"
+      "blob_url": "https://stdarz6g6mt7whau.blob.core.windows.net/retail-launch-incident/tables/launch_incidents.csv"
     },
     {
       "name": "store_response_actions.csv",
       "kind": "table",
       "blob_name": "tables/store_response_actions.csv",
-      "blob_url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/retail-launch-incident/tables/store_response_actions.csv"
+      "blob_url": "https://stdarz6g6mt7whau.blob.core.windows.net/retail-launch-incident/tables/store_response_actions.csv"
     }
   ],
-  "source_folder": "/Users/payton/work/01_lab/e2e-ms-foundry-workshop/data/retail_launch_incident/documents",
+  "source_folder": "/workspaces/e2e-ms-foundry-workshop/data/retail_launch_incident/documents",
   "status": "ready"
 }

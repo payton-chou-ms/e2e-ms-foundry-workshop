@@ -1,11 +1,11 @@
 {
   "scenario_key": "default",
   "data_folder": "data/default",
-  "index_name": "daqne4rp2yfzxd-default-documents",
+  "index_name": "darz6g6mt7whau-default-documents",
   "document_count": 4,
   "pdf_files": [
     "ticket_management_policies.pdf",
-    "customer_service_policies.pdf",
-    "outage_management_policies.pdf"
+    "outage_management_policies.pdf",
+    "customer_service_policies.pdf"
   ]
 }

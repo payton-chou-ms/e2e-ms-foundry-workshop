@@ -1,65 +1,65 @@
 {
   "scenario_key": "contract_keyword_review",
   "data_folder": "data/contract_keyword_review",
-  "blob_endpoint": "https://stdaqne4rp2yfzxd.blob.core.windows.net/",
+  "blob_endpoint": "https://stdarz6g6mt7whau.blob.core.windows.net/",
   "blob_container": "contract-keyword-review",
-  "uploaded_at": "2026-03-29T02:26:28.908543+00:00",
+  "uploaded_at": "2026-04-01T15:41:16.152621+00:00",
   "file_count": 11,
   "files": [
     {
       "path": "input/04-規則檔.xlsx",
       "source": "input/04-規則檔.xlsx",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/input/04-規則檔.xlsx"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/input/04-規則檔.xlsx"
     },
     {
       "path": "input/06-合約範本.docx",
       "source": "input/06-合約範本.docx",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/input/06-合約範本.docx"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/input/06-合約範本.docx"
     },
     {
       "path": "input/07-待審閱合約.docx",
       "source": "input/07-待審閱合約.docx",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/input/07-待審閱合約.docx"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/input/07-待審閱合約.docx"
     },
     {
       "path": "intermediate/04-規則清單.json",
       "source": "intermediate/04-規則清單.json",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/intermediate/04-規則清單.json"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/intermediate/04-規則清單.json"
     },
     {
       "path": "intermediate/04-規則清單.md",
       "source": "intermediate/04-規則清單.md",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/intermediate/04-規則清單.md"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/intermediate/04-規則清單.md"
     },
     {
       "path": "intermediate/06-合約範本-可比較內容.md",
       "source": "intermediate/06-合約範本-可比較內容.md",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/intermediate/06-合約範本-可比較內容.md"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/intermediate/06-合約範本-可比較內容.md"
     },
     {
       "path": "intermediate/06-合約範本-可比較段落.json",
       "source": "intermediate/06-合約範本-可比較段落.json",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/intermediate/06-合約範本-可比較段落.json"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/intermediate/06-合約範本-可比較段落.json"
     },
     {
       "path": "intermediate/07-待審閱合約-可比較內容.md",
       "source": "intermediate/07-待審閱合約-可比較內容.md",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/intermediate/07-待審閱合約-可比較內容.md"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/intermediate/07-待審閱合約-可比較內容.md"
     },
     {
       "path": "intermediate/07-待審閱合約-可比較段落.json",
       "source": "intermediate/07-待審閱合約-可比較段落.json",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/intermediate/07-待審閱合約-可比較段落.json"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/intermediate/07-待審閱合約-可比較段落.json"
     },
     {
       "path": "intermediate/ref-08-差異比較.html",
       "source": "intermediate/ref-08-差異比較.html",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/intermediate/ref-08-差異比較.html"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/intermediate/ref-08-差異比較.html"
     },
     {
       "path": "output/09-審閱結果.html",
       "source": "output/09-審閱結果.html",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/contract-keyword-review/output/09-審閱結果.html"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/contract-keyword-review/output/09-審閱結果.html"
     }
   ]
 }

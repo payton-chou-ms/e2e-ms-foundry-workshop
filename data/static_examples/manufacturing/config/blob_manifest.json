@@ -1,30 +1,30 @@
 {
   "scenario_key": "static_manufacturing",
   "data_folder": "data/static_examples/manufacturing",
-  "blob_endpoint": "https://stdaqne4rp2yfzxd.blob.core.windows.net/",
+  "blob_endpoint": "https://stdarz6g6mt7whau.blob.core.windows.net/",
   "blob_container": "static-manufacturing",
-  "uploaded_at": "2026-03-29T02:27:48.365976+00:00",
+  "uploaded_at": "2026-04-01T15:41:35.817746+00:00",
   "file_count": 4,
   "files": [
     {
       "path": "documents/maintenance_guide.pdf",
       "source": "documents/maintenance_guide.pdf",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-manufacturing/documents/maintenance_guide.pdf"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/static-manufacturing/documents/maintenance_guide.pdf"
     },
     {
       "path": "documents/quality_standards.pdf",
       "source": "documents/quality_standards.pdf",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-manufacturing/documents/quality_standards.pdf"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/static-manufacturing/documents/quality_standards.pdf"
     },
     {
       "path": "tables/equipment.csv",
       "source": "tables/equipment.csv",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-manufacturing/tables/equipment.csv"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/static-manufacturing/tables/equipment.csv"
     },
     {
       "path": "tables/suppliers.csv",
       "source": "tables/suppliers.csv",
-      "url": "https://stdaqne4rp2yfzxd.blob.core.windows.net/static-manufacturing/tables/suppliers.csv"
+      "url": "https://stdarz6g6mt7whau.blob.core.windows.net/static-manufacturing/tables/suppliers.csv"
     }
   ]
 }
