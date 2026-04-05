@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P2P Multi-Agent Workflow 動態展示</title>
+<style>
+  :root {
+    --blue: #0078d4;
+    --blue-dark: #005a9e;
+    --blue-light: #deecf9;
+    --green: #107c10;
+    --green-light: #dff6dd;
+    --red: #d13438;
+    --red-light: #fde7e9;
+    --orange: #ca5010;
+    --orange-light: #fff4ce;
+    --purple: #8764b8;
+    --purple-light: #f0e6ff;
+    --teal: #038387;
+    --teal-light: #d6f4f4;
+    --gray: #605e5c;
+    --gray-light: #f3f2f1;
+    --bg: #ffffff;
+    --shadow: 0 2px 12px rgba(0,0,0,0.10);
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', 'Microsoft JhengHei', -apple-system, sans-serif;
+    line-height: 1.6;
+    color: #323130;
+    background: #f0f2f5;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #0078d4 0%, #004578 100%);
+    color: white;
+    padding: 40px 24px 32px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 1.8rem; font-weight: 600; margin-bottom: 6px; }
+  .hero p { font-size: 1rem; opacity: 0.85; }
+
+  /* ── Container ── */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,120,212,0.3);
+  }
+  .btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+  .btn-primary:disabled { background: #a0a0a0; box-shadow: none; cursor: default; transform: none; }
+  .btn-outline {
+    background: white;
+    color: var(--gray);
+    border: 1.5px solid #d2d0ce;
+  }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .speed-label { font-size: 0.85rem; color: var(--gray); }
+  .speed-select {
+    padding: 8px 12px;
+    border: 1.5px solid #d2d0ce;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
+  }
+
+  /* ── Question bar ── */
+  .question-bar {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s ease;
+  }
+  .question-bar.visible { opacity: 1; transform: translateY(0); }
+  .question-bar .icon { font-size: 1.4rem; }
+  .question-bar .text { font-size: 1.05rem; color: #323130; }
+  .question-bar .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  /* ── Flow layout ── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  /* ── Connector lines ── */
+  .connector {
+    display: flex;
+    justify-content: center;
+    padding: 4px 0;
+  }
+  .connector .line {
+    width: 3px;
+    height: 32px;
+    background: #d2d0ce;
+    border-radius: 2px;
+    transition: background 0.5s ease;
+  }
+  .connector.active .line {
+    background: var(--blue);
+    box-shadow: 0 0 8px rgba(0,120,212,0.3);
+  }
+
+  /* ── Agent card ── */
+  .agent-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    border: 2px solid transparent;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    opacity: 0.5;
+    transform: scale(0.97);
+  }
+  .agent-card.waiting {
+    opacity: 0.5;
+    border-color: transparent;
+  }
+  .agent-card.active {
+    opacity: 1;
+    transform: scale(1);
+    border-color: var(--blue);
+    box-shadow: 0 4px 20px rgba(0,120,212,0.15);
+  }
+  .agent-card.done {
+    opacity: 1;
+    transform: scale(1);
+    border-color: var(--green);
+  }
+
+  .agent-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f3f2f1;
+  }
+  .agent-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .agent-header .info { flex: 1; }
+  .agent-header .name { font-weight: 600; font-size: 1rem; }
+  .agent-header .role { font-size: 0.82rem; color: var(--gray); }
+  .agent-status {
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .status-waiting { background: var(--gray-light); color: var(--gray); }
+  .status-thinking { background: var(--blue-light); color: var(--blue); animation: pulse 1.2s infinite; }
+  .status-done { background: var(--green-light); color: var(--green); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* ── Agent body (the I/O panel) ── */
+  .agent-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, padding 0.3s ease;
+    padding: 0 20px;
+  }
+  .agent-card.active .agent-body,
+  .agent-card.done .agent-body {
+    max-height: 600px;
+    padding: 16px 20px;
+  }
+
+  .io-section { margin-bottom: 12px; }
+  .io-section:last-child { margin-bottom: 0; }
+  .io-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .io-label.input-label { color: var(--orange); }
+  .io-label.output-label { color: var(--green); }
+  .io-label.thinking-label { color: var(--blue); }
+
+  .io-content {
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    border-left: 3px solid #e1dfdd;
+  }
+  .io-content.input-content { border-left-color: var(--orange); background: #fff8f0; }
+  .io-content.output-content { border-left-color: var(--green); background: #f0faf0; }
+  .io-content.thinking-content { border-left-color: var(--blue); background: #f0f6ff; }
+
+  .io-content ul { padding-left: 18px; margin: 4px 0; }
+  .io-content li { margin: 2px 0; }
+  .io-content .tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 4px 2px 0;
+  }
+  .tag-pass { background: var(--green-light); color: var(--green); }
+  .tag-warn { background: var(--orange-light); color: var(--orange); }
+  .tag-fail { background: var(--red-light); color: var(--red); }
+  .tag-info { background: var(--blue-light); color: var(--blue); }
+
+  /* typing dots animation */
+  .typing-dots span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--blue);
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: typingBounce 1s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* ── Summary panel ── */
+  .summary-panel {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 2px solid var(--green);
+    padding: 24px;
+    margin-top: 4px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+  }
+  .summary-panel.visible { opacity: 1; transform: translateY(0); }
+  .summary-panel h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .summary-content {
+    background: var(--green-light);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+
+  /* ── Architecture diagram ── */
+  .arch-section {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 20px 20px;
+    margin-bottom: 28px;
+  }
+  .arch-section h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--blue-dark);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .arch-svg-wrap {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+  }
+  .arch-svg-wrap svg { max-width: 100%; height: auto; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 0.82rem;
+    color: var(--gray);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.4rem; }
+    .container { padding: 16px 12px 40px; }
+    .agent-header { padding: 12px 14px; }
+    .agent-card.active .agent-body,
+    .agent-card.done .agent-body { padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>P2P Multi-Agent Workflow</h1>
+  <p>採購到付款 — 五角色協作流程動態展示</p>
+</div>
+
+<div class="container">
+
+  <!-- Architecture Diagram -->
+  <div class="arch-section">
+    <h2>🏗️ Multi-Agent 架構圖</h2>
+    <div class="arch-svg-wrap">
+      <svg viewBox="0 0 900 420" width="900" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI','Microsoft JhengHei',sans-serif">
+        <!-- Defs: arrow marker -->
+        <defs>
+          <marker id="arrowBlue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="#0078d4"/>
+          </marker>
+          <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="#107c10"/>
+          </marker>
+          <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="116%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.10"/>
+          </filter>
+        </defs>
+
+        <!-- User question -->
+        <rect x="10" y="188" width="100" height="44" rx="22" fill="#f3f2f1" stroke="#d2d0ce" stroke-width="1.5" filter="url(#cardShadow)"/>
+        <text x="60" y="215" text-anchor="middle" font-size="13" fill="#605e5c">💬 使用者</text>
+
+        <!-- Arrow: User → Router -->
+        <line x1="112" y1="210" x2="158" y2="210" stroke="#0078d4" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+        <!-- Router box -->
+        <rect x="162" y="180" width="120" height="60" rx="10" fill="#e8eaf6" stroke="#3f51b5" stroke-width="2" filter="url(#cardShadow)"/>
+        <text x="222" y="205" text-anchor="middle" font-size="15" font-weight="600" fill="#3f51b5">🔀 Router</text>
+        <text x="222" y="222" text-anchor="middle" font-size="10" fill="#605e5c">意圖分析 / 分派</text>
+
+        <!-- Arrow lines: Router → each Specialist -->
+        <path d="M282,192 Q330,52 374,52" fill="none" stroke="#0078d4" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <path d="M282,198 Q330,132 374,132" fill="none" stroke="#0078d4" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <line x1="282" y1="210" x2="374" y2="210" stroke="#0078d4" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <path d="M282,222 Q330,288 374,288" fill="none" stroke="#0078d4" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+        <path d="M282,228 Q330,368 374,368" fill="none" stroke="#0078d4" stroke-width="1.5" marker-end="url(#arrowBlue)"/>
+
+        <!-- ── Specialist boxes (w=210, h=64) ── -->
+
+        <!-- ① 請購 -->
+        <rect x="378" y="20" width="210" height="64" rx="8" fill="#e3f2fd" stroke="#1565c0" stroke-width="1.5" filter="url(#cardShadow)"/>
+        <text x="483" y="40" text-anchor="middle" font-size="13" font-weight="600" fill="#1565c0">📋 ① 請購 Specialist</text>
+        <text x="483" y="55" text-anchor="middle" font-size="9.5" fill="#605e5c">PR 驗證 · 預算 · 簽核</text>
+        <rect x="412" y="62" width="62" height="16" rx="8" fill="#0078d4" opacity="0.12"/>
+        <text x="443" y="74" text-anchor="middle" font-size="8" font-weight="600" fill="#0078d4">Foundry Agent</text>
+        <rect x="480" y="62" width="52" height="16" rx="8" fill="#038387" opacity="0.12"/>
+        <text x="506" y="74" text-anchor="middle" font-size="8" font-weight="600" fill="#038387">Knowledge</text>
+
+        <!-- ② 採購 -->
+        <rect x="378" y="100" width="210" height="64" rx="8" fill="#fff3e0" stroke="#e65100" stroke-width="1.5" filter="url(#cardShadow)"/>
+        <text x="483" y="120" text-anchor="middle" font-size="13" font-weight="600" fill="#e65100">📝 ② 採購 Specialist</text>
+        <text x="483" y="135" text-anchor="middle" font-size="9.5" fill="#605e5c">合約審閱 · 條款比對</text>
+        <rect x="393" y="142" width="100" height="16" rx="8" fill="#8764b8" opacity="0.15"/>
+        <text x="443" y="154" text-anchor="middle" font-size="8" font-weight="600" fill="#7b1fa2">Content Understanding</text>
+        <rect x="499" y="142" width="62" height="16" rx="8" fill="#0078d4" opacity="0.12"/>
+        <text x="530" y="154" text-anchor="middle" font-size="8" font-weight="600" fill="#0078d4">Foundry Agent</text>
+
+        <!-- ③ 收貨 -->
+        <rect x="378" y="180" width="210" height="64" rx="8" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5" filter="url(#cardShadow)"/>
+        <text x="483" y="200" text-anchor="middle" font-size="13" font-weight="600" fill="#2e7d32">📦 ③ 收貨 Specialist</text>
+        <text x="483" y="215" text-anchor="middle" font-size="9.5" fill="#605e5c">送貨 vs PO 數量比對</text>
+        <rect x="412" y="222" width="62" height="16" rx="8" fill="#0078d4" opacity="0.12"/>
+        <text x="443" y="234" text-anchor="middle" font-size="8" font-weight="600" fill="#0078d4">Foundry Agent</text>
+        <rect x="480" y="222" width="52" height="16" rx="8" fill="#038387" opacity="0.12"/>
+        <text x="506" y="234" text-anchor="middle" font-size="8" font-weight="600" fill="#038387">Knowledge</text>
+
+        <!-- ④ 發票 -->
+        <rect x="378" y="260" width="210" height="64" rx="8" fill="#fce4ec" stroke="#c62828" stroke-width="1.5" filter="url(#cardShadow)"/>
+        <text x="483" y="280" text-anchor="middle" font-size="13" font-weight="600" fill="#c62828">🧾 ④ 發票 Specialist</text>
+        <text x="483" y="295" text-anchor="middle" font-size="9.5" fill="#605e5c">CU 辨識 · 三單比對</text>
+        <rect x="388" y="302" width="100" height="16" rx="8" fill="#8764b8" opacity="0.15"/>
+        <text x="438" y="314" text-anchor="middle" font-size="8" font-weight="600" fill="#7b1fa2">Content Understanding</text>
+        <rect x="494" y="302" width="82" height="16" rx="8" fill="#ca5010" opacity="0.12"/>
+        <text x="535" y="314" text-anchor="middle" font-size="8" font-weight="600" fill="#ca5010">Fabric Data Agent</text>
+
+        <!-- ⑤ 付款 -->
+        <rect x="378" y="340" width="210" height="64" rx="8" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5" filter="url(#cardShadow)"/>
+        <text x="483" y="360" text-anchor="middle" font-size="13" font-weight="600" fill="#7b1fa2">🛡️ ⑤ 付款 Specialist</text>
+        <text x="483" y="375" text-anchor="middle" font-size="9.5" fill="#605e5c">Content Safety 檢查</text>
+        <rect x="401" y="382" width="72" height="16" rx="8" fill="#d13438" opacity="0.12"/>
+        <text x="437" y="394" text-anchor="middle" font-size="8" font-weight="600" fill="#d13438">Content Safety</text>
+        <rect x="479" y="382" width="68" height="16" rx="8" fill="#d13438" opacity="0.12"/>
+        <text x="513" y="394" text-anchor="middle" font-size="8" font-weight="600" fill="#d13438">Prompt Shield</text>
+
+        <!-- Arrow lines: each Specialist → Coordinator -->
+        <path d="M588,52 Q625,52 640,195" fill="none" stroke="#107c10" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+        <path d="M588,132 Q625,132 640,198" fill="none" stroke="#107c10" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+        <line x1="588" y1="210" x2="640" y2="210" stroke="#107c10" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+        <path d="M588,288 Q625,288 640,222" fill="none" stroke="#107c10" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+        <path d="M588,368 Q625,368 640,225" fill="none" stroke="#107c10" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+        <!-- Coordinator box -->
+        <rect x="644" y="180" width="140" height="60" rx="10" fill="#e0f7fa" stroke="#00695c" stroke-width="2" filter="url(#cardShadow)"/>
+        <text x="714" y="205" text-anchor="middle" font-size="14" font-weight="600" fill="#00695c">🎯 Coordinator</text>
+        <text x="714" y="222" text-anchor="middle" font-size="10" fill="#605e5c">整合 · 最終回覆</text>
+
+        <!-- Arrow: Coordinator → Answer -->
+        <line x1="784" y1="210" x2="814" y2="210" stroke="#107c10" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+        <!-- Answer box -->
+        <rect x="818" y="188" width="54" height="44" rx="22" fill="#dff6dd" stroke="#107c10" stroke-width="1.5" filter="url(#cardShadow)"/>
+        <text x="845" y="215" text-anchor="middle" font-size="13" fill="#107c10">✅</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn btn-primary" id="btnStart" onclick="startFlow()">
+      ▶ 開始展示
+    </button>
+    <button class="btn btn-outline" onclick="resetFlow()">
+      ↺ 重置
+    </button>
+    <span class="speed-label">速度</span>
+    <select class="speed-select" id="speedSelect">
+      <option value="2400">慢（展示用）</option>
+      <option value="1400" selected>正常</option>
+      <option value="700">快</option>
+    </select>
+  </div>
+
+  <!-- Question -->
+  <div class="question-bar" id="questionBar">
+    <span class="label">使用者問題</span>
+    <span class="icon">💬</span>
+    <span class="text">PO 4500001332 的發票金額是否正確？請完成三單比對並確認可否付款。</span>
+  </div>
+
+  <!-- Flow -->
+  <div class="flow" id="flow">
+
+    <!-- Router -->
+    <div class="agent-card waiting" id="card-router">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:#e8eaf6;color:#3f51b5;">🔀</div>
+        <div class="info">
+          <div class="name">P2P Router</div>
+          <div class="role">分析問題意圖，決定分派順序</div>
+        </div>
+        <span class="agent-status status-waiting" id="status-router">等待中</span>
+      </div>
+      <div class="agent-body" id="body-router"></div>
+    </div>
+
+    <div class="connector" id="conn-1"><div class="line"></div></div>
+
+    <!-- ① 請購 -->
+    <div class="agent-card waiting" id="card-pr">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:#e3f2fd;color:#1565c0;">📋</div>
+        <div class="info">
+          <div class="name">① 請購 Specialist</div>
+          <div class="role">PR Validation — 欄位、預算、簾核</div>
+        </div>
+        <span class="agent-status status-waiting" id="status-pr">等待中</span>
+      </div>
+      <div class="agent-body" id="body-pr"></div>
+    </div>
+
+    <div class="connector" id="conn-2"><div class="line"></div></div>
+
+    <!-- ② 採購 -->
+    <div class="agent-card waiting" id="card-contract">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:#fff3e0;color:#e65100;">📝</div>
+        <div class="info">
+          <div class="name">② 採購 Specialist</div>
+          <div class="role">Contract Review — 合約審閱、規則比對</div>
+        </div>
+        <span class="agent-status status-waiting" id="status-contract">等待中</span>
+      </div>
+      <div class="agent-body" id="body-contract"></div>
+    </div>
+
+    <div class="connector" id="conn-3"><div class="line"></div></div>
+
+    <!-- ③ 收貨 -->
+    <div class="agent-card waiting" id="card-gr">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:#e8f5e9;color:#2e7d32;">📦</div>
+        <div class="info">
+          <div class="name">③ 收貨 Specialist</div>
+          <div class="role">GR Validation — 送貨單 vs PO 比對</div>
+        </div>
+        <span class="agent-status status-waiting" id="status-gr">等待中</span>
+      </div>
+      <div class="agent-body" id="body-gr"></div>
+    </div>
+
+    <div class="connector" id="conn-4"><div class="line"></div></div>
+
+    <!-- ④ 發票 -->
+    <div class="agent-card waiting" id="card-invoice">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:#fce4ec;color:#c62828;">🧾</div>
+        <div class="info">
+          <div class="name">④ 發票 Specialist</div>
+          <div class="role">Invoice Agent — CU 辨識 + 三單比對</div>
+        </div>
+        <span class="agent-status status-waiting" id="status-invoice">等待中</span>
+      </div>
+      <div class="agent-body" id="body-invoice"></div>
+    </div>
+
+    <div class="connector" id="conn-5"><div class="line"></div></div>
+
+    <!-- ⑤ 付款 -->
+    <div class="agent-card waiting" id="card-payment">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:#f3e5f5;color:#7b1fa2;">🛡️</div>
+        <div class="info">
+          <div class="name">⑤ 付款 Specialist</div>
+          <div class="role">Payment Guard — Content Safety 檢查</div>
+        </div>
+        <span class="agent-status status-waiting" id="status-payment">等待中</span>
+      </div>
+      <div class="agent-body" id="body-payment"></div>
+    </div>
+
+    <div class="connector" id="conn-6"><div class="line"></div></div>
+
+    <!-- Coordinator -->
+    <div class="agent-card waiting" id="card-coord">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:#e0f7fa;color:#00695c;">🎯</div>
+        <div class="info">
+          <div class="name">P2P Coordinator</div>
+          <div class="role">整合所有 Specialist 結果，產出最終回覆</div>
+        </div>
+        <span class="agent-status status-waiting" id="status-coord">等待中</span>
+      </div>
+      <div class="agent-body" id="body-coord"></div>
+    </div>
+
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-panel" id="summaryPanel">
+    <h3>✅ 最終回覆</h3>
+    <div class="summary-content" id="summaryContent"></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  P2P Multi-Agent Workflow Demo — e2e-ms-foundry-workshop
+</div>
+
+<script>
+const STEPS = [
+  {
+    card: 'router',
+    conn: null,
+    thinkingTime: 0.6,
+    input: '💬 使用者問題：PO 4500001332 的發票金額是否正確？請完成三單比對並確認可否付款。',
+    thinking: '分析問題意圖… 涉及發票驗證 + 付款確認 → 需要經過全部五個 Specialist',
+    output: `<strong>路由決策：</strong>依序派發至五個 Specialist<br>
+      <span class="tag tag-info">① 請購</span>
+      <span class="tag tag-info">② 採購</span>
+      <span class="tag tag-info">③ 收貨</span>
+      <span class="tag tag-info">④ 發票</span>
+      <span class="tag tag-info">⑤ 付款</span>`
+  },
+  {
+    card: 'pr',
+    conn: 'conn-1',
+    thinkingTime: 0.8,
+    input: '查詢 PO 4500001332 對應的請購單 PR-2025-0847',
+    thinking: '檢查欄位完整性、預算餘額、簾核狀態…',
+    output: `<span class="tag tag-pass">欄位完整</span> 料號 MZ-RM-R300-01、數量 53、成本中心 CC-2001<br>
+      <span class="tag tag-pass">預算充足</span> CC-2001 剩餘額度 NT$2,450,000<br>
+      <span class="tag tag-pass">已簽核</span> 金額 NT$91,690 未超過自動核准門檻`
+  },
+  {
+    card: 'contract',
+    conn: 'conn-2',
+    thinkingTime: 1.0,
+    input: '查詢 PO 4500001332 對應的採購合約 SA-2025-0312',
+    thinking: '比對合約條款、付款條件、單價約定…',
+    output: `<span class="tag tag-pass">合約有效</span> 效期至 2026/12/31<br>
+      <span class="tag tag-pass">單價一致</span> 合約約定 NT$1,730/unit = 發票單價<br>
+      <span class="tag tag-warn">注意</span> 付款條件為月結 60 天，發票日 3/15 → 到期日 5/14`
+  },
+  {
+    card: 'gr',
+    conn: 'conn-3',
+    thinkingTime: 0.8,
+    input: '查詢 PO 4500001332 的收貨紀錄 GR-2025-1205',
+    thinking: '比對送貨數量 vs PO 數量 vs 發票數量…',
+    output: `<span class="tag tag-pass">數量一致</span> PO 53 → 送貨 53 → 收貨 53<br>
+      <span class="tag tag-pass">品項吻合</span> 料號 MZ-RM-R300-01 品名規格完全匹配<br>
+      <span class="tag tag-pass">品質合格</span> 收貨檢驗已通過，無退貨紀錄`
+  },
+  {
+    card: 'invoice',
+    conn: 'conn-4',
+    thinkingTime: 1.2,
+    input: '讀取 CU 辨識結果 → 發票 INV-2025-03887<br>查詢 Fabric Data Agent → PO + GR 資料',
+    thinking: '執行三單比對：Invoice vs PO vs GR…',
+    output: `<strong>三單比對結果</strong>
+      <table style="width:100%;font-size:0.85rem;margin:8px 0;border-collapse:collapse;">
+        <tr style="background:#f3f2f1;"><th style="padding:6px 8px;text-align:left;">欄位</th><th>發票</th><th>PO</th><th>GR</th><th>結果</th></tr>
+        <tr><td style="padding:4px 8px;">數量</td><td>53</td><td>53</td><td>53</td><td><span class="tag tag-pass">✓</span></td></tr>
+        <tr><td style="padding:4px 8px;">單價</td><td>1,730</td><td>1,730</td><td>—</td><td><span class="tag tag-pass">✓</span></td></tr>
+        <tr><td style="padding:4px 8px;">金額</td><td>91,690</td><td>91,690</td><td>—</td><td><span class="tag tag-pass">✓</span></td></tr>
+        <tr><td style="padding:4px 8px;">稅額 5%</td><td>4,585</td><td>—</td><td>—</td><td><span class="tag tag-pass">✓ 驗算正確</span></td></tr>
+        <tr><td style="padding:4px 8px;">總計</td><td>96,275</td><td>—</td><td>—</td><td><span class="tag tag-pass">✓</span></td></tr>
+      </table>
+      <span class="tag tag-pass">PASS</span> 三單比對全部通過，無差異`
+  },
+  {
+    card: 'payment',
+    conn: 'conn-5',
+    thinkingTime: 0.7,
+    input: '安全檢查：此筆付款請求是否觸發任何 guardrail',
+    thinking: '檢查 Decision Safety / Contract Safety / Prompt Injection / 金額門檻…',
+    output: `<span class="tag tag-pass">Decision Safety</span> 未要求直接核准付款<br>
+      <span class="tag tag-pass">Contract Safety</span> 未涉及法律爭議<br>
+      <span class="tag tag-pass">Prompt Safety</span> 未偵測到注入攻擊<br>
+      <span class="tag tag-pass">金額門檻</span> NT$96,275 &lt; NT$500,000，無需升級`
+  },
+  {
+    card: 'coord',
+    conn: 'conn-6',
+    thinkingTime: 1.0,
+    input: '整合 5 位 Specialist 的分析結果',
+    thinking: '彙整各階段結論，產出最終建議…',
+    output: `<strong>結論：建議核准付款流程</strong><br>
+      所有檢查均通過，無需人工介入。<br>
+      <span class="tag tag-info">下一步</span> 送簽核系統，由主管最終核准`
+  }
+];
+
+const FINAL_SUMMARY = `
+<strong>📋 PO 4500001332 — 發票驗證與付款建議</strong><br><br>
+<strong>1. 請購單</strong>：PR-2025-0847 欄位完整、預算充足、已完成簽核<br>
+<strong>2. 採購合約</strong>：SA-2025-0312 有效、單價與合約一致、付款條件月結 60 天<br>
+<strong>3. 收貨紀錄</strong>：GR-2025-1205 數量 53 完全吻合、品質合格<br>
+<strong>4. 三單比對</strong>：發票 INV-2025-03887 金額 NT$91,690 + 稅 NT$4,585 = 總計 NT$96,275 ✅ 全部通過<br>
+<strong>5. 安全檢查</strong>：未觸發任何 guardrail，金額在自動處理範圍內<br><br>
+✅ <strong>建議：送入標準付款簽核流程，由主管做最終核准。</strong>
+`;
+
+let running = false;
+let abortController = null;
+
+function getSpeed() {
+  return parseInt(document.getElementById('speedSelect').value, 10);
+}
+
+function sleep(ms) {
+  return new Promise((resolve, reject) => {
+    const id = setTimeout(resolve, ms);
+    if (abortController) {
+      abortController.signal.addEventListener('abort', () => { clearTimeout(id); reject(new Error('aborted')); });
+    }
+  });
+}
+
+function setStatus(cardId, state) {
+  const el = document.getElementById('status-' + cardId);
+  el.className = 'agent-status';
+  if (state === 'waiting')  { el.classList.add('status-waiting');  el.textContent = '等待中'; }
+  if (state === 'thinking') { el.classList.add('status-thinking'); el.textContent = '思考中…'; }
+  if (state === 'done')     { el.classList.add('status-done');     el.textContent = '完成 ✓'; }
+}
+
+function setCardState(cardId, state) {
+  const card = document.getElementById('card-' + cardId);
+  card.className = 'agent-card ' + state;
+}
+
+function setBody(cardId, html) {
+  document.getElementById('body-' + cardId).innerHTML = html;
+}
+
+function typingDots() {
+  return '<div class="typing-dots"><span></span><span></span><span></span></div>';
+}
+
+function ioBlock(label, cls, content) {
+  return `<div class="io-section"><div class="io-label ${cls}-label">${label}</div><div class="io-content ${cls}-content">${content}</div></div>`;
+}
+
+async function startFlow() {
+  if (running) return;
+  running = true;
+  abortController = new AbortController();
+  document.getElementById('btnStart').disabled = true;
+
+  resetFlow();
+  await sleep(200);
+
+  const qBar = document.getElementById('questionBar');
+  qBar.classList.add('visible');
+  await sleep(getSpeed() * 0.5);
+
+  try {
+    for (let i = 0; i < STEPS.length; i++) {
+      const step = STEPS[i];
+      const speed = getSpeed();
+
+      // Activate connector
+      if (step.conn) {
+        document.getElementById(step.conn).classList.add('active');
+        await sleep(speed * 0.25);
+      }
+
+      // Show card as thinking
+      setCardState(step.card, 'active');
+      setStatus(step.card, 'thinking');
+      setBody(step.card,
+        ioBlock('INPUT', 'input', step.input) +
+        ioBlock('THINKING', 'thinking', typingDots())
+      );
+      await sleep(speed * step.thinkingTime);
+
+      // Show thinking text
+      setBody(step.card,
+        ioBlock('INPUT', 'input', step.input) +
+        ioBlock('THINKING', 'thinking', step.thinking)
+      );
+      await sleep(speed * 0.4);
+
+      // Show output
+      setCardState(step.card, 'done');
+      setStatus(step.card, 'done');
+      setBody(step.card,
+        ioBlock('INPUT', 'input', step.input) +
+        ioBlock('OUTPUT', 'output', step.output)
+      );
+      await sleep(speed * 0.3);
+    }
+
+    // Show final summary
+    await sleep(getSpeed() * 0.3);
+    const panel = document.getElementById('summaryPanel');
+    document.getElementById('summaryContent').innerHTML = FINAL_SUMMARY;
+    panel.classList.add('visible');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  } catch (e) {
+    if (e.message !== 'aborted') throw e;
+  }
+
+  running = false;
+  document.getElementById('btnStart').disabled = false;
+}
+
+function resetFlow() {
+  if (abortController) abortController.abort();
+  running = false;
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('questionBar').classList.remove('visible');
+  document.getElementById('summaryPanel').classList.remove('visible');
+
+  for (const step of STEPS) {
+    setCardState(step.card, 'waiting');
+    setStatus(step.card, 'waiting');
+    setBody(step.card, '');
+    if (step.conn) document.getElementById(step.conn).classList.remove('active');
+  }
+}
+</script>
+</body>
+</html>

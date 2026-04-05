@@ -206,8 +206,9 @@ else:
 with open(suffix_file, "w") as f:
     f.write(str(new_suffix))
 
-lakehouse_name = f"{SOLUTION_NAME}-lakehouse-{new_suffix}"
-ontology_name = f"{SOLUTION_NAME}-ontology-{new_suffix}"
+# Fabric display names only allow alphanumeric + underscore; replace hyphens.
+lakehouse_name = f"{SOLUTION_NAME}-lakehouse-{new_suffix}".replace("-", "_")
+ontology_name = f"{SOLUTION_NAME}-ontology-{new_suffix}".replace("-", "_")
 
 # ============================================================================
 # Step 1: Create Lakehouse

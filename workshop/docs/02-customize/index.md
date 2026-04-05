@@ -12,6 +12,7 @@
 
     - [零售手動 demo](04-retail-manual-demo.md)：示範多 agent workflow、incident routing 與 image prompt 驗證
     - [合約關鍵字審閱手動 demo](05-contract-keyword-review-manual-demo.md)：示範 Azure Content Understanding 中間產物、規則清單與 reviewer 審閱流程
+    - [P2P 採購到付款手動 demo](06-p2p-procurement-demo.md)：示範合約審閱、發票三單比對與 Content Safety 防護
 
 ## 你需要提供的輸入
 

@@ -1,0 +1,48 @@
+{
+  "workflow_name": "p2p-procurement",
+  "config_path": "data/p2p/multi_agent/p2p_workflow.yaml",
+  "created_at": "2026-04-05T12:42:29.875831+00:00",
+  "runtime_mode": "search-only",
+  "scenarios": {
+    "p2p_invoice_verification": {
+      "title": "P2P Invoice Three-Way Matching",
+      "agents": {
+        "router": {
+          "id": "p2p-procurem-so-piv-rou:1",
+          "name": "p2p-procurem-so-piv-rou",
+          "version": "1",
+          "tool_mode": "none",
+          "requested_tool_mode": "none"
+        },
+        "contract_review_specialist": {
+          "id": "p2p-procurem-so-piv-cr:1",
+          "name": "p2p-procurem-so-piv-cr",
+          "version": "1",
+          "tool_mode": "search",
+          "requested_tool_mode": "search"
+        },
+        "invoice_verification_specialist": {
+          "id": "p2p-procurem-so-piv-iv:1",
+          "name": "p2p-procurem-so-piv-iv",
+          "version": "1",
+          "tool_mode": "search",
+          "requested_tool_mode": "both"
+        },
+        "payment_guard_specialist": {
+          "id": "p2p-procurem-so-piv-pg:1",
+          "name": "p2p-procurem-so-piv-pg",
+          "version": "1",
+          "tool_mode": "search",
+          "requested_tool_mode": "both"
+        },
+        "coordinator": {
+          "id": "p2p-procurem-so-piv-coo:1",
+          "name": "p2p-procurem-so-piv-coo",
+          "version": "1",
+          "tool_mode": "none",
+          "requested_tool_mode": "none"
+        }
+      }
+    }
+  }
+}

@@ -75,6 +75,7 @@ nav:
       - 測試你的 PoC: 02-customize/03-demo.md
       - 零售手動 demo: 02-customize/04-retail-manual-demo.md
       - 合約關鍵字審閱手動 demo: 02-customize/05-contract-keyword-review-manual-demo.md
+      - P2P 採購到付款 demo: 02-customize/06-p2p-procurement-demo.md
   - Deep dive:
       - 總覽: 03-understand/index.md
       - "Foundry Model: 部署策略": 03-understand/00-foundry-model.md
