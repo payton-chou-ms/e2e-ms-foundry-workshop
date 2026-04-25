@@ -1,0 +1,5 @@
+action_id,incident_id,promo_removed,staff_briefed,refund_count,replacement_count,replacement_offer,reopen_approved
+RA-2001,RI-1001,是,是,2,6,其他 oat 飲品免費升級,否
+RA-2002,RI-1002,是,否,1,4,點心兌換券,否
+RA-2003,RI-1003,否,是,3,5,其他 oat 飲品免費升級,否
+RA-2004,RI-1004,是,是,0,0,其他 oat 飲品免費升級,否
